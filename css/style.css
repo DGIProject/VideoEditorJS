@@ -46,7 +46,12 @@
 .valuesTrack
 {
     float: left;
+<<<<<<< HEAD
     width: 80px;
+=======
+    width: 140px;
+    margin-top: 5px;
+>>>>>>> Changes
 }
 
 .time
@@ -62,7 +67,11 @@
     width: 80%;
     float: left;
     overflow-y: auto;
+<<<<<<< HEAD
     overflow-x: hidden;
+=======
+    overflow-x: auto;
+>>>>>>> Changes
 }
 
 .textViewEditor
@@ -70,12 +79,31 @@
     text-align: center;
 }
 
+<<<<<<< HEAD
+=======
+.sizeViewEditorTrack
+{
+    width: 1000px;
+}
+
+.posMinVolume
+{
+    float: left;
+}
+
+.posMaxVolume
+{
+    float: right;
+}
+
+>>>>>>> Changes
 .zoom
 {
     margin-left: 20px;
     display: inline-block;
 }
 
+<<<<<<< HEAD
 .player {
     width: 79%;
 }
@@ -83,4 +111,20 @@
 #progressPlayerOuter {
     margin-left: 20px;
     margin-right: 20px;
+=======
+.player
+{
+    width: 79%;
+}
+
+#progressPlayerOuter
+{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.bold
+{
+    font-weight: bold;
+>>>>>>> Changes
 }

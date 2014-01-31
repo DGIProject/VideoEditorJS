@@ -43,6 +43,11 @@
                         <div class="valuesTrack">
                             <input type="text" onkeypress="updateNameTrack(1, this.value);" class="form-control">
                             <input type="range" onchange="updateVolumeTrack(1, this.value);">
+                            <input type="text" onkeypress="updateNameTrack(1, this.value);" class="form-control" placeholder="Name">
+                            </br>
+                            <input type="range" onchange="updateVolumeTrack(1, this.value);" min="1" max="100">
+                            <span class="posMinVolume">0</span>
+                            <span class="posMaxVolume">100</span>
                         </div>
                         <div class="optionsTrack">
                             <button type="button" onclick="settingsTrack(1);" class="btn btn-link" data-toggle="modal" data-target="#addFileTrackModal"><span class="glyphicon glyphicon-plus"></span></button>
@@ -55,6 +60,8 @@
                 <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor">
                     <div id="ViewTrack1" class="singleTrack">
                         <p class="textViewEditor">Vous n'avez séléctionné aucune vidéo.</p>
+                    <div id="ViewTrack1" class="singleTrack sizeViewEditorTrack">
+                        <p class="textViewEditor">Aucune vidéo n'est présente dans cette piste.</p>
                     </div>
                 </div>
             </div>
