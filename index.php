@@ -11,13 +11,14 @@
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <h1>VideoEditorJS</h1>
-        <div class="editor well">
+        <div class="well">
             <div class="toolbar">
                 <button class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span></button>
                 <button class="btn btn-default">Cut</button>
                 <button class="btn btn-default">Render & save </button>
                 <button onclick="New()" class="btn btn-default">New...</button>
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
+                <button data-toggle="modal" data-target="#addFileTrackModal" class="btn btn-default">Videothèque</button>
                 <a href="#"><span class="glyphicon glyphicon-zoom-out" ></span></a>
                 <input type="range" style="display: inline-block; width: 150px;" name="zoom" min="1" max="10">
                 <a href="#"><span class="glyphicon glyphicon-zoom-in"></span></a>
@@ -25,44 +26,22 @@
 
             </div>
             </br>
-            <div>
-                <span class="player">
+            <div class="content">
+                <div class="chronologicalView pre">
+                    <div id="tracks"></div>
+                    <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
+                </div>
+                <div class="player pre">
+                    <div id="contentPlayer"></div>
+                <span>
                     <div id="timeStart" class="time">00:00</div>
-                    <div id="progressPlayerOuter" class="progress">
-                        <div id="progressPlayer" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                            <span class="sr-only">60% Complete</span>
+                        <div id="progressPlayerOuter" class="progress">
+                            <div id="progressPlayer" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                                <span class="sr-only">60% Complete</span>
+                            </div>
                         </div>
-                    </div>
                     <div id="timeEnd" class="time">00:00</div>
                 </span>
-            </div>
-            </br>
-            <div class="chronologicalView">
-                <div id="tracks">
-                    <div id="track1" class="singleTrack">
-                        <div class="valuesTrack">
-                            <input type="text" onkeypress="updateNameTrack(1, this.value);" class="form-control">
-                            <input type="range" onchange="updateVolumeTrack(1, this.value);">
-                            <input type="text" onkeypress="updateNameTrack(1, this.value);" class="form-control" placeholder="Name">
-                            </br>
-                            <input type="range" onchange="updateVolumeTrack(1, this.value);" min="1" max="100">
-                            <span class="posMinVolume">0</span>
-                            <span class="posMaxVolume">100</span>
-                        </div>
-                        <div class="optionsTrack">
-                            <button type="button" onclick="settingsTrack(1);" class="btn btn-link" data-toggle="modal" data-target="#addFileTrackModal"><span class="glyphicon glyphicon-plus"></span></button>
-                            <button type="button" onclick="settingsTrack(1);" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button>
-                            <button type="button" onclick="deleteTrack(1);" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor">
-                    <div id="ViewTrack1" class="singleTrack">
-                        <p class="textViewEditor">Vous n'avez séléctionné aucune vidéo.</p>
-                    <div id="ViewTrack1" class="singleTrack sizeViewEditorTrack">
-                        <p class="textViewEditor">Aucune vidéo n'est présente dans cette piste.</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -75,7 +54,31 @@
                     <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <div class="well" style="height: 300px;">
+                        <div class="row">
+                            <div class="col-xs-6" style="text-align: center;">
+                                <span>Liste des videos, photos, musique</span>
+                                <div class="toolbar">
+                                    <button class="btn-default btn-xs btn" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span></button><button onclick="removeFileFromList()" class="btn btn-default btn-xs "><span class="glyphicon glyphicon-minus"></span></button>
+                                    <hr/>
+                                    <div style="display: none;"><input type="file" onchange="addOneFile()" id="fileLoader"/></div>
+                                </div>
+                                <div id="divListFile">
+                                </div>
+                            </div>
+                            <div class="col-xs-6" style="text-align: center; height:250px ;border-left: 1px solid grey">
+                                <div>
+                                    <span>Information sur la selection</span>
+                                    <hr/>
+                                </div>
+                                <div>
+                                    Nom: <span id="selectedFileName"></span><br/>
+                                    Taille: <span id="selectedFileSize"></span><br/>
+                                    Format: <span id="selectedFileFormat"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -89,5 +92,6 @@
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/index.js"></script>
+<script src="js/FileList.js"></script>
 </body>
 </html>
