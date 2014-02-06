@@ -6,7 +6,10 @@ var numberOfTrack = 0;
 var TabListFile = [];
 var selectedFileID = 0;
 var Fileselected = true;
-
+var selectedTrack ;
+var elementList = [];
+var divElementSelectedForMove, canMove = false, firstMove;
+var lastPosition = {x:0,y:0};
 function addTrack()
 {
     var tracks = document.getElementById('tracks');
@@ -21,7 +24,7 @@ function addTrack()
 
     newViewTrack.setAttribute("class","singleTrack sizeViewEditorTrack");
     newViewTrack.setAttribute("id","ViewTrack" + numberOfTrack);
-    newViewTrack.innerHTML = '<p class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
+    newViewTrack.innerHTML = '<p id="textViewEditor'+numberOfTrack+'" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
 }
 
@@ -62,6 +65,33 @@ function generateTimetick()
 function addFileTrack(id)
 {
     console.log('addFileTrack');
+    selectedTrack = id;
+    var actualTrack = document.getElementById("ViewTrack"+id);
+    var element = document.createElement("div");
+    element.setAttribute('class',"trackElement");
+    element.innerHTML = "dsjf";
+    element.setAttribute('id','trackElementId'+ elementList.length);
+    element.setAttribute('onclick','prepareMoveElement('+elementList.length+')');
+    document.getElementById("textViewEditor"+id).style.display = "none";
+    actualTrack.appendChild(element);
+    elementList.push('trackElementId'+elementList.length);
+
+}
+
+function prepareMoveElement(elementListID)
+{
+    divElementSelectedForMove = document.getElementById(elementList[elementListID]);
+    if (canMove)
+    {
+
+        canMove = false;
+    }
+    else
+    {
+        canMove = true;
+    }
+    console.log('moveOk');
+
 }
 
 function settingsTrack(id)
@@ -78,7 +108,7 @@ function addOneFile()
 {
     var currentFile = document.getElementById('fileLoader').files[0];
     var currentItem = new FileList(TabListFile.length,currentFile.size, currentFile.name, currentFile.name.split('.').pop())
-    console.log(currentItem);
+    console.log('currentItem '+currentItem);
     TabListFile.push(currentItem);
    // console.log("biblioElement"+TabListFile.length-1)
     //console.log("selectBibElement("+TabListFile.length-1+")")
@@ -119,4 +149,47 @@ function removeFileFromList()
     parrent.removeChild(toDelete);
     delete TabListFile[selectedFileID]
     Fileselected = false;
+}
+window.onmousemove = handleMouseMove;
+function handleMouseMove(event) {
+    event = event || window.event; // IE-ism
+    if (canMove)
+    {
+      //  var offset = divElementSelectedForMove.offsetLeft
+       // var posX = event.clientX - offset
+        console.log(event.clientX, event.clientY);
+        var marginText =  divElementSelectedForMove.style.marginLeft;
+        var newMargin =  event.clientX - 340
+        console.log("maegN",newMargin, marginText)
+        console.log('scrrol',document.getElementById("VideoView").scrollLeft);
+       divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
+        lastPosition.x = event.clientX
+        lastPosition.y = event.clientY
+        firstMove = false;
+    }
+}
+window.onclick = function(e){
+
+    lastPosition.x = e.clientX;
+    lastPosition.y = e.clientY;
+    if (!firstMove)
+    {
+        canMove = false;
+        firstMove = true;
+    }
+    console.log('ok');
+
+}
+window.onkeypress = function(e){
+
+    if (e.keyCode == 37 ) // left
+    {
+        document.getElementById('VideoView').scrollLeft = document.getElementById('VideoView').scrollLeft - 10
+    }
+    else if (e.keyCode == 39) // right
+    {
+        document.getElementById('VideoView').scrollLeft = document.getElementById('VideoView').scrollLeft + 10
+    }
+    console.log(e.keyCode, "keycode")
+
 }
