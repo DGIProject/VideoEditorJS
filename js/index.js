@@ -1,7 +1,7 @@
 /**
  * Created by Guillaume on 29/01/14.
  */
-
+document.getElementById("libSelectButton").style.display = "none";
 var numberOfTrack = 0;
 var TabListFile = [];
 var selectedFileID = 0;
@@ -51,7 +51,7 @@ function scroolAllTracks()
 {
     var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
     var positionActuelle = videoTrackView.scrollTop;
-    console.log(positionActuelle);
+  //  console.log(positionActuelle);
     tracks.scrollTop = positionActuelle;
     videoTrackView.scrollTop = positionActuelle;
 }
@@ -65,16 +65,10 @@ function generateTimetick()
 function addFileTrack(id)
 {
     console.log('addFileTrack');
-    selectedTrack = id;
-    var actualTrack = document.getElementById("ViewTrack"+id);
-    var element = document.createElement("div");
-    element.setAttribute('class',"trackElement");
-    element.innerHTML = "dsjf";
-    element.setAttribute('id','trackElementId'+ elementList.length);
-    element.setAttribute('onclick','prepareMoveElement('+elementList.length+')');
-    document.getElementById("textViewEditor"+id).style.display = "none";
-    actualTrack.appendChild(element);
-    elementList.push('trackElementId'+elementList.length);
+
+    document.getElementById("libSelectButton").setAttribute("onclick","addElement('"+id+"')");
+    document.getElementById("libSelectButton").style.display = "";
+
 
 }
 
@@ -102,6 +96,22 @@ function settingsTrack(id)
 function updateNameTrack(id, nameTrack)
 {
     console.log(nameTrack);
+}
+
+function addElement(id)
+{
+    document.getElementById("libSelectButton").setAttribute("onclick","");
+    var info = getInfoForFileId(selectedFileID,"JSon");
+    console.log(info);
+     var actualTrack = document.getElementById("ViewTrack"+id);
+     var element = document.createElement("div");
+     element.setAttribute('class',"trackElement");
+     element.innerHTML = info.fileName;
+     element.setAttribute('id','trackElementId'+ elementList.length);
+     element.setAttribute('onclick','prepareMoveElement('+elementList.length+')');
+     document.getElementById("textViewEditor"+id).style.display = "none";
+     actualTrack.appendChild(element);
+     elementList.push('trackElementId'+elementList.length);
 }
 
 function addOneFile()
@@ -135,12 +145,20 @@ function selectBibElement(id)
     getInfoForFileId(id);
     Fileselected = true;
 }
-function getInfoForFileId(id)
+function getInfoForFileId(id,mode)
 {
-    var nameSpan = document.getElementById("selectedFileName"), sizeSpan = document.getElementById("selectedFileSize"), formatSpan = document.getElementById("selectedFileFormat");
-    nameSpan.innerHTML = TabListFile[id].fileName;
-    sizeSpan.innerHTML = TabListFile[id].size + " Octets";
-    formatSpan.innerHTML = TabListFile[id].format;
+    if ( mode == "JSon")
+    {
+        return TabListFile[id];
+    }
+    else
+    {
+        var nameSpan = document.getElementById("selectedFileName"), sizeSpan = document.getElementById("selectedFileSize"), formatSpan = document.getElementById("selectedFileFormat");
+        nameSpan.innerHTML = TabListFile[id].fileName;
+        sizeSpan.innerHTML = TabListFile[id].size + " Octets";
+        formatSpan.innerHTML = TabListFile[id].format;
+    }
+
 }
 function removeFileFromList()
 {
@@ -161,11 +179,15 @@ function handleMouseMove(event) {
         var marginText =  divElementSelectedForMove.style.marginLeft;
         var newMargin =  event.clientX - 340
         console.log("maegN",newMargin, marginText)
-        console.log('scrrol',document.getElementById("VideoView").scrollLeft);
-       divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
-        lastPosition.x = event.clientX
-        lastPosition.y = event.clientY
-        firstMove = false;
+        if (newMargin >= 0 || marginText >= 0)
+        {
+            console.log('scrrol',document.getElementById("VideoView").scrollLeft);
+            divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
+            lastPosition.x = event.clientX
+            lastPosition.y = event.clientY
+            firstMove = false;
+        }
+
     }
 }
 window.onclick = function(e){
