@@ -74,7 +74,8 @@
                                 <div>
                                     Nom: <span id="selectedFileName"></span><br/>
                                     Taille: <span id="selectedFileSize"></span><br/>
-                                    Format: <span id="selectedFileFormat"></span>
+                                    Format: <span id="selectedFileFormat"></span><br/>
+                                    Durée: <span id="selectedFileDuration"></span>
                                 </div>
                             </div>
                         </div>
@@ -93,5 +94,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/FileList.js"></script>
+<script src="js/Elements.js"></script>
+<script src="js/lib/terminal.js"></script>
 </body>
 </html>
