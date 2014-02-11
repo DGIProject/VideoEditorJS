@@ -10,6 +10,7 @@ var selectedTrack;
 var elementList = [];
 var divElementSelectedForMove, canMove = false, firstMove;
 var lastPosition = {x: 0, y: 0};
+var actionWorker;
 window.onmousemove = handleMouseMove;
 
 function addTrack() {
@@ -63,7 +64,7 @@ function addFileTrack(id) {
 
 }
 function prepareMoveElement(elementListID) {
-    divElementSelectedForMove = document.getElementById(elementList[elementListID]);
+    divElementSelectedForMove = document.getElementById("trackElementId"+elementList[elementListID].id);
     if (canMove) {
 
         canMove = false;
@@ -81,34 +82,63 @@ function updateNameTrack(id, nameTrack) {
     console.log(nameTrack);
 }
 function addElement(id) {
+
+
     document.getElementById("libSelectButton").setAttribute("onclick", "");
+
     var info = getInfoForFileId(selectedFileID, "JSon");
-    console.log(info);
+    var ElementToAdd = new Elements(elementList.length,info.fileName,info.duration);
+
     var actualTrack = document.getElementById("ViewTrack" + id);
+
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");
     element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + id + "," + elementList.length + ")'><span class='glyphicon glyphicon-remove'></span></button>";
     element.setAttribute('id', 'trackElementId' + elementList.length);
     element.setAttribute('onclick', 'prepareMoveElement(' + elementList.length + ')');
+    element.style.width = ElementToAdd.length+"px";
+
     document.getElementById("textViewEditor" + id).style.display = "none";
+
     actualTrack.appendChild(element);
-    elementList.push('trackElementId' + elementList.length);
+    elementList.push(ElementToAdd);
 }
 function addOneFile() {
     var currentFile = document.getElementById('fileLoader').files[0];
-    var currentItem = new FileList(TabListFile.length, currentFile.size, currentFile.name, currentFile.name.split('.').pop())
-    console.log('currentItem ' + currentItem);
-    TabListFile.push(currentItem);
-    // console.log("biblioElement"+TabListFile.length-1)
-    //console.log("selectBibElement("+TabListFile.length-1+")")
-    var element = document.createElement('div');
-    element.setAttribute('class', 'well')
-    element.setAttribute('id', "biblioElement" + (TabListFile.length - 1))
-    element.setAttribute('onclick', "selectBibElement(" + (TabListFile.length - 1) + ")");
-    element.innerHTML = currentItem.fileName;
-    document.getElementById("divListFile").appendChild(element);
+    actionWorker = "getDurationFile"
+    var reader = new FileReader();
 
+    reader.onload = function(e){
+        var data  = e.target.result;
 
+       var ElementData = new Uint8Array(data);
+
+        worker.postMessage({
+            type: "command",
+            arguments: ["-i","fileInput"],
+            files: [
+                {
+                    "name": "fileInput",
+                    "data": ElementData
+                }
+            ]
+        });
+
+        var currentItem = new FileList(TabListFile.length, currentFile.size, currentFile.name, currentFile.name.split('.').pop())
+        console.log('currentItem ' + currentItem);
+        TabListFile.push(currentItem);
+        // console.log("biblioElement"+TabListFile.length-1)
+        //console.log("selectBibElement("+TabListFile.length-1+")")
+        var element = document.createElement('div');
+        element.setAttribute('class', 'well')
+        element.setAttribute('id', "biblioElement" + (TabListFile.length - 1))
+        element.setAttribute('onclick', "selectBibElement(" + (TabListFile.length - 1) + ")");
+        element.innerHTML = currentItem.fileName;
+        document.getElementById("divListFile").appendChild(element);
+
+    }
+
+    reader.readAsArrayBuffer(currentFile)
 }
 function selectBibElement(id) {
     if (Fileselected) {
@@ -127,10 +157,11 @@ function getInfoForFileId(id, mode) {
         return TabListFile[id];
     }
     else {
-        var nameSpan = document.getElementById("selectedFileName"), sizeSpan = document.getElementById("selectedFileSize"), formatSpan = document.getElementById("selectedFileFormat");
+        var nameSpan = document.getElementById("selectedFileName"), sizeSpan = document.getElementById("selectedFileSize"), formatSpan = document.getElementById("selectedFileFormat"), durationSpan = document.getElementById('selectedFileDuration');
         nameSpan.innerHTML = TabListFile[id].fileName;
         sizeSpan.innerHTML = TabListFile[id].size + " Octets";
         formatSpan.innerHTML = TabListFile[id].format;
+        durationSpan.innerHTML = TabListFile[id].duration;
     }
 
 }
@@ -162,7 +193,7 @@ function handleMouseMove(event) {
 }
 function removeElementFromTrack(trackId, ElementId) {
    var track = document.getElementById('ViewTrack'+trackId);
-   var elementToDelete = document.getElementById(elementList[ElementId]);
+   var elementToDelete = document.getElementById("trackElementId"+elementList[ElementId].id);
    track.removeChild(elementToDelete);
     canMove = false;
     firstMove = true;

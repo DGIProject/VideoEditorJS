@@ -8,3 +8,8 @@ FileList = function(id, size, fileName, format) {
     this.fileName = fileName;
     this.format = format
 }
+
+FileList.prototype.setDuration = function(duration)
+{
+    this.duration = duration;
+}

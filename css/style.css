@@ -142,7 +142,7 @@
 
 .trackElement
 {
-    width: 2000px;
+    /*width: 2000px;*/
     border: 1px solid blue;
     height: 80%;
     background-color: rosybrown;
