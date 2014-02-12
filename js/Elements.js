@@ -52,3 +52,7 @@ Elements.prototype.calculateLenght = function()
 {
     return this.getDurationInSecondFromffmpegFormat()*oneSecond
 }
+Elements.prototype.actualiseLenght = function()
+{
+    this.length = this.calculateLenght()
+}
