@@ -42,11 +42,13 @@ function deleteTrack(id) {
     tracks.removeChild(trackToDelete);
 }
 function New() {
-    numberOfTrack = 0;
+    //numberOfTrack = 0;
     var tracks = document.getElementById('tracks');
     tracks.innerHTML = "";
     var videoView = document.getElementById("VideoView");
     videoView.innerHTML = "";
+    tabListTracks = []
+    elementList = []
 }
 function scroolAllTracks() {
     var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
@@ -65,14 +67,12 @@ function addFileTrack(id) {
 }
 function prepareMoveElement(elementListID) {
     divElementSelectedForMove = document.getElementById("trackElementId" + elementList[elementListID].id);
-    if (canMove) {
-
-        canMove = false;
-    }
-    else {
-        canMove = true;
-    }
-    console.log('moveOk');
+    canMove = true;
+    console.log('true!')
+}
+function stopMoveElement() {
+    canMove = false;
+    console.log('false!')
 
 }
 function settingsTrack(id) {
@@ -96,10 +96,11 @@ function addElement(id) {
     element.setAttribute('class', "trackElement");
     element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + id + "," + elementList.length + ")'><span class='glyphicon glyphicon-remove'></span></button>";
     element.setAttribute('id', 'trackElementId' + elementList.length);
-    element.setAttribute('onclick', 'prepareMoveElement(' + elementList.length + ')');
-    element.setAttribute('onresize','resizeElementById("'+elementList.length+'")')
+    element.setAttribute('onmousedown', 'prepareMoveElement(' + elementList.length + ')');
+    element.setAttribute('onmouseup', 'stopMoveElement()');
+    element.setAttribute('onresize', 'resizeElementById("' + elementList.length + '")')
     element.style.width = ElementToAdd.length + "px";
-
+    element.style.cursor = 'move';
     document.getElementById("textViewEditor" + id).style.display = "none";
 
     actualTrack.appendChild(element);
@@ -184,14 +185,13 @@ function handleMouseMove(event) {
         // var posX = event.clientX - offset
         console.log(event.clientX, event.clientY);
         var marginText = divElementSelectedForMove.style.marginLeft;
-        var newMargin = event.clientX - 340
+        var newMargin = event.clientX - 400
         console.log("maegN", newMargin, marginText)
         if (newMargin >= 0 || marginText >= 0) {
             console.log('scrrol', document.getElementById("VideoView").scrollLeft);
             divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
             lastPosition.x = event.clientX
             lastPosition.y = event.clientY
-            firstMove = false;
         }
 
     }
@@ -201,7 +201,6 @@ function removeElementFromTrack(trackId, ElementId) {
     var elementToDelete = document.getElementById("trackElementId" + elementList[ElementId].id);
     track.removeChild(elementToDelete);
     canMove = false;
-    firstMove = true;
 }
 function showLoadingDiv() {
     console.log('showLoadingDiv');
@@ -215,20 +214,10 @@ function hideLoadingDiv() {
     $('#loadingDiv').modal('hide');
     document.getElementById('editor').removeAttribute('disabled');
 }
-window.onclick = function (e) {
+window.onmousedown = function (e) {
 
     lastPosition.x = e.clientX;
     lastPosition.y = e.clientY;
-    if (e.target.className != "btn btn-xs removeElement") // Si la selection est diferente de la classe du bouton remove
-    {
-        if (!firstMove) {
-            canMove = false;
-            firstMove = true;
-        }
-    }
-    else {
-        canMove = false;
-    }
 
     console.log('ok');
 
@@ -283,11 +272,9 @@ function calculateNewSize() {
         document.getElementById('trackElementId' + elementList[i].id).style.maxWidth = elementList[i].length + 'px';
     }
 }
-function updateVolumeTrack(trackId,value)
-{
+function updateVolumeTrack(trackId, value) {
     tabListTracks[trackId].changeVolume(value);
 }
-function resizeElementById(id)
-{
+function resizeElementById(id) {
     console.log("!")
 }
