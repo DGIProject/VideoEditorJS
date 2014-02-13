@@ -2,8 +2,6 @@
  * Created by Guillaume on 29/01/14.
  */
 
-
-
 document.getElementById("libSelectButton").style.display = "none";
 var TabListFile = [];
 var selectedFileID = 0;
@@ -24,7 +22,7 @@ function addTrack() {
     var newViewTrack = document.createElement('div');
     newTrack.setAttribute("class", "singleTrack");
     newTrack.setAttribute("id", "track" + tabListTracks.length);
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeypress="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link" data-toggle="modal" data-target="#addFileTrackModal"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link" data-toggle="modal" data-target="#addFileTrackModal"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
@@ -57,10 +55,6 @@ function scroolAllTracks() {
     tracks.scrollTop = positionActuelle;
     videoTrackView.scrollTop = positionActuelle;
 }
-function generateTimetick() {
-    var timediv = document.getElementById('time');
-
-}
 function addFileTrack(id) {
     console.log('addFileTrack');
 
@@ -70,7 +64,7 @@ function addFileTrack(id) {
 
 }
 function prepareMoveElement(elementListID) {
-    divElementSelectedForMove = document.getElementById("trackElementId"+elementList[elementListID].id);
+    divElementSelectedForMove = document.getElementById("trackElementId" + elementList[elementListID].id);
     if (canMove) {
 
         canMove = false;
@@ -86,14 +80,15 @@ function settingsTrack(id) {
 }
 function updateNameTrack(id, nameTrack) {
     console.log(nameTrack);
+    tabListTracks[id].changeName(nameTrack);
 }
 function addElement(id) {
 
-
     document.getElementById("libSelectButton").setAttribute("onclick", "");
+    document.getElementById('libSelectButton').style.display = 'none';
 
     var info = getInfoForFileId(selectedFileID, "JSon");
-    var ElementToAdd = new Elements(elementList.length,info.fileName,info.duration);
+    var ElementToAdd = new Elements(elementList.length, info.fileName, info.duration);
 
     var actualTrack = document.getElementById("ViewTrack" + id);
 
@@ -102,7 +97,8 @@ function addElement(id) {
     element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + id + "," + elementList.length + ")'><span class='glyphicon glyphicon-remove'></span></button>";
     element.setAttribute('id', 'trackElementId' + elementList.length);
     element.setAttribute('onclick', 'prepareMoveElement(' + elementList.length + ')');
-    element.style.width = ElementToAdd.length+"px";
+    element.setAttribute('onresize','resizeElementById("'+elementList.length+'")')
+    element.style.width = ElementToAdd.length + "px";
 
     document.getElementById("textViewEditor" + id).style.display = "none";
 
@@ -114,14 +110,14 @@ function addOneFile() {
     actionWorker = "getDurationFile"
     var reader = new FileReader();
 
-    reader.onload = function(e){
-        var data  = e.target.result;
+    reader.onload = function (e) {
+        var data = e.target.result;
 
-       var ElementData = new Uint8Array(data);
+        var ElementData = new Uint8Array(data);
 
         worker.postMessage({
             type: "command",
-            arguments: ["-i","fileInput"],
+            arguments: ["-i", "fileInput"],
             files: [
                 {
                     "name": "fileInput",
@@ -201,47 +197,36 @@ function handleMouseMove(event) {
     }
 }
 function removeElementFromTrack(trackId, ElementId) {
-   var track = document.getElementById('ViewTrack'+trackId);
-   var elementToDelete = document.getElementById("trackElementId"+elementList[ElementId].id);
-   track.removeChild(elementToDelete);
+    var track = document.getElementById('ViewTrack' + trackId);
+    var elementToDelete = document.getElementById("trackElementId" + elementList[ElementId].id);
+    track.removeChild(elementToDelete);
     canMove = false;
     firstMove = true;
 }
-
-function showLoadingDiv()
-{
+function showLoadingDiv() {
     console.log('showLoadingDiv');
 
     document.getElementById('editor').setAttribute('disabled', '');
     $('#loadingDiv').modal('show');
 }
-
-function hideLoadingDiv()
-{
+function hideLoadingDiv() {
     console.log('hideLoadingDiv');
 
     $('#loadingDiv').modal('hide');
     document.getElementById('editor').removeAttribute('disabled');
 }
-
-function videothequeClick()
-{
-    document.getElementById('libSelectButton').style.display = 'none';
-}
-
 window.onclick = function (e) {
 
     lastPosition.x = e.clientX;
     lastPosition.y = e.clientY;
-    if (e.target.className != "btn btn-xs removeElement" ) // Si la selection est diferente de la classe du bouton remove
+    if (e.target.className != "btn btn-xs removeElement") // Si la selection est diferente de la classe du bouton remove
     {
         if (!firstMove) {
-        canMove = false;
-        firstMove = true;
+            canMove = false;
+            firstMove = true;
         }
     }
-    else
-    {
+    else {
         canMove = false;
     }
 
@@ -261,18 +246,15 @@ window.onkeypress = function (e) {
     console.log(e.keyCode, "keycode")
 
 }
-function changeZoom(zoom)
-{
+function changeZoom(zoom) {
     document.getElementById('zoomRange').value = zoom;
     oneSecond = zoom;
     console.log(oneSecond)
 
     calculateNewSize();
 }
-function zoomPlus()
-{
-    if (parseInt(document.getElementById('zoomRange').value) < 10)
-    {
+function zoomPlus() {
+    if (parseInt(document.getElementById('zoomRange').value) < 10) {
         oneSecond = parseInt(document.getElementById('zoomRange').value) + 1;
         document.getElementById('zoomRange').value = oneSecond;
     }
@@ -280,28 +262,32 @@ function zoomPlus()
 
     calculateNewSize();
 }
-function zoomMoins()
-{
-    if (parseInt(document.getElementById('zoomRange').value) > 1)
-    {
+function zoomMoins() {
+    if (parseInt(document.getElementById('zoomRange').value) > 1) {
         oneSecond = parseInt(document.getElementById('zoomRange').value) - 1;
         document.getElementById('zoomRange').value = oneSecond;
     }
     console.log(oneSecond)
     calculateNewSize();
 }
-function calculateNewSize()
-{
-    var  newTime = Math.floor( 800/oneSecond);
-    var minutes = Math.floor(newTime/60);
-    var second  = newTime-(60*minutes);
+function calculateNewSize() {
+    var newTime = Math.floor(800 / oneSecond);
+    var minutes = Math.floor(newTime / 60);
+    var second = newTime - (60 * minutes);
 
-    document.getElementById('endTime').innerHTML = minutes+"m"+second+"s";
+    document.getElementById('endTime').innerHTML = minutes + "m" + second + "s";
 
-    for(var i = 0; i < elementList.length; i++)
-    {
+    for (var i = 0; i < elementList.length; i++) {
         elementList[i].actualiseLenght();
-        document.getElementById('trackElementId'+elementList[i].id).style.width = elementList[i].length +'px';
-        document.getElementById('trackElementId'+elementList[i].id).style.maxWidth = elementList[i].length +'px';
+        document.getElementById('trackElementId' + elementList[i].id).style.width = elementList[i].length + 'px';
+        document.getElementById('trackElementId' + elementList[i].id).style.maxWidth = elementList[i].length + 'px';
     }
+}
+function updateVolumeTrack(trackId,value)
+{
+    tabListTracks[trackId].changeVolume(value);
+}
+function resizeElementById(id)
+{
+    console.log("!")
 }
