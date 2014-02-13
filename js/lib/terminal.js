@@ -126,7 +126,8 @@ function initWorker() {
     } else if (message.type == "start") {
       //outputElement.textContent = "Worker has received command\n";
     } else if (message.type == "done") {
-      stopRunning();
+        stopRunning();
+        hideLoadingDiv();
       var buffers = message.data;
       if (buffers.length) {
         //outputElement.className = "closed";

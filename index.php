@@ -9,7 +9,6 @@
 </head>
 <body>
 <div class="row">
-    <div id="loadingDiv"><div class="loader2"></div><span>Chargement en cours ...</span></div>
     <div class="col-md-10 col-md-offset-1">
         <h1>VideoEditorJS</h1>
         <div id="editor" class="well">
@@ -19,8 +18,8 @@
                 <button class="btn btn-default">Render & save </button>
                 <button onclick="New()" class="btn btn-default">New...</button>
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
-                <button data-toggle="modal" data-target="#addFileTrackModal" class="btn btn-default">Videothèque</button>
-                <a href="#" onclick="zoomMoin()"><span class="glyphicon glyphicon-zoom-out" ></span></a>
+                <button onclick="videothequeClick();" data-toggle="modal" data-target="#addFileTrackModal" class="btn btn-default">Videothèque</button>
+                <a href="#" onclick="zoomMoins()"><span class="glyphicon glyphicon-zoom-out" ></span></a>
                 <input type="range" id="zoomRange" step="1" onchange="changeZoom(this.value)" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
                 <a href="#" onclick="zoomPlus()"><span class="glyphicon glyphicon-zoom-in"></span></a>
             </div>
@@ -62,11 +61,11 @@
                     <div class="well" style="height: 300px;">
                         <div class="row">
                             <div class="col-xs-6" style="text-align: center;">
-                                <span>List des fichiers multimédias</span>
+                                <span>Liste des fichiers multimédias</span>
                                 <div class="toolbar">
                                     <button class="btn-default btn-xs btn" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span></button> <button onclick="removeFileFromList()" class="btn btn-default btn-xs "><span class="glyphicon glyphicon-minus"></span></button>
                                     <hr/>
-                                    <div style="display: none;"><input type="file" onchange="addOneFile()" id="fileLoader"/></div>
+                                    <div style="display: none;"><input type="file" onchange="addOneFile();" id="fileLoader"/></div>
                                 </div>
                                 <div id="divListFile">
                                 </div>
@@ -89,6 +88,20 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="libSelectButton">Add to Track</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loadingDiv" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                    <span class="center">Chargement en cours ...</span>
                 </div>
             </div>
         </div>

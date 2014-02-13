@@ -2,7 +2,6 @@
  * Created by Guillaume on 29/01/14.
  */
 document.getElementById("libSelectButton").style.display = "none";
-var numberOfTrack = 0;
 var TabListFile = [];
 var selectedFileID = 0;
 var Fileselected = true;
@@ -13,21 +12,26 @@ var lastPosition = {x: 0, y: 0};
 var actionWorker;
 window.onmousemove = handleMouseMove;
 
+var tabListTracks = [];
+
 function addTrack() {
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById("VideoView");
     var newTrack = document.createElement('div');
     var newViewTrack = document.createElement('div');
-    numberOfTrack++;
     newTrack.setAttribute("class", "singleTrack");
-    newTrack.setAttribute("id", "track" + numberOfTrack);
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeypress="updateNameTrack(' + numberOfTrack + ', this.value);" class="form-control"  placeholder="Name"></br><input type="range" onchange="updateVolumeTrack(' + numberOfTrack + ', this.value);" min="1" max="100"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + numberOfTrack + ');" class="btn btn-link" data-toggle="modal" data-target="#addFileTrackModal"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + numberOfTrack + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + numberOfTrack + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    newTrack.setAttribute("id", "track" + tabListTracks.length);
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeypress="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link" data-toggle="modal" data-target="#addFileTrackModal"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
-    newViewTrack.setAttribute("id", "ViewTrack" + numberOfTrack);
-    newViewTrack.innerHTML = '<p id="textViewEditor' + numberOfTrack + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
+    newViewTrack.setAttribute("id", "ViewTrack" + tabListTracks.length);
+    newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
+
+    var track = new Track(tabListTracks.length, 'Undefined', null);
+
+    tabListTracks.push(track);
 }
 function deleteTrack(id) {
     var tracks = document.getElementById('tracks');
@@ -136,6 +140,7 @@ function addOneFile() {
         element.innerHTML = currentItem.fileName;
         document.getElementById("divListFile").appendChild(element);
 
+        showLoadingDiv();
     }
 
     reader.readAsArrayBuffer(currentFile)
@@ -169,8 +174,10 @@ function removeFileFromList() {
     var toDelete = document.getElementById("biblioElement" + selectedFileID);
     var parrent = document.getElementById("divListFile");
     parrent.removeChild(toDelete);
-    delete TabListFile[selectedFileID]
+    delete TabListFile[selectedFileID];
     Fileselected = false;
+
+    console.log(TabListFile);
 }
 function handleMouseMove(event) {
     event = event || window.event; // IE-ism
@@ -198,6 +205,28 @@ function removeElementFromTrack(trackId, ElementId) {
     canMove = false;
     firstMove = true;
 }
+
+function showLoadingDiv()
+{
+    console.log('showLoadingDiv');
+
+    document.getElementById('editor').setAttribute('disabled', '');
+    $('#loadingDiv').modal('show');
+}
+
+function hideLoadingDiv()
+{
+    console.log('hideLoadingDiv');
+
+    $('#loadingDiv').modal('hide');
+    document.getElementById('editor').removeAttribute('disabled');
+}
+
+function videothequeClick()
+{
+    document.getElementById('libSelectButton').style.display = 'none';
+}
+
 window.onclick = function (e) {
 
     lastPosition.x = e.clientX;
@@ -229,4 +258,47 @@ window.onkeypress = function (e) {
     }
     console.log(e.keyCode, "keycode")
 
+}
+function changeZoom(zoom)
+{
+    document.getElementById('zoomRange').value = zoom;
+    oneSecond = zoom;
+
+    calculateNewSize();
+}
+function zoomPlus()
+{
+    if (document.getElementById('zoomRange').value < 10)
+    {
+        document.getElementById('zoomRange').value = document.getElementById('zoomRange').value + 1;
+        oneSecond = document.getElementById('zoomRange').value;
+    }
+
+    calculateNewSize();
+}
+function zoomMoins()
+{
+    if (document.getElementById('zoomRange').value > 0)
+    {
+        document.getElementById('zoomRange').value = document.getElementById('zoomRange').value - 1;
+        oneSecond = document.getElementById('zoomRange').value;
+    }
+
+    calculateNewSize();
+}
+function calculateNewSize()
+{
+    var  newTime = Math.floor( 800/oneSecond);
+    var minutes = Math.floor(newTime/60);
+    var second  = newTime-(60*minutes);
+
+    document.getElementById('endTime').innerHTML = minutes+"m"+second+"s";
+
+    for(var i = 0; i < elementList.length; i++)
+    {
+        elementList[i].actualiseLenght();
+
+        document.getElementById('trackElementId'+elementList[i].id).width = elementList[i].length +'px';
+        document.getElementById('trackElementId'+elementList[i].id).maxWidth = elementList[i].length +'px';
+    }
 }
