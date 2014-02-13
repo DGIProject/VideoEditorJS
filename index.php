@@ -113,6 +113,7 @@
 <script src="js/index.js"></script>
 <script src="js/FileList.js"></script>
 <script src="js/Elements.js"></script>
+<script src="js/track.js"></script>
 <script src="js/lib/terminal.js"></script>
 </body>
 </html>

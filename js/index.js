@@ -1,6 +1,9 @@
 /**
  * Created by Guillaume on 29/01/14.
  */
+
+
+
 document.getElementById("libSelectButton").style.display = "none";
 var TabListFile = [];
 var selectedFileID = 0;
@@ -30,7 +33,6 @@ function addTrack() {
     videoView.appendChild(newViewTrack);
 
     var track = new Track(tabListTracks.length, 'Undefined', null);
-
     tabListTracks.push(track);
 }
 function deleteTrack(id) {
@@ -263,27 +265,29 @@ function changeZoom(zoom)
 {
     document.getElementById('zoomRange').value = zoom;
     oneSecond = zoom;
+    console.log(oneSecond)
 
     calculateNewSize();
 }
 function zoomPlus()
 {
-    if (document.getElementById('zoomRange').value < 10)
+    if (parseInt(document.getElementById('zoomRange').value) < 10)
     {
-        document.getElementById('zoomRange').value = document.getElementById('zoomRange').value + 1;
-        oneSecond = document.getElementById('zoomRange').value;
+        oneSecond = parseInt(document.getElementById('zoomRange').value) + 1;
+        document.getElementById('zoomRange').value = oneSecond;
     }
+    console.log(oneSecond)
 
     calculateNewSize();
 }
 function zoomMoins()
 {
-    if (document.getElementById('zoomRange').value > 0)
+    if (parseInt(document.getElementById('zoomRange').value) > 1)
     {
-        document.getElementById('zoomRange').value = document.getElementById('zoomRange').value - 1;
-        oneSecond = document.getElementById('zoomRange').value;
+        oneSecond = parseInt(document.getElementById('zoomRange').value) - 1;
+        document.getElementById('zoomRange').value = oneSecond;
     }
-
+    console.log(oneSecond)
     calculateNewSize();
 }
 function calculateNewSize()
@@ -297,8 +301,7 @@ function calculateNewSize()
     for(var i = 0; i < elementList.length; i++)
     {
         elementList[i].actualiseLenght();
-
-        document.getElementById('trackElementId'+elementList[i].id).width = elementList[i].length +'px';
-        document.getElementById('trackElementId'+elementList[i].id).maxWidth = elementList[i].length +'px';
+        document.getElementById('trackElementId'+elementList[i].id).style.width = elementList[i].length +'px';
+        document.getElementById('trackElementId'+elementList[i].id).style.maxWidth = elementList[i].length +'px';
     }
 }
