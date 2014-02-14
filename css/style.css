@@ -158,7 +158,7 @@
     height: 80%;
     background-color: rosybrown;
     margin-left: 0px;
-    resize: horizontal;
+    resize: none;
     overflow: hidden;
 }
 

@@ -19,6 +19,7 @@
                 <button onclick="New()" class="btn btn-default">New...</button>
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
                 <button data-toggle="modal" data-target="#addFileTrackModal" class="btn btn-default">Videothèque</button>
+                <button class="btn btn-default" id="btnResize" onclick="activeResize()"><span class="glyphicon glyphicon-resize-small"></span></button>
                 <a href="#" onclick="zoomMoins()"><span class="glyphicon glyphicon-zoom-out" ></span></a>
                 <input type="range" id="zoomRange" step="1" onchange="changeZoom(this.value)" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
                 <a href="#" onclick="zoomPlus()"><span class="glyphicon glyphicon-zoom-in"></span></a>

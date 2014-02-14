@@ -11,6 +11,8 @@ var elementList = [];
 var divElementSelectedForMove, canMove = false, firstMove;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
+var resizing = false;
+
 window.onmousemove = handleMouseMove;
 
 var tabListTracks = [];
@@ -72,7 +74,15 @@ function prepareMoveElement(elementListID) {
 }
 function stopMoveElement() {
     canMove = false;
-    console.log('false!')
+    console.log('false!');
+    if(parseInt(divElementSelectedForMove.style.width.replace('px','')) <= parseInt(divElementSelectedForMove.style.maxWidth.replace('px',''))){
+        elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId',''))].resize(parseInt(divElementSelectedForMove.style.width.replace('px','')));
+    }
+    else
+    {
+        divElementSelectedForMove.style.width = divElementSelectedForMove.style.maxWidth;
+        
+    }
 
 }
 function settingsTrack(id) {
@@ -98,9 +108,9 @@ function addElement(id) {
     element.setAttribute('id', 'trackElementId' + elementList.length);
     element.setAttribute('onmousedown', 'prepareMoveElement(' + elementList.length + ')');
     element.setAttribute('onmouseup', 'stopMoveElement()');
-    element.setAttribute('onresize', 'resizeElementById("' + elementList.length + '")')
     element.style.width = ElementToAdd.length + "px";
     element.style.cursor = 'move';
+    element.style.maxWidth = ElementToAdd.maxLength +'px';
     document.getElementById("textViewEditor" + id).style.display = "none";
 
     actualTrack.appendChild(element);
@@ -180,7 +190,7 @@ function removeFileFromList() {
 }
 function handleMouseMove(event) {
     event = event || window.event; // IE-ism
-    if (canMove) {
+    if (canMove && !resizing) {
         //  var offset = divElementSelectedForMove.offsetLeft
         // var posX = event.clientX - offset
         console.log(event.clientX, event.clientY);
@@ -269,12 +279,28 @@ function calculateNewSize() {
     for (var i = 0; i < elementList.length; i++) {
         elementList[i].actualiseLenght();
         document.getElementById('trackElementId' + elementList[i].id).style.width = elementList[i].length + 'px';
-        document.getElementById('trackElementId' + elementList[i].id).style.maxWidth = elementList[i].length + 'px';
+        document.getElementById('trackElementId' + elementList[i].id).style.maxWidth = elementList[i].maxLength + 'px';
     }
 }
 function updateVolumeTrack(trackId, value) {
     tabListTracks[trackId].changeVolume(value);
 }
-function resizeElementById(id) {
-    console.log("!")
+function activeResize()
+{
+    $("#btnResize").button('toggle');
+    if (resizing)
+    {
+        resizing = false;
+        for (i=0;i<elementList.length;i++)
+        {
+            document.getElementById('trackElementId'+elementList[i].id).style.resize = "none";
+        }
+    }
+    else{
+        resizing = true;
+        for (i=0;i<elementList.length;i++)
+        {
+            document.getElementById('trackElementId'+elementList[i].id).style.resize = "horizontal";
+        }
+    }
 }
