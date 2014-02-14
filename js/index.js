@@ -14,6 +14,7 @@ var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
 var pixelCalculateTime = {g:0,d:800}
+var context = document.getElementById('TitleRender').getContext('2d')
 
 window.onmousemove = handleMouseMove;
 
@@ -287,8 +288,7 @@ function calculateNewSize() {
         document.getElementById('trackElementId' + elementList[i].id).style.marginLeft = elementList[i].marginXpx + "px"
     }
 }
-function calculateTimeBar()
-{
+function calculateTimeBar(){
     var timeGauche  = Math.floor(pixelCalculateTime.g / oneSecond);
     var timeDroit  = Math.floor(pixelCalculateTime.d / oneSecond);
     console.log(timeDroit, timeGauche);
@@ -325,8 +325,30 @@ function activeResize() {
         }
     }
 }
-
-window.onload = function (e)
-{
+window.onload = function (e){
     calculateTimeBar();
 }
+function writeTextToCanvas(text)
+{
+    context.clear();
+    context.font = document.getElementById('txtSize').value +'pt Calibri';
+    var x = document.getElementById('TitleRender').width / 2;
+    var y = document.getElementById('TitleRender').height / 2;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillStyle = document.getElementById('colorText').value;
+    context.fillText(text , x, y);
+}
+CanvasRenderingContext2D.prototype.clear =
+    CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
+        if (preserveTransform) {
+            this.save();
+            this.setTransform(1, 0, 0, 1, 0, 0);
+        }
+
+        this.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if (preserveTransform) {
+            this.restore();
+        }
+    };

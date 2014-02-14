@@ -120,6 +120,7 @@
                         <div class="row">
                             <div class="col-xs-9" style="text-align: center;">
                             <canvas id="TitleRender" width="400px" height="300px" style="border: 1px solid #000000"></canvas>
+                            <br/><button class="btn btn-default" onclick="context.clear()" >Clear</button>
                             </div>
                             <div class="col-xs-3" style="text-align: center; height:250px ;border-left: 1px solid grey">
                                 <div>
@@ -128,9 +129,9 @@
                                 </div>
                                 <div>
                                     Name<input class="form-control" type="text" placeholder="NameOfYourTitle"/> <br/>
-                                    Texte <input class="form-control" type="text"/><br/>
-                                    Couleur du texte<input class="form-control" type="color"/> <br/>
-                                    Taille du texte<input class="form-control" type="range"/> <br/>
+                                    Texte <input class="form-control" onkeyup="writeTextToCanvas(this.value)" type="text"/><br/>
+                                    Couleur du texte<input class="form-control" id="colorText" type="color"/> <br/>
+                                    Taille du texte<input id="txtSize" class="form-control" min="10" max="70" step="2" type="range"/> <br/>
                                 </div>
                             </div>
                         </div>
