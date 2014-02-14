@@ -11,6 +11,9 @@ Elements = function (id, name, initialDuration) {
     this.currentDuration = initialDuration
     this.length = this.calculateLenght(); // in px
     this.maxLength = this.calculateMaxLenght()
+    this.marginXpx = 0;
+    this.marginXDuration = 0
+    this.marginXsecond = 0;
 
 }
 Elements.prototype.changeLength = function (newLength) {
@@ -49,12 +52,12 @@ Elements.prototype.calculateLenght = function () {
 Elements.prototype.actualiseLenght = function () {
     this.length = this.calculateLenght()
     this.maxLength = this.calculateMaxLenght()
+    this.calculateMarginX()
 }
 Elements.prototype.calculateMaxLenght = function () {
     return this.getDurationInSecondFromffmpegFormat() * oneSecond
 }
-Elements.prototype.resize = function(newLenth)
-{
+Elements.prototype.resize = function(newLenth){
     var numberSecond = Math.floor(newLenth / oneSecond);
     var convertedTime = new Date();
     convertedTime.setTime(numberSecond * 1000);
@@ -62,4 +65,18 @@ Elements.prototype.resize = function(newLenth)
     this.currentDuration = timeStr;
     console.log(timeStr);
     this.length = this.calculateLenght();
+}
+Elements.prototype.setMarginX = function (marginPx){
+    this.marginXpx = marginPx;
+
+    var numberSecond = Math.floor(marginPx / oneSecond);
+    var convertedTime = new Date();
+    convertedTime.setTime(numberSecond * 1000);
+    var timeStr = convertedTime.getHours()-1+':'+convertedTime.getMinutes()+':'+convertedTime.getSeconds();
+    this.marginXDuration = timeStr;
+    this.marginXsecond = numberSecond;
+
+}
+Elements.prototype.calculateMarginX = function(){
+    this.marginXpx = this.marginXsecond * oneSecond;
 }

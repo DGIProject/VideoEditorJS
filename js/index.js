@@ -81,9 +81,9 @@ function stopMoveElement() {
     else
     {
         divElementSelectedForMove.style.width = divElementSelectedForMove.style.maxWidth;
-        
-    }
 
+    }
+    elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId',''))].setMarginX(divElementSelectedForMove.style.marginLeft.replace('px',''))
 }
 function settingsTrack(id) {
     console.log('deleteTrack');
@@ -280,6 +280,7 @@ function calculateNewSize() {
         elementList[i].actualiseLenght();
         document.getElementById('trackElementId' + elementList[i].id).style.width = elementList[i].length + 'px';
         document.getElementById('trackElementId' + elementList[i].id).style.maxWidth = elementList[i].maxLength + 'px';
+        document.getElementById('trackElementId' + elementList[i].id).style.marginLeft = elementList[i].marginXpx + "px"
     }
 }
 function updateVolumeTrack(trackId, value) {
