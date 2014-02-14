@@ -3,6 +3,7 @@
  */
 
 document.getElementById("libSelectButton").style.display = "none";
+
 var TabListFile = [];
 var selectedFileID = 0;
 var Fileselected = true;
@@ -12,6 +13,7 @@ var divElementSelectedForMove, canMove = false, firstMove;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
+var pixelCalculateTime = {g:0,d:800}
 
 window.onmousemove = handleMouseMove;
 
@@ -58,6 +60,11 @@ function scroolAllTracks() {
     //  console.log(positionActuelle);
     tracks.scrollTop = positionActuelle;
     videoTrackView.scrollTop = positionActuelle;
+    pixelCalculateTime.g = 0 + videoTrackView.scrollLeft
+    pixelCalculateTime.d = 800 + videoTrackView.scrollLeft
+
+    calculateTimeBar();
+
 }
 function addFileTrack(id) {
     console.log('addFileTrack');
@@ -75,15 +82,14 @@ function prepareMoveElement(elementListID) {
 function stopMoveElement() {
     canMove = false;
     console.log('false!');
-    if(parseInt(divElementSelectedForMove.style.width.replace('px','')) <= parseInt(divElementSelectedForMove.style.maxWidth.replace('px',''))){
-        elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId',''))].resize(parseInt(divElementSelectedForMove.style.width.replace('px','')));
+    if (parseInt(divElementSelectedForMove.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.style.maxWidth.replace('px', ''))) {
+        elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.style.width.replace('px', '')));
     }
-    else
-    {
+    else {
         divElementSelectedForMove.style.width = divElementSelectedForMove.style.maxWidth;
 
     }
-    elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId',''))].setMarginX(divElementSelectedForMove.style.marginLeft.replace('px',''))
+    elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.style.marginLeft.replace('px', ''))
 }
 function settingsTrack(id) {
     console.log('deleteTrack');
@@ -110,7 +116,7 @@ function addElement(id) {
     element.setAttribute('onmouseup', 'stopMoveElement()');
     element.style.width = ElementToAdd.length + "px";
     element.style.cursor = 'move';
-    element.style.maxWidth = ElementToAdd.maxLength +'px';
+    element.style.maxWidth = ElementToAdd.maxLength + 'px';
     document.getElementById("textViewEditor" + id).style.display = "none";
 
     actualTrack.appendChild(element);
@@ -273,9 +279,7 @@ function calculateNewSize() {
     var newTime = Math.floor(800 / oneSecond);
     var minutes = Math.floor(newTime / 60);
     var second = newTime - (60 * minutes);
-
-    document.getElementById('endTime').innerHTML = minutes + "m" + second + "s";
-
+    calculateTimeBar();
     for (var i = 0; i < elementList.length; i++) {
         elementList[i].actualiseLenght();
         document.getElementById('trackElementId' + elementList[i].id).style.width = elementList[i].length + 'px';
@@ -283,25 +287,46 @@ function calculateNewSize() {
         document.getElementById('trackElementId' + elementList[i].id).style.marginLeft = elementList[i].marginXpx + "px"
     }
 }
+function calculateTimeBar()
+{
+    var timeGauche  = Math.floor(pixelCalculateTime.g / oneSecond);
+    var timeDroit  = Math.floor(pixelCalculateTime.d / oneSecond);
+    console.log(timeDroit, timeGauche);
+    // calcule du temp a droite !
+    var heure = Math.floor(timeDroit/3600)
+    timeDroit = timeDroit - (3600*heure);
+    var minutes  =   Math.floor(timeDroit/60)
+    timeDroit = timeDroit - (60*minutes);
+    var seconde = timeDroit
+    document.getElementById('endTime').innerHTML = heure +'h'+minutes + "m" + seconde + "s";
+    var heure = Math.floor(timeGauche/3600)
+    timeGauche = timeGauche - (3600*heure);
+    var minutes  =   Math.floor(timeGauche/60)
+    timeGauche = timeGauche - (60*minutes);
+    var seconde = timeGauche
+    document.getElementById('startTime').innerHTML = heure +'h'+minutes + "m" + seconde + "s";
+
+}
 function updateVolumeTrack(trackId, value) {
     tabListTracks[trackId].changeVolume(value);
 }
-function activeResize()
-{
+function activeResize() {
     $("#btnResize").button('toggle');
-    if (resizing)
-    {
+    if (resizing) {
         resizing = false;
-        for (i=0;i<elementList.length;i++)
-        {
-            document.getElementById('trackElementId'+elementList[i].id).style.resize = "none";
+        for (i = 0; i < elementList.length; i++) {
+            document.getElementById('trackElementId' + elementList[i].id).style.resize = "none";
         }
     }
-    else{
+    else {
         resizing = true;
-        for (i=0;i<elementList.length;i++)
-        {
-            document.getElementById('trackElementId'+elementList[i].id).style.resize = "horizontal";
+        for (i = 0; i < elementList.length; i++) {
+            document.getElementById('trackElementId' + elementList[i].id).style.resize = "horizontal";
         }
     }
+}
+
+window.onload = function (e)
+{
+    calculateTimeBar();
 }

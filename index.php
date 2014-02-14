@@ -28,8 +28,8 @@
             <div class="content">
                 <div class="chronologicalView pre">
                     <div class="timeTrack">
-                        <span class="timeLeft" id="startTime">0s</span>
-                        <span class="timeRight" id="endTime">2m40s</span>
+                        <span class="timeLeft" id="startTime"></span>
+                        <span class="timeRight" id="endTime"></span>
                     </div>
                     <div id="tracks"></div>
                     <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
