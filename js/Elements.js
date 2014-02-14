@@ -4,7 +4,7 @@
 
 oneSecond = 5; // in px
 
-Elements = function (id, name, initialDuration) {
+Elements = function (id, name, initialDuration, data) {
     this.id = id
     this.name = name
     this.initialDuration = initialDuration; // in h:m:s

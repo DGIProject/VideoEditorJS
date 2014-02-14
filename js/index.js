@@ -13,7 +13,7 @@ var divElementSelectedForMove, canMove = false, firstMove;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
-var pixelCalculateTime = {g:0,d:800}
+var pixelCalculateTime = {g: 0, d: 800}
 var context = document.getElementById('TitleRender').getContext('2d')
 
 window.onmousemove = handleMouseMove;
@@ -288,23 +288,23 @@ function calculateNewSize() {
         document.getElementById('trackElementId' + elementList[i].id).style.marginLeft = elementList[i].marginXpx + "px"
     }
 }
-function calculateTimeBar(){
-    var timeGauche  = Math.floor(pixelCalculateTime.g / oneSecond);
-    var timeDroit  = Math.floor(pixelCalculateTime.d / oneSecond);
+function calculateTimeBar() {
+    var timeGauche = Math.floor(pixelCalculateTime.g / oneSecond);
+    var timeDroit = Math.floor(pixelCalculateTime.d / oneSecond);
     console.log(timeDroit, timeGauche);
     // calcule du temp a droite !
-    var heure = Math.floor(timeDroit/3600)
-    timeDroit = timeDroit - (3600*heure);
-    var minutes  =   Math.floor(timeDroit/60)
-    timeDroit = timeDroit - (60*minutes);
+    var heure = Math.floor(timeDroit / 3600)
+    timeDroit = timeDroit - (3600 * heure);
+    var minutes = Math.floor(timeDroit / 60)
+    timeDroit = timeDroit - (60 * minutes);
     var seconde = timeDroit
-    document.getElementById('endTime').innerHTML = heure +'h'+minutes + "m" + seconde + "s";
-    var heure = Math.floor(timeGauche/3600)
-    timeGauche = timeGauche - (3600*heure);
-    var minutes  =   Math.floor(timeGauche/60)
-    timeGauche = timeGauche - (60*minutes);
+    document.getElementById('endTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
+    var heure = Math.floor(timeGauche / 3600)
+    timeGauche = timeGauche - (3600 * heure);
+    var minutes = Math.floor(timeGauche / 60)
+    timeGauche = timeGauche - (60 * minutes);
     var seconde = timeGauche
-    document.getElementById('startTime').innerHTML = heure +'h'+minutes + "m" + seconde + "s";
+    document.getElementById('startTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
 
 }
 function updateVolumeTrack(trackId, value) {
@@ -325,19 +325,38 @@ function activeResize() {
         }
     }
 }
-window.onload = function (e){
+window.onload = function (e) {
     calculateTimeBar();
 }
-function writeTextToCanvas(text)
-{
+function writeTextToCanvas(text) {
     context.clear();
-    context.font = document.getElementById('txtSize').value +'pt Calibri';
+    context.font = document.getElementById('txtSize').value + 'pt Calibri';
     var x = document.getElementById('TitleRender').width / 2;
     var y = document.getElementById('TitleRender').height / 2;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillStyle = document.getElementById('colorText').value;
-    context.fillText(text , x, y);
+    context.fillText(text, x, y);
+}
+function saveTitle() {
+
+    var image = new Image();
+    image.onload = function(){
+        image.src = document.getElementById('TitleRender').toDataURL("image/png");
+    }
+
+    var currentItem = new FileList(TabListFile.length, 0, document.getElementById('titleName').value+'.tl', 'tl')
+    console.log('currentItem ' + currentItem);
+    TabListFile.push(currentItem);
+    // console.log("biblioElement"+TabListFile.length-1)
+    //console.log("selectBibElement("+TabListFile.length-1+")")
+    var element = document.createElement('div');
+    element.setAttribute('class', 'well')
+    element.setAttribute('id', "biblioElement" + (TabListFile.length - 1))
+    element.setAttribute('onclick', "selectBibElement(" + (TabListFile.length - 1) + ")");
+    element.innerHTML = currentItem.fileName;
+    document.getElementById("divListFile").appendChild(element);
+
 }
 CanvasRenderingContext2D.prototype.clear =
     CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {

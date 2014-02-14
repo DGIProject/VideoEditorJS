@@ -128,7 +128,7 @@
                                     <hr/>
                                 </div>
                                 <div>
-                                    Name<input class="form-control" type="text" placeholder="NameOfYourTitle"/> <br/>
+                                    Name<input class="form-control" id="titleName" type="text" placeholder="NameOfYourTitle"/> <br/>
                                     Texte <input class="form-control" onkeyup="writeTextToCanvas(this.value)" type="text"/><br/>
                                     Couleur du texte<input class="form-control" id="colorText" type="color"/> <br/>
                                     Taille du texte<input id="txtSize" class="form-control" min="10" max="70" step="2" type="range"/> <br/>
@@ -138,7 +138,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveTitle">Save Title</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-primary" onclick="saveTitle()" id="saveTitle">Save Title</button>
                 </div>
             </div>
         </div>
