@@ -20,8 +20,9 @@
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
                 <button data-toggle="modal" data-target="#addFileTrackModal" class="btn btn-default">Videothèque</button>
                 <button class="btn btn-default" id="btnResize" onclick="activeResize()"><span class="glyphicon glyphicon-resize-small"></span></button>
+                <button class="btn btn-default" data-toggle="modal" data-target="#createTitle"><span class="glyphicon glyphicon-text-width"></span></button>
                 <a href="#" onclick="zoomMoins()"><span class="glyphicon glyphicon-zoom-out" ></span></a>
-                <input type="range" id="zoomRange" step="1" onchange="changeZoom(this.value)" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
+                <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value)" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
                 <a href="#" onclick="zoomPlus()"><span class="glyphicon glyphicon-zoom-in"></span></a>
             </div>
             </br>
@@ -107,6 +108,41 @@
             </div>
         </div>
     </div>
+    <div id="createTitle" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Editeur de Titre</h4>
+                </div>
+                <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-xs-9" style="text-align: center;">
+                            <canvas id="TitleRender" width="400px" height="300px" style="border: 1px solid #000000"></canvas>
+                            </div>
+                            <div class="col-xs-3" style="text-align: center; height:250px ;border-left: 1px solid grey">
+                                <div>
+                                    <span>Informations</span>
+                                    <hr/>
+                                </div>
+                                <div>
+                                    Name<input class="form-control" type="text" placeholder="NameOfYourTitle"/> <br/>
+                                    Texte <input class="form-control" type="text"/><br/>
+                                    Couleur du texte<input class="form-control" type="color"/> <br/>
+                                    Taille du texte<input class="form-control" type="range"/> <br/>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveTitle">Save Title</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://code.jquery.com/jquery.js"></script>
