@@ -120,7 +120,7 @@ function initWorker() {
         if ( message.data.substring(0,11) == "  Duration:" && actionWorker == "getDurationFile")
         {
             DurationString = message.data;
-            TabListFile[TabListFile.length-1].setDuration(DurationString.substring(11,DurationString.indexOf(',')).replace(' ',''))
+            tabListFiles[tabListFiles.length-1].setDuration(DurationString.substring(11,DurationString.indexOf(',')).replace(' ',''))
         }
       //outputElement.textContent += message.data + "\n";
     } else if (message.type == "start") {

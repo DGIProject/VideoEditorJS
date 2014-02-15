@@ -136,11 +136,6 @@
 {
     font-weight: bold;
 }
-
-.content
-{
-    display: inline-block;
-}
 .selectedFile
 {
    border:  1px solid red;
@@ -162,7 +157,30 @@
     overflow: hidden;
 }
 
+.listFilesLib
+{
+    height: 410px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.filesList
+{
+    height: 550px;
+    margin-left: 10px;
+}
+
 .center
 {
     text-align: center;
+}
+
+.strong
+{
+    font-weight: bold;
+}
+
+.titleSize
+{
+    font-size: 20px;
 }

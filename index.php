@@ -13,21 +13,17 @@
         <h1>VideoEditorJS</h1>
         <div id="editor" class="well">
             <div class="toolbar">
-                <button class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span></button>
-                <button class="btn btn-default">Cut</button>
-                <button class="btn btn-default">Render & save </button>
-                <button onclick="New()" class="btn btn-default">New...</button>
+                <button onclick="newProject();" class="btn btn-default">New project</button>
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
-                <button data-toggle="modal" data-target="#addFileTrackModal" class="btn btn-default">Videothèque</button>
-                <button class="btn btn-default" id="btnResize" onclick="activeResize()"><span class="glyphicon glyphicon-resize-small"></span></button>
-                <button class="btn btn-default" data-toggle="modal" data-target="#createTitle"><span class="glyphicon glyphicon-text-width"></span></button>
-                <a href="#" onclick="zoomMoins()"><span class="glyphicon glyphicon-zoom-out" ></span></a>
-                <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value)" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
-                <a href="#" onclick="zoomPlus()"><span class="glyphicon glyphicon-zoom-in"></span></a>
+                <button class="btn btn-default">Render & save </button>
+                <button class="btn btn-default" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
+                <a href="#" onclick="zoomMoins();"><span class="glyphicon glyphicon-zoom-out" ></span></a>
+                <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
+                <a href="#" onclick="zoomPlus();"><span class="glyphicon glyphicon-zoom-in"></span></a>
             </div>
             </br>
-            <div class="content">
-                <div class="chronologicalView pre">
+            <div class="row">
+                <div class="col-md-10 chronologicalView pre">
                     <div class="timeTrack">
                         <span class="timeLeft" id="startTime"></span>
                         <span class="timeRight" id="endTime"></span>
@@ -35,18 +31,17 @@
                     <div id="tracks"></div>
                     <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
                 </div>
-
-                <div class="player pre">
-                    <div id="contentPlayer"></div>
-                <span>
-                    <div id="timeStart" class="time">00:00</div>
-                        <div id="progressPlayerOuter" class="progress">
-                            <div id="progressPlayer" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                <span class="sr-only">60% Complete</span>
-                            </div>
-                        </div>
-                    <div id="timeEnd" class="time">00:00</div>
-                </span>
+                <div class="col-md-2 col-md-offset-1 filesList pre">
+                    <span class="titleSize strong">Eléments</span>
+                    </br>
+                    <div class="toolbar">
+                        <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span></button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#createTitle"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
+                        <button type="button" class="btn btn-danger" onclick="stopAddFileToTrack();" style="display: none;" id="stopAddFileToTrackButton">STOP</button>
+                        <hr/>
+                        <div style="display: none;"><input type="file" onchange="addOneFile();" id="fileLoader"/></div>
+                    </div>
+                    <div id="listFilesLib" class="list-group listFilesLib"></div>
                 </div>
             </div>
         </div>
@@ -90,6 +85,32 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="libSelectButton">Add to Track</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="selectFileLib" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Information & option</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" id="libFileName">Undefined</h3>
+                        </div>
+                        <div class="panel-body">
+                            Taille: <span id="libFileSize"></span><br/>
+                            Format: <span id="libFileFormat"></span><br/>
+                            Durée: <span id="libFileDuration"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="fileRemoveButton" data-dismiss="modal">Remove</button>
                 </div>
             </div>
         </div>
