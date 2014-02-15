@@ -120,7 +120,7 @@ function initWorker() {
         if ( message.data.substring(0,11) == "  Duration:" && actionWorker == "getDurationFile")
         {
             DurationString = message.data;
-            tabListFiles[tabListFiles.length-1].setDuration(DurationString.substring(11,DurationString.indexOf(',')).replace(' ',''))
+            tabListFiles[tabListFiles.length - 1].setDuration(DurationString.substring(11,DurationString.indexOf(',')).replace(' ',''))
         }
       //outputElement.textContent += message.data + "\n";
     } else if (message.type == "start") {
@@ -134,6 +134,10 @@ function initWorker() {
       }
       buffers.forEach(function(file) {
        // filesElement.appendChild(getDownloadLink(file.data, file.name));
+          if (actionWorker == "ConvertPngToVideo")
+          {
+              tabListFiles[tabListFiles.length - 1].setData(window.URL.createObjectURL(new Blob([file.data])));
+          }
       });
     }
   };

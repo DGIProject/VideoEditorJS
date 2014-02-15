@@ -153,7 +153,7 @@ function stopMoveElement()
 function addElement(id)
 {
     var info = getInfoForFileId(id, "JSon");
-    var ElementToAdd = new Elements(elementList.length, info.fileName, info.duration);
+    var ElementToAdd = new Elements(elementList.length, info.fileName, info.duration, id);
 
     var actualTrack = document.getElementById("ViewTrack" + id);
 
@@ -232,6 +232,7 @@ function getInfoForFileId(id, mode)
         document.getElementById('libFileSize').innerHTML = tabListFiles[id].size + " Octets";
         document.getElementById('libFileFormat').innerHTML = tabListFiles[id].format;
         document.getElementById('libFileDuration').innerHTML = tabListFiles[id].duration;
+        document.getElementById('libFilePreview').innerHTML = '<img class="previewFileContent" src="' + tabListFiles[id].data + '">';
     }
 }
 
@@ -401,18 +402,15 @@ function writeTextToCanvas(text) {
 function saveTitle() {
 
     var image = new Image();
-    image.onload = function(){
-        image.src = document.getElementById('TitleRender').toDataURL("image/png");
-    }
+    image.src = document.getElementById('TitleRender').toDataURL("image/png");
 
-    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('titleName').value+'.tl', 'tl');
+    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('titleName').value, 'tl', image.src);
     currentItem.setDuration('00:00:20');
 
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
     document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="setModalProperties(' + (tabListFiles.length - 1) + ')" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + document.getElementById('titleName').value + '</h4><p class="list-group-item-text">text</p></a>';
-
 }
 CanvasRenderingContext2D.prototype.clear =
     CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {

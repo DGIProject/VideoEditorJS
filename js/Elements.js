@@ -1,12 +1,8 @@
-/**
- * Created by Guillaume on 11/02/14.
- */
-
 oneSecond = 5; // in px
 
-Elements = function (id, name, initialDuration) {
-    this.id = id
-    this.name = name
+Elements = function (id, name, initialDuration, fileId) {
+    this.id = id;
+    this.name = name;
     this.initialDuration = initialDuration; // in h:m:s
     this.currentDuration = initialDuration;
     this.length = this.calculateLenght(); // in px
@@ -14,6 +10,7 @@ Elements = function (id, name, initialDuration) {
     this.marginXpx = 0;
     this.marginXDuration = 0;
     this.marginXsecond = 0;
+    this.fileId = fileId;
 
 }
 Elements.prototype.changeLength = function (newLength) {

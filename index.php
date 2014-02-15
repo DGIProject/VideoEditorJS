@@ -104,7 +104,8 @@
                         <div class="panel-body">
                             Taille: <span id="libFileSize"></span><br/>
                             Format: <span id="libFileFormat"></span><br/>
-                            Durée: <span id="libFileDuration"></span>
+                            Durée: <span id="libFileDuration"></span><br/>
+                            Aperçu: <span id="libFilePreview" style="width: 100px;height: 100px"></span>
                         </div>
                     </div>
                 </div>
