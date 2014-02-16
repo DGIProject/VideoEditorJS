@@ -1,24 +1,16 @@
-/**
- * Created by Guillaume on 29/01/14.
- */
-
-document.getElementById("libSelectButton").style.display = "none";
-
 var tabListFiles = [];
-var selectedFileID = 0;
-var Fileselected = true;
-var selectedTrack;
-var elementList = [];
+var tabListTracks = [];
+var tabListElements = [];
 var divElementSelectedForMove, canMove = false, firstMove;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
 var pixelCalculateTime = {g: 0, d: 800}
-var context = document.getElementById('TitleRender').getContext('2d')
+var context = document.getElementById('textRender').getContext('2d');
 
 window.onmousemove = handleMouseMove;
 
-var tabListTracks = [];
+var posX, posY;
 
 //PROJECT
 
@@ -30,149 +22,12 @@ function newProject()
     var videoView = document.getElementById("VideoView");
     videoView.innerHTML = "";
     tabListTracks = []
-    elementList = []
+    tabListElements = []
 }
 
-//TRACK
+//FILE
 
-function addTrack()
-{
-    var tracks = document.getElementById('tracks');
-    var videoView = document.getElementById("VideoView");
-    var newTrack = document.createElement('div');
-    var newViewTrack = document.createElement('div');
-    newTrack.setAttribute("class", "singleTrack");
-    newTrack.setAttribute("id", "track" + tabListTracks.length);
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
-    tracks.appendChild(newTrack);
-
-    newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
-    newViewTrack.setAttribute("id", "ViewTrack" + tabListTracks.length);
-    newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
-    videoView.appendChild(newViewTrack);
-
-    var track = new Track(tabListTracks.length, 'Undefined', null);
-    tabListTracks.push(track);
-}
-
-function deleteTrack(id)
-{
-    var tracks = document.getElementById('tracks');
-    var videoView = document.getElementById("VideoView");
-    var trackToDelete = document.getElementById("track" + id);
-    var ViewTrackToDelete = document.getElementById("ViewTrack" + id);
-    videoView.removeChild(ViewTrackToDelete);
-    tracks.removeChild(trackToDelete);
-}
-
-function updateNameTrack(id, nameTrack)
-{
-    console.log(nameTrack);
-
-    tabListTracks[id].changeName(nameTrack);
-}
-
-function addFileTrack(id)
-{
-    console.log('addFileTrack');
-
-    document.getElementById('stopAddFileToTrackButton').style.display = '';
-
-    var listFilesLib = document.getElementById('listFilesLib');
-    var filesTab = listFilesLib.getElementsByTagName('a');
-
-    for(var i = 0; i < filesTab.length; i++)
-    {
-        var idFile = filesTab[i].getAttribute('idFile');
-
-        filesTab[i].removeAttribute('onclick');
-        filesTab[i].setAttribute('onclick', 'addElement(' + idFile + ');');
-
-        filesTab[i].classList.add('active');
-    }
-}
-
-function settingsTrack(id)
-{
-    console.log('settingsTrack');
-}
-
-function stopAddFileToTrack()
-{
-    document.getElementById('stopAddFileToTrackButton').style.display = 'none';
-
-    var listFilesLib = document.getElementById('listFilesLib');
-    var filesTab = listFilesLib.getElementsByTagName('a');
-
-    for(var i = 0; i < filesTab.length; i++)
-    {
-        var idFile = filesTab[i].getAttribute('idFile');
-
-        filesTab[i].removeAttribute('onclick');
-        filesTab[i].setAttribute('onclick', 'setModalProperties(' + idFile + ');');
-
-        filesTab[i].classList.remove('active');
-    }
-}
-
-function scroolAllTracks()
-{
-    var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
-    var positionActuelle = videoTrackView.scrollTop;
-    //  console.log(positionActuelle);
-    tracks.scrollTop = positionActuelle;
-    videoTrackView.scrollTop = positionActuelle;
-    pixelCalculateTime.g = 0 + videoTrackView.scrollLeft
-    pixelCalculateTime.d = 800 + videoTrackView.scrollLeft
-
-    calculateTimeBar();
-
-}
-
-function prepareMoveElement(elementListID)
-{
-    divElementSelectedForMove = document.getElementById("trackElementId" + elementList[elementListID].id);
-    canMove = true;
-    console.log('true!')
-}
-
-function stopMoveElement()
-{
-    canMove = false;
-    console.log('false!');
-    if (parseInt(divElementSelectedForMove.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.style.maxWidth.replace('px', ''))) {
-        elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.style.width.replace('px', '')));
-    }
-    else {
-        divElementSelectedForMove.style.width = divElementSelectedForMove.style.maxWidth;
-
-    }
-    elementList[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.style.marginLeft.replace('px', ''))
-}
-
-function addElement(id)
-{
-    var info = getInfoForFileId(id, "JSon");
-    var ElementToAdd = new Elements(elementList.length, info.fileName, info.duration, id);
-
-    var actualTrack = document.getElementById("ViewTrack" + id);
-
-    var element = document.createElement("div");
-    element.setAttribute('class', "trackElement");
-    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + id + "," + elementList.length + ")'><span class='glyphicon glyphicon-remove'></span></button>";
-    element.setAttribute('id', 'trackElementId' + elementList.length);
-    element.setAttribute('onmousedown', 'prepareMoveElement(' + elementList.length + ')');
-    element.setAttribute('onmouseup', 'stopMoveElement()');
-    element.style.width = ElementToAdd.length + "px";
-    element.style.cursor = 'move';
-    element.style.maxWidth = ElementToAdd.maxLength + 'px';
-    document.getElementById("textViewEditor" + id).style.display = "none";
-
-    actualTrack.appendChild(element);
-    elementList.push(ElementToAdd);
-}
-
-function addOneFile()
+function addMultimediaFile()
 {
     var currentFile = document.getElementById('fileLoader').files[0];
     actionWorker = "getDurationFile"
@@ -197,18 +52,18 @@ function addOneFile()
         var currentItem = new FileList(tabListFiles.length, 'audio/video', currentFile.size, currentFile.name, currentFile.name.split('.').pop())
         console.log('currentItem ' + currentItem);
         tabListFiles.push(currentItem);
-        
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="setModalProperties(' + (tabListFiles.length - 1) + ')" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
-        
+
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + (tabListFiles.length - 1) + ');" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
+
         showLoadingDiv();
     }
 
     reader.readAsArrayBuffer(currentFile)
 }
 
-function setModalProperties(id)
+function fileProperties(id)
 {
-    console.log('setModalProperties');
+    console.log('fileProperties');
 
     $('#selectFileLib').modal('show');
 
@@ -241,10 +96,156 @@ function removeFile(id)
     var toDelete = document.getElementById('libFile' + id);
     var parent = document.getElementById('listFilesLib');
     parent.removeChild(toDelete);
-    
-    tabListFiles[selectedFileID] = 0;
-    
+
+    tabListFiles[id] = 0;
+
     console.log(tabListFiles);
+}
+
+//TRACK
+
+function addTrack()
+{
+    var tracks = document.getElementById('tracks');
+    var videoView = document.getElementById("VideoView");
+    var newTrack = document.createElement('div');
+    var newViewTrack = document.createElement('div');
+    newTrack.setAttribute("class", "singleTrack");
+    newTrack.setAttribute("id", "track" + tabListTracks.length);
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    tracks.appendChild(newTrack);
+
+    newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
+    newViewTrack.setAttribute("id", "ViewTrack" + tabListTracks.length);
+    newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
+    videoView.appendChild(newViewTrack);
+
+    var track = new Track(tabListTracks.length, 'Undefined', null);
+    tabListTracks.push(track);
+}
+
+function deleteTrack(id)
+{
+    var tracks = document.getElementById('tracks');
+    var videoView = document.getElementById("VideoView");
+    var trackToDelete = document.getElementById("track" + id);
+    var ViewTrackToDelete = document.getElementById("ViewTrack" + id);
+    videoView.removeChild(ViewTrackToDelete);
+    tracks.removeChild(trackToDelete);
+}
+
+function updateNameTrack(id, nameTrack)
+{
+    console.log(nameTrack);
+
+    tabListTracks[id].changeName(nameTrack);
+}
+
+function updateVolumeTrack(id, valueVolume)
+{
+    console.log('updateVolumeTrack');
+
+    tabListTracks[id].changeVolume(valueVolume);
+}
+
+function addFileTrack(id)
+{
+    console.log('addFileTrack');
+
+    document.getElementById('stopAddFileToTrackButton').style.display = '';
+
+    var listFilesLib = document.getElementById('listFilesLib');
+    var filesTab = listFilesLib.getElementsByTagName('a');
+
+    for(var i = 0; i < filesTab.length; i++)
+    {
+        var idFile = filesTab[i].getAttribute('idFile');
+
+        filesTab[i].removeAttribute('onclick');
+        filesTab[i].setAttribute('onclick', 'addElement(' + idFile + ', ' + id + ');');
+
+        filesTab[i].classList.add('active');
+    }
+}
+
+function settingsTrack(id)
+{
+    console.log('settingsTrack');
+}
+
+function stopAddFileToTrack()
+{
+    document.getElementById('stopAddFileToTrackButton').style.display = 'none';
+
+    var listFilesLib = document.getElementById('listFilesLib');
+    var filesTab = listFilesLib.getElementsByTagName('a');
+
+    for(var i = 0; i < filesTab.length; i++)
+    {
+        var idFile = filesTab[i].getAttribute('idFile');
+
+        filesTab[i].removeAttribute('onclick');
+        filesTab[i].setAttribute('onclick', 'fileProperties(' + idFile + ');');
+
+        filesTab[i].classList.remove('active');
+    }
+}
+
+function scroolAllTracks()
+{
+    var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
+    var positionActuelle = videoTrackView.scrollTop;
+    //  console.log(positionActuelle);
+    tracks.scrollTop = positionActuelle;
+    videoTrackView.scrollTop = positionActuelle;
+    pixelCalculateTime.g = 0 + videoTrackView.scrollLeft
+    pixelCalculateTime.d = 800 + videoTrackView.scrollLeft
+
+    calculateTimeBar();
+
+}
+
+function prepareMoveElement(elementListID)
+{
+    divElementSelectedForMove = document.getElementById("trackElementId" + tabListElements[elementListID].id);
+    canMove = true;
+    console.log('true!')
+}
+
+function stopMoveElement()
+{
+    canMove = false;
+    console.log('false!');
+    if (parseInt(divElementSelectedForMove.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.style.maxWidth.replace('px', ''))) {
+        tabListElements[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.style.width.replace('px', '')));
+    }
+    else {
+        divElementSelectedForMove.style.width = divElementSelectedForMove.style.maxWidth;
+
+    }
+    tabListElements[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.style.marginLeft.replace('px', ''))
+}
+
+function addElement(id, idTrack)
+{
+    var info = getInfoForFileId(id, "JSon");
+    var ElementToAdd = new Elements(tabListElements.length, info.fileName, info.duration, id);
+
+    var actualTrack = document.getElementById("ViewTrack" + idTrack);
+
+    var element = document.createElement("div");
+    element.setAttribute('class', "trackElement");
+    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + tabListElements.length + ")'><span class='glyphicon glyphicon-remove'></span></button>";
+    element.setAttribute('id', 'trackElementId' + tabListElements.length);
+    element.setAttribute('onmousedown', 'prepareMoveElement(' + tabListElements.length + ')');
+    element.setAttribute('onmouseup', 'stopMoveElement()');
+    element.style.width = ElementToAdd.length + "px";
+    element.style.cursor = 'move';
+    element.style.maxWidth = ElementToAdd.maxLength + 'px';
+    document.getElementById("textViewEditor" + idTrack).style.display = "none";
+
+    actualTrack.appendChild(element);
+    tabListElements.push(ElementToAdd);
 }
 
 function handleMouseMove(event) {
@@ -269,7 +270,7 @@ function handleMouseMove(event) {
 function removeElementFromTrack(trackId, ElementId)
 {
     var track = document.getElementById('ViewTrack' + trackId);
-    var elementToDelete = document.getElementById("trackElementId" + elementList[ElementId].id);
+    var elementToDelete = document.getElementById("trackElementId" + tabListElements[ElementId].id);
     track.removeChild(elementToDelete);
     canMove = false;
 }
@@ -342,11 +343,11 @@ function calculateNewSize() {
     var minutes = Math.floor(newTime / 60);
     var second = newTime - (60 * minutes);
     calculateTimeBar();
-    for (var i = 0; i < elementList.length; i++) {
-        elementList[i].actualiseLenght();
-        document.getElementById('trackElementId' + elementList[i].id).style.width = elementList[i].length + 'px';
-        document.getElementById('trackElementId' + elementList[i].id).style.maxWidth = elementList[i].maxLength + 'px';
-        document.getElementById('trackElementId' + elementList[i].id).style.marginLeft = elementList[i].marginXpx + "px"
+    for (var i = 0; i < tabListElements.length; i++) {
+        tabListElements[i].actualiseLenght();
+        document.getElementById('trackElementId' + tabListElements[i].id).style.width = tabListElements[i].length + 'px';
+        document.getElementById('trackElementId' + tabListElements[i].id).style.maxWidth = tabListElements[i].maxLength + 'px';
+        document.getElementById('trackElementId' + tabListElements[i].id).style.marginLeft = tabListElements[i].marginXpx + "px"
     }
 }
 function calculateTimeBar() {
@@ -368,50 +369,71 @@ function calculateTimeBar() {
     document.getElementById('startTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
 
 }
-function updateVolumeTrack(trackId, value) {
-    tabListTracks[trackId].changeVolume(value);
-}
 function activeResize() {
     $("#btnResize").button('toggle');
     if (resizing) {
         resizing = false;
-        for (i = 0; i < elementList.length; i++) {
-            document.getElementById('trackElementId' + elementList[i].id).style.resize = "none";
+        for (i = 0; i < tabListElements.length; i++) {
+            document.getElementById('trackElementId' + tabListElements[i].id).style.resize = "none";
         }
     }
     else {
         resizing = true;
-        for (i = 0; i < elementList.length; i++) {
-            document.getElementById('trackElementId' + elementList[i].id).style.resize = "horizontal";
+        for (i = 0; i < tabListElements.length; i++) {
+            document.getElementById('trackElementId' + tabListElements[i].id).style.resize = "horizontal";
         }
     }
 }
 window.onload = function (e) {
     calculateTimeBar();
 }
-function writeTextToCanvas(text) {
+
+function newTextElement()
+{
+    $('#newTextElement').modal('show');
+
     context.clear();
-    context.font = document.getElementById('txtSize').value + 'pt Calibri';
-    var x = document.getElementById('TitleRender').width / 2;
-    var y = document.getElementById('TitleRender').height / 2;
+
+    document.getElementById('nameText').value = '';
+    document.getElementById('contentText').value = '';
+    document.getElementById('colorText').value = '';
+    document.getElementById('sizeText').value = 20;
+
+    posX = document.getElementById('textRender').width / 2;
+    posY = document.getElementById('textRender').height / 2;
+}
+
+function writeTextToCanvas(x, y)
+{
+    var text = document.getElementById('contentText').value;
+
+    context.clear();
+    context.font = document.getElementById('sizeText').value + 'pt Calibri';
+
+    posX = posX + x;
+    posY = posY + y;
+
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillStyle = document.getElementById('colorText').value;
-    context.fillText(text, x, y);
+    context.fillText(text, posX, posY);
 }
-function saveTitle() {
+
+function saveTitle()
+{
 
     var image = new Image();
-    image.src = document.getElementById('TitleRender').toDataURL("image/png");
+    image.src = document.getElementById('textRender').toDataURL("image/png");
 
-    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('titleName').value, 'tl', image.src);
+    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('nameText').value, 'tl', image.src);
     currentItem.setDuration('00:00:20');
 
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="setModalProperties(' + (tabListFiles.length - 1) + ')" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + document.getElementById('titleName').value + '</h4><p class="list-group-item-text">text</p></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + (tabListFiles.length - 1) + ');" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p></a>';
 }
+
 CanvasRenderingContext2D.prototype.clear =
     CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
         if (preserveTransform) {

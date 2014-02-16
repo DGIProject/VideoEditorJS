@@ -10,5 +10,5 @@ Track.prototype.changeName = function(newName)
 }
 Track.prototype.changeVolume = function(newLevel)
 {
-    this.volume = newLevel
+    this.volume = newLevel;
 }

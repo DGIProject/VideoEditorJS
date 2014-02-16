@@ -36,55 +36,12 @@
                     </br>
                     <div class="toolbar">
                         <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span></button>
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#createTitle"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
+                        <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
                         <button type="button" class="btn btn-danger" onclick="stopAddFileToTrack();" style="display: none;" id="stopAddFileToTrackButton">STOP</button>
                         <hr/>
-                        <div style="display: none;"><input type="file" onchange="addOneFile();" id="fileLoader"/></div>
+                        <div style="display: none;"><input type="file" onchange="addMultimediaFile();" id="fileLoader"/></div>
                     </div>
                     <div id="listFilesLib" class="list-group listFilesLib"></div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div id="addFileTrackModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Videothèque</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="well" style="height: 300px;">
-                        <div class="row">
-                            <div class="col-xs-6" style="text-align: center;">
-                                <span>Liste des fichiers multimédias</span>
-                                <div class="toolbar">
-                                    <button class="btn-default btn-xs btn" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span></button> <button onclick="removeFileFromList()" class="btn btn-default btn-xs "><span class="glyphicon glyphicon-minus"></span></button>
-                                    <hr/>
-                                    <div style="display: none;"><input type="file" onchange="addOneFile();" id="fileLoader"/></div>
-                                </div>
-                                <div id="divListFile">
-                                </div>
-                            </div>
-                            <div class="col-xs-6" style="text-align: center; height:250px ;border-left: 1px solid grey">
-                                <div>
-                                    <span>Information sur la sélection</span>
-                                    <hr/>
-                                </div>
-                                <div>
-                                    Nom: <span id="selectedFileName"></span><br/>
-                                    Taille: <span id="selectedFileSize"></span><br/>
-                                    Format: <span id="selectedFileFormat"></span><br/>
-                                    Durée: <span id="selectedFileDuration"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="libSelectButton">Add to Track</button>
                 </div>
             </div>
         </div>
@@ -130,30 +87,31 @@
             </div>
         </div>
     </div>
-    <div id="createTitle" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="newTextElement" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Editeur de Titre</h4>
+                    <h4 class="modal-title" id="myModalLabel">Ajouter un élément texte</h4>
                 </div>
                 <div class="modal-body">
-
                         <div class="row">
-                            <div class="col-xs-9" style="text-align: center;">
-                            <canvas id="TitleRender" width="400px" height="300px" style="border: 1px solid #000000"></canvas>
-                            <br/><button class="btn btn-default" onclick="context.clear()" >Clear</button>
+                            <div class="col-xs-9 center">
+                                <canvas id="textRender" width="400px" height="300px" style="border: 1px solid #000000"></canvas>
                             </div>
-                            <div class="col-xs-3" style="text-align: center; height:250px ;border-left: 1px solid grey">
+                            <div class="col-xs-3 center propertiesDivText">
                                 <div>
-                                    <span>Informations</span>
-                                    <hr/>
+                                    Nom : <input class="form-control" id="nameText" type="text"><br/>
+                                    Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
+                                    Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
+                                    Taille : <input id="sizeText" class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" type="range"><br/>
                                 </div>
                                 <div>
-                                    Name<input class="form-control" id="titleName" type="text" placeholder="NameOfYourTitle"/> <br/>
-                                    Texte <input class="form-control" onkeyup="writeTextToCanvas(this.value)" type="text"/><br/>
-                                    Couleur du texte<input class="form-control" id="colorText" type="color"/> <br/>
-                                    Taille du texte<input id="txtSize" class="form-control" min="10" max="70" step="2" type="range"/> <br/>
+                                    Position :</br>
+                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(-5, 0);"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, -5);"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(5, 0);"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, 5);"><span class="glyphicon glyphicon-chevron-down"></span></button>
                                 </div>
                             </div>
                         </div>
