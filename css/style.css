@@ -175,6 +175,11 @@
     text-align: center;
 }
 
+.marginauto
+{
+    margin: auto;
+}
+
 .strong
 {
     font-weight: bold;

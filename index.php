@@ -25,8 +25,8 @@
             <div class="row">
                 <div class="col-md-10 chronologicalView pre">
                     <div class="timeTrack">
-                        <span class="timeLeft" id="startTime"></span>
-                        <span class="timeRight" id="endTime"></span>
+                        <span class="timeLeft" id="startTime">0h0m0s</span>
+                        <span class="timeRight" id="endTime">0h2m40s</span>
                     </div>
                     <div id="tracks"></div>
                     <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
@@ -36,8 +36,9 @@
                     </br>
                     <div class="toolbar">
                         <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span></button>
+                        <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-picture"></span></button>
                         <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
-                        <button type="button" class="btn btn-danger" onclick="stopAddFileToTrack();" style="display: none;" id="stopAddFileToTrackButton">STOP</button>
+                        <button type="button" class="btn btn-block btn-danger" onclick="stopAddFileToTrack();" style="margin-top: 5px;display: none;" id="stopAddFileToTrackButton">STOP</button>
                         <hr/>
                         <div style="display: none;"><input type="file" onchange="addMultimediaFile();" id="fileLoader"/></div>
                     </div>
@@ -82,7 +83,21 @@
                             <span class="sr-only">100% Complete</span>
                         </div>
                     </div>
-                    <span class="center">Chargement en cours ...</span>
+                    <span class="marginauto">Chargement en cours ...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="startLoadingJS" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress progress-striped active">
+                        <div id="downloadJSProgress" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">0% Complete</span>
+                        </div>
+                    </div>
+                    <span class="marginauto">Chargement en cours ... <span id="persentProgress">0%</span></span>
                 </div>
             </div>
         </div>
@@ -97,7 +112,7 @@
                 <div class="modal-body">
                         <div class="row">
                             <div class="col-xs-9 center">
-                                <canvas id="textRender" width="400px" height="300px" style="border: 1px solid #000000"></canvas>
+                                <canvas id="textRender" width="400px" height="300px" style="border: 1px solid #000000;"></canvas>
                             </div>
                             <div class="col-xs-3 center propertiesDivText">
                                 <div>
@@ -118,7 +133,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" data-dismiss="modal" class="btn btn-primary" onclick="saveTitle()" id="saveTitle">Save Title</button>
+                    <button type="button" class="btn btn-primary" onclick="saveTextElement();" data-dismiss="modal">Save text element</button>
                 </div>
             </div>
         </div>
@@ -133,5 +148,37 @@
 <script src="js/Elements.js"></script>
 <script src="js/track.js"></script>
 <script src="js/lib/terminal.js"></script>
+
+<script type="text/javascript">
+    var OAjax, lenghtFfmpeg = 23905207, lenghTerminal = 4183, lenghScript = 5796, totalLenth = lenghScript + lenghTerminal + lenghtFfmpeg;
+
+    window.onload = function()
+    {
+        $('#startLoadingJS').modal('show');
+
+        if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+        else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+
+        OAjax.open('GET', 'js/lib/ffmpeg.js');
+
+        OAjax.onprogress = function(e)
+        {
+            console.log(e.loaded);
+            var persent = Math.ceil((e.loaded/totalLenth)*100) + '%';
+
+            document.getElementById('downloadJSProgress').style.width = persent;
+            document.getElementById('persentProgress').innerHTML = persent;
+        }
+
+        OAjax.onloadend = function(e)
+        {
+            console.log('end '+e.loaded);
+
+            $('#startLoadingJS').modal('hide');
+        }
+
+        OAjax.send();
+    }
+</script>
 </body>
 </html>

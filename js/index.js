@@ -7,10 +7,9 @@ var actionWorker;
 var resizing = false;
 var pixelCalculateTime = {g: 0, d: 800}
 var context = document.getElementById('textRender').getContext('2d');
+var posX, posY;
 
 window.onmousemove = handleMouseMove;
-
-var posX, posY;
 
 //PROJECT
 
@@ -58,8 +57,71 @@ function addMultimediaFile()
         showLoadingDiv();
     }
 
-    reader.readAsArrayBuffer(currentFile)
+    reader.readAsArrayBuffer(currentFile);
+
+    stopAddFileToTrack();
 }
+
+function newTextElement()
+{
+    $('#newTextElement').modal('show');
+
+    context.clear();
+
+    document.getElementById('nameText').value = '';
+    document.getElementById('contentText').value = '';
+    document.getElementById('colorText').value = '';
+    document.getElementById('sizeText').value = 20;
+
+    posX = document.getElementById('textRender').width / 2;
+    posY = document.getElementById('textRender').height / 2;
+
+    stopAddFileToTrack();
+}
+
+function writeTextToCanvas(x, y)
+{
+    var text = document.getElementById('contentText').value;
+
+    context.clear();
+    context.font = document.getElementById('sizeText').value + 'pt Calibri';
+
+    posX = posX + x;
+    posY = posY + y;
+
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillStyle = document.getElementById('colorText').value;
+    context.fillText(text, posX, posY);
+}
+
+function saveTextElement()
+{
+    var image = new Image();
+    image.src = document.getElementById('textRender').toDataURL("image/png");
+
+    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('nameText').value, 'tl', image.src);
+    currentItem.setDuration('00:00:20');
+
+    console.log('currentItem ' + currentItem);
+    tabListFiles.push(currentItem);
+
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + (tabListFiles.length - 1) + ');" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p></a>';
+}
+
+CanvasRenderingContext2D.prototype.clear =
+    CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
+        if (preserveTransform) {
+            this.save();
+            this.setTransform(1, 0, 0, 1, 0, 0);
+        }
+
+        this.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if (preserveTransform) {
+            this.restore();
+        }
+    };
 
 function fileProperties(id)
 {
@@ -132,6 +194,10 @@ function deleteTrack(id)
     var ViewTrackToDelete = document.getElementById("ViewTrack" + id);
     videoView.removeChild(ViewTrackToDelete);
     tracks.removeChild(trackToDelete);
+
+    tabListTracks[id] = 0;
+
+    stopAddFileToTrack();
 }
 
 function updateNameTrack(id, nameTrack)
@@ -191,6 +257,20 @@ function stopAddFileToTrack()
     }
 }
 
+function removeElementFromTrack(trackId, ElementId)
+{
+    var track = document.getElementById('ViewTrack' + trackId);
+    var elementToDelete = document.getElementById("trackElementId" + tabListElements[ElementId].id);
+    track.removeChild(elementToDelete);
+    tabListElements.remove(ElementId);
+    canMove = false;
+}
+
+Array.prototype.remove = function(from, to) { var rest = this.slice((to || from) + 1 || this.length); this.length = from < 0 ? this.length + from : from; return this.push.apply(this, rest); };
+
+
+//SCROLL
+
 function scroolAllTracks()
 {
     var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
@@ -198,11 +278,18 @@ function scroolAllTracks()
     //  console.log(positionActuelle);
     tracks.scrollTop = positionActuelle;
     videoTrackView.scrollTop = positionActuelle;
-    pixelCalculateTime.g = 0 + videoTrackView.scrollLeft
-    pixelCalculateTime.d = 800 + videoTrackView.scrollLeft
+    pixelCalculateTime.g = 0 + videoTrackView.scrollLeft;
+    pixelCalculateTime.d = 800 + videoTrackView.scrollLeft;
+
+    for(var i = 0; i < tabListTracks.length; i++)
+    {
+        if(tabListTracks[i] != 0)
+        {
+            document.getElementById('ViewTrack' + i).style.width = pixelCalculateTime.d + 'px';
+        }
+    }
 
     calculateTimeBar();
-
 }
 
 function prepareMoveElement(elementListID)
@@ -229,7 +316,19 @@ function stopMoveElement()
 function addElement(id, idTrack)
 {
     var info = getInfoForFileId(id, "JSon");
-    var ElementToAdd = new Elements(tabListElements.length, info.fileName, info.duration, id);
+
+    var idElement;
+
+    if(tabListElements.length > 0)
+    {
+        idElement = tabListElements[tabListElements.length-1].id + 1;
+    }
+    else
+    {
+        idElement = 0;
+    }
+
+    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id);
 
     var actualTrack = document.getElementById("ViewTrack" + idTrack);
 
@@ -265,14 +364,6 @@ function handleMouseMove(event) {
         }
 
     }
-}
-
-function removeElementFromTrack(trackId, ElementId)
-{
-    var track = document.getElementById('ViewTrack' + trackId);
-    var elementToDelete = document.getElementById("trackElementId" + tabListElements[ElementId].id);
-    track.removeChild(elementToDelete);
-    canMove = false;
 }
 
 function showLoadingDiv()
@@ -384,66 +475,7 @@ function activeResize() {
         }
     }
 }
+
 window.onload = function (e) {
     calculateTimeBar();
 }
-
-function newTextElement()
-{
-    $('#newTextElement').modal('show');
-
-    context.clear();
-
-    document.getElementById('nameText').value = '';
-    document.getElementById('contentText').value = '';
-    document.getElementById('colorText').value = '';
-    document.getElementById('sizeText').value = 20;
-
-    posX = document.getElementById('textRender').width / 2;
-    posY = document.getElementById('textRender').height / 2;
-}
-
-function writeTextToCanvas(x, y)
-{
-    var text = document.getElementById('contentText').value;
-
-    context.clear();
-    context.font = document.getElementById('sizeText').value + 'pt Calibri';
-
-    posX = posX + x;
-    posY = posY + y;
-
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillStyle = document.getElementById('colorText').value;
-    context.fillText(text, posX, posY);
-}
-
-function saveTitle()
-{
-
-    var image = new Image();
-    image.src = document.getElementById('textRender').toDataURL("image/png");
-
-    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('nameText').value, 'tl', image.src);
-    currentItem.setDuration('00:00:20');
-
-    console.log('currentItem ' + currentItem);
-    tabListFiles.push(currentItem);
-
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + (tabListFiles.length - 1) + ');" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p></a>';
-}
-
-CanvasRenderingContext2D.prototype.clear =
-    CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
-        if (preserveTransform) {
-            this.save();
-            this.setTransform(1, 0, 0, 1, 0, 0);
-        }
-
-        this.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        if (preserveTransform) {
-            this.restore();
-        }
-    };
