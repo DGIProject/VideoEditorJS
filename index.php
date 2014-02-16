@@ -38,6 +38,7 @@
                         <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span></button>
                         <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-picture"></span></button>
                         <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
+                        <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span> Audio/Video</button>
                         <button type="button" class="btn btn-block btn-danger" onclick="stopAddFileToTrack();" style="margin-top: 5px;display: none;" id="stopAddFileToTrackButton">STOP</button>
                         <hr/>
                         <div style="display: none;"><input type="file" onchange="addMultimediaFile();" id="fileLoader"/></div>
@@ -134,6 +135,34 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" onclick="saveTextElement();" data-dismiss="modal">Save text element</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="recordAudioOrVideoElement" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Enregistrer un élément audio/vidéo</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <button type="button" onclick="chooseVideoRecord();" id="chooseVideoButton" class="btn btn-default">VIDEO</button>
+                        <button type="button" onclick="chooseAudioRecord();" id="chooseAudioButton" class="btn btn-default">AUDIO</button>
+                    </div>
+                    <div id="videoRecord">
+                        <button type="button" onclick="" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
+                        <button type="button" onclick="" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
+                        <button type="button" onclick="" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
+                    </div>
+                    <div id="audioRecord">
+                        <button type="button" onclick="" id="playRecordAudioButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="" data-dismiss="modal">Save element</button>
                 </div>
             </div>
         </div>

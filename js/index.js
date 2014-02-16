@@ -347,6 +347,26 @@ function addElement(id, idTrack)
     tabListElements.push(ElementToAdd);
 }
 
+function newRecord()
+{
+    $('#recordAudioOrVideoElement').modal('show');
+    $('#chooseVideoButton').button('toggle');
+}
+
+function chooseVideoRecord()
+{
+    $('#chooseVideoButton').button('toggle');
+
+    document.getElementById('videoRecord').style.display = '';
+    document.getElementById('audioRecord').style.display = 'none';
+}
+
+function chooseAudioRecord()
+{
+    document.getElementById('audioRecord').style.display = '';
+    document.getElementById('videoRecord').style.display = 'none';
+}
+
 function handleMouseMove(event) {
     event = event || window.event; // IE-ism
     if (canMove && !resizing) {
