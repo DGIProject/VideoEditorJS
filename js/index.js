@@ -63,7 +63,7 @@ function addMultimediaFile()
         console.log('currentItem ' + currentItem);
         tabListFiles.push(currentItem);
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p><button type="button" onclick="removeFile(' + newId + ');" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span></button></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
 
         showLoadingDiv();
     }
@@ -147,7 +147,7 @@ function saveTextElement()
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p><button type="button" onclick="removeFile(' + newId + ');" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span></button></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p></a>';
 }
 
 CanvasRenderingContext2D.prototype.clear =
