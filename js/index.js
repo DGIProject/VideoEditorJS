@@ -48,11 +48,22 @@ function addMultimediaFile()
             ]
         });
 
-        var currentItem = new FileList(tabListFiles.length, 'audio/video', currentFile.size, currentFile.name, currentFile.name.split('.').pop())
+        var newId;
+
+        if(tabListFiles.length > 0)
+        {
+            newId = tabListFiles[tabListFiles.length - 1].id + 1;
+        }
+        else
+        {
+            newId = 0;
+        }
+
+        var currentItem = new FileList(newId, 'audio/video', currentFile.size, currentFile.name, currentFile.name.split('.').pop())
         console.log('currentItem ' + currentItem);
         tabListFiles.push(currentItem);
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + (tabListFiles.length - 1) + ');" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p><button type="button" onclick="removeFile(' + newId + ');" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span></button></a>';
 
         showLoadingDiv();
     }
@@ -73,6 +84,8 @@ function newTextElement()
     document.getElementById('colorText').value = '';
     document.getElementById('sizeText').value = 20;
 
+    document.getElementById('saveTextElementButton').setAttribute('disabled', '');
+
     posX = document.getElementById('textRender').width / 2;
     posY = document.getElementById('textRender').height / 2;
 
@@ -81,7 +94,7 @@ function newTextElement()
 
 function writeTextToCanvas(x, y)
 {
-    var text = document.getElementById('contentText').value;
+    var contentText = document.getElementById('contentText').value;
 
     context.clear();
     context.font = document.getElementById('sizeText').value + 'pt Calibri';
@@ -92,7 +105,24 @@ function writeTextToCanvas(x, y)
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillStyle = document.getElementById('colorText').value;
-    context.fillText(text, posX, posY);
+    context.fillText(contentText, posX, posY);
+
+    verifyFieldTextElement();
+}
+
+function verifyFieldTextElement()
+{
+    var nameText = document.getElementById('nameText').value;
+    var contentText = document.getElementById('contentText').value;
+
+    if(nameText != '' && contentText != '')
+    {
+        document.getElementById('saveTextElementButton').removeAttribute('disabled');
+    }
+    else
+    {
+        document.getElementById('saveTextElementButton').setAttribute('disabled', '');
+    }
 }
 
 function saveTextElement()
@@ -100,13 +130,24 @@ function saveTextElement()
     var image = new Image();
     image.src = document.getElementById('textRender').toDataURL("image/png");
 
-    var currentItem = new FileList(tabListFiles.length, 'text', 0, document.getElementById('nameText').value, 'tl', image.src);
+    var newId;
+
+    if(tabListFiles.length > 0)
+    {
+        newId = tabListFiles[tabListFiles.length - 1].id + 1;
+    }
+    else
+    {
+        newId = 0;
+    }
+
+    var currentItem = new FileList(newId, 'text', 0, document.getElementById('nameText').value, 'tl', image.src);
     currentItem.setDuration('00:00:20');
 
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + (tabListFiles.length - 1) + ');" class="list-group-item" id="libFile' + (tabListFiles.length - 1) + '" idFile="' + (tabListFiles.length - 1) + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p><button type="button" onclick="removeFile(' + newId + ');" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span></button></a>';
 }
 
 CanvasRenderingContext2D.prototype.clear =
@@ -155,11 +196,19 @@ function getInfoForFileId(id, mode)
 
 function removeFile(id)
 {
+    $('#selectFileLib').modal('hide');
+
     var toDelete = document.getElementById('libFile' + id);
     var parent = document.getElementById('listFilesLib');
     parent.removeChild(toDelete);
 
-    tabListFiles[id] = 0;
+    for(var i = 0; i < tabListFiles.length; i++)
+    {
+        if(tabListFiles[i].id == id)
+        {
+            tabListFiles.remove(i);
+        }
+    }
 
     console.log(tabListFiles);
 }
@@ -349,22 +398,30 @@ function addElement(id, idTrack)
 
 function newRecord()
 {
+    document.getElementById('chooseRecordButtons').style.display = '';
+    document.getElementById('videoRecord').style.display = 'none';
+    document.getElementById('audioRecord').style.display = 'none';
+    document.getElementById('saveRecordButton').style.display = 'none';
+
+    document.getElementById('saveRecordButton').setAttribute('disabled', '');
+
     $('#recordAudioOrVideoElement').modal('show');
-    $('#chooseVideoButton').button('toggle');
 }
 
 function chooseVideoRecord()
 {
-    $('#chooseVideoButton').button('toggle');
-
     document.getElementById('videoRecord').style.display = '';
+    document.getElementById('saveRecordButton').style.display = '';
     document.getElementById('audioRecord').style.display = 'none';
+    document.getElementById('chooseRecordButtons').style.display = 'none';
 }
 
 function chooseAudioRecord()
 {
     document.getElementById('audioRecord').style.display = '';
+    document.getElementById('saveRecordButton').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
+    document.getElementById('chooseRecordButtons').style.display = 'none';
 }
 
 function handleMouseMove(event) {

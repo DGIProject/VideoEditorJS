@@ -117,7 +117,7 @@
                             </div>
                             <div class="col-xs-3 center propertiesDivText">
                                 <div>
-                                    Nom : <input class="form-control" id="nameText" type="text"><br/>
+                                    Nom : <input class="form-control" onkeyup="verifyFieldTextElement();" id="nameText" type="text"><br/>
                                     Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
                                     Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
                                     Taille : <input id="sizeText" class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" type="range"><br/>
@@ -134,7 +134,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="saveTextElement();" data-dismiss="modal">Save text element</button>
+                    <button type="button" onclick="saveTextElement();" id="saveTextElementButton" class="btn btn-primary" data-dismiss="modal" disabled="">Save text element</button>
                 </div>
             </div>
         </div>
@@ -147,22 +147,22 @@
                     <h4 class="modal-title" id="myModalLabel">Enregistrer un élément audio/vidéo</h4>
                 </div>
                 <div class="modal-body">
-                    <div>
-                        <button type="button" onclick="chooseVideoRecord();" id="chooseVideoButton" class="btn btn-default">VIDEO</button>
-                        <button type="button" onclick="chooseAudioRecord();" id="chooseAudioButton" class="btn btn-default">AUDIO</button>
+                    <div id="chooseRecordButtons">
+                        <button type="button" onclick="chooseVideoRecord();" id="chooseVideoButton" class="btn btn-block btn-lg btn-default">VIDEO</button>
+                        <button type="button" onclick="chooseAudioRecord();" id="chooseAudioButton" class="btn btn-block btn-lg btn-default">AUDIO</button>
                     </div>
-                    <div id="videoRecord">
+                    <div id="videoRecord" style="display: none;">
                         <button type="button" onclick="" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
                         <button type="button" onclick="" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
                         <button type="button" onclick="" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
                     </div>
-                    <div id="audioRecord">
+                    <div id="audioRecord" style="display: none;">
                         <button type="button" onclick="" id="playRecordAudioButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="" data-dismiss="modal">Save element</button>
+                    <button type="button" onclick="" id="saveRecordButton" class="btn btn-primary" data-dismiss="modal" style="display: none;" disabled="">Save record</button>
                 </div>
             </div>
         </div>
@@ -179,11 +179,11 @@
 <script src="js/lib/terminal.js"></script>
 
 <script type="text/javascript">
-    var OAjax, lenghtFfmpeg = 23905207, lenghTerminal = 4183, lenghScript = 5796, totalLenth = lenghScript + lenghTerminal + lenghtFfmpeg;
-
     window.onload = function()
     {
         $('#startLoadingJS').modal('show');
+
+        var OAjax;
 
         if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
         else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
@@ -193,7 +193,8 @@
         OAjax.onprogress = function(e)
         {
             console.log(e.loaded);
-            var persent = Math.ceil((e.loaded/totalLenth)*100) + '%';
+
+            var persent = Math.ceil((e.loaded/23905207)*100) + '%';
 
             document.getElementById('downloadJSProgress').style.width = persent;
             document.getElementById('persentProgress').innerHTML = persent;

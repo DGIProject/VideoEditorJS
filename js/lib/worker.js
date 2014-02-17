@@ -1,4 +1,4 @@
-importScripts('../../../testRecord/js/ffmpeg.js');
+importScripts('ffmpeg.js');
 
 var now = Date.now;
 
