@@ -64,7 +64,7 @@ function addMultimediaFile()
         console.log('currentItem ' + currentItem);
         tabListFiles.push(currentItem);
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
 
         showLoadingDiv();
     }
@@ -76,7 +76,9 @@ function addMultimediaFile()
 
 function newTextElement()
 {
-    $('#newTextElement').modal('show');
+    console.log('newTextElement');
+
+    $('#fileTextModal').modal('show');
 
     context.clear();
 
@@ -157,7 +159,7 @@ function saveTextElement()
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameElement' + newId + '" class="list-group-item-heading">' + nameText + '</h4><p class="list-group-item-text">text</p></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + nameText + '</h4><p class="list-group-item-text">text</p></a>';
 }
 
 CanvasRenderingContext2D.prototype.clear =
@@ -226,6 +228,8 @@ function getInfoForFileId(id, mode)
 
 function editFileText(id)
 {
+    $('#fileTextModal').modal('show');
+
     var posTabListTextElements = 0;
 
     for(var i = 0; i < tabListTextElements.length; i++)
@@ -236,6 +240,8 @@ function editFileText(id)
         }
     }
 
+    document.getElementById('saveTextElementButton').setAttribute('onclick', 'saveEditFileText(' + id + ')');
+
     document.getElementById('nameText').value = tabListTextElements[posTabListTextElements].nameText;
     document.getElementById('contentText').value = tabListTextElements[posTabListTextElements].contentText;
     document.getElementById('colorText').value = tabListTextElements[posTabListTextElements].colorText;
@@ -243,6 +249,47 @@ function editFileText(id)
 
     posX = tabListTextElements[posTabListTextElements].posText.x;
     posY = tabListTextElements[posTabListTextElements].posText.y;
+
+    context.clear();
+
+    writeTextToCanvas(0, 0);
+}
+
+function saveEditFileText(id)
+{
+    console.log('saveEditFileText');
+
+    var posTabListFiles = 0, posTabListTextElements = 0;
+
+    for(var i = 0; i < tabListFiles.length; i++)
+    {
+        if(tabListFiles[i].id == id)
+        {
+            posTabListFiles = i;
+        }
+    }
+
+    for(var x = 0; x < tabListTextElements.length; x++)
+    {
+        if(tabListTextElements[x].id == id)
+        {
+            posTabListTextElements = x;
+        }
+    }
+
+    var image = new Image();
+    image.src = document.getElementById('textRender').toDataURL('image/png');
+
+    var nameText = document.getElementById('nameText').value;
+    var contentText = document.getElementById('contentText').value;
+    var colorText = document.getElementById('colorText').value;
+    var sizeText = document.getElementById('sizeText').value;
+    var posText = {x: posX, y: posY};
+
+    tabListFiles[posTabListFiles].setData(image.src);
+    tabListTextElements[posTabListTextElements].updateValuesElement(nameText, contentText, colorText, sizeText, posText);
+
+    document.getElementById('nameFile' + id).innerHTML = nameText;
 }
 
 function editFileImage(id)
