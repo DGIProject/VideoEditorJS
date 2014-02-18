@@ -1,11 +1,12 @@
 var tabListFiles = [];
 var tabListTracks = [];
 var tabListElements = [];
-var divElementSelectedForMove, canMove = false, firstMove;
+var tabListTextElements = [];
+var divElementSelectedForMove, canMove = false;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
-var pixelCalculateTime = {g: 0, d: 800}
+var pixelCalculateTime = {g: 0, d: 800};
 var context = document.getElementById('textRender').getContext('2d');
 var posX, posY;
 
@@ -141,13 +142,21 @@ function saveTextElement()
         newId = 0;
     }
 
-    var currentItem = new FileList(newId, 'text', 0, document.getElementById('nameText').value, 'tl', image.src);
+    var nameText = document.getElementById('nameText').value;
+    var contentText = document.getElementById('contentText').value;
+    var colorText = document.getElementById('colorText').value;
+    var sizeText = document.getElementById('sizeText').value;
+
+    var currentTextElement = new TextElement(newId, nameText, contentText, colorText, sizeText, {x: posX, y: posY});
+    tabListTextElements.push(currentTextElement);
+
+    var currentItem = new FileList(newId, 'text', 0, nameText, 'tl', image.src);
     currentItem.setDuration('00:00:20');
 
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 class="list-group-item-heading">' + document.getElementById('nameText').value + '</h4><p class="list-group-item-text">text</p></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameElement' + newId + '" class="list-group-item-heading">' + nameText + '</h4><p class="list-group-item-text">text</p></a>';
 }
 
 CanvasRenderingContext2D.prototype.clear =

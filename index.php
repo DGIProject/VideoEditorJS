@@ -92,13 +92,23 @@
     <div id="startLoadingJS" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bienvenue sur VideoEditorJS</h4>
+                </div>
                 <div class="modal-body">
-                    <div class="progress progress-striped active">
-                        <div id="downloadJSProgress" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                            <span class="sr-only">0% Complete</span>
+                    <p>VideoEditorJS est un projet qui vous permet de faire votre montage vidéo directement en ligne. Il est encore en développement mais pour l'instant vous avez la possibilité d'ajouter des vidéos, musiques, images, titres.</p>
+                    </br>
+                    <div id="loadingProgressProject">
+                        <div class="progress progress-striped active">
+                            <div id="downloadJSProgress" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">0% Complete</span>
+                            </div>
                         </div>
+                        <span class="marginauto strong">Chargement en cours ... <span id="persentProgress">0%</span></span>
                     </div>
-                    <span class="marginauto">Chargement en cours ... <span id="persentProgress">0%</span></span>
+                    <div id="startUseProject" style="display: none;">
+                        <button type="button" class="btn btn-lg btn-block btn-success" data-dismiss="modal">Let's go !</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,7 +214,8 @@
         {
             console.log('end '+e.loaded);
 
-            $('#startLoadingJS').modal('hide');
+            document.getElementById('loadingProgressProject').style.display = 'none';
+            document.getElementById('startUseProject').style.display = '';
         }
 
         OAjax.send();
