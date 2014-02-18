@@ -11,6 +11,8 @@ Elements = function (id, name, initialDuration, fileId) {
     this.marginXDuration = 0;
     this.marginXsecond = 0;
     this.fileId = fileId;
+    this.startTime = "0"; //in second
+    this.startTimePx = 0;
 
 }
 Elements.prototype.changeLength = function (newLength) {
@@ -42,6 +44,10 @@ Elements.prototype.getDurationInSecondFromCurrentDuration = function () {
     var heure = splitedValueFromText[0]
     var totalseconde = (3600 * heure) + (60 * minute) + parseInt(seconde)
     return totalseconde;
+}
+Elements.prototype.getStartTimeFromStartLenth = function()
+{
+    return  Math.ceil(this.startTimePx / oneSecond);
 }
 Elements.prototype.calculateLenght = function () {
     return this.getDurationInSecondFromCurrentDuration() * oneSecond
