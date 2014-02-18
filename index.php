@@ -15,7 +15,7 @@
             <div class="toolbar">
                 <button onclick="newProject();" class="btn btn-default">New project</button>
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
-                <button class="btn btn-default">Render & save </button>
+                <button onclick="makeRender();" class="btn btn-default">Render</button>
                 <button class="btn btn-default" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
                 <a href="#" onclick="zoomMoins();"><span class="glyphicon glyphicon-zoom-out" ></span></a>
                 <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
@@ -186,6 +186,7 @@
 <script src="js/FileList.js"></script>
 <script src="js/Elements.js"></script>
 <script src="js/track.js"></script>
+<script src="js/Render.js"></script>
 <script src="js/lib/terminal.js"></script>
 
 <script type="text/javascript">

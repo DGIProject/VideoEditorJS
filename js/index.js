@@ -565,3 +565,11 @@ function activeResize() {
 window.onload = function (e) {
     calculateTimeBar();
 }
+
+function makeRender()
+{
+   var renderClass = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
+   renderClass.onProcessEnd = function(event){
+        console.log('ok perso');
+   }
+}
