@@ -11,8 +11,44 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
     this.Tracks = tabListTracks;
     this.videoLenthPx = 0; //PX !!!
     this.videoDuration = 0 //Secondes !!
-    this.prepareElement();
 
+    this.currentFileIteration =0;
+    this.inputFileData = null;
+    this.commandList = [];
+    this.worker = new Worker("js/lib/worker.js");
+
+    this.worker.onmessage = function (event) {
+        var message = event.data;
+        if (message.type == "ready") {
+            isWorkerLoaded = true;
+            this.runCommand(this.commandList[this.currentFileIteration].command);
+        } else if (message.type == "stdout") {
+            console.log(message.data);
+            //outputElement.textContent += message.data + "\n";
+        } else if (message.type == "start") {
+            //outputElement.textContent = "Worker has received command\n";
+        } else if (message.type == "done") {
+            running = false;
+            var buffers = message.data;
+            if (buffers.length) {
+                //outputElement.className = "closed";
+            }
+            buffers.forEach(function(file) {
+                // filesElement.appendChild(getDownloadLink(file.data, file.name));
+                //   new Blob([file.data]);
+                this.currentFileIteration++;
+                if (this.currentFileIteration < this.commandList.length)
+                {
+                    this.inputFileData = this.Files[this.commandList[this.currentFileIteration].fileId].data;
+                    this.runCommand(this.commandList[this.currentFileIteration].command);
+                    console.log('File number'+this.currentFileIteration-1+"Has finished to be in mp4");
+                    this.Elements[this.commandList[this.currentFileIteration].elementIdInTab].data = new Blob([file.data]);
+                }
+
+            });
+        }
+    };
+    this.prepareElement();
 }
 Render.prototype.prepareElement = function()
 {
@@ -46,27 +82,53 @@ Render.prototype.prepareElement = function()
     var timeStr = convertedTime.getHours()-1+':'+convertedTime.getMinutes()+':'+convertedTime.getSeconds();
     this.videoDuration = timeStr;
 
+    this.makeRenderCommandList();
+
     //So we have the duration of the student video
 
-    //TODO: create method to convert all file elements.
+    this.runCommand('-help');
 
     //
-    //
-    console.log(this.makeRenderCommandList())
-    this.onProcessEnd(['ok']);
-
     console.log(this)
 
 }
-Render.prototype.makeRenderCommandList = function()
-{
+Render.prototype.makeRenderCommandList = function(){
     var listCommand = [];
 
     for (i=0;i<this.Elements.length;i++)
     {
-        var tempCommand = "-i fileInput -ss "+ this.Elements[i].getStartTimeFromStartLenth() +"-t "+this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime +" "+this.Elements[i].name+".mp4"
-        listCommand.push(tempCommand);
+        var tempCommand = "-i fileInput -ss "+ parseInt(this.Elements[i].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
+        listCommand.push({command:tempCommand,id:this.Elements[i].fileId,elementIdInTab:i});
     }
 
-    return listCommand;
+    this.commandList = listCommand;
+}
+Render.prototype.runCommand = function(text) {
+        running = true;
+        var args = this.parseArguments(text);
+        console.log(args);
+        this.worker.postMessage({
+            type: "command",
+            arguments: args,
+            files: [
+                {
+                    "name": "fileInput",
+                    "data": this.inputFileData
+                }
+            ]
+        });
+}
+Render.prototype.parseArguments = function(text) {
+    text = text.replace(/\s+/g, ' ');
+    var args = [];
+    // Allow double quotes to not split args.
+    text.split('"').forEach(function(t, i) {
+        t = t.trim();
+        if ((i % 2) === 1) {
+            args.push(t);
+        } else {
+            args = args.concat(t.split(" "));
+        }
+    });
+    return args;
 }

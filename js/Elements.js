@@ -13,6 +13,7 @@ Elements = function (id, name, initialDuration, fileId) {
     this.fileId = fileId;
     this.startTime = "0"; //in second
     this.startTimePx = 0;
+    this.data = null;
 
 }
 Elements.prototype.changeLength = function (newLength) {
