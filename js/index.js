@@ -86,6 +86,7 @@ function newTextElement()
     document.getElementById('sizeText').value = 20;
 
     document.getElementById('saveTextElementButton').setAttribute('disabled', '');
+    document.getElementById('saveTextElementButton').setAttribute('onclick', 'saveTextElement();');
 
     posX = document.getElementById('textRender').width / 2;
     posY = document.getElementById('textRender').height / 2;
@@ -179,6 +180,26 @@ function fileProperties(id)
 
     $('#selectFileLib').modal('show');
 
+    var type;
+
+    for(var i = 0; i < tabListFiles.length; i++)
+    {
+        if(tabListFiles[i].id == id)
+        {
+            type = tabListFiles[i].type;
+        }
+    }
+
+    if(type == 'text')
+    {
+        document.getElementById('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
+    }
+
+    if(type == 'image')
+    {
+        document.getElementById('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
+    }
+
     document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
     getInfoForFileId(id);
@@ -201,6 +222,32 @@ function getInfoForFileId(id, mode)
         document.getElementById('libFileDuration').innerHTML = tabListFiles[id].duration;
         document.getElementById('libFilePreview').innerHTML = '<img class="previewFileContent" src="' + tabListFiles[id].data + '">';
     }
+}
+
+function editFileText(id)
+{
+    var posTabListTextElements = 0;
+
+    for(var i = 0; i < tabListTextElements.length; i++)
+    {
+        if(tabListTextElements[i].id == id)
+        {
+            posTabListTextElements = i;
+        }
+    }
+
+    document.getElementById('nameText').value = tabListTextElements[posTabListTextElements].nameText;
+    document.getElementById('contentText').value = tabListTextElements[posTabListTextElements].contentText;
+    document.getElementById('colorText').value = tabListTextElements[posTabListTextElements].colorText;
+    document.getElementById('sizeText').value = tabListTextElements[posTabListTextElements].sizeText;
+
+    posX = tabListTextElements[posTabListTextElements].posText.x;
+    posY = tabListTextElements[posTabListTextElements].posText.y;
+}
+
+function editFileImage(id)
+{
+
 }
 
 function removeFile(id)

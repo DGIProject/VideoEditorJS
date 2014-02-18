@@ -70,6 +70,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" id="fileEditButton" data-dismiss="modal">Edit</button>
                     <button type="button" class="btn btn-danger" id="fileRemoveButton" data-dismiss="modal">Remove</button>
                 </div>
             </div>
@@ -130,7 +131,7 @@
                                     Nom : <input class="form-control" onkeyup="verifyFieldTextElement();" id="nameText" type="text"><br/>
                                     Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
                                     Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
-                                    Taille : <input id="sizeText" class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" type="range"><br/>
+                                    Taille : <input class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" id="sizeText" type="range"><br/>
                                 </div>
                                 <div>
                                     Position :</br>
@@ -144,7 +145,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" onclick="saveTextElement();" id="saveTextElementButton" class="btn btn-primary" data-dismiss="modal" disabled="">Save text element</button>
+                    <button type="button" id="saveTextElementButton" class="btn btn-primary" data-dismiss="modal" disabled="">Save text element</button>
                 </div>
             </div>
         </div>
@@ -186,6 +187,7 @@
 <script src="js/FileList.js"></script>
 <script src="js/Elements.js"></script>
 <script src="js/track.js"></script>
+<script src="js/TextElement.js"></script>
 <script src="js/Render.js"></script>
 <script src="js/lib/terminal.js"></script>
 
