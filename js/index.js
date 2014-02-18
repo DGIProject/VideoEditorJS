@@ -60,7 +60,7 @@ function addMultimediaFile()
             newId = 0;
         }
 
-        var currentItem = new FileList(newId, 'audio/video', currentFile.size, currentFile.name, currentFile.name.split('.').pop())
+        var currentItem = new FileList(newId, 'audio/video', currentFile.size, currentFile.name, currentFile.name.split('.').pop(),ElementData)
         console.log('currentItem ' + currentItem);
         tabListFiles.push(currentItem);
 

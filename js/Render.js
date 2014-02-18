@@ -2,6 +2,8 @@
  * Created by Guillaume on 18/02/14.
  */
 
+currentFileIteration = 0
+
 Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTracks)
 {
     this.onProcessEnd ;
@@ -14,14 +16,13 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
 
     this.currentFileIteration =0;
     this.inputFileData = null;
-    this.commandList = [];
+    commandList = [];
     this.worker = new Worker("js/lib/worker.js");
 
     this.worker.onmessage = function (event) {
         var message = event.data;
         if (message.type == "ready") {
             isWorkerLoaded = true;
-            this.runCommand(this.commandList[this.currentFileIteration].command);
         } else if (message.type == "stdout") {
             console.log(message.data);
             //outputElement.textContent += message.data + "\n";
@@ -36,13 +37,13 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
             buffers.forEach(function(file) {
                 // filesElement.appendChild(getDownloadLink(file.data, file.name));
                 //   new Blob([file.data]);
-                this.currentFileIteration++;
-                if (this.currentFileIteration < this.commandList.length)
+                currentFileIteration++;
+                if (currentFileIteration < this.commandList.length)
                 {
-                    this.inputFileData = this.Files[this.commandList[this.currentFileIteration].fileId].data;
-                    this.runCommand(this.commandList[this.currentFileIteration].command);
-                    console.log('File number'+this.currentFileIteration-1+"Has finished to be in mp4");
-                    this.Elements[this.commandList[this.currentFileIteration].elementIdInTab].data = new Blob([file.data]);
+                    this.inputFileData = this.Files[commandList[currentFileIteration].fileId].data;
+                    this.runCommand(commandList[currentFileIteration].command);
+                    console.log('File number'+currentFileIteration-1+"Has finished to be in mp4");
+                    this.Elements[commandList[currentFileIteration].elementIdInTab].data = new Blob([file.data]);
                 }
 
             });
@@ -86,8 +87,9 @@ Render.prototype.prepareElement = function()
 
     //So we have the duration of the student video
 
-    this.runCommand('-help');
-
+   // this.runCommand('-help');
+    this.inputFileData = this.Files[currentFileIteration].data;
+    this.runCommand(commandList[currentFileIteration].command);
     //
     console.log(this)
 
@@ -97,11 +99,11 @@ Render.prototype.makeRenderCommandList = function(){
 
     for (i=0;i<this.Elements.length;i++)
     {
-        var tempCommand = "-i fileInput -ss "+ parseInt(this.Elements[i].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
+        var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(this.Elements[i].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
         listCommand.push({command:tempCommand,id:this.Elements[i].fileId,elementIdInTab:i});
     }
 
-    this.commandList = listCommand;
+    commandList = listCommand;
 }
 Render.prototype.runCommand = function(text) {
         running = true;
