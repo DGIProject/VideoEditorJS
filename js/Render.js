@@ -7,7 +7,7 @@ currentFileIteration = 0
 Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTracks)
 {
     this.onProcessEnd ;
-    this.Elements = tabListElements
+    this.Elements = tabListElements;
     this.Files = tabListFiles;
     this.TextElements = tabListTextElements;
     this.Tracks = tabListTracks;
@@ -37,13 +37,14 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
             buffers.forEach(function(file) {
                 // filesElement.appendChild(getDownloadLink(file.data, file.name));
                 //   new Blob([file.data]);
+                console.log(this)
                 currentFileIteration++;
                 if (currentFileIteration < this.commandList.length)
                 {
-                    this.inputFileData = this.Files[commandList[currentFileIteration].fileId].data;
-                    this.runCommand(commandList[currentFileIteration].command);
-                    console.log('File number'+currentFileIteration-1+"Has finished to be in mp4");
-                    this.Elements[commandList[currentFileIteration].elementIdInTab].data = new Blob([file.data]);
+                    renderVar.inputFileData = renderVar.Files[commandList[currentFileIteration].id].data;
+                    renderVar.runCommand(commandList[currentFileIteration].command);
+                    console.log('File number'+parseInt(currentFileIteration-1)+"Has finished to be in mp4");
+                    renderVar.Elements[commandList[currentFileIteration].elementIdInTab].data = new Blob([file.data]);
                 }
 
             });

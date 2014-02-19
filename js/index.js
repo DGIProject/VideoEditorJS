@@ -9,6 +9,7 @@ var resizing = false;
 var pixelCalculateTime = {g: 0, d: 800};
 var context = document.getElementById('textRender').getContext('2d');
 var posX, posY;
+var renderVar;
 
 window.onmousemove = handleMouseMove;
 
@@ -662,8 +663,5 @@ window.onload = function (e) {
 
 function makeRender()
 {
-   var renderClass = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
-   renderClass.onProcessEnd = function(event){
-        console.log('ok perso');
-   }
+   renderVar = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
 }
