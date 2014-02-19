@@ -39,12 +39,13 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
                 //   new Blob([file.data]);
                 console.log(this)
                 currentFileIteration++;
+                console.log('File number'+parseInt(currentFileIteration-1)+"Has finished to be in mp4");
+                renderVar.Elements[commandList[parseInt(currentFileIteration-1)].elementIdInTab].data = new Blob([file.data]);
+
                 if (currentFileIteration < this.commandList.length)
                 {
                     renderVar.inputFileData = renderVar.Files[commandList[currentFileIteration].id].data;
                     renderVar.runCommand(commandList[currentFileIteration].command);
-                    console.log('File number'+parseInt(currentFileIteration-1)+"Has finished to be in mp4");
-                    renderVar.Elements[commandList[currentFileIteration].elementIdInTab].data = new Blob([file.data]);
                 }
 
             });
