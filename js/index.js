@@ -51,10 +51,20 @@ function addMultimediaFile()
 
         if(typeFile == 'image')
         {
-            var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), currentFile.src);
-            currentItem.setDuration('00:00:20');
+            var reader = new FileReader();
 
-            tabListFiles.push(currentItem);
+            reader.onload = function (e) {
+                var data = e.target.result;
+                var link = window.URL.createObjectURL(data);
+                var ElementData = new Uint8Array(data);
+
+                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), ElementData);
+                currentItem.setDuration('00:00:20');
+
+                tabListFiles.push(currentItem);
+            }
+
+            reader.readAsArrayBuffer(currentFile);
         }
         else
         {
@@ -106,7 +116,7 @@ function getTypeFile(fileName)
 
     var tabExtensionAudio = ['mp3', 'wav'];
     var tabExtensionVideo = ['avi', 'mp4'];
-    var tabExtensionImage = ['png', 'jpeg'];
+    var tabExtensionImage = ['png', 'jpg', 'jpeg'];
 
     if(tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1)
     {
