@@ -6,7 +6,7 @@ currentFileIteration = 0
 
 Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTracks)
 {
-    this.onProcessEnd ;
+    this.onProcessEnd;
     this.Elements = tabListElements;
     this.Files = tabListFiles;
     this.TextElements = tabListTextElements;

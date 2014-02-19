@@ -31,25 +31,13 @@ function newProject()
 function addMultimediaFile()
 {
     var currentFile = document.getElementById('fileLoader').files[0];
-    actionWorker = "getDurationFile"
-    var reader = new FileReader();
+    console.log(currentFile);
 
-    reader.onload = function (e) {
-        var data = e.target.result;
+    var typeFile = getTypeFile(currentFile.name);
+    console.log(typeFile);
 
-        var ElementData = new Uint8Array(data);
-
-        worker.postMessage({
-            type: "command",
-            arguments: ["-i", "fileInput"],
-            files: [
-                {
-                    "name": "fileInput",
-                    "data": ElementData
-                }
-            ]
-        });
-
+    if(typeFile != 'error')
+    {
         var newId;
 
         if(tabListFiles.length > 0)
@@ -61,18 +49,81 @@ function addMultimediaFile()
             newId = 0;
         }
 
-        var currentItem = new FileList(newId, 'audio/video', currentFile.size, currentFile.name, currentFile.name.split('.').pop(),ElementData)
-        console.log('currentItem ' + currentItem);
-        tabListFiles.push(currentItem);
+        if(typeFile == 'image')
+        {
+            var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), currentFile.src);
+            currentItem.setDuration('00:00:20');
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">audio/video</p></a>';
+            tabListFiles.push(currentItem);
+        }
+        else
+        {
+            actionWorker = "getDurationFile";
+            var reader = new FileReader();
 
-        showLoadingDiv();
+            reader.onload = function (e) {
+                var data = e.target.result;
+
+                var ElementData = new Uint8Array(data);
+
+                worker.postMessage({
+                    type: "command",
+                    arguments: ["-i", "fileInput"],
+                    files: [
+                        {
+                            "name": "fileInput",
+                            "data": ElementData
+                        }
+                    ]
+                });
+
+                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), ElementData);
+                console.log('currentItem ' + currentItem);
+                tabListFiles.push(currentItem);
+            }
+
+            reader.readAsArrayBuffer(currentFile);
+
+            showLoadingDiv();
+        }
+
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">' + typeFile + '</p></a>';
+    }
+    else
+    {
+        console.log('error');
     }
 
-    reader.readAsArrayBuffer(currentFile);
-
     stopAddFileToTrack();
+}
+
+function getTypeFile(fileName)
+{
+    console.log(fileName);
+
+    var extension = fileName.split('.').reverse()[0];
+    console.log(extension);
+
+    var tabExtensionAudio = ['mp3', 'wav'];
+    var tabExtensionVideo = ['avi', 'mp4'];
+    var tabExtensionImage = ['png', 'jpeg'];
+
+    if(tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1)
+    {
+        return 'audio';
+    }
+    else if(tabExtensionVideo.lastIndexOf(extension.toLowerCase()) != -1)
+    {
+        return 'video';
+    }
+    else if(tabExtensionImage.lastIndexOf(extension.toLowerCase()) != -1)
+    {
+        return 'image';
+    }
+    else
+    {
+        return 'error';
+    }
 }
 
 function newTextElement()
@@ -535,13 +586,13 @@ function handleMouseMove(event) {
         // var posX = event.clientX - offset
         console.log(event.clientX, event.clientY);
         var marginText = divElementSelectedForMove.style.marginLeft;
-        var newMargin = event.clientX - 400
-        console.log("maegN", newMargin, marginText)
+        var newMargin = event.clientX - 400;
+        console.log("maegN", newMargin, marginText);
         if (newMargin >= 0 || marginText >= 0) {
             console.log('scrrol', document.getElementById("VideoView").scrollLeft);
             divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
-            lastPosition.x = event.clientX
-            lastPosition.y = event.clientY
+            lastPosition.x = event.clientX;
+            lastPosition.y = event.clientY;
         }
 
     }
