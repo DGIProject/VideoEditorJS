@@ -55,7 +55,6 @@ function addMultimediaFile()
 
             reader.onload = function (e) {
                 var data = e.target.result;
-                var link = window.URL.createObjectURL(data);
                 var ElementData = new Uint8Array(data);
 
                 var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), ElementData);
@@ -97,7 +96,7 @@ function addMultimediaFile()
             showLoadingDiv();
         }
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">' + typeFile + '</p></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', ' + typeFile + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">' + typeFile + '</p></a>';
     }
     else
     {
@@ -221,7 +220,7 @@ function saveTextElement()
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + nameText + '</h4><p class="list-group-item-text">text</p></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + nameText + '</h4><p class="list-group-item-text">text</p></a>';
 }
 
 CanvasRenderingContext2D.prototype.clear =
@@ -238,21 +237,11 @@ CanvasRenderingContext2D.prototype.clear =
         }
     };
 
-function fileProperties(id)
+function fileProperties(id, type)
 {
     console.log('fileProperties');
 
     $('#selectFileLib').modal('show');
-
-    var type;
-
-    for(var i = 0; i < tabListFiles.length; i++)
-    {
-        if(tabListFiles[i].id == id)
-        {
-            type = tabListFiles[i].type;
-        }
-    }
 
     if(type == 'text')
     {
@@ -266,10 +255,10 @@ function fileProperties(id)
 
     document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
-    getInfoForFileId(id);
+    getInfoForFileId(id, type);
 }
 
-function getInfoForFileId(id, mode)
+function getInfoForFileId(id, type, mode)
 {
     if (mode == "JSon")
     {
@@ -281,10 +270,13 @@ function getInfoForFileId(id, mode)
         console.log(tabListFiles[id].fileName);
 
         document.getElementById('libFileName').innerHTML = tabListFiles[id].fileName;
-        document.getElementById('libFileSize').innerHTML = tabListFiles[id].size + " Octets";
+        document.getElementById('libFileSize').innerHTML = tabListFiles[id].size + ' Octets';
         document.getElementById('libFileFormat').innerHTML = tabListFiles[id].format;
         document.getElementById('libFileDuration').innerHTML = tabListFiles[id].duration;
-        document.getElementById('libFilePreview').innerHTML = '<img class="previewFileContent" src="' + tabListFiles[id].data + '">';
+
+        var preview = (type == 'text') ? tabListFiles[id].data : window.URL.createObjectURL(new Blob([tabListFiles[id].data]));
+
+        document.getElementById('libFilePreview').innerHTML = '<img class="previewFileContent" src="' + preview + '">';
     }
 }
 
@@ -394,9 +386,9 @@ function addTrack()
     newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
     newViewTrack.setAttribute("id", "ViewTrack" + tabListTracks.length);
     newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
-    videoView.appendChild(newViewTrack);
+    videoView.appendChild(newViewTrack)
 
-    var track = new Track(tabListTracks.length, 'Undefined', null);
+    var track = new Track(tabListTracks.length, 'Undefined');
     tabListTracks.push(track);
 }
 
@@ -477,7 +469,11 @@ function removeElementFromTrack(trackId, ElementId)
     var elementToDelete = document.getElementById("trackElementId" + tabListElements[ElementId].id);
     track.removeChild(elementToDelete);
     tabListElements.remove(ElementId);
+
     canMove = false;
+
+    tabListTracks[trackId].elementsId.remove(tabListTracks[trackId].elementsId.lastIndexOf(ElementId));
+
 }
 
 Array.prototype.remove = function(from, to) { var rest = this.slice((to || from) + 1 || this.length); this.length = from < 0 ? this.length + from : from; return this.push.apply(this, rest); };
@@ -529,7 +525,7 @@ function stopMoveElement()
 
 function addElement(id, idTrack)
 {
-    var info = getInfoForFileId(id, "JSon");
+    var info = getInfoForFileId(id, null, "JSon");
 
     var idElement;
 
@@ -542,9 +538,10 @@ function addElement(id, idTrack)
         idElement = 0;
     }
 
-    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id,idTrack);
+    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id);
 
     var actualTrack = document.getElementById("ViewTrack" + idTrack);
+    tabListTracks[idTrack].elementsId.push(idElement);
 
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");

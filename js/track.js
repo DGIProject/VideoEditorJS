@@ -1,8 +1,8 @@
-Track = function(id, name, fileName) {
+Track = function(id, name) {
     this.id = id;
     this.name = name;
-    this.fileName = fileName;
     this.volume = 0; // under 100
+    this.elementsId = [];
 }
 Track.prototype.changeName = function(newName)
 {

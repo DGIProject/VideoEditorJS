@@ -1,6 +1,6 @@
 oneSecond = 5; // in px
 
-Elements = function (id, name, initialDuration, fileId,trackId ) {
+Elements = function (id, name, initialDuration, fileId) {
     this.id = id;
     this.name = name;
     this.initialDuration = initialDuration; // in h:m:s
@@ -14,8 +14,6 @@ Elements = function (id, name, initialDuration, fileId,trackId ) {
     this.startTime = "0"; //in second
     this.startTimePx = 0;
     this.data = null;
-    this.trackId = trackId;
-
 }
 Elements.prototype.changeLength = function (newLength) {
     this.length = newLength;
