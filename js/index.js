@@ -542,7 +542,7 @@ function addElement(id, idTrack)
         idElement = 0;
     }
 
-    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id);
+    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id,idTrack);
 
     var actualTrack = document.getElementById("ViewTrack" + idTrack);
 
