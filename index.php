@@ -177,6 +177,20 @@
             </div>
         </div>
     </div>
+    <div id="loadingDivConvert" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" id="progressRender"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                    <span id="renderText" class="marginauto"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

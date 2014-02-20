@@ -39,14 +39,17 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
                 //   new Blob([file.data]);
                 console.log(this)
                 currentFileIteration++;
-                console.log('File number'+parseInt(currentFileIteration-1)+"Has finished to be in mp4");
+                console.log('File number '+parseInt(currentFileIteration-1)+" Has finished to be in mp4");
                 renderVar.Elements[commandList[parseInt(currentFileIteration-1)].elementIdInTab].data = new Blob([file.data]);
 
                 if (currentFileIteration < this.commandList.length)
                 {
                     renderVar.inputFileData = renderVar.Files[commandList[currentFileIteration].id].data;
                     renderVar.runCommand(commandList[currentFileIteration].command);
+
                 }
+                document.getElementById('renderText').innerHTML = parseInt(currentFileIteration+1) + "/"+commandList.length
+                document.getElementById('progressRender').style.width = parseInt(currentFileIteration+1)/commandList.length*100 + "px"
 
             });
         }
@@ -90,6 +93,11 @@ Render.prototype.prepareElement = function()
     //So we have the duration of the student video
 
    // this.runCommand('-help');
+    document.getElementById('renderText').innerHTML = parseInt(currentFileIteration+1) + "/"+commandList.length
+    document.getElementById('progressRender').style.width = parseInt(currentFileIteration+1)/commandList.length*100 + "%"
+
+    $("#loadingDivConvert").modal('show');
+
     this.inputFileData = this.Files[currentFileIteration].data;
     this.runCommand(commandList[currentFileIteration].command);
     //
