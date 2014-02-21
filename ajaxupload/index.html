@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HTML5 File Drag &amp; Drop API</title>
+<link rel="stylesheet" type="text/css" media="all" href="styles.css" />
+</head>
+<body>
+
+<h1>HTML5 File Drag &amp; Drop API</h1>
+
+<p>This is a demonstration of the HTML5 file drag &amp; drop API with asynchronous Ajax file uploads, graphical progress bars and progressive enhancement.</p>
+
+<p>For more information, please refer to:</p>
+<ul>
+<li><a href="http://www.sitepoint.com/html5-file-drag-and-drop/">How to Use HTML5 File Drag &amp Drop</a></li>
+<li><a href="http://www.sitepoint.com/html5-javascript-open-dropped-files">How to Open Dropped Files Using HTML5 and JavaScript</a></li>
+<li><a href="http://www.sitepoint.com/html5-ajax-file-upload">How to Asynchronously Upload Files Using HTML5 and Ajax</a></li>
+<li><a href="http://www.sitepoint.com/html5-javascript-file-upload-progress-bar">How to Create File Upload Progress Bars in HTML5 and JavaScript</a></li>
+</ul>
+
+
+<form id="upload" action="upload.php" method="POST" enctype="multipart/form-data">
+
+<fieldset>
+<legend>HTML File Upload</legend>
+
+<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+
+<div>
+	<label for="fileselect">Files to upload:</label>
+	<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+	<div id="filedrag">or drop files here</div>
+</div>
+
+<div id="submitbutton">
+	<button type="submit">Upload Files</button>
+</div>
+
+</fieldset>
+
+</form>
+
+<div id="progress"></div>
+
+<div id="messages">
+<p>Status Messages</p>
+</div>
+
+
+<h2>Disclaimer</h2>
+<p>The code was developed by <a href="http://twitter.com/craigbuckler">Craig Buckler</a> of <a href="http://optimalworks.net/">OptimalWorks.net</a> for <a href="http://sitepoint.com/">SitePoint.com</a>.</p>
+
+<p>This code can be <a href="http://blogs.sitepointstatic.com/examples/tech/filedrag/3/filedrag3.zip">downloaded and used</a> without any restrictions but please don't expect support! A link back to SitePoint.com is appreciated.</p>
+
+<script src="filedrag.js"></script>
+</body>
+</html>
