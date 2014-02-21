@@ -41,6 +41,8 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
                 currentFileIteration++;
                 console.log('File number '+parseInt(currentFileIteration-1)+" Has finished to be in mp4");
                 renderVar.Elements[commandList[parseInt(currentFileIteration-1)].elementIdInTab].data = new Blob([file.data]);
+                document.getElementById('renderText').innerHTML = parseInt(currentFileIteration+1) + "/"+commandList.length
+                document.getElementById('progressRender').style.width = parseInt(currentFileIteration+1)/commandList.length*100 + "px"
 
                 if (currentFileIteration < this.commandList.length)
                 {
@@ -48,8 +50,10 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
                     renderVar.runCommand(commandList[currentFileIteration].command);
 
                 }
-                document.getElementById('renderText').innerHTML = parseInt(currentFileIteration+1) + "/"+commandList.length
-                document.getElementById('progressRender').style.width = parseInt(currentFileIteration+1)/commandList.length*100 + "px"
+                else
+                {
+                  renderVar.makeTracksFile();
+                }
 
             });
         }
@@ -93,7 +97,7 @@ Render.prototype.prepareElement = function()
     //So we have the duration of the student video
 
    // this.runCommand('-help');
-    document.getElementById('renderText').innerHTML = parseInt(currentFileIteration+1) + "/"+commandList.length
+    document.getElementById('renderText').innerHTML ="Convertion de l'élément " + parseInt(currentFileIteration+1) + "/"+commandList.length
     document.getElementById('progressRender').style.width = parseInt(currentFileIteration+1)/commandList.length*100 + "%"
 
     $("#loadingDivConvert").modal('show');
@@ -143,4 +147,46 @@ Render.prototype.parseArguments = function(text) {
         }
     });
     return args;
+}
+Render.prototype.makeTracksFile = function()
+{
+
+    buildTrack = this.makeCommandTracks();
+
+    this.worker = new Worker("js/lib/worker.js");
+
+    this.worker.onmessage = function (event) {
+        var message = event.data;
+        if (message.type == "ready") {
+            isWorkerLoaded = true;
+        } else if (message.type == "stdout") {
+            console.log(message.data);
+            //outputElement.textContent += message.data + "\n";
+        } else if (message.type == "start") {
+            //outputElement.textContent = "Worker has received command\n";
+        } else if (message.type == "done") {
+            running = false;
+            var buffers = message.data;
+            if (buffers.length) {
+                //outputElement.className = "closed";
+            }
+            buffers.forEach(function(file) {
+                // filesElement.appendChild(getDownloadLink(file.data, file.name));
+                //   new Blob([file.data]);
+
+            });
+        }
+    };
+
+
+}
+Render.prototype.makeCommandTracks = function()
+{
+    for (i=0;i<this.Tracks.length;i++)
+    {
+        for (currentElement = 0;currentElement<this.Elements.length;currentElement++)
+        {
+
+        }
+    }
 }
