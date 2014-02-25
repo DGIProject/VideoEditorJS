@@ -2,7 +2,7 @@ var tabListFiles = [];
 var tabListTracks = [];
 var tabListElements = [];
 var tabListTextElements = [];
-var divElementSelectedForMove, canMove = false;
+var divElementSelectedForMove = {id: null, Object: null, trackId: null, elementListID: null}, canMove = false;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
@@ -530,7 +530,10 @@ function scroolAllTracks()
 
 function prepareMoveElement(elementListID)
 {
-    divElementSelectedForMove = document.getElementById("trackElementId" + tabListElements[elementListID].id);
+    divElementSelectedForMove.elementListID = elementListID;
+    divElementSelectedForMove.id = tabListElements[elementListID].id;
+    divElementSelectedForMove.trackId = tabListElements[elementListID].trackId;
+    divElementSelectedForMove.Object = document.getElementById("trackElementId" + tabListElements[elementListID].id);
     canMove = true;
     console.log('true!')
 }
@@ -539,14 +542,14 @@ function stopMoveElement()
 {
     canMove = false;
     console.log('false!');
-    if (parseInt(divElementSelectedForMove.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.style.maxWidth.replace('px', ''))) {
-        tabListElements[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.style.width.replace('px', '')));
+    if (parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.Object.style.maxWidth.replace('px', ''))) {
+        tabListElements[parseInt(divElementSelectedForMove.Objectid.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')));
     }
     else {
-        divElementSelectedForMove.style.width = divElementSelectedForMove.style.maxWidth;
+        divElementSelectedForMove.Object.style.width = divElementSelectedForMove.Object.style.maxWidth;
 
     }
-    tabListElements[parseInt(divElementSelectedForMove.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.style.marginLeft.replace('px', ''))
+    tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.Object.style.marginLeft.replace('px', ''))
 }
 
 function addElement(id, idTrack)
@@ -564,7 +567,7 @@ function addElement(id, idTrack)
         idElement = 0;
     }
 
-    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id);
+    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id, idTrack);
 
     var actualTrack = document.getElementById("ViewTrack" + idTrack);
     tabListTracks[idTrack].elementsId.push(idElement);
@@ -581,6 +584,7 @@ function addElement(id, idTrack)
     document.getElementById("textViewEditor" + idTrack).style.display = "none";
 
     actualTrack.appendChild(element);
+    console.log('------------------',element.offsetLeft,'-------------------------');
     tabListElements.push(ElementToAdd);
 }
 
@@ -619,7 +623,7 @@ function handleMouseMove(event) {
     if (canMove && !resizing) {
         //  var offset = divElementSelectedForMove.offsetLeft
         // var posX = event.clientX - offset
-        console.log(event.clientX, event.clientY);
+      /*  console.log(event.clientX, event.clientY);
         var marginText = divElementSelectedForMove.style.marginLeft;
         var newMargin = event.clientX - 400;
         console.log("maegN", newMargin, marginText);
@@ -628,7 +632,36 @@ function handleMouseMove(event) {
             divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
             lastPosition.x = event.clientX;
             lastPosition.y = event.clientY;
+        }*/
+
+        console.log(divElementSelectedForMove)
+        var elementIdFinded = tabListTracks[divElementSelectedForMove.trackId].elementsId.lastIndexOf(divElementSelectedForMove.elementListID);
+
+        if (elementIdFinded > 0)
+        {
+            console.log("shdfs")
+            var beforElement = document.getElementById("trackElementId"+parseInt(elementIdFinded-1));
+            var sizetoRemove = parseInt(beforElement.style.marginLeft.replace('px','')) + parseInt(beforElement.style.width.replace('px',''))
+            var positionInEditAeraX = event.clientX - (326 + sizetoRemove)  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
+
         }
+        else
+        {
+            var offsetElement = divElementSelectedForMove.Object.offsetLeft
+            var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
+            var positionInEditAeraX = event.clientX - 326  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
+        }
+
+
+        console.log(event.clientX, divElementSelectedForMove.Object.style.width.replace('px','')/2, offsetElement-326, offsetElement);
+
+        console.log(positionInEditAeraX);
+        if (actualMargin >= 0 || positionInEditAeraX >= 0)
+        {
+            divElementSelectedForMove.Object.style.marginLeft = document.getElementById("VideoView").scrollLeft + positionInEditAeraX + "px";
+        }
+
+
 
     }
 }
