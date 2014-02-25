@@ -8,43 +8,41 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <h1>VideoEditorJS</h1>
-        <div id="editor" class="well">
-            <div id="errors"></div>
-            <div class="toolbar">
-                <button onclick="newProject();" class="btn btn-default">New project</button>
-                <button onclick="addTrack();" class="btn btn-default">New track</button>
-                <button onclick="makeRender();" class="btn btn-default">Render</button>
-                <button class="btn btn-default" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                <a href="#" onclick="zoomMoins();"><span class="glyphicon glyphicon-zoom-out" ></span></a>
-                <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
-                <a href="#" onclick="zoomPlus();"><span class="glyphicon glyphicon-zoom-in"></span></a>
+<div class="container">
+    <h1>VideoEditorJS</h1>
+    <div id="editor">
+        <div id="errors"></div>
+        <div class="toolbar">
+            <button onclick="newProject();" class="btn btn-default">New project</button>
+            <button onclick="addTrack();" class="btn btn-default">New track</button>
+            <button onclick="makeRender();" class="btn btn-default">Render</button>
+            <button class="btn btn-default" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
+            <a href="#" onclick="zoomMoins();"><span class="glyphicon glyphicon-zoom-out" ></span></a>
+            <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
+            <a href="#" onclick="zoomPlus();"><span class="glyphicon glyphicon-zoom-in"></span></a>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col-md-9 chronologicalView pre">
+                <div class="timeTrack">
+                    <span class="timeLeft" id="startTime">0h0m0s</span>
+                    <span class="timeRight" id="endTime">0h2m40s</span>
+                </div>
+                <div id="tracks"></div>
+                <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
             </div>
-            </br>
-            <div class="row">
-                <div class="col-md-10 chronologicalView pre">
-                    <div class="timeTrack">
-                        <span class="timeLeft" id="startTime">0h0m0s</span>
-                        <span class="timeRight" id="endTime">0h2m40s</span>
-                    </div>
-                    <div id="tracks"></div>
-                    <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
+            <div class="col-md-2 filesList pre">
+                <span class="titleSize strong">Eléments</span>
+                </br>
+                <div class="toolbar">
+                    <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span> | <span class="glyphicon glyphicon-volume-up"></span> | <span class="glyphicon glyphicon-picture"></span></button>
+                    <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
+                    <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span></button>
+                    <button type="button" class="btn btn-block btn-danger" onclick="stopAddFileToTrack();" style="margin-top: 5px;display: none;" id="stopAddFileToTrackButton">STOP</button>
+                    <hr/>
+                    <div style="display: none;"><input type="file" onchange="addMultimediaFile();" id="fileLoader"/></div>
                 </div>
-                <div class="col-md-2 col-md-offset-1 filesList pre">
-                    <span class="titleSize strong">Eléments</span>
-                    </br>
-                    <div class="toolbar">
-                        <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span> | <span class="glyphicon glyphicon-volume-up"></span> | <span class="glyphicon glyphicon-picture"></span></button>
-                        <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
-                        <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span> Audio/Video</button>
-                        <button type="button" class="btn btn-block btn-danger" onclick="stopAddFileToTrack();" style="margin-top: 5px;display: none;" id="stopAddFileToTrackButton">STOP</button>
-                        <hr/>
-                        <div style="display: none;"><input type="file" onchange="addMultimediaFile();" id="fileLoader"/></div>
-                    </div>
-                    <div id="listFilesLib" class="list-group listFilesLib"></div>
-                </div>
+                <div id="listFilesLib" class="list-group listFilesLib"></div>
             </div>
         </div>
     </div>
@@ -122,26 +120,26 @@
                     <h4 class="modal-title" id="myModalLabel">Ajouter un élément texte</h4>
                 </div>
                 <div class="modal-body">
-                        <div class="row">
-                            <div class="col-xs-9 center">
-                                <canvas id="textRender" width="400px" height="300px" style="border: 1px solid #000000;"></canvas>
+                    <div class="row">
+                        <div class="col-xs-9 center">
+                            <canvas id="textRender" width="400px" height="300px" style="border: 1px solid #000000;"></canvas>
+                        </div>
+                        <div class="col-xs-3 center propertiesDivText">
+                            <div>
+                                Nom : <input class="form-control" onkeyup="verifyFieldTextElement();" id="nameText" type="text"><br/>
+                                Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
+                                Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
+                                Taille : <input class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" id="sizeText" type="range"><br/>
                             </div>
-                            <div class="col-xs-3 center propertiesDivText">
-                                <div>
-                                    Nom : <input class="form-control" onkeyup="verifyFieldTextElement();" id="nameText" type="text"><br/>
-                                    Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
-                                    Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
-                                    Taille : <input class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" id="sizeText" type="range"><br/>
-                                </div>
-                                <div>
-                                    Position :</br>
-                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(-5, 0);"><span class="glyphicon glyphicon-chevron-left"></span></button>
-                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, -5);"><span class="glyphicon glyphicon-chevron-up"></span></button>
-                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(5, 0);"><span class="glyphicon glyphicon-chevron-right"></span></button>
-                                    <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, 5);"><span class="glyphicon glyphicon-chevron-down"></span></button>
-                                </div>
+                            <div>
+                                Position :</br>
+                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(-5, 0);"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, -5);"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(5, 0);"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, 5);"><span class="glyphicon glyphicon-chevron-down"></span></button>
                             </div>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -192,7 +190,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script src="https://code.jquery.com/jquery.js"></script>

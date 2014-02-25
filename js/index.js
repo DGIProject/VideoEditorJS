@@ -23,14 +23,18 @@ function newProject()
     tracks.innerHTML = "";
     var videoView = document.getElementById("VideoView");
     videoView.innerHTML = "";
-    tabListTracks = []
-    tabListElements = []
+    tabListTracks = [];
+    tabListElements = [];
+
+    stopAddFileToTrack();
 }
 
 //FILE
 
 function addMultimediaFile()
 {
+    stopAddFileToTrack();
+
     var currentFile = document.getElementById('fileLoader').files[0];
     console.log(currentFile);
 
@@ -97,14 +101,16 @@ function addMultimediaFile()
             showLoadingDiv();
         }
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', ' + typeFile + ');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">' + typeFile + '</p></a>';
+        console.log('typeFile : ' + typeFile);
+
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">' + typeFile + '</p></a>';
     }
     else
     {
         console.log('error');
-    }
 
-    stopAddFileToTrack();
+        showError('error', 'Votre extension n\'est pas compatible avec VideoEditorJS.');
+    }
 }
 
 function getTypeFile(fileName)
@@ -140,6 +146,8 @@ function newTextElement()
 {
     console.log('newTextElement');
 
+    stopAddFileToTrack();
+
     $('#fileTextModal').modal('show');
 
     context.clear();
@@ -154,8 +162,6 @@ function newTextElement()
 
     posX = document.getElementById('textRender').width / 2;
     posY = document.getElementById('textRender').height / 2;
-
-    stopAddFileToTrack();
 }
 
 function writeTextToCanvas(x, y)
@@ -247,11 +253,17 @@ function fileProperties(id, type)
     if(type == 'text')
     {
         document.getElementById('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
+        document.getElementById('fileEditButton').style.display = '';
     }
-
-    if(type == 'image')
+    else if(type == 'image')
     {
         document.getElementById('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
+        document.getElementById('fileEditButton').style.display = '';
+    }
+    else
+    {
+        document.getElementById('fileEditButton').removeAttribute('onclick');
+        document.getElementById('fileEditButton').style.display = 'none';
     }
 
     document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
@@ -275,9 +287,22 @@ function getInfoForFileId(id, type, mode)
         document.getElementById('libFileFormat').innerHTML = tabListFiles[id].format;
         document.getElementById('libFileDuration').innerHTML = tabListFiles[id].duration;
 
-        var preview = (type == 'text') ? tabListFiles[id].data : window.URL.createObjectURL(new Blob([tabListFiles[id].data]));
+        var preview;
 
-        document.getElementById('libFilePreview').innerHTML = '<img class="previewFileContent" src="' + preview + '">';
+        if(type == 'text')
+        {
+            preview = '<img class="previewFileContent" src="' + tabListFiles[id].data + '">';
+        }
+        else if(type == 'image')
+        {
+            preview = '<img class="previewFileContent" src="' + window.URL.createObjectURL(new Blob([tabListFiles[id].data])) + '">';
+        }
+        else
+        {
+            preview = 'Non disponible';
+        }
+
+        document.getElementById('libFilePreview').innerHTML = preview;
     }
 }
 
@@ -349,7 +374,7 @@ function saveEditFileText(id)
 
 function editFileImage(id)
 {
-
+    console.log('editFileImage');
 }
 
 function removeFile(id)
@@ -387,7 +412,7 @@ function addTrack()
     newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
     newViewTrack.setAttribute("id", "ViewTrack" + tabListTracks.length);
     newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
-    videoView.appendChild(newViewTrack)
+    videoView.appendChild(newViewTrack);
 
     var track = new Track(tabListTracks.length, 'Undefined');
     tabListTracks.push(track);
@@ -561,6 +586,8 @@ function addElement(id, idTrack)
 
 function newRecord()
 {
+    stopAddFileToTrack();
+
     document.getElementById('chooseRecordButtons').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
     document.getElementById('audioRecord').style.display = 'none';
