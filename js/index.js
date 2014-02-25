@@ -10,6 +10,7 @@ var pixelCalculateTime = {g: 0, d: 800};
 var context = document.getElementById('textRender').getContext('2d');
 var posX, posY;
 var renderVar;
+var errorId = 0;
 
 window.onmousemove = handleMouseMove;
 
@@ -722,4 +723,33 @@ window.onload = function (e) {
 function makeRender()
 {
    renderVar = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
+}
+
+function showError(type, text)
+{
+    var id = errorId;
+
+    console.log('showError');
+
+    var errors = document.getElementById('errors');
+
+    var error = document.createElement('div');
+    error.setAttribute('id', 'error' + errorId);
+    error.setAttribute('class', 'alert alert-danger fade in');
+    error.innerHTML = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error :</strong> ' + text + '';
+
+    errors.appendChild(error);
+
+    var timeOut = setTimeout(function(){hideError(id)}, 10000);
+
+    errorId++;
+}
+
+function hideError(id)
+{
+    console.log('hideError');
+
+    console.log(id);
+
+    $('#error' + id).alert('close');
 }

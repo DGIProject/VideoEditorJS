@@ -12,6 +12,7 @@
     <div class="col-md-10 col-md-offset-1">
         <h1>VideoEditorJS</h1>
         <div id="editor" class="well">
+            <div id="errors"></div>
             <div class="toolbar">
                 <button onclick="newProject();" class="btn btn-default">New project</button>
                 <button onclick="addTrack();" class="btn btn-default">New track</button>
