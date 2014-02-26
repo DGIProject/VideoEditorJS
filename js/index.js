@@ -543,7 +543,7 @@ function stopMoveElement()
     canMove = false;
     console.log('false!');
     if (parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.Object.style.maxWidth.replace('px', ''))) {
-        tabListElements[parseInt(divElementSelectedForMove.Objectid.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')));
+        tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')));
     }
     else {
         divElementSelectedForMove.Object.style.width = divElementSelectedForMove.Object.style.maxWidth;
