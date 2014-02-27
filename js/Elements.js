@@ -15,6 +15,7 @@ Elements = function (id, name, initialDuration, fileId,trackId) {
     this.startTimePx = 0;
     this.data = null;
     this.trackId = trackId;
+    this.offset = null;
 }
 Elements.prototype.changeLength = function (newLength) {
     this.length = newLength;
@@ -61,7 +62,7 @@ Elements.prototype.actualiseLenght = function () {
 Elements.prototype.calculateMaxLenght = function () {
     return this.getDurationInSecondFromffmpegFormat() * oneSecond
 }
-Elements.prototype.resize = function(newLenth){
+Elements.prototype.resize = function(newLenth, offset){
     var numberSecond = Math.floor(newLenth / oneSecond);
     var convertedTime = new Date();
     convertedTime.setTime(numberSecond * 1000);
@@ -69,6 +70,8 @@ Elements.prototype.resize = function(newLenth){
     this.currentDuration = timeStr;
     console.log(timeStr);
     this.length = this.calculateLenght();
+    this.offset = offset;
+    console.log('offset = '+this.offset);
 }
 Elements.prototype.setMarginX = function (marginPx){
     this.marginXpx = marginPx;
