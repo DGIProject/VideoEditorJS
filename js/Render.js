@@ -6,7 +6,6 @@ currentFileIteration = 0
 
 Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTracks)
 {
-    this.onProcessEnd;
     this.Elements = tabListElements;
     this.Files = tabListFiles;
     this.TextElements = tabListTextElements;
@@ -17,9 +16,9 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
     this.currentFileIteration =0;
     this.inputFileData = null;
     commandList = [];
-    this.worker = new Worker("js/lib/worker.js");
+ //   this.worker = new Worker("js/lib/worker.js");
 
-    this.worker.onmessage = function (event) {
+ /*   this.worker.onmessage = function (event) {
         var message = event.data;
         if (message.type == "ready") {
             isWorkerLoaded = true;
@@ -57,7 +56,7 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
 
             });
         }
-    };
+    };*/
     this.prepareElement();
 }
 Render.prototype.prepareElement = function()
@@ -92,7 +91,7 @@ Render.prototype.prepareElement = function()
     var timeStr = convertedTime.getHours()-1+':'+convertedTime.getMinutes()+':'+convertedTime.getSeconds();
     this.videoDuration = timeStr;
 
-    this.makeRenderCommandList();
+   // this.makeRenderCommandList();
 
     //So we have the duration of the student video
 
@@ -103,21 +102,10 @@ Render.prototype.prepareElement = function()
     $("#loadingDivConvert").modal('show');
 
     this.inputFileData = this.Files[currentFileIteration].data;
-    this.runCommand(commandList[currentFileIteration].command);
+   // this.runCommand(commandList[currentFileIteration].command);
     //
     console.log(this)
 
-}
-Render.prototype.makeRenderCommandList = function(){
-    var listCommand = [];
-
-    for (i=0;i<this.Elements.length;i++)
-    {
-        var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(this.Elements[i].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
-        listCommand.push({command:tempCommand,id:this.Elements[i].fileId,elementIdInTab:i});
-    }
-
-    commandList = listCommand;
 }
 Render.prototype.runCommand = function(text) {
         running = true;
@@ -182,11 +170,61 @@ Render.prototype.makeTracksFile = function()
 }
 Render.prototype.makeCommandTracks = function()
 {
+    // Elements
+    var listCommand = [];
+    var px = 0;
+    var continuer = 0;
+    var infoElements = [];
+    var noncollee = 0;
+
     for (i=0;i<this.Tracks.length;i++)
     {
-        for (currentElement = 0;currentElement<this.Elements.length;currentElement++)
+        for (y=0;y<this.Tracks[i].elementsId.length;y++)
         {
+            if(y+1 >= this.Tracks[i].elementsId.length)
+            {
 
+            }
+            else
+            {
+                var curentElement = this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length;
+                var afterElement = this.Elements[this.Tracks[i].elementsId[y+1]].offset ;
+
+                console.log("current Element", curentElement)
+                console.log("afterElement", afterElement)
+
+                if (curentElement == afterElement)
+                {
+                  console.log("Collée au lélémoent d'apres...")
+                    var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(this.Elements[this.Tracks[i].elementsId[y]].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
+                    listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length})
+
+                }
+                else
+                {
+
+                    var espace  = afterElement - curentElement
+
+                    var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(this.Elements[this.Tracks[i].elementsId[y]].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
+                    listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length})
+
+                    console.log("non Collé  !!!! Il y a un espace de ",espace," px soit ", Math.ceil(espace/oneSecond), "secondes");
+
+                    var tempCommand = "-i blockImage -strict -2 -t "+ Math.ceil(espace/oneSecond) +" black"+noncollee+".mp4"
+                    listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + espace})
+
+
+                    noncollee++;
+                }
+            }
         }
+
     }
+    console.log(listCommand);
+    console.log(infoElements)
+    console.log("il y a ",noncollee,"element non collé");
+    //commandList = listCommand;
 }
