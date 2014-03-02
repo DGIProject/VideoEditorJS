@@ -15,7 +15,10 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
 
     this.currentFileIteration =0;
     this.inputFileData = null;
+    //this.blackImageData = this.retrieveBlackImage();
+    this.filesToConcat = []
     commandList = [];
+
  //   this.worker = new Worker("js/lib/worker.js");
 
  /*   this.worker.onmessage = function (event) {
@@ -139,7 +142,7 @@ Render.prototype.parseArguments = function(text) {
 Render.prototype.makeTracksFile = function()
 {
 
-    buildTrack = this.makeCommandTracks();
+    this.makeCommandTracks();
 
     this.worker = new Worker("js/lib/worker.js");
 
@@ -171,10 +174,10 @@ Render.prototype.makeTracksFile = function()
 Render.prototype.makeCommandTracks = function()
 {
     // Elements
-    var listCommand = [];
+    this.listCommand = [];
     var px = 0;
     var continuer = 0;
-    var infoElements = [];
+    this.infoElements = [];
     var noncollee = 0;
 
     for (i=0;i<this.Tracks.length;i++)
@@ -197,8 +200,8 @@ Render.prototype.makeCommandTracks = function()
                 {
                   console.log("Collée au lélémoent d'apres...")
                     var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(this.Elements[this.Tracks[i].elementsId[y]].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
-                    listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
-                    infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length})
+                    this.listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    this.infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length})
 
                 }
                 else
@@ -207,14 +210,20 @@ Render.prototype.makeCommandTracks = function()
                     var espace  = afterElement - curentElement
 
                     var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(this.Elements[this.Tracks[i].elementsId[y]].getStartTimeFromStartLenth()) +" -t "+ parseInt(this.Elements[i].getDurationInSecondFromCurrentDuration() - this.Elements[i].startTime) +" "+this.Elements[i].id+".mp4"
-                    listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
-                    infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length})
+                    this.listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    this.infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length})
 
                     console.log("non Collé  !!!! Il y a un espace de ",espace," px soit ", Math.ceil(espace/oneSecond), "secondes");
 
                     var tempCommand = "-i blockImage -strict -2 -t "+ Math.ceil(espace/oneSecond) +" black"+noncollee+".mp4"
-                    listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
-                    infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset, end:this.Elements[this.Tracks[i].elementsId[y]].offset + espace})
+
+                    var blackElement = new Elements(this.Elements.length,'black'+noncollee+".mp4","00:00:00",null,i);
+                    blackElement.resize(espace,this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length);
+
+                    this.Elements.push(blackElement);
+
+                    this.listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    this.infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length, end:this.Elements[this.Tracks[i].elementsId[y]].offset + espace})
 
 
                     noncollee++;
@@ -223,8 +232,23 @@ Render.prototype.makeCommandTracks = function()
         }
 
     }
-    console.log(listCommand);
-    console.log(infoElements)
+    console.log(this.listCommand);
+    console.log(this.infoElements);
+    console.log(this.Elements);
     console.log("il y a ",noncollee,"element non collé");
     //commandList = listCommand;
+}
+Render.prototype.retrieveBlackImage = function() {
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", "blackElement.png", true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function (oEvent) {
+        var arrayBuffer = oReq.response;
+        if (arrayBuffer) {
+            this.blackImageData = new Uint8Array(arrayBuffer);
+        }
+    };
+
+    oReq.send(null);
 }
