@@ -35,7 +35,7 @@
                 <span class="titleSize strong">Eléments</span>
                 </br>
                 <div class="toolbar">
-                    <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-facetime-video"></span> | <span class="glyphicon glyphicon-volume-up"></span> | <span class="glyphicon glyphicon-picture"></span></button>
+                    <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-file"></span></button>
                     <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
                     <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span></button>
                     <button type="button" class="btn btn-block btn-danger" onclick="stopAddFileToTrack();" style="margin-top: 5px;display: none;" id="stopAddFileToTrackButton">STOP</button>

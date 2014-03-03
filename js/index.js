@@ -401,16 +401,16 @@ function removeFile(id)
 function addTrack()
 {
     var tracks = document.getElementById('tracks');
-    var videoView = document.getElementById("VideoView");
+    var videoView = document.getElementById('VideoView');
     var newTrack = document.createElement('div');
     var newViewTrack = document.createElement('div');
-    newTrack.setAttribute("class", "singleTrack");
-    newTrack.setAttribute("id", "track" + tabListTracks.length);
+    newTrack.setAttribute('class', 'singleTrack');
+    newTrack.setAttribute('id', 'track' + tabListTracks.length);
     newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
-    newViewTrack.setAttribute("class", "singleTrack sizeViewEditorTrack");
-    newViewTrack.setAttribute("id", "ViewTrack" + tabListTracks.length);
+    newViewTrack.setAttribute('class', 'singleTrack');
+    newViewTrack.setAttribute('id', 'ViewTrack' + tabListTracks.length);
     newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
 
@@ -421,9 +421,9 @@ function addTrack()
 function deleteTrack(id)
 {
     var tracks = document.getElementById('tracks');
-    var videoView = document.getElementById("VideoView");
-    var trackToDelete = document.getElementById("track" + id);
-    var ViewTrackToDelete = document.getElementById("ViewTrack" + id);
+    var videoView = document.getElementById('VideoView');
+    var trackToDelete = document.getElementById('track' + id);
+    var ViewTrackToDelete = document.getElementById('ViewTrack' + id);
     videoView.removeChild(ViewTrackToDelete);
     tracks.removeChild(trackToDelete);
 
