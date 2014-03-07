@@ -100,10 +100,18 @@ function addMultimediaFile()
 
             showLoadingDiv();
         }
-
+        var iconeName = ""
         console.log('typeFile : ' + typeFile);
+        if (typeFile == "text")
+        iconeName = "glyphicon-text-width"
+        else if (typeFile == "audio")
+        iconeName = "glyphicon-music"
+        else if (typeFile == "video")
+        iconeName = "glyphicon-film"
+        else
+        iconeName = "glyphicon-file"
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + currentFile.name + '</h4><p class="list-group-item-text">' + typeFile + '</p></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4></a>';
     }
     else
     {
@@ -120,9 +128,9 @@ function getTypeFile(fileName)
     var extension = fileName.split('.').reverse()[0];
     console.log(extension);
 
-    var tabExtensionAudio = ['mp3', 'wav'];
-    var tabExtensionVideo = ['avi', 'mp4'];
-    var tabExtensionImage = ['png', 'jpg', 'jpeg'];
+    var tabExtensionAudio = ['mp3', 'wav','wmv'];
+    var tabExtensionVideo = ['avi', 'mp4','wma','flv'];
+    var tabExtensionImage = ['png', 'jpg', 'jpeg','gif'];
 
     if(tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1)
     {
@@ -227,7 +235,7 @@ function saveTextElement()
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading">' + nameText + '</h4><p class="list-group-item-text">text</p></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + nameText + '</h4></a>';
 }
 
 CanvasRenderingContext2D.prototype.clear =

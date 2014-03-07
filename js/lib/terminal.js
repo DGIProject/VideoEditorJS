@@ -107,13 +107,8 @@ function initWorker() {
       isWorkerLoaded = true;
       /*worker.postMessage({
         type: "command",
-        arguments: ["-i","input.webm"],
-          files: [
-              {
-                  "name": "input.webm",
-                  "data": sampleVideoData
-              }
-          ]
+        arguments: ["-help"],
+          files: []
       });*/
     } else if (message.type == "stdout") {
 		console.log(message.data);
@@ -124,7 +119,7 @@ function initWorker() {
         }
       //outputElement.textContent += message.data + "\n";
     } else if (message.type == "start") {
-      //outputElement.textContent = "Worker has received command\n";
+      console.log("Worker has received command\n");
     } else if (message.type == "done") {
         stopRunning();
         hideLoadingDiv();
