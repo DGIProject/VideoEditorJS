@@ -667,7 +667,7 @@ function handleMouseMove(event) {
             console.log("extremit = ", extremitBeforElementOffset)
 			var offsetElement = divElementSelectedForMove.Object.offsetLeft
             var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
-            var positionInEditAeraX = event.clientX - extremitBeforElementOffset - divElementSelectedForMove.Object.style.width.replace('px','')/2;
+            var positionInEditAeraX = event.clientX - extremitBeforElementOffset - divElementSelectedForMove.Object.style.width.replace('px','')/2 - document.getElementById("VideoView").scrollLeft;
             console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
 
 /*             var beforElement = $("#trackElementId"+parseInt(elementIdFinded-1));
