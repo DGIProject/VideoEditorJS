@@ -15,7 +15,7 @@ Render = function(tabListElements,tabListFiles,tabListTextElements, tabListTrack
 
     this.currentFileIteration =0;
     this.inputFileData = null;
-    //this.blackImageData = this.retrieveBlackImage();
+    this.blackImageData = this.retrieveBlackImage();
     this.filesToConcat = []
     commandList = [];
 

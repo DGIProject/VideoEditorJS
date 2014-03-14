@@ -418,6 +418,7 @@ function addTrack()
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
+    newViewTrack.setAttribute('style','width: 1000px;');
     newViewTrack.setAttribute('id', 'ViewTrack' + tabListTracks.length);
     newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
@@ -601,11 +602,10 @@ function addElement(id, idTrack)
     document.getElementById("textViewEditor" + idTrack).style.display = "none";
 
     actualTrack.appendChild(element);
-    ElementToAdd.offset = document.getElementById(element.id).offsetLeft
-    console.log('------------------',element.offsetLeft,'-------------------------');
+    ElementToAdd.offset = $("#"+element.id).offset().left
+    console.log('------------------',ElementToAdd.offset,'-------------------------');
     tabListElements.push(ElementToAdd);
 }
-
 function newRecord()
 {
     stopAddFileToTrack();
@@ -653,28 +653,41 @@ function handleMouseMove(event) {
         }*/
 
         console.log(divElementSelectedForMove)
-        var elementIdFinded = tabListTracks[divElementSelectedForMove.trackId].elementsId.lastIndexOf(divElementSelectedForMove.elementListID);
+        var elementsIdCurrentTrack = tabListTracks[divElementSelectedForMove.trackId].elementsId;
+        console.log(elementsIdCurrentTrack)
+        var posInTabListElements = elementsIdCurrentTrack.lastIndexOf(divElementSelectedForMove.elementListID)
+        var elementIdFinded = elementsIdCurrentTrack[posInTabListElements]
         console.log(elementIdFinded, "Nous avons trouvé !!!!")
-        if (elementIdFinded > 0)
+        var offsetWindow = $("#VideoView").offset().left
+        if (posInTabListElements > 0)
         {
+            var beforElement = $("#trackElementId"+parseInt(posInTabListElements-1));
+            console.log(beforElement.offset().left, event.clientX)
+            var extremitBeforElementOffset = beforElement.offset().left + beforElement.width();
+            console.log("extremit = ", extremitBeforElementOffset)
+			var offsetElement = divElementSelectedForMove.Object.offsetLeft
+            var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
+            var positionInEditAeraX = event.clientX - extremitBeforElementOffset - divElementSelectedForMove.Object.style.width.replace('px','')/2;
+            console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
 
-            var beforElement = document.getElementById("trackElementId"+parseInt(elementIdFinded-1));
-            var sizetoRemove = parseInt(beforElement.offsetLeft)- 200 + parseInt(beforElement.style.width.replace('px',''))
-            var positionInEditAeraX = event.clientX - (326 + sizetoRemove)  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
-            console.log("margin calculated !", sizetoRemove, positionInEditAeraX)
+/*             var beforElement = $("#trackElementId"+parseInt(elementIdFinded-1));
+            var sizetoRemove = beforElement.position().left + beforElement.width()
+            var positionInEditAeraX = event.clientX - (offsetWindow )  + ($(divElementSelectedForMove.Object.id).width()/2);
+            console.log("margin calculated !", sizetoRemove, offsetWindow, positionInEditAeraX, beforElement.position().left);
+
+            var currentLenthTrack = document.getElementById('ViewTrack'+divElementSelectedForMove.trackId).style.width.replace('px',''); */
         }
         else
         {
             var offsetElement = divElementSelectedForMove.Object.offsetLeft
             var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
-            var positionInEditAeraX = event.clientX - 326  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
+            var positionInEditAeraX = event.clientX - offsetWindow  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
             console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
         }
         if (actualMargin >= 0 || positionInEditAeraX >= 0)
         {
             divElementSelectedForMove.Object.style.marginLeft = document.getElementById("VideoView").scrollLeft + positionInEditAeraX + "px";
         }
-
 
 
     }

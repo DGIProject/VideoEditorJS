@@ -22,8 +22,8 @@
             <a href="#" onclick="zoomPlus();"><span class="glyphicon glyphicon-zoom-in"></span></a>
         </div>
         </br>
-        <div class="row">
-            <div class="col-md-9 chronologicalView pre">
+        <div class="row" id="globalEdit"">
+            <div class="col-md-9 chronologicalView well" id="offsetBlank">
                 <div class="timeTrack">
                     <span class="timeLeft" id="startTime">0h0m0s</span>
                     <span class="timeRight" id="endTime">0h2m40s</span>
@@ -31,7 +31,7 @@
                 <div id="tracks"></div>
                 <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
             </div>
-            <div class="col-md-2 filesList pre">
+            <div class="col-md-2 filesList well">
                 <span class="titleSize strong">Eléments</span>
                 </br>
                 <div class="toolbar">
