@@ -153,6 +153,7 @@
 {
     height: 550px;
     margin-left: 10px;
+    min-width: 204px;
 }
 
 .center

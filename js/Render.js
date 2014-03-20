@@ -180,7 +180,7 @@ Render.prototype.makeCommandTracks = function()
     this.infoElements = [];
     var noncollee = 0;
 
-    for (i=0;i<this.Tracks.length;i++)
+  /*  for (i=0;i<this.Tracks.length;i++)
     {
         for (y=0;y<this.Tracks[i].elementsId.length;y++)
         {
@@ -221,13 +221,98 @@ Render.prototype.makeCommandTracks = function()
                     blackElement.resize(espace,this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length);
 
                     this.Elements.push(blackElement);
+                    console.log(this.Elements);
 
                     this.listCommand.push({command:tempCommand,fileId:this.Elements[this.Tracks[i].elementsId[y]].fileId,elementIdInTab:this.Tracks[i].elementsId[y]});
+                    console.log('OK');
                     this.infoElements.push({start:this.Elements[this.Tracks[i].elementsId[y]].offset + this.Elements[this.Tracks[i].elementsId[y]].length, end:this.Elements[this.Tracks[i].elementsId[y]].offset + espace})
 
 
                     noncollee++;
                 }
+            }
+        }
+
+    } */
+
+    // Pour chaque piste
+    for (trackIteration = 0; trackIteration< this.Tracks.length; trackIteration++)
+    {
+       trackElements = this.Tracks[trackIteration].elementsId;
+       console.log('ELement de la piste: ',trackElements);
+       noncollee = 0;
+       //Pour chaque element de la piste
+        for (elementTrackIteration = 0 ; elementTrackIteration<trackElements.length;elementTrackIteration++)
+        {
+            currentElementIdFromTrack = trackElements[elementTrackIteration];
+            currentElement = this.Elements[currentElementIdFromTrack];
+            console.log("Current Element", currentElement)
+            // On test si c'est pas le dernier element
+            console.log("current ELement ID from track : ",currentElementIdFromTrack)
+
+            if (elementTrackIteration+1 < trackElements.length)
+            {
+                nextElementId  = trackElements[elementTrackIteration+1];
+                nextElement = this.Elements[nextElementId];
+                console.log("Element suivant ID: ", nextElementId, nextElement);
+
+                startPosNextElement = nextElement.offset
+                endPosCurrentElement = currentElement.offset+currentElement.length
+
+                console.log("Position Element : Start next:", startPosNextElement, "End current : ", endPosCurrentElement)
+                if (startPosNextElement == endPosCurrentElement)
+                {
+                    // Si les éléments sont collé ...
+                    console.log("l'element collé !!! ");
+
+                    var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(currentElement.getStartTimeFromStartLenth()) +" -t "+ parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) +" "+currentElement.id+".mp4"
+                    this.listCommand.push({command:tempCommand,fileId:currentElement.fileId,elementIdInTab:currentElementIdFromTrack});
+                    this.infoElements.push({start:currentElement.offset, end:currentElement.offset + currentElement.length})
+
+                }
+                else
+                {
+                    // Si deux element ne sont pas colle
+                    console.log("l'element non collé !!! ");
+                    // on crée un element fictif qui va correcpondre a une image noire.
+                    // 1) on calcule la longueur en pixel :
+
+                    ecart = endPosCurrentElement - startPosNextElement
+                    durre = Math.ceil(ecart/oneSecond);
+
+                    console.log("Il y a un ecart de ", ecart," pixels soit ",durre, " secondes");
+
+                    // on ajoute le fichier d'avant
+                    var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(currentElement.getStartTimeFromStartLenth()) +" -t "+ parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) +" "+currentElement.id+".mp4"
+                    this.listCommand.push({command:tempCommand,fileId:currentElement.fileId,elementIdInTab:currentElementIdFromTrack});
+                    this.infoElements.push({start:currentElement.offset, end:currentElement.offset + currentElement.length})
+
+                    var blackElement = new Elements(this.Elements.length,'black'+noncollee+".mp4","00:00:00",null,trackIteration);
+                    blackElement.resize(ecart,endPosCurrentElement);
+
+                    this.Elements.push(blackElement);
+                    console.log("Liste de tout les elements : ",this.Elements);
+
+                    //On ajoute l'element noir ...
+
+                    var tempCommand = "-i blockImage -strict -2 -t "+ Math.ceil(ecart/oneSecond) +" black"+noncollee+".mp4"
+                    this.listCommand.push({command:tempCommand,fileId:this.Elements[this.Elements.length-1].fileId,elementIdInTab:this.Elements[this.Elements.length-1]});
+                    this.infoElements.push({start:endPosCurrentElement, end:endPosCurrentElement + blackElement.length})
+
+                    noncollee++;
+                }
+
+            }
+            else
+            {
+                // cela veux dire que c'est le dernier !
+                console.log("C'est le dernier avec Iteration ", elementTrackIteration);
+
+                //Ajout des information pour générer les fichier qui correspondent
+                var tempCommand = "-i fileInput -strict -2 -ss "+ parseInt(currentElement.getStartTimeFromStartLenth()) +" -t "+ parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) +" "+currentElement.id+".mp4"
+                this.listCommand.push({command:tempCommand,fileId:currentElement.fileId,elementIdInTab:currentElementIdFromTrack});
+                this.infoElements.push({start:currentElement.offset, end:currentElement.offset + currentElement.length})
+
             }
         }
 
@@ -240,7 +325,7 @@ Render.prototype.makeCommandTracks = function()
 }
 Render.prototype.retrieveBlackImage = function() {
     var oReq = new XMLHttpRequest();
-    oReq.open("GET", "blackElement.png", true);
+    oReq.open("GET", "img/blackElement.png", true);
     oReq.responseType = "arraybuffer";
 
     oReq.onload = function (oEvent) {
