@@ -28,7 +28,6 @@ function newProject()
 
     stopAddFileToTrack();
 }
-
 //FILE
 
 function addMultimediaFile()
@@ -209,7 +208,6 @@ function saveTextElement()
 {
     var image = new Image();
     image.src = document.getElementById('textRender').toDataURL("image/png");
-
     var newId;
 
     if(tabListFiles.length > 0)
@@ -228,14 +226,25 @@ function saveTextElement()
 
     var currentTextElement = new TextElement(newId, nameText, contentText, colorText, sizeText, {x: posX, y: posY});
     tabListTextElements.push(currentTextElement);
-
-    var currentItem = new FileList(newId, 'text', 0, nameText, 'tl', image.src);
+    var arrayBuffer = base64ToArrayBuffer(image.src.replace(/^data:image\/(png|jpg);base64,/, ""));
+    console.log(new Uint8Array(arrayBuffer))
+    var currentItem = new FileList(newId, 'text', 0, nameText, 'tl', new Uint8Array(arrayBuffer));
     currentItem.setDuration('00:00:20');
 
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
 
     document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + nameText + '</h4></a>';
+}
+function base64ToArrayBuffer(string_base64) {
+    var binary_string = window.atob(string_base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        var ascii = binary_string.charCodeAt(i);
+        bytes[i] = ascii;
+    }
+    return bytes.buffer;
 }
 
 CanvasRenderingContext2D.prototype.clear =
@@ -297,11 +306,7 @@ function getInfoForFileId(id, type, mode)
 
         var preview;
 
-        if(type == 'text')
-        {
-            preview = '<img class="previewFileContent" src="' + tabListFiles[id].data + '">';
-        }
-        else if(type == 'image')
+        if(type == 'image' || type == 'text')
         {
             preview = '<img class="previewFileContent" src="' + window.URL.createObjectURL(new Blob([tabListFiles[id].data])) + '">';
         }
