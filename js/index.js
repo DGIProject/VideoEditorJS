@@ -111,6 +111,36 @@ function addMultimediaFile()
         iconeName = "glyphicon-file"
 
         document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4></a>';
+
+        var fd = new FormData();
+        fd.append('uf', currentFile);
+        var xhr = new XMLHttpRequest();
+        xhr.file = currentFile; // not necessary if you create scopes like this
+        xhr.addEventListener('progress', function(e) {
+
+            var done = e.position || e.loaded,
+                total = e.totalSize || e.total;
+            console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+        }, false);
+        if (xhr.upload) {
+            xhr.upload.onprogress = function(e) {
+                var done = e.position || e.loaded,
+                    total = e.totalSize || e.total;
+
+                console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+            };
+        }
+        xhr.onreadystatechange = function(e) {
+            if (4 == this.readyState) {
+                console.log('xhr upload complete ' + this.responseText);
+                if (this.responseText != "success") {
+                    alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
+                }
+            }
+        };
+        xhr.open('post', "http://clangue.net/testVideo/uploadFile.php?w=19&u=AZE&fileID="+newId, true);
+        xhr.send(fd);
     }
     else
     {
@@ -226,6 +256,7 @@ function saveTextElement()
 
     var currentTextElement = new TextElement(newId, nameText, contentText, colorText, sizeText, {x: posX, y: posY});
     tabListTextElements.push(currentTextElement);
+
     var arrayBuffer = base64ToArrayBuffer(image.src.replace(/^data:image\/(png|jpg);base64,/, ""));
     console.log(new Uint8Array(arrayBuffer))
     var currentItem = new FileList(newId, 'text', 0, nameText, 'tl', new Uint8Array(arrayBuffer));
@@ -233,6 +264,24 @@ function saveTextElement()
 
     console.log('currentItem ' + currentItem);
     tabListFiles.push(currentItem);
+
+    var OAjax;
+
+    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+    OAjax.open('POST', "uploadPngTitle.php?w=19&u=AZE", true);
+    OAjax.onreadystatechange = function() {
+        if (OAjax.readyState == 4 && OAjax.status == 200) {
+            console.log(OAjax.responseText);
+
+            if (OAjax.responseText == 'true') {
+                location.href = 'index';
+            }
+        }
+    }
+
+    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    OAjax.send("imageDataURL=" + document.getElementById('textRender').toDataURL("image/png") + "&nameID=" + newId);
 
     document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + nameText + '</h4></a>';
 }
