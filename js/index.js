@@ -28,6 +28,7 @@ function newProject()
 
     stopAddFileToTrack();
 }
+
 //FILE
 
 function addMultimediaFile()
@@ -110,7 +111,7 @@ function addMultimediaFile()
         else
         iconeName = "glyphicon-file"
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4><div id="divProgressFile' + newId + '" class="progress"><div id="progressFile' + newId + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></a>';
 
         var fd = new FormData();
         fd.append('uf', currentFile);
@@ -120,7 +121,10 @@ function addMultimediaFile()
 
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
+
             console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+            document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
 
         }, false);
         if (xhr.upload) {
@@ -129,6 +133,8 @@ function addMultimediaFile()
                     total = e.totalSize || e.total;
 
                 console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+                document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
             };
         }
         xhr.onreadystatechange = function(e) {
@@ -137,9 +143,13 @@ function addMultimediaFile()
                 if (this.responseText != "success") {
                     alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
                 }
+                else
+                {
+                    document.getElementById('libFile' + newId).removeChild('divProgressFile' + newId);
+                }
             }
         };
-        xhr.open('post', "http://clangue.net/testVideo/uploadFile.php?w=19&u=AZE&fileID="+newId, true);
+        xhr.open('POST', "http://clangue.net/testVideo/uploadFile.php?w=19&u=AZE&fileID=" + newId, true);
         xhr.send(fd);
     }
     else
@@ -285,7 +295,9 @@ function saveTextElement()
 
     document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + nameText + '</h4></a>';
 }
-function base64ToArrayBuffer(string_base64) {
+
+function base64ToArrayBuffer(string_base64)
+{
     var binary_string = window.atob(string_base64);
     var len = binary_string.length;
     var bytes = new Uint8Array(len);
