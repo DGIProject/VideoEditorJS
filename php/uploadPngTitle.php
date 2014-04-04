@@ -7,7 +7,7 @@
  */
 if ( isset($_POST["imageDataURL"]) && !empty($_POST["imageDataURL"]) && isset($_POST['nameID']) ) {
     // create $dataURL
-    $path = 'data/project_'.$_GET['w'].'_'.$_GET['u'].'/';
+    $path = '../data/project_'.$_GET['w'].'_'.$_GET['u'].'/';
     if(!is_dir($path)){
         mkdir($path);
     }

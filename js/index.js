@@ -29,6 +29,62 @@ function newProject()
     stopAddFileToTrack();
 }
 
+function openProject()
+{
+    $('#loadingDiv').modal('show');
+
+    var OAjax;
+
+    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+    OAjax.open('POST', "php/getListProjects.php", true);
+    OAjax.onreadystatechange = function() {
+        if (OAjax.readyState == 4 && OAjax.status == 200) {
+            console.log(OAjax.responseText);
+
+            var tabListProjects = JSON.parse(OAjax.responseText);
+
+            console.log(tabListProjects.length);
+
+            if(tabListProjects.length > 0)
+            {
+                document.getElementById('listProjects').innerHTML = '';
+
+                for(var i = 0; i < tabListProjects.length; i++)
+                {
+                    document.getElementById('listProjects').innerHTML += '<a onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item">' + tabListProjects[i] + '</a>';
+                }
+            }
+
+            $('#loadingDiv').modal('hide');
+            $('#selectProjectModal').modal('show');
+        }
+    }
+
+    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    OAjax.send();
+}
+
+function loadProject(fileName)
+{
+    $('#selectProjectModal').modal('hide');
+    $('#loadingDiv').modal('show');
+
+    var OAjax;
+
+    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+    OAjax.open('POST', "php/readFileProject.php", true);
+    OAjax.onreadystatechange = function() {
+        if (OAjax.readyState == 4 && OAjax.status == 200) {
+            console.log(OAjax.responseText);
+        }
+    }
+
+    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    OAjax.send('fileName=' + fileName);
+}
+
 //FILE
 
 function addMultimediaFile()
@@ -145,11 +201,13 @@ function addMultimediaFile()
                 }
                 else
                 {
-                    document.getElementById('libFile' + newId).removeChild('divProgressFile' + newId);
+                    var divProgressFile = document.getElementById('divProgressFile' + newId);
+
+                    document.getElementById('libFile' + newId).removeChild(divProgressFile);
                 }
             }
         };
-        xhr.open('POST', "http://clangue.net/testVideo/uploadFile.php?w=19&u=AZE&fileID=" + newId, true);
+        xhr.open('POST', "http://clangue.net/testVideo/php/uploadFile.php?w=19&u=AZE&fileID=" + newId, true);
         xhr.send(fd);
     }
     else
@@ -279,7 +337,7 @@ function saveTextElement()
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', "uploadPngTitle.php?w=19&u=AZE", true);
+    OAjax.open('POST', "php/uploadPngTitle.php?w=19&u=AZE", true);
     OAjax.onreadystatechange = function() {
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
@@ -905,4 +963,8 @@ function hideError(id)
     console.log(id);
 
     $('#error' + id).alert('close');
+}
+
+window.onbeforeunload = function(e){
+    alert('Attention ! Vous allez perdre toutes vos données si vous continuez.')
 }

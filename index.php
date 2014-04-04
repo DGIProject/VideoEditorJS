@@ -14,6 +14,7 @@
         <div id="errors"></div>
         <div class="toolbar">
             <button onclick="newProject();" class="btn btn-default">New project</button>
+            <button onclick="openProject();" class="btn btn-default">Open project</button>
             <button onclick="addTrack();" class="btn btn-default">New track</button>
             <button onclick="makeRender();" class="btn btn-default">Render</button>
             <button class="btn btn-default" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
@@ -108,6 +109,21 @@
                     <div id="startUseProject" style="display: none;">
                         <button type="button" class="btn btn-lg btn-block btn-success" data-dismiss="modal">Let's go !</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="selectProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisissez le project</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="listProjects" class="list-group">Aucun projet présent.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>

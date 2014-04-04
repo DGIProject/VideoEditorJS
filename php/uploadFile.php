@@ -9,7 +9,7 @@
 if ($_GET['w'] != null && $_GET['u'] != null && $_GET['fileID'] != null )
 {
     $filename = 'file'.$_GET['fileID'].'.file';
-    $path = 'data/project_'.$_GET['w'].'_'.$_GET['u'].'/';
+    $path = '../data/project_'.$_GET['w'].'_'.$_GET['u'].'/';
     if(!is_dir($path)){
         mkdir($path);
     }
