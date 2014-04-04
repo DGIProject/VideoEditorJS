@@ -13,53 +13,17 @@ Render = function (tabListElements, tabListFiles, tabListTextElements, tabListTr
     this.videoDuration = 0 //Secondes !!
 
     this.inputFileData = null;
-    this.blackImageData = this.retrieveBlackImage();
+
     this.filesToConcat = []
     commandList = [];
     currentFileIteration = 0
-
-    //   this.worker = new Worker("js/lib/worker.js");
-
-    /*   this.worker.onmessage = function (event) {
-     var message = event.data;
-     if (message.type == "ready") {
-     isWorkerLoaded = true;
-     } else if (message.type == "stdout") {
-     console.log(message.data);
-     //outputElement.textContent += message.data + "\n";
-     } else if (message.type == "start") {
-     //outputElement.textContent = "Worker has received command\n";
-     } else if (message.type == "done") {
-     running = false;
-     var buffers = message.data;
-     if (buffers.length) {
-     //outputElement.className = "closed";
-     }
-     buffers.forEach(function(file) {
-     // filesElement.appendChild(getDownloadLink(file.data, file.name));
-     //   new Blob([file.data]);
-     console.log(this)
-     currentFileIteration++;
-     console.log('File number '+parseInt(currentFileIteration-1)+" Has finished to be in mp4");
-     renderVar.Elements[commandList[parseInt(currentFileIteration-1)].elementIdInTab].data = new Blob([file.data]);
-     document.getElementById('renderText').innerHTML = parseInt(currentFileIteration+1) + "/"+commandList.length
-     document.getElementById('progressRender').style.width = parseInt(currentFileIteration+1)/commandList.length*100 + "px"
-
-     if (currentFileIteration < this.commandList.length)
-     {
-     renderVar.inputFileData = renderVar.Files[commandList[currentFileIteration].id].data;
-     renderVar.runCommand(commandList[currentFileIteration].command);
-
-     }
-     else
-     {
-     renderVar.makeTracksFile();
-     }
-
-     });
-     }
-     };*/
+	var blackImageFile = new FileList(this.Files.length, 'Image', 0, 'Blackelement', 'png', null);
+	this.Files.push(blackImageFile);
+	this.blackElementId = this.Files.length-1;
+	console.log(this.blackElementId);
+    this.retrieveBlackImage();
     this.prepareElement();
+
 }
 
 Render.prototype.prepareElement = function () {
@@ -103,6 +67,7 @@ Render.prototype.prepareElement = function () {
     // this.runCommand(commandList[currentFileIteration].command);
     //
     console.log(this)
+    this.makeCommandTracks();
 
 }
 Render.prototype.runCommand = function (text) {
@@ -116,6 +81,10 @@ Render.prototype.runCommand = function (text) {
             {
                 "name": "fileInput",
                 "data": this.inputFileData
+            },
+            {
+                "name": "blackElement",
+                "data": this.blackElementData
             }
         ]
     });
@@ -185,7 +154,8 @@ Render.prototype.makeTracksFile = function () {
                 }
                 else
                 {
-                    console("Finit, nous allons donc générer l'ensemvle du fichier")
+                    console.log("Finit, nous allons donc générer l'ensemvle du fichier")
+					
                 }
             });
         }
@@ -199,13 +169,14 @@ Render.prototype.makeCommandTracks = function () {
     var px = 0;
     var continuer = 0;
     this.infoElements = [];
-    var noncollee = 0;
+    var noncollee = 0, noncolleeTenS = 0;
 
     // Pour chaque piste
     for (trackIteration = 0; trackIteration < this.Tracks.length; trackIteration++) {
         trackElements = this.Tracks[trackIteration].elementsId;
         console.log('ELement de la piste: ', trackElements);
         noncollee = 0;
+        noncolleeTenS = 0
         //Pour chaque element de la piste
         for (elementTrackIteration = 0; elementTrackIteration < trackElements.length; elementTrackIteration++) {
             currentElementIdFromTrack = trackElements[elementTrackIteration];
@@ -238,7 +209,7 @@ Render.prototype.makeCommandTracks = function () {
                     // on crée un element fictif qui va correcpondre a une image noire.
                     // 1) on calcule la longueur en pixel :
 
-                    ecart = endPosCurrentElement - startPosNextElement
+                    ecart = Math.abs(startPosNextElement - endPosCurrentElement);
                     durre = Math.ceil(ecart / oneSecond);
 
                     console.log("Il y a un ecart de ", ecart, " pixels soit ", durre, " secondes");
@@ -248,19 +219,44 @@ Render.prototype.makeCommandTracks = function () {
                     this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
                     this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
 
-                    var blackElement = new Elements(this.Elements.length, 'black' + noncollee + ".mp4", "00:00:00", null, trackIteration);
-                    blackElement.resize(ecart, endPosCurrentElement);
+                    var numberofTenSBlackElement = durre/10;
+                    var numberfullElement = Math.floor(numberofTenSBlackElement);
+                    var restsecond = (numberofTenSBlackElement - numberfullElement) * 10;
 
+                    console.log(" Nombre total d'éléement 10s = ", numberofTenSBlackElement, " Nombre full=", numberfullElement, "Nb sec resnatnte =", restsecond)
+
+                    for (i = 0; i<numberfullElement;i++)
+                    {
+                        // Full element !!
+                        var blackElement = new Elements(this.Elements.length, 'black' + noncolleeTenS + ".mp4", "00:00:10", null, trackIteration);
+                        this.Elements.push(blackElement);
+
+                        var tempCommand = "-i blackElement black" + noncolleeTenS + ".mp4"
+                        this.listCommand.push({command: tempCommand, fileId: this.blackElementId , elementIdInTab: this.Elements[this.Elements.length - 1]});
+                        this.infoElements.push({start: endPosCurrentElement+(i*oneSecond*10), end: endPosCurrentElement + blackElement.length, black: true})
+
+                        noncolleeTenS++
+                    }
+
+                    // Secondes restante
+
+                    var tempCalculator = new Date();
+                    tempCalculator.setTime(restsecond * 1000);
+                    var tempsFFmpeg = tempCalculator.getHours()-1+":"+tempCalculator.getMinutes()+":"+tempCalculator.getSeconds();
+                    console.log("Calculated time", tempsFFmpeg)
+                    var blackElement = new Elements(this.Elements.length, 'black' + noncolleeTenS + ".mp4", tempsFFmpeg, null, trackIteration);
                     this.Elements.push(blackElement);
+
                     console.log("Liste de tout les elements : ", this.Elements);
 
                     //On ajoute l'element noir ...
 
-                    var tempCommand = "-i blockImage -strict -2 -t " + Math.ceil(ecart / oneSecond) + " black" + noncollee + ".mp4"
-                    this.listCommand.push({command: tempCommand, fileId: this.Elements[this.Elements.length - 1].fileId, elementIdInTab: this.Elements[this.Elements.length - 1]});
-                    this.infoElements.push({start: endPosCurrentElement, end: endPosCurrentElement + blackElement.length, black: true})
+                    var tempCommand = "-i blackElement -t " + restsecond + " black" + noncolleeTenS + ".mp4"
+                    this.listCommand.push({command: tempCommand, fileId: this.blackElementId , elementIdInTab: this.Elements[this.Elements.length - 1]});
+                    this.infoElements.push({start: endPosCurrentElement+(numberfullElement*oneSecond*restsecond), end: endPosCurrentElement + blackElement.length, black: true})
 
                     noncollee++;
+                    noncolleeTenS++;
                 }
 
             }
@@ -286,13 +282,15 @@ Render.prototype.makeCommandTracks = function () {
 }
 Render.prototype.retrieveBlackImage = function () {
     var oReq = new XMLHttpRequest();
-    oReq.open("GET", "img/blackElement.png", true);
+    oReq.open("GET", "vid/blackElementVid10S", true);
     oReq.responseType = "arraybuffer";
 
     oReq.onload = function (oEvent) {
         var arrayBuffer = oReq.response;
         if (arrayBuffer) {
-            this.blackImageData = new Uint8Array(arrayBuffer);
+            renderVar.blackElementData = new Uint8Array(arrayBuffer)
+            renderVar.Files[renderVar.blackElementId].data = renderVar.blackElementData;
+            console.log("ok DL VID")
         }
     };
 
