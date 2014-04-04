@@ -11,17 +11,14 @@ if ( isset($_POST["imageDataURL"]) && !empty($_POST["imageDataURL"]) && isset($_
     if(!is_dir($path)){
         mkdir($path);
     }
-    $dataURL = $_POST["imageDataURL"];
-    // Extract base64 data
-    // we have an unneeded header, zap it
-    $parts = explode(',', $dataURL);
-    $data = $parts[1];
-    // Decode
-    $data = base64_decode($data);
-    // Save
-    $fp = fopen($path.'title'.$_POST['nameID'].'.png', 'w');
-    fwrite($fp, $data);
-    fclose($fp);
+
+    $img = $_POST['imageDataURL'];
+    $img = str_replace('data:image/png;base64,', '', $img);
+    $img = str_replace(' ', '+', $img);
+    $data = base64_decode($img);
+    $file = $path . 'title'.$_POST['nameID'] . '.png';
+    $success = file_put_contents($file, $data);
+    print $success ? $file : 'Unable to save the file.';
 }
 else
 {
