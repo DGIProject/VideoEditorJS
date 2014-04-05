@@ -12,23 +12,42 @@ var posX, posY;
 var renderVar;
 var errorId = 0;
 
-var currentProject = 'none';
+var currentProject = {name: 'undefined', dateCreation: '05/04/2014 20:43:13', lastSave: 'aucune'};
 
 window.onmousemove = handleMouseMove;
 
 //PROJECT
 
-function newProject()
+function newProjectModal(reset)
 {
-    //numberOfTrack = 0;
-    var tracks = document.getElementById('tracks');
-    tracks.innerHTML = "";
-    var videoView = document.getElementById("VideoView");
-    videoView.innerHTML = "";
-    tabListTracks = [];
-    tabListElements = [];
+    document.getElementById('nameProject').value = '';
+    document.getElementById('buttonNewProject').setAttribute('onclick', 'newProject(' + reset + ');');
+
+    $('#newProjectModal').modal('show');
+}
+
+function newProject(reset)
+{
+    $('#newProjectModal').modal('hide');
 
     stopAddFileToTrack();
+
+    if(reset)
+    {
+        document.getElementById('tracks').innerHTML = '';
+        document.getElementById('VideoView').innerHTML = '';
+
+        tabListElements = [];
+        tabListFiles = [];
+        tabListTextElements = [];
+        tabListTracks = [];
+    }
+
+    currentProject.name = document.getElementById('nameProject').value;
+    currentProject.dateCreation = '05/04/2014 21:00:00';
+    currentProject.lastSave = 'aucune';
+
+    updateTextProject();
 }
 
 function openProject()
@@ -89,50 +108,63 @@ function loadProject(fileName)
 
 function saveProject()
 {
-    var fileProject = new GenerateFileProject('project1', tabListElements, tabListFiles, tabListTextElements, tabListTracks);
+    if(currentProject.name != 'undefined')
+    {
+        var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, tabListElements, tabListFiles, tabListTextElements, tabListTracks);
 
-    var fd = new FormData();
-    fd.append('fileProject', test);
-    var xhr = new XMLHttpRequest();
-    xhr.file = currentFile; // not necessary if you create scopes like this
-    xhr.addEventListener('progress', function(e) {
+        console.log('fileProject : ' + fileProject);
 
-        var done = e.position || e.loaded,
-            total = e.totalSize || e.total;
+        var blobFileProject = new Blob(fileProject, {type: 'plain/text'});
 
-        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+        var fileProjectAjax = new FormData();
+        fileProjectAjax.append('fileProject', blobFileProject);
+        var xhr = new XMLHttpRequest();
+        xhr.file = blobFileProject; // not necessary if you create scopes like this
+        xhr.addEventListener('progress', function(e) {
 
-        document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-
-    }, false);
-    if (xhr.upload) {
-        xhr.upload.onprogress = function(e) {
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
 
-            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+            console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
 
-            document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-        };
-    }
-    xhr.onreadystatechange = function(e) {
-        if (4 == this.readyState) {
-            console.log('xhr upload complete ' + this.responseText);
-            if (this.responseText != "success") {
-                alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
-            }
-            else
-            {
-                var divProgressFile = document.getElementById('divProgressFile' + newId);
+        }, false);
+        if (xhr.upload) {
+            xhr.upload.onprogress = function(e) {
+                var done = e.position || e.loaded,
+                    total = e.totalSize || e.total;
 
-                document.getElementById('libFile' + newId).removeChild(divProgressFile);
-            }
+                console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+            };
         }
-    };
-    xhr.open('POST', "http://clangue.net/testVideo/php/uploadFile.php?w=19&u=AZE&fileID=" + newId, true);
-    xhr.send(fd);
+        xhr.onreadystatechange = function(e) {
+            if (4 == this.readyState) {
+                console.log('xhr upload complete ' + this.responseText);
+                if (this.responseText != "success") {
+                    alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
+                }
+                else
+                {
+                }
+            }
+        };
+        xhr.open('POST', 'php/addFileProject.php?nameProject=' + currentProject.name, true);
+        xhr.send(fileProjectAjax);
 
-    console.log('fileProject : ' + fileProject);
+        currentProject.lastSave = '05/04/2014 21:40:35';
+
+        updateTextProject();
+    }
+    else
+    {
+        newProjectModal(false);
+    }
+}
+
+function updateTextProject()
+{
+    console.log('updateTextProject');
+
+    document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
 }
 
 //FILE
@@ -257,7 +289,7 @@ function addMultimediaFile()
                 }
             }
         };
-        xhr.open('POST', "http://clangue.net/testVideo/php/uploadFile.php?w=19&u=AZE&fileID=" + newId, true);
+        xhr.open('POST', 'php/uploadFile.php?w=19&u=AZE&fileID=' + newId, true);
         xhr.send(fd);
     }
     else
@@ -387,7 +419,7 @@ function saveTextElement()
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', "php/uploadPngTitle.php?w=19&u=AZE", true);
+    OAjax.open('POST', 'php/uploadPngTitle.php?w=19&u=AZE', true);
     OAjax.onreadystatechange = function() {
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
@@ -399,7 +431,7 @@ function saveTextElement()
     }
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send("imageDataURL=" + document.getElementById('textRender').toDataURL("image/png") + "&nameID=" + newId);
+    OAjax.send('imageDataURL=' + document.getElementById('textRender').toDataURL('image/png') + '&nameID=' + newId);
 
     document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + nameText + '</h4></a>';
 }
@@ -979,6 +1011,7 @@ function activeResize() {
 
 window.onload = function (e) {
     calculateTimeBar();
+    updateTextProject();
 }
 
 function makeRender()

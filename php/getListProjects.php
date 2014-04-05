@@ -1,5 +1,5 @@
 <?php
-$dirname = '../data/nameProject/';
+$dirname = '../data/listProjects/';
 $dir = opendir($dirname);
 
 $tabListProjects = [];

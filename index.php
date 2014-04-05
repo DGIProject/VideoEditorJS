@@ -13,7 +13,7 @@
     <div id="editor">
         <div id="errors"></div>
         <div class="toolbar">
-            <button onclick="newProject();" class="btn btn-default">New project</button>
+            <button onclick="newProjectModal(true);" class="btn btn-default">New project</button>
             <button onclick="openProject();" class="btn btn-default">Open project</button>
             <button onclick="saveProject();" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span></button>
             <button onclick="addTrack();" class="btn btn-default">New track</button>
@@ -111,6 +111,26 @@
                     <div id="startUseProject" style="display: none;">
                         <button type="button" class="btn btn-lg btn-block btn-success" data-dismiss="modal">Let's go !</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="newProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Entrez le nom de votre projet</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" id="nameProject" name="nameProject" class="form-control" placeholder="Nom du projet">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="buttonNewProject" class="btn btn-primary">Créer le projet</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
@@ -213,6 +233,7 @@
 <script src="js/jquery-latest.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/index.js"></script>
+<script src="js/Project.js"></script>
 <script src="js/FileList.js"></script>
 <script src="js/Element.js"></script>
 <script src="js/Track.js"></script>
@@ -250,6 +271,8 @@
 
             document.getElementById('loadingProgressProject').style.display = 'none';
             document.getElementById('startUseProject').style.display = '';
+
+            updateTextProject();
         }
 
         OAjax.send();
