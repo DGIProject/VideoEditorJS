@@ -7,8 +7,6 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListEleme
     this.tabListFiles = tabListFiles;
     this.tabListTextElements = tabListTextElements;
     this.tabListTracks = tabListTracks;
-
-    this.generateMain();
 }
 
 GenerateFileProject.prototype.generateMain = function() {

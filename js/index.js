@@ -48,6 +48,7 @@ function newProject(reset)
     currentProject.lastSave = 'aucune';
 
     updateTextProject();
+    saveProject();
 }
 
 function openProject()
@@ -111,48 +112,34 @@ function saveProject()
     if(currentProject.name != 'undefined')
     {
         var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, tabListElements, tabListFiles, tabListTextElements, tabListTracks);
+        var contentFile = fileProject.generateMain();
 
-        console.log('fileProject : ' + fileProject);
+        console.log('contentFile : ' + contentFile);
 
-        var blobFileProject = new Blob(fileProject, {type: 'plain/text'});
+        var OAjax;
 
-        var fileProjectAjax = new FormData();
-        fileProjectAjax.append('fileProject', blobFileProject);
-        var xhr = new XMLHttpRequest();
-        xhr.file = blobFileProject; // not necessary if you create scopes like this
-        xhr.addEventListener('progress', function(e) {
+        if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+        else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+        OAjax.open('POST', 'php/addFileProject.php', true);
+        OAjax.onreadystatechange = function() {
+            if(OAjax.readyState == 4 && OAjax.status == 200) {
+                console.log('answer : ' + OAjax.responseText);
 
-            var done = e.position || e.loaded,
-                total = e.totalSize || e.total;
+                if(OAjax.responseText == 'true')
+                {
+                    currentProject.lastSave = '05/04/2014 21:40:35';
 
-            console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
-
-        }, false);
-        if (xhr.upload) {
-            xhr.upload.onprogress = function(e) {
-                var done = e.position || e.loaded,
-                    total = e.totalSize || e.total;
-
-                console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
-            };
-        }
-        xhr.onreadystatechange = function(e) {
-            if (4 == this.readyState) {
-                console.log('xhr upload complete ' + this.responseText);
-                if (this.responseText != "success") {
-                    alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
+                    updateTextProject();
                 }
                 else
                 {
+                    console.log('error');
                 }
             }
-        };
-        xhr.open('POST', 'php/addFileProject.php?nameProject=' + currentProject.name, true);
-        xhr.send(fileProjectAjax);
+        }
 
-        currentProject.lastSave = '05/04/2014 21:40:35';
-
-        updateTextProject();
+        OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        OAjax.send('nameProject=' + currentProject.name + '&contentFile=' + contentFile);
     }
     else
     {
@@ -238,6 +225,7 @@ function addMultimediaFile()
 
             showLoadingDiv();
         }
+
         var iconeName = ""
         console.log('typeFile : ' + typeFile);
         if (typeFile == "text")
@@ -421,7 +409,7 @@ function saveTextElement()
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
     OAjax.open('POST', 'php/uploadPngTitle.php?w=19&u=AZE', true);
     OAjax.onreadystatechange = function() {
-        if (OAjax.readyState == 4 && OAjax.status == 200) {
+        if(OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
 
             if (OAjax.responseText == 'true') {

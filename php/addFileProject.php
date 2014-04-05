@@ -1,18 +1,13 @@
 <?php
-if($_POST['nameProject'] != NULL)
+if($_POST['nameProject'] != NULL && $_POST['contentFile'] != NULL)
 {
-    $pathTofilename = '../data/listProjects/' . $_GET['nameProject'] . '.wejs';
+    $pathToFilename = '../data/listProjects/' . $_POST['nameProject'] . '.vejs';
 
-    if (is_uploaded_file($_FILES['fileProject']['tmp_name']))
-    {
-        echo 'success';
+    $fp = fopen($pathToFilename, "w");
+    fputs($fp, $_POST['contentFile']);
+    fclose($fp);
 
-        move_uploaded_file($_FILES['fileProject']['tmp_name'], $pathTofilename);
-    }
-    else
-    {
-        echo 'error2';
-    }
+    echo 'true';
 }
 else
 {
