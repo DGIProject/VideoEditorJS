@@ -1,7 +1,7 @@
 <?php
 $fileName = $_POST['fileName'];
 
-if (!$fp = fopen('../data/nameProject/' . $fileName, "r"))
+if (!$fp = fopen('../data/listProjects/' . $fileName, "r"))
 {
     echo "Echec de l'ouverture du fichier";
 

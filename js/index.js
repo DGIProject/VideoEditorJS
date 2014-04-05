@@ -12,6 +12,8 @@ var posX, posY;
 var renderVar;
 var errorId = 0;
 
+var currentProject = 'none';
+
 window.onmousemove = handleMouseMove;
 
 //PROJECT
@@ -83,6 +85,54 @@ function loadProject(fileName)
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send('fileName=' + fileName);
+}
+
+function saveProject()
+{
+    var fileProject = new GenerateFileProject('project1', tabListElements, tabListFiles, tabListTextElements, tabListTracks);
+
+    var fd = new FormData();
+    fd.append('fileProject', test);
+    var xhr = new XMLHttpRequest();
+    xhr.file = currentFile; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function(e) {
+
+        var done = e.position || e.loaded,
+            total = e.totalSize || e.total;
+
+        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+        document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
+
+    }, false);
+    if (xhr.upload) {
+        xhr.upload.onprogress = function(e) {
+            var done = e.position || e.loaded,
+                total = e.totalSize || e.total;
+
+            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+            document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
+        };
+    }
+    xhr.onreadystatechange = function(e) {
+        if (4 == this.readyState) {
+            console.log('xhr upload complete ' + this.responseText);
+            if (this.responseText != "success") {
+                alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
+            }
+            else
+            {
+                var divProgressFile = document.getElementById('divProgressFile' + newId);
+
+                document.getElementById('libFile' + newId).removeChild(divProgressFile);
+            }
+        }
+    };
+    xhr.open('POST', "http://clangue.net/testVideo/php/uploadFile.php?w=19&u=AZE&fileID=" + newId, true);
+    xhr.send(fd);
+
+    console.log('fileProject : ' + fileProject);
 }
 
 //FILE

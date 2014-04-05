@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Guillaume
- * Date: 03/04/14
- * Time: 22:00
- */
-
 if ($_GET['w'] != null && $_GET['u'] != null && $_GET['fileID'] != null )
 {
     $filename = 'file'.$_GET['fileID'].'.file';

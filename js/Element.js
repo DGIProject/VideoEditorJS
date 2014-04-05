@@ -1,6 +1,6 @@
 oneSecond = 5; // in px
 
-Elements = function (id, name, initialDuration, fileId,trackId) {
+Elements = function (id, name, initialDuration, fileId, trackId) {
     this.id = id;
     this.name = name;
     this.initialDuration = initialDuration; // in h:m:s

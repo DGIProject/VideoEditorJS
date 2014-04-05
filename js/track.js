@@ -5,10 +5,12 @@ Track = function(id, name) {
     this.elementsId = [];
     this.data = null;
 }
+
 Track.prototype.changeName = function(newName)
 {
     this.name = newName;
 }
+
 Track.prototype.changeVolume = function(newLevel)
 {
     this.volume = newLevel;
