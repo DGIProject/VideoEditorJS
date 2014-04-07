@@ -3,7 +3,6 @@ Track = function(id, name) {
     this.name = name;
     this.volume = 0; // under 100
     this.elementsId = [];
-    this.data = null;
 }
 
 Track.prototype.changeName = function(newName)

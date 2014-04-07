@@ -203,19 +203,11 @@ function addMultimediaFile()
 
         if(typeFile == 'image')
         {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                var data = e.target.result;
-                var ElementData = new Uint8Array(data);
-
-                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), ElementData);
+                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
                 currentItem.setDuration('00:00:20');
 
                 tabListFiles.push(currentItem);
-            }
 
-            reader.readAsArrayBuffer(currentFile);
         }
         else
         {
@@ -238,7 +230,7 @@ function addMultimediaFile()
                     ]
                 });
 
-                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop(), ElementData);
+                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
                 console.log('currentItem ' + currentItem);
                 tabListFiles.push(currentItem);
             }
@@ -538,9 +530,13 @@ function getInfoForFileId(id, type, mode)
 
         var preview;
 
-        if(type == 'image' || type == 'text')
+        if(type == 'image')
         {
-            preview = '<img class="previewFileContent" src="' + window.URL.createObjectURL(new Blob([tabListFiles[id].data])) + '">';
+            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/data/project_19_AZE/file'+tabListFiles[id].id+'.file">';
+        }
+        else if (type == 'text')
+        {
+            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/data/project_19_AZE/title'+tabListFiles[id].id+'.png">';
         }
         else
         {
@@ -611,7 +607,7 @@ function saveEditFileText(id)
     var sizeText = document.getElementById('sizeText').value;
     var posText = {x: posX, y: posY};
 
-    tabListFiles[posTabListFiles].setData(image.src);
+    //TODO : add a function to reupload the file !
     tabListTextElements[posTabListTextElements].updateValuesElement(nameText, contentText, colorText, sizeText, posText);
 
     document.getElementById('nameFile' + id).innerHTML = nameText;

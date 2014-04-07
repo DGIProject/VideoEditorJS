@@ -13,7 +13,6 @@ Elements = function(id, name, initialDuration, fileId, trackId) {
     this.fileId = fileId;
     this.startTime = "0"; //in second
     this.startTimePx = 0;
-    this.data = null;
     this.trackId = trackId;
     this.offset = null;
 }
