@@ -30,18 +30,16 @@ ReadFileProject.prototype.mainParse = function() {
     this.contentTracks = parseContent.match('<tracksProject>(.*)</tracksProject>')[1];
 
     console.log('contentElements : ' + this.contentElements);
-
-    //this.parseTabListElements(contentElements);
-    //this.parseTabListFiles(contentFiles);
-    //this.parseTabListTextElements(contentTextElements);
-    //this.parseTabListTracks(contentTracks);
 }
 
 ReadFileProject.prototype.parseTabListElements = function() {
     var tabListElementsN = [];
 
+    console.log('contentElements : ' + this.contentElements);
+
     var elements = this.contentElements.match('<element>(.*)</element>');
 
+    console.log('length : ' + elements.length);
     console.log('elements[1] : ' + elements[1]);
 
     if(elements.length > 0)
@@ -50,11 +48,18 @@ ReadFileProject.prototype.parseTabListElements = function() {
 
         for(var i = 1; i < elements.length; i++)
         {
-            var id = elements[i].match('<id>(.*)</id>')[1];
-            var name = elements[i].match('<name>(.*)</name>')[1];
-            var initialDuration = elements[i].match('<initialDuration>(.*)</initialDuration>')[1];
-            var fileId = elements[i].match('<fileId>(.*)</fileId>')[1];
-            var trackId = elements[i].match('<trackId>(.*)</trackId>')[1];
+            console.log(i);
+
+            var id = elements[1].match('<id>(.*)</id>')[1];
+
+            console.log('test1');
+
+            var name = elements[1].match('<name>(.*)</name>');
+            var initialDuration = elements[1].match('<initialDuration>(.*)</initialDuration>');
+            var fileId = elements[1].match('<fileId>(.*)</fileId>');
+            var trackId = elements[1].match('<trackId>(.*)</trackId>');
+
+            console.log('infoElement : ' + id.length + ' - ' + name.length + ' - ' + initialDuration.length);
 
             tabListElementsN[i - 1] = new Elements(id, name, initialDuration, fileId, trackId);
         }

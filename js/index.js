@@ -115,6 +115,8 @@ function loadProject(fileName)
             var fileProject = new ReadFileProject(OAjax.responseText);
 
             console.log(fileProject.parseTabListElements());
+
+            console.log('return : ' + fileProject.parseTabListElements());
         }
     }
 
@@ -1064,6 +1066,19 @@ function getCurrentDate()
     return currentDate;
 }
 
-window.onbeforeunload = function(e){
-    alert('Attention ! Vous allez perdre toutes vos données si vous continuez.')
-}
+window.onbeforeunload = function (e) {
+    e = e || window.event;
+
+    saveProject();
+
+    if(currentUploads > 0)
+    {
+        var msg = 'Envoi en cours des fichier, ne fermez pas encore la fenêtre ou tout sera perdu.';
+
+        // For IE and Firefox
+        if (e) {e.returnValue = msg;}
+
+        // For Chrome and Safari
+        return msg;
+    }
+};
