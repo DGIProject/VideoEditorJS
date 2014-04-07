@@ -143,6 +143,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="listProjects" class="list-group">Aucun projet présent.</div>
+                    <button type="button" onclick="newProjectModal(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
@@ -231,6 +232,7 @@
 </div>
 
 <script src="js/jquery-latest.js"></script>
+<script src="js/jquery.noty.packaged.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/Project.js"></script>
@@ -272,6 +274,7 @@
             document.getElementById('loadingProgressProject').style.display = 'none';
             document.getElementById('startUseProject').style.display = '';
 
+            currentProject = new Project('undefined', getCurrentDate());
             updateTextProject();
         }
 

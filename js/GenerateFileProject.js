@@ -42,6 +42,15 @@ GenerateFileProject.prototype.generateElements = function() {
             '<initialDuration>' + this.tabListElements[i].initialDuration + '</initialDuration>' +
             '<currentDuration>' + this.tabListElements[i].currentDuration + '</currentDuration>' +
             '<length>' + this.tabListElements[i].length + '</length>' +
+            '<maxLength>' + this.tabListElements[i].maxLength + '</maxLength>' +
+            '<maginXpx>' + this.tabListElements[i].marginXpx + '</maginXpx>' +
+            '<marginXDuration>' + this.tabListElements[i].marginXDuration + '</marginXDuration>' +
+            '<marginXsecond>' + this.tabListElements[i].marginXsecond + '</marginXsecond>' +
+            '<fileId>' + this.tabListElements[i].fileId + '</fileId>' +
+            '<startTime>' + this.tabListElements[i].startTime + '</startTime>' +
+            '<startTimePx>' + this.tabListElements[i].startTimePx + '</startTimePx>' +
+            '<trackId>' + this.tabListElements[i].trackId + '</trackId>' +
+            '<offset>' + this.tabListElements[i].offset + '</offset>' +
             '</element>';
     }
 
@@ -63,7 +72,6 @@ GenerateFileProject.prototype.generateFiles = function() {
             '<size>' + this.tabListFiles[i].size + '</size>' +
             '<fileName>' + this.tabListFiles[i].fileName + '</fileName>' +
             '<format>' + this.tabListFiles[i].format + '</format>' +
-            '<data>' + this.tabListFiles[i].data + '</data>' +
             '</file>';
     }
 
@@ -106,7 +114,6 @@ GenerateFileProject.prototype.generateTracks = function() {
             '<name>' + this.tabListTracks[i].name + '</name>' +
             '<volume>' + this.tabListTracks[i].volume + '</volume>' +
             '<elementsId>' + this.tabListTracks[i].elementsId + '</elementsId>' +
-            '<data>' + this.tabListTracks[i].data + '</data>' +
             '</track>';
     }
 

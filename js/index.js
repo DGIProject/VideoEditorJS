@@ -1,7 +1,7 @@
-var tabListFiles = [];
-var tabListTracks = [];
 var tabListElements = [];
+var tabListFiles = [];
 var tabListTextElements = [];
+var tabListTracks = [];
 var divElementSelectedForMove = {id: null, Object: null, trackId: null, elementListID: null}, canMove = false;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
@@ -10,9 +10,10 @@ var pixelCalculateTime = {g: 0, d: 800};
 var context = document.getElementById('textRender').getContext('2d');
 var posX, posY;
 var renderVar;
-var errorId = 0;
 
-var currentProject = {name: 'undefined', dateCreation: '05/04/2014 20:43:13', lastSave: 'aucune'};
+var currentUploads = 0;
+
+var currentProject;
 
 window.onmousemove = handleMouseMove;
 
@@ -23,32 +24,42 @@ function newProjectModal(reset)
     document.getElementById('nameProject').value = '';
     document.getElementById('buttonNewProject').setAttribute('onclick', 'newProject(' + reset + ');');
 
+    $('#selectProjectModal').modal('hide');
     $('#newProjectModal').modal('show');
 }
 
 function newProject(reset)
 {
-    $('#newProjectModal').modal('hide');
+    var nameProject = document.getElementById('nameProject').value;
 
-    stopAddFileToTrack();
-
-    if(reset)
+    if(nameProject != '')
     {
-        document.getElementById('tracks').innerHTML = '';
-        document.getElementById('VideoView').innerHTML = '';
+        $('#newProjectModal').modal('hide');
 
-        tabListElements = [];
-        tabListFiles = [];
-        tabListTextElements = [];
-        tabListTracks = [];
+        stopAddFileToTrack();
+
+        if(reset)
+        {
+            document.getElementById('tracks').innerHTML = '';
+            document.getElementById('VideoView').innerHTML = '';
+
+            tabListElements = [];
+            tabListFiles = [];
+            tabListTextElements = [];
+            tabListTracks = [];
+        }
+
+        currentProject.name = document.getElementById('nameProject').value;
+        currentProject.dateCreation = getCurrentDate();
+        currentProject.lastSave = 'aucune';
+
+        updateTextProject();
+        saveProject();
     }
-
-    currentProject.name = document.getElementById('nameProject').value;
-    currentProject.dateCreation = '05/04/2014 21:00:00';
-    currentProject.lastSave = 'aucune';
-
-    updateTextProject();
-    saveProject();
+    else
+    {
+        var n = noty({layout: 'top', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
+    }
 }
 
 function openProject()
@@ -100,6 +111,10 @@ function loadProject(fileName)
     OAjax.onreadystatechange = function() {
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
+
+            var fileProject = new ReadFileProject(OAjax.responseText);
+
+            console.log(fileProject.parseTabListElements());
         }
     }
 
@@ -111,6 +126,8 @@ function saveProject()
 {
     if(currentProject.name != 'undefined')
     {
+        $('#loadingDiv').modal('show');
+
         var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, tabListElements, tabListFiles, tabListTextElements, tabListTracks);
         var contentFile = fileProject.generateMain();
 
@@ -127,13 +144,15 @@ function saveProject()
 
                 if(OAjax.responseText == 'true')
                 {
-                    currentProject.lastSave = '05/04/2014 21:40:35';
+                    currentProject.lastSave = getCurrentDate();
 
                     updateTextProject();
+
+                    $('#loadingDiv').modal('hide');
                 }
                 else
                 {
-                    console.log('error');
+                    var n = noty({layout: 'top', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
                 }
             }
         }
@@ -151,7 +170,10 @@ function updateTextProject()
 {
     console.log('updateTextProject');
 
-    document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
+    if(currentProject.name != 'undefined')
+    {
+        document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
+    }
 }
 
 //FILE
@@ -237,48 +259,9 @@ function addMultimediaFile()
         else
         iconeName = "glyphicon-file"
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4><div id="divProgressFile' + newId + '" class="progress"><div id="progressFile' + newId + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4><div id="divToolsFile' + newId + '"></div></a>';
 
-        var fd = new FormData();
-        fd.append('uf', currentFile);
-        var xhr = new XMLHttpRequest();
-        xhr.file = currentFile; // not necessary if you create scopes like this
-        xhr.addEventListener('progress', function(e) {
-
-            var done = e.position || e.loaded,
-                total = e.totalSize || e.total;
-
-            console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
-
-            document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-
-        }, false);
-        if (xhr.upload) {
-            xhr.upload.onprogress = function(e) {
-                var done = e.position || e.loaded,
-                    total = e.totalSize || e.total;
-
-                console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
-
-                document.getElementById('progressFile' + newId).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-            };
-        }
-        xhr.onreadystatechange = function(e) {
-            if (4 == this.readyState) {
-                console.log('xhr upload complete ' + this.responseText);
-                if (this.responseText != "success") {
-                    alert("Une erreur est surevenue !  Veuillez réessayer en cliquant de nouveau sur le bouton envoyer");
-                }
-                else
-                {
-                    var divProgressFile = document.getElementById('divProgressFile' + newId);
-
-                    document.getElementById('libFile' + newId).removeChild(divProgressFile);
-                }
-            }
-        };
-        xhr.open('POST', 'php/uploadFile.php?w=19&u=AZE&fileID=' + newId, true);
-        xhr.send(fd);
+        uploadMultimediaFile(newId, currentFile);
     }
     else
     {
@@ -286,6 +269,66 @@ function addMultimediaFile()
 
         showError('error', 'Votre extension n\'est pas compatible avec VideoEditorJS.');
     }
+}
+
+function uploadMultimediaFile(id, file)
+{
+    currentUploads++;
+
+    document.getElementById('divToolsFile' + id).innerHTML = '<div id="divProgressFile' + id + '" class="progress"><div id="progressFile' + id + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div>';
+
+    var fd = new FormData();
+    fd.append('multimediaFile', file);
+    var xhr = new XMLHttpRequest();
+    xhr.file = file; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function(e) {
+
+        var done = e.position || e.loaded,
+            total = e.totalSize || e.total;
+
+        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+        document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
+
+    }, false);
+    if (xhr.upload) {
+        xhr.upload.onprogress = function(e) {
+            var done = e.position || e.loaded,
+                total = e.totalSize || e.total;
+
+            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+
+            document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
+        };
+    }
+    xhr.onreadystatechange = function(e) {
+        if (4 == this.readyState) {
+            console.log('xhr upload complete ' + this.responseText);
+
+            currentUploads--;
+
+            if (this.responseText != "success")
+            {
+                var n = noty({layout: 'top', type: 'error', text: 'Nous n\'avons pas réussi à envoyer ce fichier', timeout: '5000'});
+
+                var buttonRetryUpload = document.createElement('button');
+                buttonRetryUpload.setAttribute('type', 'button');
+                buttonRetryUpload.setAttribute('onclick', 'uploadMultimediaFile(\'' + id + '\', \'' + file + '\');');
+                buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
+                buttonRetryUpload.innerHTML = 'Réessayer';
+
+                document.getElementById('divToolsFile' + id).innerHTML = '';
+                document.getElementById('divToolsFile' + id).appendChild(buttonRetryUpload);
+            }
+            else
+            {
+                document.getElementById('divToolsFile' + id).innerHTML = '';
+            }
+        }
+    };
+
+    xhr.open('POST', 'php/uploadFile.php?w=19&u=AZE&fileID=' + id, true);
+    xhr.send(fd);
 }
 
 function getTypeFile(fileName)
@@ -1007,33 +1050,22 @@ function makeRender()
    renderVar = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
 }
 
-function showError(type, text)
+function getCurrentDate()
 {
-    var id = errorId;
+    var date = new Date();
 
-    console.log('showError');
+    var dayOfMonth = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+    var month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
 
-    var errors = document.getElementById('errors');
+    var hour = (date.getHours() < 10) ? '0' + date.getHours() : date.getHours();
+    var minute = (date.getMinutes() < 10) ? '0' + date.getMinutes() : date.getMinutes();
+    var second = (date.getSeconds() < 10) ? '0' + date.getSeconds() : date.getSeconds();
 
-    var error = document.createElement('div');
-    error.setAttribute('id', 'error' + errorId);
-    error.setAttribute('class', 'alert alert-danger fade in');
-    error.innerHTML = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error :</strong> ' + text + '';
+    var currentDate = dayOfMonth + '/' + month + '/' + date.getFullYear() + ' ' + hour + ':' + minute + ':' + second;
 
-    errors.appendChild(error);
+    console.log('currentDate : ' + currentDate);
 
-    var timeOut = setTimeout(function(){hideError(id)}, 10000);
-
-    errorId++;
-}
-
-function hideError(id)
-{
-    console.log('hideError');
-
-    console.log(id);
-
-    $('#error' + id).alert('close');
+    return currentDate;
 }
 
 window.onbeforeunload = function(e){

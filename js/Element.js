@@ -1,6 +1,6 @@
 oneSecond = 5; // in px
 
-Elements = function (id, name, initialDuration, fileId, trackId) {
+Elements = function(id, name, initialDuration, fileId, trackId) {
     this.id = id;
     this.name = name;
     this.initialDuration = initialDuration; // in h:m:s
@@ -17,7 +17,7 @@ Elements = function (id, name, initialDuration, fileId, trackId) {
     this.trackId = trackId;
     this.offset = null;
 }
-Elements.prototype.changeLength = function (newLength) {
+Elements.prototype.changeLength = function(newLength) {
     this.length = newLength;
 }
 Elements.prototype.getDurationInSecondFromLength = function () {
@@ -25,13 +25,13 @@ Elements.prototype.getDurationInSecondFromLength = function () {
     return  Math.ceil(this.length / oneSecond);
 
 }
-Elements.prototype.getDurationWithFormat = function () {
+Elements.prototype.getDurationWithFormat = function() {
     var numberOfSecond = Math.ceil(this.length / oneSecond);
     var convertedTime = new Date();
     convertedTime.setTime(numberOfSecond * 1000);
     return {h: convertedTime.getHours(), m: convertedTime.getMinutes(), s: convertedTime.getSeconds()};
 }
-Elements.prototype.getDurationInSecondFromffmpegFormat = function () {
+Elements.prototype.getDurationInSecondFromffmpegFormat = function() {
     var splitedValueFromText = this.initialDuration.split(':')
     var minute = splitedValueFromText[1]
     var seconde = splitedValueFromText[2].split('.')[0]
@@ -39,7 +39,7 @@ Elements.prototype.getDurationInSecondFromffmpegFormat = function () {
     var totalseconde = (3600 * heure) + (60 * minute) + parseInt(seconde)
     return totalseconde;
 }
-Elements.prototype.getDurationInSecondFromCurrentDuration = function () {
+Elements.prototype.getDurationInSecondFromCurrentDuration = function() {
     var splitedValueFromText = this.currentDuration.split(':')
     var minute = splitedValueFromText[1]
     var seconde = splitedValueFromText[2].split('.')[0]
@@ -51,15 +51,15 @@ Elements.prototype.getStartTimeFromStartLenth = function()
 {
     return  Math.ceil(this.startTimePx / oneSecond);
 }
-Elements.prototype.calculateLenght = function () {
+Elements.prototype.calculateLenght = function() {
     return this.getDurationInSecondFromCurrentDuration() * oneSecond
 }
-Elements.prototype.actualiseLenght = function () {
+Elements.prototype.actualiseLenght = function() {
     this.length = this.calculateLenght()
     this.maxLength = this.calculateMaxLenght()
     this.calculateMarginX()
 }
-Elements.prototype.calculateMaxLenght = function () {
+Elements.prototype.calculateMaxLenght = function() {
     return this.getDurationInSecondFromffmpegFormat() * oneSecond
 }
 Elements.prototype.resize = function(newLenth, offset){
@@ -73,7 +73,7 @@ Elements.prototype.resize = function(newLenth, offset){
     this.offset = offset;
     console.log('offset = '+this.offset);
 }
-Elements.prototype.setMarginX = function (marginPx){
+Elements.prototype.setMarginX = function(marginPx){
     this.marginXpx = marginPx;
 
     var numberSecond = Math.floor(marginPx / oneSecond);
