@@ -1,20 +1,24 @@
 <?php
-if ($_GET['w'] != null && $_GET['u'] != null && $_GET['fileID'] != null )
-{
-    $filename = 'file'.$_GET['fileID'].'.file';
-    $path = '../data/project_'.$_GET['w'].'_'.$_GET['u'].'/';
+ini_set('display_errors', 'off');
 
-    if(!is_dir($path)){
+if($_GET['u'] != NULL && $_GET['p'] != NULL && $_GET['fileId'] != NULL)
+{
+    $filename = 'file'.$_GET['fileId'].'.file';
+    $path = '../data/' . $_GET['u'] . '/' . $_GET['p'] . '/';
+
+    if(!is_dir($path))
+    {
+        mkdir('../data/' . $_GET['u'] . '/');
         mkdir($path);
     }
 
-    $pathTofilename = $path . $filename;
+    $pathToFilename = $path . $filename;
 
     if (is_uploaded_file($_FILES['multimediaFile']['tmp_name']))
     {
         echo 'success';
 
-        move_uploaded_file ($_FILES['multimediaFile']['tmp_name'], $pathTofilename);
+        move_uploaded_file($_FILES['multimediaFile']['tmp_name'], $pathToFilename);
     }
     else
     {

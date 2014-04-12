@@ -12,6 +12,7 @@ var posX, posY;
 var renderVar;
 
 var currentUploads = 0;
+var tabFilesUpload = [];
 
 var currentProject;
 
@@ -70,7 +71,7 @@ function openProject()
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', "php/getListProjects.php", true);
+    OAjax.open('POST', 'php/getListProjects.php', true);
     OAjax.onreadystatechange = function() {
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
@@ -107,7 +108,7 @@ function loadProject(fileName)
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', "php/readFileProject.php", true);
+    OAjax.open('POST', 'php/readFileProject.php', true);
     OAjax.onreadystatechange = function() {
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
@@ -148,6 +149,7 @@ function saveProject()
                 {
                     currentProject.lastSave = getCurrentDate();
 
+                    uploadAllFiles();
                     updateTextProject();
 
                     $('#loadingDiv').modal('hide');
@@ -253,7 +255,7 @@ function addMultimediaFile()
         else
         iconeName = "glyphicon-file"
 
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + currentFile.name + '</h4><div id="divToolsFile' + newId + '"></div></a>';
+        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + compressName(currentFile.name) + '</h4><div id="divToolsFile' + newId + '"></div></a>';
 
         uploadMultimediaFile(newId, currentFile);
     }
@@ -267,62 +269,92 @@ function addMultimediaFile()
 
 function uploadMultimediaFile(id, file)
 {
-    currentUploads++;
+    if(currentProject.name != 'undefined')
+    {
+        currentUploads++;
 
-    document.getElementById('divToolsFile' + id).innerHTML = '<div id="divProgressFile' + id + '" class="progress"><div id="progressFile' + id + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div>';
+        document.getElementById('divToolsFile' + id).innerHTML = '<div id="divProgressFile' + id + '" class="progress"><div id="progressFile' + id + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div>';
 
-    var fd = new FormData();
-    fd.append('multimediaFile', file);
-    var xhr = new XMLHttpRequest();
-    xhr.file = file; // not necessary if you create scopes like this
-    xhr.addEventListener('progress', function(e) {
+        var fd = new FormData();
+        fd.append('multimediaFile', file);
+        var xhr = new XMLHttpRequest();
+        xhr.file = file; // not necessary if you create scopes like this
+        xhr.addEventListener('progress', function(e) {
 
-        var done = e.position || e.loaded,
-            total = e.totalSize || e.total;
-
-        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
-
-        document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-
-    }, false);
-    if (xhr.upload) {
-        xhr.upload.onprogress = function(e) {
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
 
-            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+            console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
 
             document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-        };
-    }
-    xhr.onreadystatechange = function(e) {
-        if (4 == this.readyState) {
-            console.log('xhr upload complete ' + this.responseText);
 
-            currentUploads--;
+        }, false);
+        if (xhr.upload) {
+            xhr.upload.onprogress = function(e) {
+                var done = e.position || e.loaded,
+                    total = e.totalSize || e.total;
 
-            if (this.responseText != "success")
-            {
-                var n = noty({layout: 'top', type: 'error', text: 'Nous n\'avons pas réussi à envoyer ce fichier', timeout: '5000'});
+                console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
 
-                var buttonRetryUpload = document.createElement('button');
-                buttonRetryUpload.setAttribute('type', 'button');
-                buttonRetryUpload.setAttribute('onclick', 'uploadMultimediaFile(\'' + id + '\', \'' + file + '\');');
-                buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
-                buttonRetryUpload.innerHTML = 'Réessayer';
-
-                document.getElementById('divToolsFile' + id).innerHTML = '';
-                document.getElementById('divToolsFile' + id).appendChild(buttonRetryUpload);
-            }
-            else
-            {
-                document.getElementById('divToolsFile' + id).innerHTML = '';
-            }
+                document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
+            };
         }
-    };
+        xhr.onreadystatechange = function(e) {
+            if (4 == this.readyState) {
+                console.log('xhr upload complete ' + this.responseText);
 
-    xhr.open('POST', 'php/uploadFile.php?w=19&u=AZE&fileID=' + id, true);
-    xhr.send(fd);
+                currentUploads--;
+
+                if (this.responseText != "success")
+                {
+                    tabFilesUpload[tabFilesUpload.length] = [id, file];
+
+                    var n = noty({layout: 'top', type: 'error', text: 'Nous n\'avons pas réussi à envoyer ce fichier', timeout: '5000'});
+
+                    var buttonRetryUpload = document.createElement('button');
+                    buttonRetryUpload.setAttribute('type', 'button');
+                    buttonRetryUpload.setAttribute('onclick', 'uploadMultimediaFile(\'' + id + '\', \'' + file + '\');');
+                    buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
+                    buttonRetryUpload.innerHTML = 'Réessayer';
+
+                    document.getElementById('divToolsFile' + id).innerHTML = '';
+                    document.getElementById('divToolsFile' + id).appendChild(buttonRetryUpload);
+                }
+                else
+                {
+                    document.getElementById('divToolsFile' + id).innerHTML = '';
+                }
+            }
+        };
+
+        xhr.open('POST', 'php/uploadFile.php?u=User&p=' + currentProject.name + '&fileId=' + id, true);
+        xhr.send(fd);
+    }
+    else
+    {
+        tabFilesUpload[tabFilesUpload.length] = [id, file];
+
+        document.getElementById('divToolsFile' + id).innerHTML = 'Pas encore envoyé.';
+    }
+}
+
+function uploadAllFiles()
+{
+    if(tabFilesUpload.length > 0)
+    {
+        console.log('filesToUpload');
+
+        for(var i = 0; i < tabFilesUpload.length; i++)
+        {
+            uploadMultimediaFile(tabFilesUpload[i][0], tabFilesUpload[i][1]);
+        }
+
+        tabFilesUpload = [];
+    }
+    else
+    {
+        console.log('notFilesToUpload');
+    }
 }
 
 function getTypeFile(fileName)
@@ -351,6 +383,18 @@ function getTypeFile(fileName)
     else
     {
         return 'error';
+    }
+}
+
+function compressName(name)
+{
+    if(name.length > 12)
+    {
+        return name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length);
+    }
+    else
+    {
+        return name;
     }
 }
 
@@ -444,7 +488,7 @@ function saveTextElement()
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', 'php/uploadPngTitle.php?w=19&u=AZE', true);
+    OAjax.open('POST', 'php/uploadPngTitle.php?u=User&p=' + currentProject.name, true);
     OAjax.onreadystatechange = function() {
         if(OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
@@ -456,9 +500,9 @@ function saveTextElement()
     }
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send('imageDataURL=' + document.getElementById('textRender').toDataURL('image/png') + '&nameID=' + newId);
+    OAjax.send('imageDataURL=' + document.getElementById('textRender').toDataURL('image/png') + '&nameId=' + newId);
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + nameText + '</h4></a>';
+    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + compressName(nameText) + '</h4></a>';
 }
 
 function base64ToArrayBuffer(string_base64)

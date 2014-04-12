@@ -1,8 +1,11 @@
 <?php
-if ( isset($_POST["imageDataURL"]) && !empty($_POST["imageDataURL"]) && isset($_POST['nameID']) ) {
-    // create $dataURL
-    $path = '../data/project_'.$_GET['w'].'_'.$_GET['u'].'/';
-    if(!is_dir($path)){
+if(isset($_POST['imageDataURL']) && !empty($_POST['imageDataURL']) && isset($_POST['nameId']))
+{
+    $path = '../data/' . $_GET['u'] . '/' . $_GET['p'] . '/';
+
+    if(!is_dir($path))
+    {
+        mkdir('../data/' . $_GET['u'] . '/');
         mkdir($path);
     }
 
@@ -12,9 +15,10 @@ if ( isset($_POST["imageDataURL"]) && !empty($_POST["imageDataURL"]) && isset($_
     $data = base64_decode($img);
     $file = $path . 'title'.$_POST['nameID'] . '.png';
     $success = file_put_contents($file, $data);
+
     print $success ? $file : 'Unable to save the file.';
 }
 else
 {
-    echo 'Fail';
+    echo 'error1';
 }
