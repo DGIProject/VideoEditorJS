@@ -19,6 +19,8 @@ $DIR_projects = $DIR_data.$systemSep.'projects';
 $DIR_projectsData = $DIR_data.$systemSep.'projectsData';
 $DIR_ffmpegCmdFiles = $DIR_data.$systemSep.'CommandFile';
 
+$DIR_Sample = '../samples'; // if you want to change the samples place.
+
 // We create directory if they not exist.
 
 createDirectory($DIR_ffmpegCmdFiles);

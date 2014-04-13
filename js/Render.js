@@ -78,10 +78,15 @@ Render.prototype.makeCommandFile = function () {
         }
     }
 
-    var test = "coucou\n bonsoir !";
+    var content = "";
+    for (i=0;i<this.listCommand.length;i++)
+    {
+        content += this.listCommand[i].command +"\n"
+        console.log(this.listCommand[i].command)
+    }
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send('contentFile=' + test + '&nameProject=' + currentProject.name);
+    OAjax.send('contentFile=' + content + '&nameProject=' + currentProject.name);
 
 
     //$("#loadingDivConvert").modal('hide');
@@ -121,7 +126,17 @@ Render.prototype.makeCommandTracks = function () {
                     // Si les éléments sont collé ...
                     console.log("l'element collé !!! ");
 
-                    var tempCommand = "-i fileInput -strict -2 -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
+                    var tempCommand
+
+                    if (this.Files[currentElement.fileId].type == "text" )
+                    {
+                        tempCommand = "-loop 1 -i title"+currentElement.fileId+".png -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                    }
+                    else
+                    {
+                        tempCommand = "-i file"+currentElement.fileId+".file -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
+                    }
+
                     this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
                     this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
 
@@ -137,49 +152,30 @@ Render.prototype.makeCommandTracks = function () {
 
                     console.log("Il y a un ecart de ", ecart, " pixels soit ", durre, " secondes");
 
+                    var tempCommand
+
+                    if (this.Files[currentElement.fileId].type == "text" )
+                    {
+                        tempCommand = "-loop 1 -i title"+currentElement.fileId+".png -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                    }
+                    else
+                    {
+                        tempCommand = "-i file"+currentElement.fileId+".file -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
+                    }
                     // on ajoute le fichier d'avant
-                    var tempCommand = "-i fileInput -strict -2 -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
                     this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
                     this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
 
-                    var numberofTenSBlackElement = durre/10;
-                    var numberfullElement = Math.floor(numberofTenSBlackElement);
-                    var restsecond = (numberofTenSBlackElement - numberfullElement) * 10;
-
-                    console.log(" Nombre total d'éléement 10s = ", numberofTenSBlackElement, " Nombre full=", numberfullElement, "Nb sec resnatnte =", restsecond)
-
-                    for (i = 0; i<numberfullElement;i++)
-                    {
-                        // Full element !!
-                        var blackElement = new Elements(this.Elements.length, 'black' + noncolleeTenS + ".mp4", "00:00:10", null, trackIteration);
-                        this.Elements.push(blackElement);
-
-                        var tempCommand = "-i blackElement black" + noncolleeTenS + ".mp4"
-                        this.listCommand.push({command: tempCommand, fileId: this.blackElementId , elementIdInTab: this.Elements[this.Elements.length - 1]});
-                        this.infoElements.push({start: endPosCurrentElement+(i*oneSecond*10), end: endPosCurrentElement + blackElement.length, black: true})
-
-                        noncolleeTenS++
-                    }
-
-                    // Secondes restante
-
-                    var tempCalculator = new Date();
-                    tempCalculator.setTime(restsecond * 1000);
-                    var tempsFFmpeg = tempCalculator.getHours()-1+":"+tempCalculator.getMinutes()+":"+tempCalculator.getSeconds();
-                    console.log("Calculated time", tempsFFmpeg)
-                    var blackElement = new Elements(this.Elements.length, 'black' + noncolleeTenS + ".mp4", tempsFFmpeg, null, trackIteration);
+                    // Full element !!
+                    var blackElement = new Elements(this.Elements.length, "black.png", "00:00:"+ecart, null, trackIteration);
                     this.Elements.push(blackElement);
 
-                    console.log("Liste de tout les elements : ", this.Elements);
 
-                    //On ajoute l'element noir ...
-
-                    var tempCommand = "-i blackElement -t " + restsecond + " black" + noncolleeTenS + ".mp4"
+                    var tempCommand = "-loop 1 -i black.png -t "+ecart+" "+parseInt(this.Elements.length-1)+".mp4";
                     this.listCommand.push({command: tempCommand, fileId: this.blackElementId , elementIdInTab: this.Elements[this.Elements.length - 1]});
-                    this.infoElements.push({start: endPosCurrentElement+(numberfullElement*oneSecond*restsecond), end: endPosCurrentElement + blackElement.length, black: true})
+                    this.infoElements.push({start: endPosCurrentElement, end: endPosCurrentElement + blackElement.length, black: true})
 
                     noncollee++;
-                    noncolleeTenS++;
                 }
 
             }
@@ -188,7 +184,17 @@ Render.prototype.makeCommandTracks = function () {
                 console.log("C'est le dernier avec Iteration ", elementTrackIteration);
 
                 //Ajout des information pour générer les fichier qui correspondent
-                var tempCommand = "-i fileInput -strict -2 -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
+                var tempCommand
+
+                if (this.Files[currentElement.fileId].type == "text" )
+                {
+                    tempCommand = "-loop 1 -i title"+currentElement.fileId+".png -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                }
+                else
+                {
+                    tempCommand = "-i file"+currentElement.fileId+".file -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
+                }
+
                 this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
                 this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
 
