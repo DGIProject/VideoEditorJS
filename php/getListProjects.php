@@ -1,5 +1,8 @@
 <?php
-$dirname = '../data/listProjects/';
+include "config.php";
+
+$dirname = '../'.$DIR_projects;
+
 $dir = opendir($dirname);
 
 $tabListProjects = [];

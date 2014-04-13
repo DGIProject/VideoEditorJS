@@ -1,7 +1,9 @@
 <?php
+include "config.php";
+
 $fileName = $_POST['fileName'];
 
-if (!$fp = fopen('../data/listProjects/' . $fileName, "r"))
+if (!$fp = fopen("../$DIR_projects/" . $fileName, "r"))
 {
     echo "Echec de l'ouverture du fichier";
 
