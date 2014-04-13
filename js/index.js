@@ -115,7 +115,7 @@ function loadProject(fileName)
 
             var fileProject = new ReadFileProject(OAjax.responseText);
 
-            console.log(fileProject.parseTabListElements());
+            //console.log(fileProject.parseTabListElements());
 
             console.log('return : ' + fileProject.parseTabListElements());
         }

@@ -37,9 +37,9 @@ GenerateFileProject.prototype.generateElements = function() {
     for(var i = 0; i < this.tabListElements.length; i++)
     {
         contentElements += '<element>' +
-            '<id>' + this.tabListElements[i].id + '</id>' +
-            '<name>' + this.tabListElements[i].name + '</name>' +
-            '<initialDuration>' + this.tabListElements[i].initialDuration + '</initialDuration>' +
+            '<idE>' + this.tabListElements[i].id + '</idE>' +
+            '<nameE>' + this.tabListElements[i].name + '</nameE>' +
+            '<initialDurationE>' + this.tabListElements[i].initialDuration + '</initialDurationE>' +
             '<currentDuration>' + this.tabListElements[i].currentDuration + '</currentDuration>' +
             '<length>' + this.tabListElements[i].length + '</length>' +
             '<maxLength>' + this.tabListElements[i].maxLength + '</maxLength>' +

@@ -29,18 +29,17 @@ ReadFileProject.prototype.mainParse = function() {
     this.contentTextElements = parseContent.match('<textElementsProject>(.*)</textElementsProject>')[1];
     this.contentTracks = parseContent.match('<tracksProject>(.*)</tracksProject>')[1];
 
-    console.log('contentElements : ' + this.contentElements);
+    console.log('contentElements1 : ' + this.contentElements);
 }
 
 ReadFileProject.prototype.parseTabListElements = function() {
     var tabListElementsN = [];
 
-    console.log('contentElements : ' + this.contentElements);
+    console.log('contentElements2 : ' + this.contentElements);
 
     var elements = this.contentElements.match('<element>(.*)</element>');
 
     console.log('length : ' + elements.length);
-    console.log('elements[1] : ' + elements[1]);
 
     if(elements.length > 0)
     {
@@ -49,23 +48,28 @@ ReadFileProject.prototype.parseTabListElements = function() {
         for(var i = 1; i < elements.length; i++)
         {
             console.log(i);
+            console.log('elements[' + i + '] : ' + elements[i]);
 
-            var id = elements[1].match('<id>(.*)</id>')[1];
+            var id = elements[1].match('<idE>(.*)</idE>');
 
             console.log('test1');
 
-            var name = elements[1].match('<name>(.*)</name>');
-            var initialDuration = elements[1].match('<initialDuration>(.*)</initialDuration>');
-            var fileId = elements[1].match('<fileId>(.*)</fileId>');
-            var trackId = elements[1].match('<trackId>(.*)</trackId>');
+            //var name = elements[1].match('<nameE>(.*)</nameE>')[1];
+            //var initialDuration = elements[1].match('<initialDurationE>(.*)</initialDurationE>')[1];
+            //var fileId = elements[1].match('<fileIdE>(.*)</fileIdE>')[1];
+            //var trackId = elements[1].match('<trackIdE>(.*)</trackIdE>')[1];
 
-            console.log('infoElement : ' + id.length + ' - ' + name.length + ' - ' + initialDuration.length);
+            console.log('infoElement : ' + id.length);
 
-            tabListElementsN[i - 1] = new Elements(id, name, initialDuration, fileId, trackId);
+            //tabListElementsN[i - 1] = new Elements(id, null, null, null, null);
         }
     }
+    else
+    {
+        console.log('noElements');
+    }
 
-    return tabListElementsN;
+    //return tabListElementsN;
 }
 
 ReadFileProject.prototype.parseTabListFiles = function() {
