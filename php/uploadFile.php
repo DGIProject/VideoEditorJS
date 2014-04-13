@@ -1,14 +1,15 @@
 <?php
 ini_set('display_errors', 'off');
+include "config.php";
 
 if($_GET['u'] != NULL && $_GET['p'] != NULL && $_GET['fileId'] != NULL)
 {
     $filename = 'file'.$_GET['fileId'].'.file';
-    $path = '../data/' . $_GET['u'] . '/' . $_GET['p'] . '/';
+    $path = "../$DIR_projectsData/" . $_GET['u'] . '/' . $_GET['p'] . '/';
 
     if(!is_dir($path))
     {
-        mkdir('../data/' . $_GET['u'] . '/');
+        mkdir("../$DIR_projectsData/". $_GET['u'] . '/');
         mkdir($path);
     }
 

@@ -57,7 +57,7 @@ Render.prototype.prepareElement = function () {
     document.getElementById('renderText').innerHTML = "Convertion de l'élément " + parseInt(currentFileIteration + 1) + "/" + commandList.length
     document.getElementById('progressRender').style.width = parseInt(currentFileIteration + 1) / commandList.length * 100 + "%"
 
-    $("#loadingDivConvert").modal('show');
+  //  $("#loadingDivConvert").modal('show');
 
     console.log(this)
     this.makeCommandTracks();
@@ -65,10 +65,26 @@ Render.prototype.prepareElement = function () {
 }
 
 Render.prototype.makeCommandFile = function () {
-    //TODO: générer un fichier puis l'envoyer sur le serveur pour que ffmpeg traite le fichier !
+    //TODO: générer un fichier puis l'envoyer sur le serveur qui va parser et traiter la demande.
+
+    var OAjax;
+
+    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+    OAjax.open('POST', 'php/GenerateCommandFile.php?u=User1', true);
+    OAjax.onreadystatechange = function() {
+        if(OAjax.readyState == 4 && OAjax.status == 200) {
+            console.log(OAjax.responseText);
+        }
+    }
+
+    var test = "coucou\n bonsoir !";
+
+    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    OAjax.send('contentFile=' + test + '&nameProject=' + currentProject.name);
 
 
-    $("#loadingDivConvert").modal('hide');
+    //$("#loadingDivConvert").modal('hide');
 }
 Render.prototype.makeCommandTracks = function () {
     // Elements
@@ -184,6 +200,6 @@ Render.prototype.makeCommandTracks = function () {
     console.log(this.infoElements);
     console.log(this.Elements);
     console.log("il y a ", noncollee, "element non collé");
-    this.makeTracksFile();
+    this.makeCommandFile();
     //commandList = listCommand;
 }

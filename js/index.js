@@ -327,7 +327,7 @@ function uploadMultimediaFile(id, file)
             }
         };
 
-        xhr.open('POST', 'php/uploadFile.php?u=User&p=' + currentProject.name + '&fileId=' + id, true);
+        xhr.open('POST', 'php/uploadFile.php?u=User1&p=' + currentProject.name + '&fileId=' + id, true);
         xhr.send(fd);
     }
     else
@@ -488,7 +488,7 @@ function saveTextElement()
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', 'php/uploadPngTitle.php?u=User&p=' + currentProject.name, true);
+    OAjax.open('POST', 'php/uploadPngTitle.php?u=User1&p=' + currentProject.name, true);
     OAjax.onreadystatechange = function() {
         if(OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);

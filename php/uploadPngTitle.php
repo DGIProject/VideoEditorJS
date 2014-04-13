@@ -1,11 +1,19 @@
 <?php
+
+include "config.php";
+
 if(isset($_POST['imageDataURL']) && !empty($_POST['imageDataURL']) && isset($_POST['nameId']))
 {
-    $path = '../data/' . $_GET['u'] . '/' . $_GET['p'] . '/';
+    $path = "../$DIR_projectsData/" . $_GET['u'] . '/';
 
     if(!is_dir($path))
     {
-        mkdir('../data/' . $_GET['u'] . '/');
+        mkdir($path);
+    }
+
+    $path = "../$DIR_projectsData/" . $_GET['u'] . '/'. $_GET['p'] . '/';
+    if(!is_dir($path))
+    {
         mkdir($path);
     }
 
@@ -13,7 +21,7 @@ if(isset($_POST['imageDataURL']) && !empty($_POST['imageDataURL']) && isset($_PO
     $img = str_replace('data:image/png;base64,', '', $img);
     $img = str_replace(' ', '+', $img);
     $data = base64_decode($img);
-    $file = $path . 'title'.$_POST['nameID'] . '.png';
+    $file = $path . 'title'.$_POST['nameId'] . '.png';
     $success = file_put_contents($file, $data);
 
     print $success ? $file : 'Unable to save the file.';
