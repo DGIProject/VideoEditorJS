@@ -272,6 +272,7 @@
 
             document.getElementById('loadingProgressProject').style.display = 'none';
             document.getElementById('startUseProject').style.display = '';
+            document.getElementById('startUseProject').setAttribute("onclick", "openProject()");
 
             currentProject = new Project('undefined', getCurrentDate());
             updateTextProject();

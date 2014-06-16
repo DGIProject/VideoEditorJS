@@ -105,7 +105,7 @@ function loadProject(fileName){
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
 
-          var save =  JSON.parse(OAjax.responseText);
+            var save =  JSON.parse(OAjax.responseText);
 
             console.log(save);
 
