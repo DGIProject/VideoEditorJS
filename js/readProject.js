@@ -49,6 +49,9 @@ Loader.prototype.addFile = function(file)
 }
 Loader.prototype.load = function()
 {
+    currentProject = this.info.project;
+    updateTextProject();
+
     files = this.info.files
 
     for (i=0;i<files.length;i++)
