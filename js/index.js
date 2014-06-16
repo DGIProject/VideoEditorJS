@@ -106,6 +106,8 @@ function loadProject(fileName){
             console.log(OAjax.responseText);
 
             var save =  JSON.parse(OAjax.responseText);
+            var loader = new Loader(save);
+            loader.load();
 
             console.log(save);
 
@@ -146,6 +148,7 @@ function saveProject(){
                 else
                 {
                     var n = noty({layout: 'top', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
+                    $('#loadingDiv').modal('hide');
                 }
             }
         }
@@ -247,7 +250,7 @@ function addMultimediaFile(){
     {
         console.log('error');
 
-        showError('error', 'Votre extension n\'est pas compatible avec VideoEditorJS.');
+        //showError('error', 'Votre extension n\'est pas compatible avec VideoEditorJS.');
     }
 }
 function uploadMultimediaFile(id, file){

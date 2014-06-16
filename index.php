@@ -241,6 +241,7 @@
 <script src="js/Track.js"></script>
 <script src="js/TextElement.js"></script>
 <script src="js/Render.js"></script>
+<script src="js/readProject.js"></script>
 <script src="js/GenerateFileProject.js"></script>
 <script src="js/lib/terminal.js"></script>
 
