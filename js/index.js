@@ -19,18 +19,14 @@ var currentProject;
 window.onmousemove = handleMouseMove;
 
 //PROJECT
-
-function newProjectModal(reset)
-{
+function newProjectModal(reset){
     document.getElementById('nameProject').value = '';
     document.getElementById('buttonNewProject').setAttribute('onclick', 'newProject(' + reset + ');');
 
     $('#selectProjectModal').modal('hide');
     $('#newProjectModal').modal('show');
 }
-
-function newProject(reset)
-{
+function newProject(reset){
     var nameProject = document.getElementById('nameProject').value;
 
     if(nameProject != '')
@@ -62,9 +58,7 @@ function newProject(reset)
         var n = noty({layout: 'top', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
     }
 }
-
-function openProject()
-{
+function openProject(){
     $('#loadingDiv').modal('show');
 
     var OAjax;
@@ -98,9 +92,7 @@ function openProject()
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send();
 }
-
-function loadProject(fileName)
-{
+function loadProject(fileName){
     $('#selectProjectModal').modal('hide');
     $('#loadingDiv').modal('show');
 
@@ -113,28 +105,25 @@ function loadProject(fileName)
         if (OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
 
-            var fileProject = new ReadFileProject(OAjax.responseText);
+          var save =  JSON.parse(OAjax.responseText);
 
-            //console.log(fileProject.parseTabListElements());
+            console.log(save);
 
-            console.log('return : ' + fileProject.parseTabListElements());
         }
     }
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send('fileName=' + fileName);
 }
-
-function saveProject()
-{
+function saveProject(){
     if(currentProject.name != 'undefined')
     {
         $('#loadingDiv').modal('show');
 
         var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, tabListElements, tabListFiles, tabListTextElements, tabListTracks);
-        var contentFile = fileProject.generateMain();
+        var informations = fileProject.generateMain();
 
-        console.log('contentFile : ' + contentFile);
+        console.log(informations);
 
         var OAjax;
 
@@ -162,16 +151,14 @@ function saveProject()
         }
 
         OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        OAjax.send('nameProject=' + currentProject.name + '&contentFile=' + contentFile);
+        OAjax.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(informations));
     }
     else
     {
         newProjectModal(false);
     }
 }
-
-function updateTextProject()
-{
+function updateTextProject(){
     console.log('updateTextProject');
 
     if(currentProject.name != 'undefined')
@@ -179,11 +166,8 @@ function updateTextProject()
         document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
     }
 }
-
 //FILE
-
-function addMultimediaFile()
-{
+function addMultimediaFile(){
     stopAddFileToTrack();
 
     var currentFile = document.getElementById('fileLoader').files[0];
@@ -266,9 +250,7 @@ function addMultimediaFile()
         showError('error', 'Votre extension n\'est pas compatible avec VideoEditorJS.');
     }
 }
-
-function uploadMultimediaFile(id, file)
-{
+function uploadMultimediaFile(id, file){
     if(currentProject.name != 'undefined')
     {
         currentUploads++;
@@ -337,9 +319,7 @@ function uploadMultimediaFile(id, file)
         document.getElementById('divToolsFile' + id).innerHTML = 'Pas encore envoyé.';
     }
 }
-
-function uploadAllFiles()
-{
+function uploadAllFiles(){
     if(tabFilesUpload.length > 0)
     {
         console.log('filesToUpload');
@@ -356,9 +336,7 @@ function uploadAllFiles()
         console.log('notFilesToUpload');
     }
 }
-
-function getTypeFile(fileName)
-{
+function getTypeFile(fileName){
     console.log(fileName);
 
     var extension = fileName.split('.').reverse()[0];
@@ -385,9 +363,7 @@ function getTypeFile(fileName)
         return 'error';
     }
 }
-
-function compressName(name)
-{
+function compressName(name){
     if(name.length > 12)
     {
         return name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length);
@@ -397,9 +373,7 @@ function compressName(name)
         return name;
     }
 }
-
-function newTextElement()
-{
+function newTextElement(){
     console.log('newTextElement');
 
     stopAddFileToTrack();
@@ -419,9 +393,7 @@ function newTextElement()
     posX = document.getElementById('textRender').width / 2;
     posY = document.getElementById('textRender').height / 2;
 }
-
-function writeTextToCanvas(x, y)
-{
+function writeTextToCanvas(x, y){
     var contentText = document.getElementById('contentText').value;
 
     context.clear();
@@ -437,9 +409,7 @@ function writeTextToCanvas(x, y)
 
     verifyFieldTextElement();
 }
-
-function verifyFieldTextElement()
-{
+function verifyFieldTextElement(){
     var nameText = document.getElementById('nameText').value;
     var contentText = document.getElementById('contentText').value;
 
@@ -452,9 +422,7 @@ function verifyFieldTextElement()
         document.getElementById('saveTextElementButton').setAttribute('disabled', '');
     }
 }
-
-function saveTextElement()
-{
+function saveTextElement(){
     var image = new Image();
     image.src = document.getElementById('textRender').toDataURL("image/png");
     var newId;
@@ -504,9 +472,7 @@ function saveTextElement()
 
     document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + compressName(nameText) + '</h4></a>';
 }
-
-function base64ToArrayBuffer(string_base64)
-{
+function base64ToArrayBuffer(string_base64){
     var binary_string = window.atob(string_base64);
     var len = binary_string.length;
     var bytes = new Uint8Array(len);
@@ -516,9 +482,7 @@ function base64ToArrayBuffer(string_base64)
     }
     return bytes.buffer;
 }
-
-CanvasRenderingContext2D.prototype.clear =
-    CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
+CanvasRenderingContext2D.prototype.clear = CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
         if (preserveTransform) {
             this.save();
             this.setTransform(1, 0, 0, 1, 0, 0);
@@ -530,9 +494,7 @@ CanvasRenderingContext2D.prototype.clear =
             this.restore();
         }
     };
-
-function fileProperties(id, type)
-{
+function fileProperties(id, type){
     console.log('fileProperties');
 
     $('#selectFileLib').modal('show');
@@ -557,9 +519,7 @@ function fileProperties(id, type)
 
     getInfoForFileId(id, type);
 }
-
-function getInfoForFileId(id, type, mode)
-{
+function getInfoForFileId(id, type, mode){
     if (mode == "JSon")
     {
         return tabListFiles[id];
@@ -592,9 +552,7 @@ function getInfoForFileId(id, type, mode)
         document.getElementById('libFilePreview').innerHTML = preview;
     }
 }
-
-function editFileText(id)
-{
+function editFileText(id){
     $('#fileTextModal').modal('show');
 
     var posTabListTextElements = 0;
@@ -621,9 +579,7 @@ function editFileText(id)
 
     writeTextToCanvas(0, 0);
 }
-
-function saveEditFileText(id)
-{
+function saveEditFileText(id){
     console.log('saveEditFileText');
 
     var posTabListFiles = 0, posTabListTextElements = 0;
@@ -658,14 +614,10 @@ function saveEditFileText(id)
 
     document.getElementById('nameFile' + id).innerHTML = nameText;
 }
-
-function editFileImage(id)
-{
+function editFileImage(id){
     console.log('editFileImage');
 }
-
-function removeFile(id)
-{
+function removeFile(id){
     $('#selectFileLib').modal('hide');
 
     var toDelete = document.getElementById('libFile' + id);
@@ -682,11 +634,8 @@ function removeFile(id)
 
     console.log(tabListFiles);
 }
-
 //TRACK
-
-function addTrack()
-{
+function addTrack(){
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');
     var newTrack = document.createElement('div');
@@ -705,9 +654,7 @@ function addTrack()
     var track = new Track(tabListTracks.length, 'Undefined');
     tabListTracks.push(track);
 }
-
-function deleteTrack(id)
-{
+function deleteTrack(id){
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');
     var trackToDelete = document.getElementById('track' + id);
@@ -719,23 +666,17 @@ function deleteTrack(id)
 
     stopAddFileToTrack();
 }
-
-function updateNameTrack(id, nameTrack)
-{
+function updateNameTrack(id, nameTrack){
     console.log(nameTrack);
 
     tabListTracks[id].changeName(nameTrack);
 }
-
-function updateVolumeTrack(id, valueVolume)
-{
+function updateVolumeTrack(id, valueVolume){
     console.log('updateVolumeTrack');
 
     tabListTracks[id].changeVolume(valueVolume);
 }
-
-function addFileTrack(id)
-{
+function addFileTrack(id){
     console.log('addFileTrack');
 
     document.getElementById('stopAddFileToTrackButton').style.display = '';
@@ -753,14 +694,10 @@ function addFileTrack(id)
         filesTab[i].classList.add('active');
     }
 }
-
-function settingsTrack(id)
-{
+function settingsTrack(id){
     console.log('settingsTrack');
 }
-
-function stopAddFileToTrack()
-{
+function stopAddFileToTrack(){
     document.getElementById('stopAddFileToTrackButton').style.display = 'none';
 
     var listFilesLib = document.getElementById('listFilesLib');
@@ -776,9 +713,7 @@ function stopAddFileToTrack()
         filesTab[i].classList.remove('active');
     }
 }
-
-function removeElementFromTrack(trackId, ElementId)
-{
+function removeElementFromTrack(trackId, ElementId){
     var iterationForElementId
     for (i=0; i< tabListElements.length;i++)
     {
@@ -798,14 +733,9 @@ function removeElementFromTrack(trackId, ElementId)
     tabListTracks[trackId].elementsId.remove(tabListTracks[trackId].elementsId.lastIndexOf(ElementId));
 
 }
-
 Array.prototype.remove = function(from, to) { var rest = this.slice((to || from) + 1 || this.length); this.length = from < 0 ? this.length + from : from; return this.push.apply(this, rest); };
-
-
 //SCROLL
-
-function scroolAllTracks()
-{
+function scroolAllTracks(){
     var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
     var positionActuelle = videoTrackView.scrollTop;
     //  console.log(positionActuelle);
@@ -824,9 +754,7 @@ function scroolAllTracks()
 
     calculateTimeBar();
 }
-
-function prepareMoveElement(elementListID)
-{
+function prepareMoveElement(elementListID){
     divElementSelectedForMove.elementListID = elementListID;
     divElementSelectedForMove.id = tabListElements[elementListID].id;
     divElementSelectedForMove.trackId = tabListElements[elementListID].trackId;
@@ -834,9 +762,7 @@ function prepareMoveElement(elementListID)
     canMove = true;
     console.log('true!')
 }
-
-function stopMoveElement()
-{
+function stopMoveElement(){
     canMove = false;
     console.log('false!');
     if (parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.Object.style.maxWidth.replace('px', ''))) {
@@ -848,9 +774,7 @@ function stopMoveElement()
     }
     tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.Object.style.marginLeft.replace('px', ''))
 }
-
-function addElement(id, idTrack)
-{
+function addElement(id, idTrack){
     var info = getInfoForFileId(id, null, "JSon");
 
     var idElement;
@@ -885,8 +809,7 @@ function addElement(id, idTrack)
     console.log('------------------',ElementToAdd.offset,'-------------------------');
     tabListElements.push(ElementToAdd);
 }
-function newRecord()
-{
+function newRecord(){
     stopAddFileToTrack();
 
     document.getElementById('chooseRecordButtons').style.display = '';
@@ -898,23 +821,18 @@ function newRecord()
 
     $('#recordAudioOrVideoElement').modal('show');
 }
-
-function chooseVideoRecord()
-{
+function chooseVideoRecord(){
     document.getElementById('videoRecord').style.display = '';
     document.getElementById('saveRecordButton').style.display = '';
     document.getElementById('audioRecord').style.display = 'none';
     document.getElementById('chooseRecordButtons').style.display = 'none';
 }
-
-function chooseAudioRecord()
-{
+function chooseAudioRecord(){
     document.getElementById('audioRecord').style.display = '';
     document.getElementById('saveRecordButton').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
     document.getElementById('chooseRecordButtons').style.display = 'none';
 }
-
 function handleMouseMove(event) {
     event = event || window.event; // IE-ism
     if (canMove && !resizing) {
@@ -971,25 +889,20 @@ function handleMouseMove(event) {
 
     }
 }
-
-function showLoadingDiv()
-{
+function showLoadingDiv(){
     console.log('showLoadingDiv');
 
     $('#loadingDiv').modal('show');
 
     document.getElementById('editor').setAttribute('disabled', '');
 }
-
-function hideLoadingDiv()
-{
+function hideLoadingDiv(){
     console.log('hideLoadingDiv');
 
     $('#loadingDiv').modal('hide');
 
     document.getElementById('editor').removeAttribute('disabled');
 }
-
 window.onmousedown = function (e) {
 
     lastPosition.x = e.clientX;
@@ -1081,19 +994,14 @@ function activeResize() {
         }
     }
 }
-
 window.onload = function (e) {
     calculateTimeBar();
     updateTextProject();
 }
-
-function makeRender()
-{
+function makeRender(){
    renderVar = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
 }
-
-function getCurrentDate()
-{
+function getCurrentDate(){
     var date = new Date();
 
     var dayOfMonth = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
@@ -1109,7 +1017,6 @@ function getCurrentDate()
 
     return currentDate;
 }
-
 window.onbeforeunload = function (e) {
     e = e || window.event;
 

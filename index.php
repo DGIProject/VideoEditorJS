@@ -242,7 +242,6 @@
 <script src="js/TextElement.js"></script>
 <script src="js/Render.js"></script>
 <script src="js/GenerateFileProject.js"></script>
-<script src="js/ReadFileProject.js"></script>
 <script src="js/lib/terminal.js"></script>
 
 <script type="text/javascript">
