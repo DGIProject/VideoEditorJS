@@ -5,11 +5,11 @@ include "config.php";
 if($_GET['u'] != NULL && $_GET['p'] != NULL && $_GET['fileId'] != NULL)
 {
     $filename = 'file'.$_GET['fileId'].'.file';
-    $path = "../$DIR_projectsData/" . $_GET['u'] . '/' . $_GET['p'] . '/';
+    $path = "../$DIR_projectsData/" .$_SESSION['user']. '/' . $_GET['p'] . '/';
 
     if(!is_dir($path))
     {
-        mkdir("../$DIR_projectsData/". $_GET['u'] . '/');
+        mkdir("../$DIR_projectsData/". $_SESSION['user'] . '/');
         mkdir($path);
     }
 

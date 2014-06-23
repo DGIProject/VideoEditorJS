@@ -1,3 +1,12 @@
+<?php
+    include "../model/sql_connect.php";
+    if (!isset($_SESSION['user']))
+    {
+        echo 'Vous devez vous connecter avec un compte elève avant toute chose';
+        exit(0);
+    }
+?>
+
 <!DOCTYPE html>
 <html>
 <head>

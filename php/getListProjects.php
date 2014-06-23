@@ -1,7 +1,7 @@
 <?php
 include "config.php";
 
-$dirname = '../'.$DIR_projects;
+$dirname = '../'.$DIR_projects.'/'.$_SESSION['user'].'/';
 
 $dir = opendir($dirname);
 

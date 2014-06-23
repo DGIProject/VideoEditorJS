@@ -1,5 +1,9 @@
 <?php
 
+// On inclue la conexion a la base sql qui doit être faites dans un autre fichier
+
+include_once "../../model/sql_connect.php";
+
 //TODO: Ce fichier va traiter la configuration pour le chemin de ffmpeg par explemple et autre information de config pour la generation du fichier final
 // Base directory is '/' of php installation. For linux apache/php server it correspond to /var/www/
 

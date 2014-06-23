@@ -3,7 +3,7 @@ include "config.php";
 
 $fileName = $_POST['fileName'];
 
-if (!$fp = fopen("../$DIR_projects/" . $fileName, "r"))
+if (!$fp = fopen("../$DIR_projects/" .$_SESSION['user'].'/'. $fileName, "r"))
 {
     echo "Echec de l'ouverture du fichier";
 

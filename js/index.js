@@ -501,6 +501,7 @@ function fileProperties(id, type){
     console.log('fileProperties');
 
     $('#selectFileLib').modal('show');
+    type = tabListFiles[id].type;
 
     if(type == 'text')
     {
@@ -520,6 +521,8 @@ function fileProperties(id, type){
 
     document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
+
+    console.log('id '+id+ "Type !!!! "+type);
     getInfoForFileId(id, type);
 }
 function getInfoForFileId(id, type, mode){
@@ -539,13 +542,11 @@ function getInfoForFileId(id, type, mode){
 
         var preview;
 
-        if(type == 'image')
+        console.log(type);
+
+        if(type == 'image' || type == 'text')
         {
-            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/data/project_19_AZE/file'+tabListFiles[id].id+'.file">';
-        }
-        else if (type == 'text')
-        {
-            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/data/project_19_AZE/title'+tabListFiles[id].id+'.png">';
+            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/php/getFile.php?p='+currentProject.name+'&fileId='+tabListFiles[id].id+'">';
         }
         else
         {
