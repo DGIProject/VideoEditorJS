@@ -270,7 +270,7 @@
         {
             console.log(e.loaded);
 
-            var persent = Math.ceil((e.loaded/23905207)*100) + '%';
+            var persent = Math.ceil((e.loaded/27547136)*100) + '%';
 
             document.getElementById('downloadJSProgress').style.width = persent;
             document.getElementById('persentProgress').innerHTML = persent;

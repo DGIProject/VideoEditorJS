@@ -4,7 +4,7 @@ include "config.php";
 
 if($_POST['nameProject'] != NULL && $_POST['contentFile'] != NULL)
 {
-    $pathToFilename = "../$DIR_ffmpegCmdFiles/".$_POST['nameProject'].".ffm";
+    $pathToFilename = "../$DIR_ffmpegCmdFiles/".$_POST['nameProject'].".".$_SESSION['user'].".ffm";
 
     $fp = fopen($pathToFilename, "w");
     fputs($fp, $_POST['contentFile']);

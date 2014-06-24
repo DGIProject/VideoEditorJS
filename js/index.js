@@ -250,7 +250,6 @@ function addMultimediaFile(){
     {
         console.log('error');
 
-        //showError('error', 'Votre extension n\'est pas compatible avec VideoEditorJS.');
     }
 }
 function uploadMultimediaFile(id, file){
@@ -501,7 +500,13 @@ function fileProperties(id, type){
     console.log('fileProperties');
 
     $('#selectFileLib').modal('show');
-    type = tabListFiles[id].type;
+    for(i=0;i<tabListFiles.length;i++)
+    {
+        if (tabListFiles[i].id == id)
+        {
+            type = tabListFiles[i].type;
+        }
+    }
 
     if(type == 'text')
     {
@@ -528,17 +533,31 @@ function fileProperties(id, type){
 function getInfoForFileId(id, type, mode){
     if (mode == "JSon")
     {
-        return tabListFiles[id];
+        for(i=0;i<tabListFiles.length;i++)
+        {
+            if (tabListFiles[i].id == id)
+            {
+                return tabListFiles[i];
+            }
+        }
+
     }
     else
     {
+        for(i=0;i<tabListFiles.length;i++)
+        {
+            if (tabListFiles[i].id == id)
+            {
+                info = tabListFiles[i];
+            }
+        }
         console.log('yes');
-        console.log(tabListFiles[id].fileName);
+        console.log(info.fileName);
 
-        document.getElementById('libFileName').innerHTML = tabListFiles[id].fileName;
-        document.getElementById('libFileSize').innerHTML = tabListFiles[id].size + ' Octets';
-        document.getElementById('libFileFormat').innerHTML = tabListFiles[id].format;
-        document.getElementById('libFileDuration').innerHTML = tabListFiles[id].duration;
+        document.getElementById('libFileName').innerHTML = info.fileName;
+        document.getElementById('libFileSize').innerHTML = info.size + ' Octets';
+        document.getElementById('libFileFormat').innerHTML = info.format;
+        document.getElementById('libFileDuration').innerHTML = info.duration;
 
         var preview;
 
@@ -546,7 +565,7 @@ function getInfoForFileId(id, type, mode){
 
         if(type == 'image' || type == 'text')
         {
-            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/php/getFile.php?p='+currentProject.name+'&fileId='+tabListFiles[id].id+'">';
+            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/php/getFile.php?p='+currentProject.name+'&fileId='+info.id+'">';
         }
         else
         {
@@ -640,22 +659,32 @@ function removeFile(id){
 }
 //TRACK
 function addTrack(){
+
+    numberofTrack = tabListTracks.length;
+    var nextId = 0;
+    if (numberofTrack != 0)
+    {
+        var lastId = tabListTracks[numberofTrack-1].id;
+        nextId = lastId+1;
+    }
+
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');
     var newTrack = document.createElement('div');
     var newViewTrack = document.createElement('div');
     newTrack.setAttribute('class', 'singleTrack');
-    newTrack.setAttribute('id', 'track' + tabListTracks.length);
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + tabListTracks.length + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + tabListTracks.length + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + tabListTracks.length + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    newTrack.setAttribute('id', 'track' + nextId);
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
     newViewTrack.setAttribute('style','width: 1000px;');
-    newViewTrack.setAttribute('id', 'ViewTrack' + tabListTracks.length);
-    newViewTrack.innerHTML = '<p id="textViewEditor' + tabListTracks.length + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
+    newViewTrack.setAttribute('id', 'ViewTrack' + nextId);
+    newViewTrack.innerHTML = '<p id="textViewEditor' + nextId + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
 
     var track = new Track(tabListTracks.length, 'Undefined');
+
     tabListTracks.push(track);
 }
 function deleteTrack(id){
@@ -666,7 +695,24 @@ function deleteTrack(id){
     videoView.removeChild(ViewTrackToDelete);
     tracks.removeChild(trackToDelete);
 
-    tabListTracks[id] = 0;
+    var tabTrackId;
+
+    for (i=0;i< tabListTracks.length;i++)
+    {
+        if (tabListTracks[i].id == id)
+        {
+           tabTrackId = i;
+        }
+    }
+
+    elementsInTrack = tabListTracks[tabTrackId].elementsId;
+    for (i=0;i<elementsInTrack.length;i++)
+    {
+
+    }
+
+    tabListTracks.remove(tabTrackId);
+
 
     stopAddFileToTrack();
 }
@@ -718,7 +764,7 @@ function stopAddFileToTrack(){
     }
 }
 function removeElementFromTrack(trackId, ElementId){
-    var iterationForElementId
+    var iterationForElementId, trackItId;
     for (i=0; i< tabListElements.length;i++)
     {
         if (tabListElements[i].id == ElementId)
@@ -727,7 +773,15 @@ function removeElementFromTrack(trackId, ElementId){
         }
     }
 
-    var track = document.getElementById('ViewTrack' + trackId);
+    for (i=0; i< tabListTracks.length;i++)
+    {
+        if (tabListTracks[i].id == trackId)
+        {
+            trackItId = i;
+        }
+    }
+
+    var track = document.getElementById('ViewTrack' + trackItId);
     var elementToDelete = document.getElementById("trackElementId" + tabListElements[iterationForElementId].id);
     track.removeChild(elementToDelete);
     tabListElements.remove(iterationForElementId);
@@ -799,9 +853,9 @@ function addElement(id, idTrack){
 
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");
-    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + tabListElements.length + ")'><span class='glyphicon glyphicon-remove'></span></button>";
-    element.setAttribute('id', 'trackElementId' + tabListElements.length);
-    element.setAttribute('onmousedown', 'prepareMoveElement(' + tabListElements.length + ')');
+    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + idElement + ")'><span class='glyphicon glyphicon-remove'></span></button>";
+    element.setAttribute('id', 'trackElementId' + idElement);
+    element.setAttribute('onmousedown', 'prepareMoveElement(' + idElement + ')');
     element.setAttribute('onmouseup', 'stopMoveElement()');
     element.style.width = ElementToAdd.length + "px";
     element.style.cursor = 'move';

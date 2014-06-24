@@ -65,6 +65,7 @@ Render.prototype.prepareElement = function () {
 }
 
 Render.prototype.makeCommandFile = function () {
+
     //TODO: générer un fichier puis l'envoyer sur le serveur qui va parser et traiter la demande.
 
     var OAjax;
