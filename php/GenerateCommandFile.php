@@ -10,7 +10,7 @@ if($_POST['nameProject'] != NULL && $_POST['contentFile'] != NULL)
     fputs($fp, $_POST['contentFile']);
     fclose($fp);
 
-    $file = "$DIR_Sample/black.png";
+  /*  $file = "$DIR_Sample/black.png";
     $newfile = $pathToFilename = "../$DIR_ffmpegCmdFiles/black.png";
 
     if (!copy($file, $newfile)) {
@@ -18,7 +18,7 @@ if($_POST['nameProject'] != NULL && $_POST['contentFile'] != NULL)
     }else
     {
         echo 'true';
-    }
+    }*/
 
 
 

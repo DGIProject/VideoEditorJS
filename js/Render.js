@@ -86,6 +86,7 @@ Render.prototype.makeCommandFile = function () {
         console.log(this.listCommand[i].command)
     }
 
+
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send('contentFile=' + content + '&nameProject=' + currentProject.name);
 
@@ -108,6 +109,7 @@ Render.prototype.makeCommandTracks = function () {
         noncolleeTenS = 0
         //Pour chaque element de la piste
         for (elementTrackIteration = 0; elementTrackIteration < trackElements.length; elementTrackIteration++) {
+
             currentElementIdFromTrack = trackElements[elementTrackIteration];
             currentElement = this.Elements[currentElementIdFromTrack];
             console.log("Current Element", currentElement)
@@ -131,7 +133,16 @@ Render.prototype.makeCommandTracks = function () {
 
                     if (this.Files[currentElement.fileId].type == "text" )
                     {
-                        tempCommand = "-loop 1 -i title"+currentElement.fileId+".png -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                        tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                    }
+                    else if (this.Files[currentElement.fileId].type == "image")
+                    {
+                        if (this.Files[currentElement.fileId].format == "jpg" || this.Files[currentElement.fileId].format == "jpeg")
+                            tempCommand = "-loop 1 -f image2 -c:v mjpeg -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                        else if(this.Files[currentElement.fileId].format == "png")
+                            tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                        else if(this.Files[currentElement.fileId].format == "bmp")
+                            tempCommand = "-loop 1 -f image2 -c:v bmp -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
                     }
                     else
                     {
@@ -157,7 +168,16 @@ Render.prototype.makeCommandTracks = function () {
 
                     if (this.Files[currentElement.fileId].type == "text" )
                     {
-                        tempCommand = "-loop 1 -i title"+currentElement.fileId+".png -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                        tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                    }
+                    else if (this.Files[currentElement.fileId].type == "image")
+                    {
+                        if (this.Files[currentElement.fileId].format == "jpg" || this.Files[currentElement.fileId].format == "jpeg")
+                            tempCommand = "-loop 1 -f image2 -c:v mjpeg -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                        else if(this.Files[currentElement.fileId].format == "png")
+                            tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                        else if(this.Files[currentElement.fileId].format == "bmp")
+                            tempCommand = "-loop 1 -f image2 -c:v bmp -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
                     }
                     else
                     {
@@ -172,7 +192,7 @@ Render.prototype.makeCommandTracks = function () {
                     this.Elements.push(blackElement);
 
 
-                    var tempCommand = "-loop 1 -i black.png -t "+ecart+" "+parseInt(this.Elements.length-1)+".mp4";
+                    var tempCommand = "-loop 1 -i black.png -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t "+ecart+" "+parseInt(this.Elements.length-1)+".mp4";
                     this.listCommand.push({command: tempCommand, fileId: this.blackElementId , elementIdInTab: this.Elements[this.Elements.length - 1]});
                     this.infoElements.push({start: endPosCurrentElement, end: endPosCurrentElement + blackElement.length, black: true})
 
@@ -189,7 +209,16 @@ Render.prototype.makeCommandTracks = function () {
 
                 if (this.Files[currentElement.fileId].type == "text" )
                 {
-                    tempCommand = "-loop 1 -i title"+currentElement.fileId+".png -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                    tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                }
+                else if (this.Files[currentElement.fileId].type == "image")
+                {
+                    if (this.Files[currentElement.fileId].format == "jpg" || this.Files[currentElement.fileId].format == "jpeg")
+                        tempCommand = "-loop 1 -f image2 -c:v mjpeg -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + "  " + currentElement.id + ".mp4";
+                    else if(this.Files[currentElement.fileId].format == "png")
+                        tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                    else if(this.Files[currentElement.fileId].format == "bmp")
+                        tempCommand = "-loop 1 -f image2 -c:v bmp -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
                 }
                 else
                 {
@@ -203,10 +232,30 @@ Render.prototype.makeCommandTracks = function () {
         }
 
     }
+
+    this.lastCmd = ''
+    complexfliter = '-filter_complex \''
+    ending = "concat=n="+this.listCommand.length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]'  -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
+
+    for (i=0;i<this.listCommand.length;i++)
+    {
+        this.lastCmd += '-i '+this.listCommand[i].fileId+'.mp4 '
+        complexfliter += '['+i+':0]['+i+':1]'
+    }
+
+    this.lastCmd += complexfliter
+    this.lastCmd += ending
+    this.lastCmd += " out.mp4"
+
+    console.log("LastCmd" + this.lastCmd);
+
+    this.listCommand.push({command: this.lastCmd})
+
     console.log(this.listCommand);
     console.log(this.infoElements);
     console.log(this.Elements);
     console.log("il y a ", noncollee, "element non collé");
+
     this.makeCommandFile();
     //commandList = listCommand;
 }
