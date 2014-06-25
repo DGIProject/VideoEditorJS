@@ -448,7 +448,7 @@ function saveTextElement(){
 
     var arrayBuffer = base64ToArrayBuffer(image.src.replace(/^data:image\/(png|jpg);base64,/, ""));
     console.log(new Uint8Array(arrayBuffer))
-    var currentItem = new FileList(newId, 'text', 0, nameText, 'tl', new Uint8Array(arrayBuffer));
+    var currentItem = new FileList(newId, 'text', 0, nameText, 'png', new Uint8Array(arrayBuffer));
     currentItem.setDuration('00:00:20');
 
     console.log('currentItem ' + currentItem);

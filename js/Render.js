@@ -2,7 +2,6 @@
  * Created by Guillaume on 18/02/14.
  */
 
-currentFileIteration = 0
 
 Render = function (tabListElements, tabListFiles, tabListTextElements, tabListTracks) {
     this.Elements = tabListElements;
@@ -12,18 +11,21 @@ Render = function (tabListElements, tabListFiles, tabListTextElements, tabListTr
     this.videoLenthPx = 0; //PX !!!
     this.videoDuration = 0 //Secondes !!
 
-    commandList = [];
-    currentFileIteration = 0
-	var blackImageFile = new FileList(this.Files.length, 'Image', 0, 'Blackelement', 'png', null);
-	this.Files.push(blackImageFile);
-	this.blackElementId = this.Files.length-1;
-	console.log(this.blackElementId);
+    console.log(this.Files);
+    console.log(this.Files.length);
+    console.log(this.Files[this.Files.length-1]);
+    console.log("id = ",this.Files[this.Files.length-1].id);
+    var newId = parseInt(this.Files[this.Files.length-1].id)+1;
+    console.log("n ==== ",newId);
+	this.blackImageFile = new FileList(newId, 'Image', 0, 'Blackelement', 'png', null);
+	this.Files.push(this.blackImageFile);
+    this.blackFileId = newId;
     this.prepareElement();
 
 }
 
 Render.prototype.prepareElement = function () {
-    var ElementIncrementMin = 100000000;
+   /* var ElementIncrementMin = 100000000;
     var ElementIncrementMinId;
     for (i = 0; i < this.Elements.length; i++) {
         if (this.Elements[i].marginXpx < ElementIncrementMin) {
@@ -59,7 +61,7 @@ Render.prototype.prepareElement = function () {
 
   //  $("#loadingDivConvert").modal('show');
 
-    console.log(this)
+    console.log(this)*/
     this.makeCommandTracks();
 
 }
@@ -72,7 +74,7 @@ Render.prototype.makeCommandFile = function () {
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
     else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', 'php/GenerateCommandFile.php?u=User1', true);
+    OAjax.open('POST', 'php/GenerateCommandFile.php', true);
     OAjax.onreadystatechange = function() {
         if(OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
@@ -80,10 +82,10 @@ Render.prototype.makeCommandFile = function () {
     }
 
     var content = "";
-    for (i=0;i<this.listCommand.length;i++)
+    for (i=0;i<this.commandList.length;i++)
     {
-        content += this.listCommand[i].command +"\n"
-        console.log(this.listCommand[i].command)
+        content += this.commandList[i].cmd +"\n"
+        console.log(this.commandList[i].cmd)
     }
 
 
@@ -94,152 +96,70 @@ Render.prototype.makeCommandFile = function () {
     //$("#loadingDivConvert").modal('hide');
 }
 Render.prototype.makeCommandTracks = function () {
-    // Elements
-    this.listCommand = [];
-    var px = 0;
-    var continuer = 0;
-    this.infoElements = [];
-    var noncollee = 0, noncolleeTenS = 0;
 
-    // Pour chaque piste
-    for (trackIteration = 0; trackIteration < this.Tracks.length; trackIteration++) {
-        trackElements = this.Tracks[trackIteration].elementsId;
-        console.log('ELement de la piste: ', trackElements);
-        noncollee = 0;
-        noncolleeTenS = 0
-        //Pour chaque element de la piste
-        for (elementTrackIteration = 0; elementTrackIteration < trackElements.length; elementTrackIteration++) {
+    this.commandList = [];
 
-            currentElementIdFromTrack = trackElements[elementTrackIteration];
-            currentElement = this.Elements[currentElementIdFromTrack];
-            console.log("Current Element", currentElement)
-            // On test si c'est pas le dernier element
-            console.log("current ELement ID from track : ", currentElementIdFromTrack)
+    for (var avancementPiste =0;avancementPiste<this.Tracks.length;avancementPiste++) // Pour chaque piste
+    {
+        var pisteActuelle = this.Tracks[avancementPiste]  // on stoque la piste
+        var elementInPiste = pisteActuelle.elementsId;
 
-            if (elementTrackIteration + 1 < trackElements.length) {
-                nextElementId = trackElements[elementTrackIteration + 1];
-                nextElement = this.Elements[nextElementId];
-                console.log("Element suivant ID: ", nextElementId, nextElement);
+        console.log("Piste",pisteActuelle, "Element en Piste", elementInPiste);
 
-                startPosNextElement = nextElement.offset
-                endPosCurrentElement = currentElement.offset + currentElement.length
+        for (var avancementElementPiste = 0;avancementElementPiste<elementInPiste.length;avancementElementPiste++) // pour chaque Element de la piste
+        {
+            curentElement =  this.getElementById(elementInPiste[avancementElementPiste]);
 
-                console.log("Position Element : Start next:", startPosNextElement, "End current : ", endPosCurrentElement)
-                if (startPosNextElement == endPosCurrentElement) {
-                    // Si les éléments sont collé ...
-                    console.log("l'element collé !!! ");
+            // Creation d'une commande pour l'element
+            curentFileforElement = this.getFileInformationById(curentElement.fileId)
 
-                    var tempCommand
-
-                    if (this.Files[currentElement.fileId].type == "text" )
-                    {
-                        tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                    }
-                    else if (this.Files[currentElement.fileId].type == "image")
-                    {
-                        if (this.Files[currentElement.fileId].format == "jpg" || this.Files[currentElement.fileId].format == "jpeg")
-                            tempCommand = "-loop 1 -f image2 -c:v mjpeg -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                        else if(this.Files[currentElement.fileId].format == "png")
-                            tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                        else if(this.Files[currentElement.fileId].format == "bmp")
-                            tempCommand = "-loop 1 -f image2 -c:v bmp -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                    }
-                    else
-                    {
-                        tempCommand = "-i file"+currentElement.fileId+".file -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
-                    }
-
-                    this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
-                    this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
-
+            if (curentFileforElement.type == "image" || curentFileforElement.type == "text"){
+                var codec = ""
+                switch (curentFileforElement.format)
+                {
+                    case "png":
+                        codec = "png";
+                        break
+                    case "bmp":
+                        codec = "bmp";
+                        break
+                    case "jpeg":
+                        codec = "mjpeg";
+                        break
+                    case "jpg":
+                        codec = "mjpeg";
+                        break
                 }
-                else {
-                    // Si deux element ne sont pas colle
-                    console.log("l'element non collé !!! ");
-                    // on crée un element fictif qui va correcpondre a une image noire.
-                    // 1) on calcule la longueur en pixel :
-
-                    ecart = Math.abs(startPosNextElement - endPosCurrentElement);
-                    durre = Math.ceil(ecart / oneSecond);
-
-                    console.log("Il y a un ecart de ", ecart, " pixels soit ", durre, " secondes");
-
-                    var tempCommand
-
-                    if (this.Files[currentElement.fileId].type == "text" )
-                    {
-                        tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                    }
-                    else if (this.Files[currentElement.fileId].type == "image")
-                    {
-                        if (this.Files[currentElement.fileId].format == "jpg" || this.Files[currentElement.fileId].format == "jpeg")
-                            tempCommand = "-loop 1 -f image2 -c:v mjpeg -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                        else if(this.Files[currentElement.fileId].format == "png")
-                            tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a  -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                        else if(this.Files[currentElement.fileId].format == "bmp")
-                            tempCommand = "-loop 1 -f image2 -c:v bmp -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                    }
-                    else
-                    {
-                        tempCommand = "-i file"+currentElement.fileId+".file -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
-                    }
-                    // on ajoute le fichier d'avant
-                    this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
-                    this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
-
-                    // Full element !!
-                    var blackElement = new Elements(this.Elements.length, "black.png", "00:00:"+ecart, null, trackIteration);
-                    this.Elements.push(blackElement);
-
-
-                    var tempCommand = "-loop 1 -i black.png -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t "+ecart+" "+parseInt(this.Elements.length-1)+".mp4";
-                    this.listCommand.push({command: tempCommand, fileId: this.blackElementId , elementIdInTab: this.Elements[this.Elements.length - 1]});
-                    this.infoElements.push({start: endPosCurrentElement, end: endPosCurrentElement + blackElement.length, black: true})
-
-                    noncollee++;
-                }
+                var cmd = "-loop 1 -f image2 -c:v "+codec+" -i file"+curentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -t "+(Math.ceil(curentElement.length/oneSecond))+" -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y "+curentElement.fileId+".mp4";
+                console.log(cmd)
+                this.commandList.push({cmd: cmd, fileId : curentElement.fileId});
+            }
+            else{
 
             }
-            else {
-                // cela veux dire que c'est le dernier !
-                console.log("C'est le dernier avec Iteration ", elementTrackIteration);
 
-                //Ajout des information pour générer les fichier qui correspondent
-                var tempCommand
-
-                if (this.Files[currentElement.fileId].type == "text" )
+            if (avancementElementPiste+1<elementInPiste.length) // on verifie qu'il existe un element apres
+            {
+                nextElement = this.getElementById(elementInPiste[avancementElementPiste+1]);
+                if (nextElement.marginXsecond != 0)
                 {
-                    tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
+                   // console.log("Create blackElement");
+                    var cmd = "-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t "+nextElement.marginXsecond+" -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y "+this.blackFileId+".mp4";
+                    console.log(cmd);
+                    this.commandList.push({cmd: cmd, fileId : this.blackFileId});
                 }
-                else if (this.Files[currentElement.fileId].type == "image")
-                {
-                    if (this.Files[currentElement.fileId].format == "jpg" || this.Files[currentElement.fileId].format == "jpeg")
-                        tempCommand = "-loop 1 -f image2 -c:v mjpeg -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + "  " + currentElement.id + ".mp4";
-                    else if(this.Files[currentElement.fileId].format == "png")
-                        tempCommand = "-loop 1 -f image2 -c:v png -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                    else if(this.Files[currentElement.fileId].format == "bmp")
-                        tempCommand = "-loop 1 -f image2 -c:v bmp -i file"+currentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4";
-                }
-                else
-                {
-                    tempCommand = "-i file"+currentElement.fileId+".file -ss " + parseInt(currentElement.getStartTimeFromStartLenth()) + " -t " + parseInt(currentElement.getDurationInSecondFromCurrentDuration() - currentElement.startTime) + " " + currentElement.id + ".mp4"
-                }
-
-                this.listCommand.push({command: tempCommand, fileId: currentElement.fileId, elementIdInTab: currentElementIdFromTrack});
-                this.infoElements.push({start: currentElement.offset, end: currentElement.offset + currentElement.length})
 
             }
         }
-
     }
 
     this.lastCmd = ''
     complexfliter = '-filter_complex \''
-    ending = "concat=n="+this.listCommand.length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]'  -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
+    ending = "concat=n="+this.commandList.length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]'  -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
 
-    for (i=0;i<this.listCommand.length;i++)
+    for (i=0;i<this.commandList.length;i++)
     {
-        this.lastCmd += '-i '+this.listCommand[i].fileId+'.mp4 '
+        this.lastCmd += '-i '+this.commandList[i].fileId+'.mp4 '
         complexfliter += '['+i+':0]['+i+':1]'
     }
 
@@ -249,13 +169,29 @@ Render.prototype.makeCommandTracks = function () {
 
     console.log("LastCmd" + this.lastCmd);
 
-    this.listCommand.push({command: this.lastCmd})
+    this.commandList.push({cmd: this.lastCmd})
 
-    console.log(this.listCommand);
-    console.log(this.infoElements);
-    console.log(this.Elements);
-    console.log("il y a ", noncollee, "element non collé");
+    console.log(this.commandList);
 
     this.makeCommandFile();
-    //commandList = listCommand;
+}
+Render.prototype.getElementById = function(id){
+    for (i=0;i<this.Elements.length;i++)
+    {
+        if (this.Elements[i].id == id)
+        {
+           var element = this.Elements[i];
+        }
+    }
+    return element;
+}
+Render.prototype.getFileInformationById = function(id){
+    for (i=0;i<this.Files.length;i++)
+    {
+        if (this.Files[i].id == id)
+        {
+            var file = this.Files[i];
+        }
+    }
+    return file;
 }
