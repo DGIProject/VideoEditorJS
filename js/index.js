@@ -33,7 +33,7 @@ function newProject(reset){
     {
         $('#newProjectModal').modal('hide');
 
-        stopAddFileToTrack();
+        currentProject.stopAddFileTrack();
 
         if(reset)
         {
@@ -170,8 +170,136 @@ function updateTextProject(){
     }
 }
 //FILE
+
+function addFile()
+{
+    currentProject.stopAddFileTrack();
+
+    var currentFile = document.getElementById('fileLoader').files[0];
+    console.log(currentFile);
+
+    var typeFile = getTypeFile(currentFile.name);
+    console.log(typeFile);
+
+    if(typeFile != 'ERROR')
+    {
+        var fileId = tabListFiles.length;
+
+        if(typeFile == TYPE.IMAGE)
+        {
+            var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
+            currentItem.setDuration('00:00:20');
+
+            tabListFiles.push(currentItem);
+        }
+        else
+        {
+            actionWorker = "getDurationFile";
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var data = e.target.result;
+
+                var ElementData = new Uint8Array(data);
+
+                worker.postMessage({
+                    type: "command",
+                    arguments: ["-i", "fileInput"],
+                    files: [
+                        {
+                            "name": "fileInput",
+                            "data": ElementData
+                        }
+                    ]
+                });
+
+                var currentItem = new FileList(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
+                console.log('currentItem ' + currentItem);
+                tabListFiles.push(currentItem);
+            };
+
+            reader.readAsArrayBuffer(currentFile);
+
+            currentProject.loadModal();
+        }
+
+        console.log('next');
+
+        var iconName = '';
+
+        switch(typeFile)
+        {
+            case TYPE.AUDIO :
+                iconName = 'glyphicon-music';
+                break;
+            case TYPE.VIDEO :
+                iconName = 'glyphicon-film';
+                break;
+            case TYPE.IMAGE :
+                iconName = 'glyphicon-picture';
+                break;
+            default :
+                iconName = 'glyphicon-file';
+        }
+
+        var fileE = document.createElement('a');
+        fileE.id = 'file' + fileId;
+        fileE.href = '#';
+        fileE.setAttribute('onclick', 'fileProperties(' + fileId + ', ' + typeFile + ');');
+        fileE.classList.add('list-group-item');
+        fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(currentFile.name) + '</h4><div id="toolsFile' + fileId + '"></div>';
+
+        uploadFile(fileId, currentFile);
+    }
+    else
+    {
+        var n = noty({layout: 'top', type: 'error', text: 'Erreur, ce fichier n\'est pas compatible avec le système.', timeout: '5000'});
+    }
+}
+
+function getTypeFile(fileName)
+{
+    console.log(fileName);
+
+    var extension = fileName.split('.').reverse()[0];
+    console.log(extension);
+
+    var tabExtensionAudio = ['mp3', 'wav','wmv'];
+    var tabExtensionVideo = ['avi', 'mp4','wma','flv'];
+    var tabExtensionImage = ['png', 'jpg', 'jpeg','gif'];
+
+    if(tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1)
+    {
+        return TYPE.AUDIO;
+    }
+    else if(tabExtensionVideo.lastIndexOf(extension.toLowerCase()) != -1)
+    {
+        return TYPE.VIDEO;
+    }
+    else if(tabExtensionImage.lastIndexOf(extension.toLowerCase()) != -1)
+    {
+        return TYPE.IMAGE;
+    }
+    else
+    {
+        return 'ERROR';
+    }
+}
+
+function compressName(name)
+{
+    if(name.length > 12)
+    {
+        return name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length);
+    }
+    else
+    {
+        return name;
+    }
+}
+
 function addMultimediaFile(){
-    stopAddFileToTrack();
+    currentProject.stopAddFileTrack();
 
     var currentFile = document.getElementById('fileLoader').files[0];
     console.log(currentFile);
@@ -224,7 +352,7 @@ function addMultimediaFile(){
                 var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
                 console.log('currentItem ' + currentItem);
                 tabListFiles.push(currentItem);
-            }
+            };
 
             reader.readAsArrayBuffer(currentFile);
 
@@ -244,20 +372,19 @@ function addMultimediaFile(){
 
         document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + compressName(currentFile.name) + '</h4><div id="divToolsFile' + newId + '"></div></a>';
 
-        uploadMultimediaFile(newId, currentFile);
+        uploadFile(newId, currentFile);
     }
     else
     {
-        console.log('error');
-
+        var n = noty({layout: 'top', type: 'error', text: 'Erreur, ce fichier n\'est pas compatible avec le système.', timeout: '5000'});
     }
 }
-function uploadMultimediaFile(id, file){
+function uploadFile(id, file){
     if(currentProject.name != 'undefined')
     {
         currentUploads++;
 
-        document.getElementById('divToolsFile' + id).innerHTML = '<div id="divProgressFile' + id + '" class="progress"><div id="progressFile' + id + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div>';
+        document.getElementById('toolsFile' + id).innerHTML = '<div id="divProgressFile' + id + '" class="progress"><div id="progressFile' + id + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div>';
 
         var fd = new FormData();
         fd.append('multimediaFile', file);
@@ -301,12 +428,14 @@ function uploadMultimediaFile(id, file){
                     buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
                     buttonRetryUpload.innerHTML = 'Réessayer';
 
-                    document.getElementById('divToolsFile' + id).innerHTML = '';
-                    document.getElementById('divToolsFile' + id).appendChild(buttonRetryUpload);
+                    document.getElementById('toolsFile' + id).innerHTML = '';
+                    document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
                 }
                 else
                 {
-                    document.getElementById('divToolsFile' + id).innerHTML = '';
+                    var n = noty({layout: 'top', type: 'success', text: 'Le fichier ' + file.name + ' a bien été envoyé.', timeout: '5000'});
+
+                    document.getElementById('toolsFile' + id).innerHTML = '';
                 }
             }
         };
@@ -318,7 +447,7 @@ function uploadMultimediaFile(id, file){
     {
         tabFilesUpload[tabFilesUpload.length] = [id, file];
 
-        document.getElementById('divToolsFile' + id).innerHTML = 'Pas encore envoyé.';
+        document.getElementById('toolsFile' + id).innerHTML = 'Pas encore envoyé.';
     }
 }
 function uploadAllFiles(){
@@ -338,47 +467,10 @@ function uploadAllFiles(){
         console.log('notFilesToUpload');
     }
 }
-function getTypeFile(fileName){
-    console.log(fileName);
-
-    var extension = fileName.split('.').reverse()[0];
-    console.log(extension);
-
-    var tabExtensionAudio = ['mp3', 'wav','wmv'];
-    var tabExtensionVideo = ['avi', 'mp4','wma','flv'];
-    var tabExtensionImage = ['png', 'jpg', 'jpeg','gif'];
-
-    if(tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1)
-    {
-        return 'audio';
-    }
-    else if(tabExtensionVideo.lastIndexOf(extension.toLowerCase()) != -1)
-    {
-        return 'video';
-    }
-    else if(tabExtensionImage.lastIndexOf(extension.toLowerCase()) != -1)
-    {
-        return 'image';
-    }
-    else
-    {
-        return 'error';
-    }
-}
-function compressName(name){
-    if(name.length > 12)
-    {
-        return name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length);
-    }
-    else
-    {
-        return name;
-    }
-}
 function newTextElement(){
     console.log('newTextElement');
 
-    stopAddFileToTrack();
+    currentProject.stopAddFileTrack();
 
     $('#fileTextModal').modal('show');
 
@@ -424,7 +516,8 @@ function verifyFieldTextElement(){
         document.getElementById('saveTextElementButton').setAttribute('disabled', '');
     }
 }
-function saveTextElement(){
+function saveTextElement()
+{
     var image = new Image();
     image.src = document.getElementById('textRender').toDataURL("image/png");
     var newId;
@@ -674,7 +767,7 @@ function addTrack(){
     var newViewTrack = document.createElement('div');
     newTrack.setAttribute('class', 'singleTrack');
     newTrack.setAttribute('id', 'track' + nextId);
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
@@ -713,8 +806,7 @@ function deleteTrack(id){
 
     tabListTracks.remove(tabTrackId);
 
-
-    stopAddFileToTrack();
+    currentProject.stopAddFileTrack();
 }
 function updateNameTrack(id, nameTrack){
     console.log(nameTrack);
@@ -726,42 +818,9 @@ function updateVolumeTrack(id, valueVolume){
 
     tabListTracks[id].changeVolume(valueVolume);
 }
-function addFileTrack(id){
-    console.log('addFileTrack');
 
-    document.getElementById('stopAddFileToTrackButton').style.display = '';
-
-    var listFilesLib = document.getElementById('listFilesLib');
-    var filesTab = listFilesLib.getElementsByTagName('a');
-
-    for(var i = 0; i < filesTab.length; i++)
-    {
-        var idFile = filesTab[i].getAttribute('idFile');
-
-        filesTab[i].removeAttribute('onclick');
-        filesTab[i].setAttribute('onclick', 'addElement(' + idFile + ', ' + id + ');');
-
-        filesTab[i].classList.add('active');
-    }
-}
 function settingsTrack(id){
     console.log('settingsTrack');
-}
-function stopAddFileToTrack(){
-    document.getElementById('stopAddFileToTrackButton').style.display = 'none';
-
-    var listFilesLib = document.getElementById('listFilesLib');
-    var filesTab = listFilesLib.getElementsByTagName('a');
-
-    for(var i = 0; i < filesTab.length; i++)
-    {
-        var idFile = filesTab[i].getAttribute('idFile');
-
-        filesTab[i].removeAttribute('onclick');
-        filesTab[i].setAttribute('onclick', 'fileProperties(' + idFile + ');');
-
-        filesTab[i].classList.remove('active');
-    }
 }
 function removeElementFromTrack(trackId, ElementId){
     var iterationForElementId, trackItId;
@@ -868,7 +927,7 @@ function addElement(id, idTrack){
     tabListElements.push(ElementToAdd);
 }
 function newRecord(){
-    stopAddFileToTrack();
+    currentProject.stopAddFileTrack();
 
     document.getElementById('chooseRecordButtons').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
@@ -946,20 +1005,6 @@ function handleMouseMove(event) {
 
 
     }
-}
-function showLoadingDiv(){
-    console.log('showLoadingDiv');
-
-    $('#loadingDiv').modal('show');
-
-    document.getElementById('editor').setAttribute('disabled', '');
-}
-function hideLoadingDiv(){
-    console.log('hideLoadingDiv');
-
-    $('#loadingDiv').modal('hide');
-
-    document.getElementById('editor').removeAttribute('disabled');
 }
 window.onmousedown = function (e) {
 

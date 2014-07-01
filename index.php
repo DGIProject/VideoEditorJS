@@ -50,11 +50,11 @@
                     <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-file"></span></button>
                     <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
                     <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span></button>
-                    <button type="button" class="btn btn-block btn-danger" onclick="stopAddFileToTrack();" style="margin-top: 5px;display: none;" id="stopAddFileToTrackButton">STOP</button>
+                    <button type="button" class="btn btn-block btn-danger" onclick="currentProject.stopAddFileTrack();" style="margin-top: 5px;display: none;" id="stopAddFileTrackButton">STOP</button>
                     <hr/>
-                    <div style="display: none;"><input type="file" onchange="addMultimediaFile();" id="fileLoader"/></div>
+                    <div style="display: none;"><input type="file" onchange="addFile();" id="fileLoader"/></div>
                 </div>
-                <div id="listFilesLib" class="list-group listFilesLib"></div>
+                <div id="listFiles" class="list-group listFilesLib"></div>
             </div>
         </div>
     </div>
@@ -86,7 +86,7 @@
             </div>
         </div>
     </div>
-    <div id="loadingDiv" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
@@ -245,7 +245,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/index.js"></script>
 <script src="js/Project.js"></script>
-<script src="js/FileList.js"></script>
+<script src="js/class/FileList.js"></script>
 <script src="js/Element.js"></script>
 <script src="js/Track.js"></script>
 <script src="js/TextElement.js"></script>
