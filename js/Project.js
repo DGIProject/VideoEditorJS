@@ -2,11 +2,13 @@ Project = function(name, dateCreation) {
     this.name = name;
     this.dateCreation = dateCreation;
     this.lastSave = 'aucune';
+
+    this.isCreated = false;
 };
 
-Project.prototype.loadModal = function()
+Project.prototype.loadModal = function(type)
 {
-    $('#loadModal').modal('toggle');
+    $('#loadModal').modal(type);
 };
 
 Project.prototype.startAddFileTrack = function(id)

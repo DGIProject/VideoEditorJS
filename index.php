@@ -1,11 +1,7 @@
 <?php
-    include "../model/sql_connect.php";
-    if (!isset($_SESSION['user']))
-    {
-        echo 'Vous devez vous connecter avec un compte elève avant toute chose';
-        exit(0);
-    }
-?>
+session_start();
+
+$_SESSION['user'] = 'User'; ?>
 
 <!DOCTYPE html>
 <html>
@@ -54,7 +50,7 @@
                     <hr/>
                     <div style="display: none;"><input type="file" onchange="addFile();" id="fileLoader"/></div>
                 </div>
-                <div id="listFiles" class="list-group listFilesLib"></div>
+                <div id="listFiles" class="list-group listFiles"></div>
             </div>
         </div>
     </div>

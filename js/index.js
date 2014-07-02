@@ -187,7 +187,7 @@ function addFile()
 
         if(typeFile == TYPE.IMAGE)
         {
-            var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
+            var currentItem = new FileList(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
             currentItem.setDuration('00:00:20');
 
             tabListFiles.push(currentItem);
@@ -220,7 +220,7 @@ function addFile()
 
             reader.readAsArrayBuffer(currentFile);
 
-            currentProject.loadModal();
+            currentProject.loadModal('show');
         }
 
         console.log('next');
@@ -249,11 +249,13 @@ function addFile()
         fileE.classList.add('list-group-item');
         fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(currentFile.name) + '</h4><div id="toolsFile' + fileId + '"></div>';
 
+        document.getElementById('listFiles').appendChild(fileE);
+
         uploadFile(fileId, currentFile);
     }
     else
     {
-        var n = noty({layout: 'top', type: 'error', text: 'Erreur, ce fichier n\'est pas compatible avec le système.', timeout: '5000'});
+        var n = noty({layout: 'topRight', type: 'error', text: 'Erreur, ce fichier n\'est pas compatible avec le système.', timeout: '5000'});
     }
 }
 
@@ -288,99 +290,12 @@ function getTypeFile(fileName)
 
 function compressName(name)
 {
-    if(name.length > 12)
-    {
-        return name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length);
-    }
-    else
-    {
-        return name;
-    }
+    return ((name.length > 12) ? name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length) : name);
 }
 
-function addMultimediaFile(){
-    currentProject.stopAddFileTrack();
-
-    var currentFile = document.getElementById('fileLoader').files[0];
-    console.log(currentFile);
-
-    var typeFile = getTypeFile(currentFile.name);
-    console.log(typeFile);
-
-    if(typeFile != 'error')
-    {
-        var newId;
-
-        if(tabListFiles.length > 0)
-        {
-            newId = tabListFiles[tabListFiles.length - 1].id + 1;
-        }
-        else
-        {
-            newId = 0;
-        }
-
-        if(typeFile == 'image')
-        {
-                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
-                currentItem.setDuration('00:00:20');
-
-                tabListFiles.push(currentItem);
-
-        }
-        else
-        {
-            actionWorker = "getDurationFile";
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                var data = e.target.result;
-
-                var ElementData = new Uint8Array(data);
-
-                worker.postMessage({
-                    type: "command",
-                    arguments: ["-i", "fileInput"],
-                    files: [
-                        {
-                            "name": "fileInput",
-                            "data": ElementData
-                        }
-                    ]
-                });
-
-                var currentItem = new FileList(newId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
-                console.log('currentItem ' + currentItem);
-                tabListFiles.push(currentItem);
-            };
-
-            reader.readAsArrayBuffer(currentFile);
-
-            showLoadingDiv();
-        }
-
-        var iconeName = ""
-        console.log('typeFile : ' + typeFile);
-        if (typeFile == "text")
-        iconeName = "glyphicon-text-width"
-        else if (typeFile == "audio")
-        iconeName = "glyphicon-music"
-        else if (typeFile == "video")
-        iconeName = "glyphicon-film"
-        else
-        iconeName = "glyphicon-file"
-
-        document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + typeFile + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + compressName(currentFile.name) + '</h4><div id="divToolsFile' + newId + '"></div></a>';
-
-        uploadFile(newId, currentFile);
-    }
-    else
-    {
-        var n = noty({layout: 'top', type: 'error', text: 'Erreur, ce fichier n\'est pas compatible avec le système.', timeout: '5000'});
-    }
-}
-function uploadFile(id, file){
-    if(currentProject.name != 'undefined')
+function uploadFile(id, file)
+{
+    if(currentProject.isCreated)
     {
         currentUploads++;
 
@@ -450,14 +365,16 @@ function uploadFile(id, file){
         document.getElementById('toolsFile' + id).innerHTML = 'Pas encore envoyé.';
     }
 }
-function uploadAllFiles(){
+
+function uploadAllFiles()
+{
     if(tabFilesUpload.length > 0)
     {
         console.log('filesToUpload');
 
         for(var i = 0; i < tabFilesUpload.length; i++)
         {
-            uploadMultimediaFile(tabFilesUpload[i][0], tabFilesUpload[i][1]);
+            uploadFile(tabFilesUpload[i][0], tabFilesUpload[i][1]);
         }
 
         tabFilesUpload = [];
@@ -467,7 +384,9 @@ function uploadAllFiles(){
         console.log('notFilesToUpload');
     }
 }
-function newTextElement(){
+
+function newTextElement()
+{
     console.log('newTextElement');
 
     currentProject.stopAddFileTrack();
@@ -487,6 +406,7 @@ function newTextElement(){
     posX = document.getElementById('textRender').width / 2;
     posY = document.getElementById('textRender').height / 2;
 }
+
 function writeTextToCanvas(x, y){
     var contentText = document.getElementById('contentText').value;
 

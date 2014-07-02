@@ -122,7 +122,7 @@ function initWorker() {
       console.log("Worker has received command\n");
     } else if (message.type == "done") {
         stopRunning();
-        currentProject.loadModal();
+        currentProject.loadModal('hide');
       var buffers = message.data;
       if (buffers.length) {
         //outputElement.className = "closed";
