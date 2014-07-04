@@ -19,7 +19,9 @@ var currentProject;
 window.onmousemove = handleMouseMove;
 
 //PROJECT
-function newProjectModal(reset){
+
+function newProjectModal(reset)
+{
     document.getElementById('nameProject').value = '';
     document.getElementById('buttonNewProject').setAttribute('onclick', 'newProject(' + reset + ');');
 
@@ -117,10 +119,11 @@ function loadProject(fileName){
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send('fileName=' + fileName);
 }
-function saveProject(){
-    if(currentProject.name != 'undefined')
+function saveProject()
+{
+    if(currentProject.isCreated)
     {
-        $('#loadingDiv').modal('show');
+        currentProject.loadModal('show');
 
         var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, tabListElements, tabListFiles, tabListTextElements, tabListTracks);
         var informations = fileProject.generateMain();
@@ -143,12 +146,13 @@ function saveProject(){
                     uploadAllFiles();
                     updateTextProject();
 
-                    $('#loadingDiv').modal('hide');
+                    currentProject.loadModal('hide');
                 }
                 else
                 {
                     var n = noty({layout: 'top', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
-                    $('#loadingDiv').modal('hide');
+
+                    currentProject.loadModal('hide');
                 }
             }
         }
@@ -164,7 +168,7 @@ function saveProject(){
 function updateTextProject(){
     console.log('updateTextProject');
 
-    if(currentProject.name != 'undefined')
+    if(currentProject.isCreated)
     {
         document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
     }

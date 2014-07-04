@@ -187,3 +187,7 @@
 {
     height: 350px;
 }
+
+#textElement {
+    border: 1px solid #000000;
+}

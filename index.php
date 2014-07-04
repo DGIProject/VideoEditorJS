@@ -70,7 +70,7 @@ $_SESSION['user'] = 'User'; ?>
                             Taille: <span id="libFileSize"></span><br/>
                             Format: <span id="libFileFormat"></span><br/>
                             Durée: <span id="libFileDuration"></span><br/>
-                            Aperçu: <span id="libFilePreview" style="width: 100px;height: 100px"></span>
+                            Aperçu: <span id="libFilePreview" style="width: 100px;height: 100px;"></span>
                         </div>
                     </div>
                 </div>
@@ -174,13 +174,6 @@ $_SESSION['user'] = 'User'; ?>
                                 Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
                                 Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
                                 Taille : <input class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" id="sizeText" type="range"><br/>
-                            </div>
-                            <div>
-                                Position :</br>
-                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(-5, 0);"><span class="glyphicon glyphicon-chevron-left"></span></button>
-                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, -5);"><span class="glyphicon glyphicon-chevron-up"></span></button>
-                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(5, 0);"><span class="glyphicon glyphicon-chevron-right"></span></button>
-                                <button type="button" class="btn btn-sm btn-default" onclick="writeTextToCanvas(0, 5);"><span class="glyphicon glyphicon-chevron-down"></span></button>
                             </div>
                         </div>
                     </div>

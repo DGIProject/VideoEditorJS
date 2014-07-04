@@ -12,6 +12,8 @@ FileList = function(id, type, size, fileName, compressName, format) {
     this.fileName = fileName;
     this.compressName = compressName;
     this.format = format;
+
+    this.isUploaded = false;
 };
 
 FileList.prototype.setDuration = function(duration)
@@ -22,4 +24,9 @@ FileList.prototype.setDuration = function(duration)
 FileList.prototype.isEditing = function()
 {
     return this.type == TYPE.TEXT;
+};
+
+FileList.prototype.setProperties = function(properties)
+{
+    this.properties = properties;
 };
