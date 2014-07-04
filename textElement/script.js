@@ -6,6 +6,8 @@ var lastXMouse, lastYMouse;
 
 var leftClick = false;
 
+var selectedElement = false;
+
 var contentText = '';
 var currentFont = 'Calibri';
 var alignType = 'center';
@@ -21,6 +23,21 @@ document.getElementById('textElement').onmousedown = function(e)
     {
         leftClick = true;
     }
+
+    if(detectInZone(e.clientX, e.clientY))
+    {
+        console.log('true');
+
+        selectedElement = true;
+    }
+    else
+    {
+        console.log('false');
+
+        selectedElement = false;
+    }
+
+    writeTextToCanvas(0, 0);
 };
 
 document.onmouseup = function(e)
@@ -71,20 +88,23 @@ document.onmousemove = function(e)
 
 document.onkeypress = function(e)
 {
-    if(e.keyCode == 8)
+    if(selectedElement)
     {
-        contentText = contentText.substr(0, (contentText.length - 1));
-    }
-    else if(e.keyCode == 13)
-    {
-        contentText += '|';
-    }
-    else
-    {
-        contentText += String.fromCharCode((e.charCode));
-    }
+        if(e.keyCode == 8)
+        {
+            contentText = contentText.substr(0, (contentText.length - 1));
+        }
+        else if(e.keyCode == 13)
+        {
+            contentText += '|';
+        }
+        else
+        {
+            contentText += String.fromCharCode((e.charCode));
+        }
 
-    writeTextToCanvas(0, 0);
+        writeTextToCanvas(0, 0);
+    }
 };
 
 function initializeTextElement()
@@ -170,13 +190,24 @@ function writeTextToCanvas(x, y)
     context.fillStyle = 'rgba(180, 217, 243, 0.2)';
     context.fillRect(((posX - xWidth) - 5), ((posY - sizeText)), (widthLine + 10), ((enterInContent.length * sizeText) + 15));
 
-    context.fillStyle = 'rgba(69, 176, 228, 1)';
+    context.fillStyle = (selectedElement) ? 'rgba(116, 239, 63, 1)' : 'rgba(69, 176, 228, 1)';
     context.fillRect(((posX - xWidth) - 5), (posY - sizeText), (widthLine + 10), 2);
     context.fillRect((((posX - xWidth) - 5 + (widthLine + 10)) - 2), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
     context.fillRect((((posX - xWidth) - 5)), (((posY - sizeText) + ((enterInContent.length * sizeText) + 15)) - 2), (widthLine + 10), 2);
     context.fillRect(((posX - xWidth) - 5), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
 
     verifyFieldTextElement();
+}
+
+function detectInZone(xClient, yClient)
+{
+    var x = (xClient + window.scrollX) - $('#textElement').offset().left;
+    var y = (yClient + window.scrollY) - $('#textElement').offset().top;
+
+    console.log(x, y);
+    console.log(posX, posY);
+
+    return x >= posX && y >= posY;
 }
 
 function verifyFieldTextElement()
