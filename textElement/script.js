@@ -156,14 +156,25 @@ function writeTextToCanvas(x, y)
         context.fillText(enterInContent[i], posX, (posY + ((i * sizeText) + 5)));
     }
 
+    var xWidth = 0;
+
+    if(alignType == 'center')
+    {
+        xWidth = (widthLine / 2);
+    }
+    else if(alignType == 'right')
+    {
+        xWidth = widthLine;
+    }
+
     context.fillStyle = 'rgba(180, 217, 243, 0.2)';
-    context.fillRect(((posX - (widthLine / 2)) - 5), ((posY - sizeText)), (widthLine + 10), ((enterInContent.length * sizeText) + 15));
+    context.fillRect(((posX - xWidth) - 5), ((posY - sizeText)), (widthLine + 10), ((enterInContent.length * sizeText) + 15));
 
     context.fillStyle = 'rgba(69, 176, 228, 1)';
-    context.fillRect(((posX - (widthLine / 2)) - 5), (posY - sizeText), (widthLine + 10), 2);
-    context.fillRect((((posX - (widthLine / 2)) - 5 + (widthLine + 10)) - 2), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
-    context.fillRect((((posX - (widthLine / 2)) - 5)), (((posY - sizeText) + ((enterInContent.length * sizeText) + 15)) - 2), (widthLine + 10), 2);
-    context.fillRect(((posX - (widthLine / 2)) - 5), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
+    context.fillRect(((posX - xWidth) - 5), (posY - sizeText), (widthLine + 10), 2);
+    context.fillRect((((posX - xWidth) - 5 + (widthLine + 10)) - 2), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
+    context.fillRect((((posX - xWidth) - 5)), (((posY - sizeText) + ((enterInContent.length * sizeText) + 15)) - 2), (widthLine + 10), 2);
+    context.fillRect(((posX - xWidth) - 5), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
 
     verifyFieldTextElement();
 }
