@@ -6,6 +6,10 @@ var lastXMouse, lastYMouse;
 
 var leftClick = false;
 
+var contentText = '';
+var currentFont = 'Calibri';
+var alignType = 'center';
+
 window.onload = function()
 {
     initializeTextElement();
@@ -67,19 +71,17 @@ document.onmousemove = function(e)
 
 document.onkeypress = function(e)
 {
-    var contentText = document.getElementById('contentText');
-
     if(e.keyCode == 8)
     {
-        contentText.value = contentText.value.substr(0, (contentText.value.length - 1));
+        contentText = contentText.substr(0, (contentText.length - 1));
     }
     else if(e.keyCode == 13)
     {
-        contentText.value += '|';
+        contentText += '|';
     }
     else
     {
-        contentText.value += String.fromCharCode((e.charCode));
+        contentText += String.fromCharCode((e.charCode));
     }
 
     writeTextToCanvas(0, 0);
@@ -87,29 +89,57 @@ document.onkeypress = function(e)
 
 function initializeTextElement()
 {
-    canvas.width = 650;
-    canvas.height = 367;
+    canvas.width = 750;
+    canvas.height = 423;
 
-    context.clearRect(0, 0, 650, 367);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     document.getElementById('nameText').value = 'Text 1';
-    document.getElementById('contentText').value = 'Text 1';
 
     writeTextToCanvas((canvas.width / 2), (canvas.height / 2));
 }
 
+function changeFont(font, row)
+{
+    currentFont = font;
+
+    for(var i = 0; i < 4; i++)
+    {
+        document.getElementById('buttonFont' + i).classList.remove('active');
+    }
+
+    document.getElementById('buttonFont' + row).classList.add('active');
+
+    writeTextToCanvas(0, 0);
+}
+
+function alignText(type, row)
+{
+    alignType = type;
+
+    for(var i = 0; i < 3; i++)
+    {
+        document.getElementById('buttonAlign' + i).classList.remove('active');
+    }
+
+    document.getElementById('buttonAlign' + row).classList.add('active');
+
+    writeTextToCanvas(0, 0);
+}
+
 function writeTextToCanvas(x, y)
 {
-    var contentText = document.getElementById('contentText').value;
     var sizeText = document.getElementById('sizeText').value;
 
-    context.clearRect(0, 0, 650, 367);
-    context.font = document.getElementById('sizeText').value + 'pt Calibri';
+    document.getElementById('sizeTextInfo').innerHTML = sizeText;
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = document.getElementById('sizeText').value + 'pt ' + currentFont;
 
     posX = posX + x;
     posY = posY + y;
 
-    context.textAlign = 'center';
+    context.textAlign = alignType;
     //context.textBaseline = 'middle';
     context.fillStyle = document.getElementById('colorText').value;
 
@@ -134,4 +164,20 @@ function writeTextToCanvas(x, y)
     context.fillRect((((posX - (widthLine / 2)) - 5 + (widthLine + 10)) - 2), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
     context.fillRect((((posX - (widthLine / 2)) - 5)), (((posY - sizeText) + ((enterInContent.length * sizeText) + 15)) - 2), (widthLine + 10), 2);
     context.fillRect(((posX - (widthLine / 2)) - 5), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
+
+    verifyFieldTextElement();
+}
+
+function verifyFieldTextElement()
+{
+    var nameText = document.getElementById('nameText').value;
+
+    if(nameText != '' && contentText != '')
+    {
+        document.getElementById('buttonSaveTextElement').removeAttribute('disabled');
+    }
+    else
+    {
+        document.getElementById('buttonSaveTextElement').setAttribute('disabled', '');
+    }
 }
