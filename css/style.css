@@ -189,5 +189,7 @@
 }
 
 #textElement {
-    border: 1px solid #000000;
+    border: 1px solid transparent;
+    border-color: #E7E7E7;
+    border-radius: 4px;
 }
