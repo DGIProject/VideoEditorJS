@@ -124,8 +124,6 @@ ManageTextElement.prototype.changePosElement = function(x, y) {
 ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    console.log(this.sizeText, this.sizeText);
-
     this.context.font = this.sizeText + 'pt ' + this.font;
     this.context.textAlign = this.textAlign;
     //this.context.textBaseline = 'middle';
@@ -159,11 +157,11 @@ ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.fillStyle = 'rgba(180, 217, 243, 0.2)';
     this.context.fillRect(((this.posElement.x - xWidth) - 5), ((this.posElement.y - this.sizeText)), (this.widthLine + 10), ((enterInContent.length * this.sizeText) + 15));
 
-    //context.fillStyle = (selectedElement) ? 'rgba(116, 239, 63, 1)' : 'rgba(69, 176, 228, 1)';
-    //context.fillRect(((posX - xWidth) - 5), (posY - sizeText), (widthLine + 10), 2);
-    //context.fillRect((((posX - xWidth) - 5 + (widthLine + 10)) - 2), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
-    //context.fillRect((((posX - xWidth) - 5)), (((posY - sizeText) + ((enterInContent.length * sizeText) + 15)) - 2), (widthLine + 10), 2);
-    //context.fillRect(((posX - xWidth) - 5), (posY - sizeText), 2, ((enterInContent.length * sizeText) + 15));
+    this.context.fillStyle = (this.selectedElement) ? 'rgba(173, 250, 190, 1)' : 'rgba(221, 248, 251, 1)';
+    this.context.fillRect(((this.posElement.x - xWidth) - 5), (this.posElement.y - this.sizeText), (this.widthLine + 10), 1);
+    this.context.fillRect((((this.posElement.x - xWidth) - 5 + (this.widthLine + 10)) - 1), (this.posElement.y - this.sizeText), 1, ((enterInContent.length * this.sizeText) + 15));
+    this.context.fillRect((((this.posElement.x - xWidth) - 5)), (((this.posElement.y - this.sizeText) + ((enterInContent.length * this.sizeText) + 15)) - 1), (this.widthLine + 10), 1);
+    this.context.fillRect(((this.posElement.x - xWidth) - 5), (this.posElement.y - this.sizeText), 1, ((enterInContent.length * this.sizeText) + 15));
 
     this.enableButtonSaveTextElement();
 };
