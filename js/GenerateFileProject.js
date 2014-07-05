@@ -7,7 +7,7 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListEleme
     this.tabListFiles = tabListFiles;
     this.tabListTextElements = tabListTextElements;
     this.tabListTracks = tabListTracks;
-}
+};
 
 GenerateFileProject.prototype.generateMain = function() {
 
@@ -18,12 +18,11 @@ GenerateFileProject.prototype.generateMain = function() {
             lastSave: this.lastSave
         },
         elements : this.tabListElements,
-        track : this.tabListTracks,
-        textElement : this.tabListTextElements,
+        tracks : this.tabListTracks,
         files : this.tabListFiles
     };
 
     console.log(informations)
 
     return informations;
-}
+};

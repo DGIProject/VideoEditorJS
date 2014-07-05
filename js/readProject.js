@@ -1,7 +1,3 @@
-/**
- * Created by Guillaume on 16/06/14.
- */
-
 Loader = function(dataLoaded) {
     this.info = dataLoaded;
 }

@@ -54,23 +54,23 @@ $_SESSION['user'] = 'User'; ?>
             </div>
         </div>
     </div>
-    <div id="selectFileLib" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="filePropertiesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Information & option</h4>
+                    <h4 class="modal-title">Informations & options</h4>
                 </div>
                 <div class="modal-body">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h3 class="panel-title" id="libFileName">Undefined</h3>
+                            <h3 class="panel-title" id="FileListName">Undefined</h3>
                         </div>
                         <div class="panel-body">
-                            Taille: <span id="libFileSize"></span><br/>
-                            Format: <span id="libFileFormat"></span><br/>
-                            Durée: <span id="libFileDuration"></span><br/>
-                            Aperçu: <span id="libFilePreview" style="width: 100px;height: 100px;"></span>
+                            Taille: <span id="FileListSize"></span><br/>
+                            Format: <span id="FileListFormat"></span><br/>
+                            Durée: <span id="FileListDuration"></span><br/>
+                            Aperçu: <span id="FileListPreview" style="width: 100px;height: 100px;"></span>
                         </div>
                     </div>
                 </div>
@@ -156,31 +156,73 @@ $_SESSION['user'] = 'User'; ?>
             </div>
         </div>
     </div>
-    <div id="fileTextModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div id="textElementModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel">Ajouter un élément texte</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-9 center">
-                            <canvas id="textRender" width="400px" height="300px" style="border: 1px solid #000000;"></canvas>
-                        </div>
-                        <div class="col-xs-3 center propertiesDivText">
-                            <div>
-                                Nom : <input class="form-control" onkeyup="verifyFieldTextElement();" id="nameText" type="text"><br/>
-                                Texte : <input class="form-control" onkeyup="writeTextToCanvas(0, 0);" id="contentText" type="text"><br/>
-                                Couleur : <input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"><br/>
-                                Taille : <input class="form-control" min="10" max="70" step="2" onchange="writeTextToCanvas(0, 0);" id="sizeText" type="range"><br/>
+                    <nav class="navbar navbar-default" role="navigation">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#">Text Element</a>
+                            </div>
+                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                <ul class="nav navbar-nav">
+                                    <form class="navbar-form navbar-left" role="search">
+                                        <div class="form-group">
+                                            <input class="form-control" onkeyup="currentManageTextElement.changeNameText(this.value);" id="nameText" type="text" placeHolder="Name">
+                                        </div>
+                                    </form>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Font <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li id="buttonFont0" class="active"><a href="#" onclick="currentManageTextElement.changeFont('Calibri', 0);">Calibri</a></li>
+                                            <li id="buttonFont1"><a href="#" onclick="currentManageTextElement.changeFont('Times New Roman', 1);">Times New Roman</a></li>
+                                            <li id="buttonFont2"><a href="#" onclick="currentManageTextElement.changeFont('Arial', 2);">Arial</a></li>
+                                            <li id="buttonFont3"><a href="#" onclick="currentManageTextElement.changeFont('Verdana', 3);">Verdana</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Size <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#"><span id="sizeTextInfo"></span>px</a></li>
+                                            <li><a href="#"><input class="form-control" min="10" max="100" step="2" onchange="currentManageTextElement.changeSizeText(this.value);" id="sizeText" type="range"></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#"><input class="form-control" onchange="currentManageTextElement.changeColor(this.value);" id="colorText" type="color"></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Align <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li id="buttonTextAlign0" class="active"><a href="#" onclick="currentManageTextElement.changeTextAlign('center', 0);">Center</a></li>
+                                            <li id="buttonTextAlign1"><a href="#" onclick="currentManageTextElement.changeTextAlign('left', 1);">Left</a></li>
+                                            <li id="buttonTextAlign2"><a href="#" onclick="currentManageTextElement.changeTextAlign('right', 2);">Right</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <button type="button" onclick="saveTextElement();" id="buttonSaveTextElement" class="btn btn-success navbar-btn" disabled="">Save</button>
+                                </ul>
                             </div>
                         </div>
-                    </div>
+                    </nav>
+                    <canvas id="textElement"></canvas>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="saveTextElementButton" class="btn btn-primary" data-dismiss="modal" disabled="">Save text element</button>
                 </div>
             </div>
         </div>
@@ -233,20 +275,24 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/jquery.noty.packaged.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/index.js"></script>
-<script src="js/Project.js"></script>
+<script src="js/onEvent.js"></script>
+<script src="js/class/Project.js"></script>
 <script src="js/class/FileList.js"></script>
+<script src="js/class/ManageTextElement.js"></script>
+<script src="js/class/TextElement.js"></script>
 <script src="js/Element.js"></script>
 <script src="js/Track.js"></script>
-<script src="js/TextElement.js"></script>
 <script src="js/Render.js"></script>
 <script src="js/readProject.js"></script>
 <script src="js/GenerateFileProject.js"></script>
 <script src="js/lib/terminal.js"></script>
 
 <script type="text/javascript">
-    window.onload = function()
-    {
+    window.onload = function() {
         $('#startLoadingJS').modal('show');
+
+        currentProject = new Project('undefined', getCurrentDate());
+        currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
 
         var OAjax;
 
@@ -263,7 +309,7 @@ $_SESSION['user'] = 'User'; ?>
 
             document.getElementById('downloadJSProgress').style.width = persent;
             document.getElementById('persentProgress').innerHTML = persent;
-        }
+        };
 
         OAjax.onloadend = function(e)
         {
@@ -273,9 +319,10 @@ $_SESSION['user'] = 'User'; ?>
             document.getElementById('startUseProject').style.display = '';
             document.getElementById('startUseProject').setAttribute("onclick", "openProject()");
 
-            currentProject = new Project('undefined', getCurrentDate());
+            currentProject.isStarted = true;
+
             updateTextProject();
-        }
+        };
 
         OAjax.send();
     }

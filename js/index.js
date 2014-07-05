@@ -1,22 +1,20 @@
 var tabListElements = [];
 var tabListFiles = [];
-var tabListTextElements = [];
 var tabListTracks = [];
 var divElementSelectedForMove = {id: null, Object: null, trackId: null, elementListID: null}, canMove = false;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
 var resizing = false;
 var pixelCalculateTime = {g: 0, d: 800};
-var context = document.getElementById('textRender').getContext('2d');
-var posX, posY;
 var renderVar;
 
 var currentUploads = 0;
 var tabFilesUpload = [];
 
 var currentProject;
+var currentManageTextElement;
 
-window.onmousemove = handleMouseMove;
+var textElementId = 0;
 
 //PROJECT
 
@@ -28,7 +26,9 @@ function newProjectModal(reset)
     $('#selectProjectModal').modal('hide');
     $('#newProjectModal').modal('show');
 }
-function newProject(reset){
+
+function newProject(reset)
+{
     var nameProject = document.getElementById('nameProject').value;
 
     if(nameProject != '')
@@ -44,7 +44,6 @@ function newProject(reset){
 
             tabListElements = [];
             tabListFiles = [];
-            tabListTextElements = [];
             tabListTracks = [];
         }
 
@@ -57,10 +56,12 @@ function newProject(reset){
     }
     else
     {
-        var n = noty({layout: 'top', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
+        var n = noty({layout: 'topRight', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
     }
 }
-function openProject(){
+
+function openProject()
+{
     $('#loadingDiv').modal('show');
 
     var OAjax;
@@ -89,12 +90,14 @@ function openProject(){
             $('#loadingDiv').modal('hide');
             $('#selectProjectModal').modal('show');
         }
-    }
+    };
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send();
 }
-function loadProject(fileName){
+
+function loadProject(fileName)
+{
     $('#selectProjectModal').modal('hide');
     $('#loadingDiv').modal('show');
 
@@ -114,11 +117,12 @@ function loadProject(fileName){
             console.log(save);
 
         }
-    }
+    };
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send('fileName=' + fileName);
 }
+
 function saveProject()
 {
     if(currentProject.isCreated)
@@ -150,12 +154,12 @@ function saveProject()
                 }
                 else
                 {
-                    var n = noty({layout: 'top', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
+                    var n = noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
 
                     currentProject.loadModal('hide');
                 }
             }
-        }
+        };
 
         OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         OAjax.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(informations));
@@ -165,7 +169,9 @@ function saveProject()
         newProjectModal(false);
     }
 }
-function updateTextProject(){
+
+function updateTextProject()
+{
     console.log('updateTextProject');
 
     if(currentProject.isCreated)
@@ -173,6 +179,7 @@ function updateTextProject(){
         document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
     }
 }
+
 //FILE
 
 function addFile()
@@ -249,7 +256,7 @@ function addFile()
         var fileE = document.createElement('a');
         fileE.id = 'file' + fileId;
         fileE.href = '#';
-        fileE.setAttribute('onclick', 'fileProperties(' + fileId + ', ' + typeFile + ');');
+        fileE.setAttribute('onclick', 'fileProperties(' + fileId + ');');
         fileE.classList.add('list-group-item');
         fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(currentFile.name) + '</h4><div id="toolsFile' + fileId + '"></div>';
 
@@ -394,82 +401,54 @@ function newTextElement()
     console.log('newTextElement');
 
     currentProject.stopAddFileTrack();
+    currentManageTextElement.newTextElement(textElementId);
 
-    $('#fileTextModal').modal('show');
+    textElementId++;
 
-    context.clear();
-
-    document.getElementById('nameText').value = '';
-    document.getElementById('contentText').value = '';
-    document.getElementById('colorText').value = '';
-    document.getElementById('sizeText').value = 20;
-
-    document.getElementById('saveTextElementButton').setAttribute('disabled', '');
-    document.getElementById('saveTextElementButton').setAttribute('onclick', 'saveTextElement();');
-
-    posX = document.getElementById('textRender').width / 2;
-    posY = document.getElementById('textRender').height / 2;
+    $('#textElementModal').modal('show');
 }
 
-function writeTextToCanvas(x, y){
-    var contentText = document.getElementById('contentText').value;
+function editFileText(id)
+{
+    var textElement = tabListFiles[id].properties;
 
-    context.clear();
-    context.font = document.getElementById('sizeText').value + 'pt Calibri';
+    currentManageTextElement.editTextElement(textElement.id, id, textElement.nameText, textElement.contentText, textElement.fontText, textElement.sizeText, textElement.colorText, textElement.alignText, textElement.posText);
 
-    posX = posX + x;
-    posY = posY + y;
-
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillStyle = document.getElementById('colorText').value;
-    context.fillText(contentText, posX, posY);
-
-    verifyFieldTextElement();
+    $('#textElementModal').modal('show');
 }
-function verifyFieldTextElement(){
-    var nameText = document.getElementById('nameText').value;
-    var contentText = document.getElementById('contentText').value;
 
-    if(nameText != '' && contentText != '')
-    {
-        document.getElementById('saveTextElementButton').removeAttribute('disabled');
-    }
-    else
-    {
-        document.getElementById('saveTextElementButton').setAttribute('disabled', '');
-    }
-}
 function saveTextElement()
 {
-    var image = new Image();
-    image.src = document.getElementById('textRender').toDataURL("image/png");
-    var newId;
+    var textElement = currentManageTextElement.getInformationsTextElement();
 
-    if(tabListFiles.length > 0)
+    var fileId;
+
+    if(currentManageTextElement.isEditing)
     {
-        newId = tabListFiles[tabListFiles.length - 1].id + 1;
+        fileId = currentManageTextElement.fileId;
+
+        tabListFiles[fileId].properties.updateValuesElement(textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement);
     }
     else
     {
-        newId = 0;
+        fileId = tabListFiles.length;
+
+        var currentItem = new FileList(fileId, TYPE.TEXT, 0, textElement.nameText, compressName(textElement.nameText), 'png');
+        currentItem.setDuration('00:00:20');
+        currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
+
+        console.log('currentItem ' + currentItem);
+        tabListFiles.push(currentItem);
+
+        var fileE = document.createElement('a');
+        fileE.id = 'file' + fileId;
+        fileE.href = '#';
+        fileE.setAttribute('onclick', 'fileProperties(' + fileId + ');');
+        fileE.classList.add('list-group-item');
+        fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + compressName(textElement.nameText) + '</h4><div id="toolsFile' + fileId + '"></div>';
+
+        document.getElementById('listFiles').appendChild(fileE);
     }
-
-    var nameText = document.getElementById('nameText').value;
-    var contentText = document.getElementById('contentText').value;
-    var colorText = document.getElementById('colorText').value;
-    var sizeText = document.getElementById('sizeText').value;
-
-    var currentTextElement = new TextElement(newId, nameText, contentText, colorText, sizeText, {x: posX, y: posY});
-    tabListTextElements.push(currentTextElement);
-
-    var arrayBuffer = base64ToArrayBuffer(image.src.replace(/^data:image\/(png|jpg);base64,/, ""));
-    console.log(new Uint8Array(arrayBuffer))
-    var currentItem = new FileList(newId, 'text', 0, nameText, 'png', new Uint8Array(arrayBuffer));
-    currentItem.setDuration('00:00:20');
-
-    console.log('currentItem ' + currentItem);
-    tabListFiles.push(currentItem);
 
     var OAjax;
 
@@ -480,57 +459,52 @@ function saveTextElement()
         if(OAjax.readyState == 4 && OAjax.status == 200) {
             console.log(OAjax.responseText);
 
-            if (OAjax.responseText == 'true') {
-                location.href = 'index';
+            if (OAjax.responseText == 'true')
+            {
+                console.log('upload');
             }
         }
-    }
+    };
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send('imageDataURL=' + document.getElementById('textRender').toDataURL('image/png') + '&nameId=' + newId);
+    OAjax.send('&nameId=' + fileId + '&imageDataURL=' + document.getElementById('textElement').toDataURL('image/png'));
 
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'text\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + compressName(nameText) + '</h4></a>';
+    var n = noty({layout: 'topRight', type: 'success', text: 'Le texte a bien été sauvegardé.', timeout: '5000'});
+
+    $('#textElementModal').modal('hide');
 }
-function base64ToArrayBuffer(string_base64){
-    var binary_string = window.atob(string_base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-        var ascii = binary_string.charCodeAt(i);
-        bytes[i] = ascii;
-    }
-    return bytes.buffer;
-}
-CanvasRenderingContext2D.prototype.clear = CanvasRenderingContext2D.prototype.clear || function (preserveTransform) {
-        if (preserveTransform) {
-            this.save();
-            this.setTransform(1, 0, 0, 1, 0, 0);
-        }
 
-        this.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        if (preserveTransform) {
-            this.restore();
-        }
-    };
-function fileProperties(id, type){
+function fileProperties(id)
+{
     console.log('fileProperties');
 
-    $('#selectFileLib').modal('show');
-    for(i=0;i<tabListFiles.length;i++)
+    var fileInfo = tabListFiles[id];
+    var type = tabListFiles[id].type;
+
+    document.getElementById('FileListName').innerHTML = fileInfo.fileName;
+    document.getElementById('FileListSize').innerHTML = fileInfo.size + ' Octets';
+    document.getElementById('FileListFormat').innerHTML = fileInfo.format;
+    document.getElementById('FileListDuration').innerHTML = fileInfo.duration;
+
+    var preview;
+
+    if(type == TYPE.TEXT || type == TYPE.IMAGE)
     {
-        if (tabListFiles[i].id == id)
-        {
-            type = tabListFiles[i].type;
-        }
+        preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/php/getFile.php?p=' + currentProject.name + '&fileId=' + fileInfo.id + '">';
+    }
+    else
+    {
+        preview = 'Non disponible';
     }
 
-    if(type == 'text')
+    document.getElementById('FileListPreview').innerHTML = preview;
+
+    if(type == TYPE.TEXT)
     {
         document.getElementById('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
         document.getElementById('fileEditButton').style.display = '';
     }
-    else if(type == 'image')
+    else if(type == TYPE.IMAGE)
     {
         document.getElementById('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
         document.getElementById('fileEditButton').style.display = '';
@@ -543,138 +517,25 @@ function fileProperties(id, type){
 
     document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
-
-    console.log('id '+id+ "Type !!!! "+type);
-    getInfoForFileId(id, type);
+    $('#filePropertiesModal').modal('show');
 }
-function getInfoForFileId(id, type, mode){
-    if (mode == "JSon")
-    {
-        for(i=0;i<tabListFiles.length;i++)
-        {
-            if (tabListFiles[i].id == id)
-            {
-                return tabListFiles[i];
-            }
-        }
 
-    }
-    else
-    {
-        for(i=0;i<tabListFiles.length;i++)
-        {
-            if (tabListFiles[i].id == id)
-            {
-                info = tabListFiles[i];
-            }
-        }
-        console.log('yes');
-        console.log(info.fileName);
-
-        document.getElementById('libFileName').innerHTML = info.fileName;
-        document.getElementById('libFileSize').innerHTML = info.size + ' Octets';
-        document.getElementById('libFileFormat').innerHTML = info.format;
-        document.getElementById('libFileDuration').innerHTML = info.duration;
-
-        var preview;
-
-        console.log(type);
-
-        if(type == 'image' || type == 'text')
-        {
-            preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/php/getFile.php?p='+currentProject.name+'&fileId='+info.id+'">';
-        }
-        else
-        {
-            preview = 'Non disponible';
-        }
-
-        document.getElementById('libFilePreview').innerHTML = preview;
-    }
-}
-function editFileText(id){
-    $('#fileTextModal').modal('show');
-
-    var posTabListTextElements = 0;
-
-    for(var i = 0; i < tabListTextElements.length; i++)
-    {
-        if(tabListTextElements[i].id == id)
-        {
-            posTabListTextElements = i;
-        }
-    }
-
-    document.getElementById('saveTextElementButton').setAttribute('onclick', 'saveEditFileText(' + id + ')');
-
-    document.getElementById('nameText').value = tabListTextElements[posTabListTextElements].nameText;
-    document.getElementById('contentText').value = tabListTextElements[posTabListTextElements].contentText;
-    document.getElementById('colorText').value = tabListTextElements[posTabListTextElements].colorText;
-    document.getElementById('sizeText').value = tabListTextElements[posTabListTextElements].sizeText;
-
-    posX = tabListTextElements[posTabListTextElements].posText.x;
-    posY = tabListTextElements[posTabListTextElements].posText.y;
-
-    context.clear();
-
-    writeTextToCanvas(0, 0);
-}
-function saveEditFileText(id){
-    console.log('saveEditFileText');
-
-    var posTabListFiles = 0, posTabListTextElements = 0;
-
-    for(var i = 0; i < tabListFiles.length; i++)
-    {
-        if(tabListFiles[i].id == id)
-        {
-            posTabListFiles = i;
-        }
-    }
-
-    for(var x = 0; x < tabListTextElements.length; x++)
-    {
-        if(tabListTextElements[x].id == id)
-        {
-            posTabListTextElements = x;
-        }
-    }
-
-    var image = new Image();
-    image.src = document.getElementById('textRender').toDataURL('image/png');
-
-    var nameText = document.getElementById('nameText').value;
-    var contentText = document.getElementById('contentText').value;
-    var colorText = document.getElementById('colorText').value;
-    var sizeText = document.getElementById('sizeText').value;
-    var posText = {x: posX, y: posY};
-
-    //TODO : add a function to reupload the file !
-    tabListTextElements[posTabListTextElements].updateValuesElement(nameText, contentText, colorText, sizeText, posText);
-
-    document.getElementById('nameFile' + id).innerHTML = nameText;
-}
-function editFileImage(id){
+function editFileImage(id)
+{
     console.log('editFileImage');
 }
-function removeFile(id){
-    $('#selectFileLib').modal('hide');
 
-    var toDelete = document.getElementById('libFile' + id);
-    var parent = document.getElementById('listFilesLib');
-    parent.removeChild(toDelete);
+function removeFile(id)
+{
+    $('#filesPropertiesModal').modal('hide');
 
-    for(var i = 0; i < tabListFiles.length; i++)
-    {
-        if(tabListFiles[i].id == id)
-        {
-            tabListFiles.remove(i);
-        }
-    }
+    tabListFiles[id] = null;
 
-    console.log(tabListFiles);
+    document.getElementById('listFiles').removeChild(document.getElementById('file' + id));
 }
+
 //TRACK
+
 function addTrack(){
 
     numberofTrack = tabListTracks.length;
@@ -873,83 +734,6 @@ function chooseAudioRecord(){
     document.getElementById('saveRecordButton').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
     document.getElementById('chooseRecordButtons').style.display = 'none';
-}
-function handleMouseMove(event) {
-    event = event || window.event; // IE-ism
-    if (canMove && !resizing) {
-        //  var offset = divElementSelectedForMove.offsetLeft
-        // var posX = event.clientX - offset
-      /*  console.log(event.clientX, event.clientY);
-        var marginText = divElementSelectedForMove.style.marginLeft;
-        var newMargin = event.clientX - 400;
-        console.log("maegN", newMargin, marginText);
-        if (newMargin >= 0 || marginText >= 0) {
-            console.log('scrrol', document.getElementById("VideoView").scrollLeft);
-            divElementSelectedForMove.style.marginLeft = document.getElementById("VideoView").scrollLeft + newMargin + "px";
-            lastPosition.x = event.clientX;
-            lastPosition.y = event.clientY;
-        }*/
-
-        console.log(divElementSelectedForMove)
-        var elementsIdCurrentTrack = tabListTracks[divElementSelectedForMove.trackId].elementsId;
-        console.log(elementsIdCurrentTrack)
-        var posInTabListElements = elementsIdCurrentTrack.lastIndexOf(divElementSelectedForMove.elementListID)
-        var elementIdFinded = elementsIdCurrentTrack[posInTabListElements]
-        console.log(elementIdFinded, "Nous avons trouvé !!!!")
-        var offsetWindow = $("#VideoView").offset().left
-        if (posInTabListElements > 0)
-        {
-            var beforElement = $("#trackElementId"+parseInt(posInTabListElements-1));
-            console.log(beforElement.offset().left, event.clientX)
-            var extremitBeforElementOffset = beforElement.offset().left + beforElement.width();
-            console.log("extremit = ", extremitBeforElementOffset)
-			var offsetElement = divElementSelectedForMove.Object.offsetLeft
-            var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
-            var positionInEditAeraX = event.clientX - extremitBeforElementOffset - divElementSelectedForMove.Object.style.width.replace('px','')/2 - document.getElementById("VideoView").scrollLeft;
-            console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
-
-/*             var beforElement = $("#trackElementId"+parseInt(elementIdFinded-1));
-            var sizetoRemove = beforElement.position().left + beforElement.width()
-            var positionInEditAeraX = event.clientX - (offsetWindow )  + ($(divElementSelectedForMove.Object.id).width()/2);
-            console.log("margin calculated !", sizetoRemove, offsetWindow, positionInEditAeraX, beforElement.position().left);
-
-            var currentLenthTrack = document.getElementById('ViewTrack'+divElementSelectedForMove.trackId).style.width.replace('px',''); */
-        }
-        else
-        {
-            var offsetElement = divElementSelectedForMove.Object.offsetLeft
-            var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
-            var positionInEditAeraX = event.clientX - offsetWindow  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
-            console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
-        }
-        if (actualMargin >= 0 || positionInEditAeraX >= 0)
-        {
-            divElementSelectedForMove.Object.style.marginLeft = document.getElementById("VideoView").scrollLeft + positionInEditAeraX + "px";
-        }
-
-
-    }
-}
-window.onmousedown = function (e) {
-
-    lastPosition.x = e.clientX;
-    lastPosition.y = e.clientY;
-
-    console.log('ok');
-
-}
-window.onkeypress = function (e) {
-
-    if (e.keyCode == 37) // left
-    {
-        document.getElementById('VideoView').scrollLeft = document.getElementById('VideoView').scrollLeft - 10
-    }
-    else if (e.keyCode == 39) // right
-    {
-        document.getElementById('VideoView').scrollLeft = document.getElementById('VideoView').scrollLeft + 10
-    }
-    console.log(e.keyCode, "keycode")
-
 }
 function changeZoom(zoom) {
     document.getElementById('zoomRange').value = zoom;

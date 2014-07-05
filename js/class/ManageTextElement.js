@@ -10,7 +10,8 @@ ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
 
     this.elementsId = elementsId;
 
-    this.isEnabled = true;
+    this.isEditing = false;
+    this.isEnabled = false;
 };
 
 ManageTextElement.prototype.disableTextElement = function() {
@@ -20,6 +21,7 @@ ManageTextElement.prototype.disableTextElement = function() {
 ManageTextElement.prototype.newTextElement = function(id) {
     //Editor
     this.id = id;
+    this.fileId = null;
     this.nameText = 'Text ' + id;
     this.text = 'Text ' + id;
     this.font = 'Calibri';
@@ -41,12 +43,16 @@ ManageTextElement.prototype.newTextElement = function(id) {
     document.getElementById(this.elementsId.nameText).value = this.nameText;
     document.getElementById(this.elementsId.sizeTextInfo).innerHTML = this.sizeText;
 
+    this.isEditing = false;
+    this.isEnabled = true;
+
     this.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.editTextElement = function(id, nameText, text, font, sizeText, color, textAlign, posElement) {
+ManageTextElement.prototype.editTextElement = function(id, fileId, nameText, text, font, sizeText, color, textAlign, posElement) {
     //Editor
     this.id = id;
+    this.fileId = fileId;
     this.nameText = nameText;
     this.text = text;
     this.font = font;
@@ -64,6 +70,9 @@ ManageTextElement.prototype.editTextElement = function(id, nameText, text, font,
 
     document.getElementById(this.elementsId.nameText).value = this.nameText;
     document.getElementById(this.elementsId.sizeTextInfo).innerHTML = this.sizeText;
+
+    this.isEditing = true;
+    this.isEnabled = true;
 
     this.writeTextToCanvas();
 };
@@ -200,6 +209,10 @@ ManageTextElement.prototype.enableButtonSaveTextElement = function() {
     }
 };
 
+ManageTextElement.prototype.getInformationsTextElement = function() {
+    return {id : this.id, nameText : this.nameText, text : this.text, font : this.font, sizeText : this.sizeText, color : this.color, textAlign : this.textAlign, posElement : this.posElement};
+};
+
 ManageTextElement.prototype.mouseDown = function(xClient, yClient, buttonClient) {
     if(this.isOnArea(xClient, yClient))
     {
@@ -278,44 +291,5 @@ ManageTextElement.prototype.keyPress = function(keyCodeClient, charCodeClient)
         }
 
         this.writeTextToCanvas();
-    }
-};
-
-var currentManageTextElement;
-
-window.onload = function()
-{
-    currentManageTextElement = new ManageTextElement(0, 'textElement', 750, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
-};
-
-document.onmousedown = function(e)
-{
-    if(currentManageTextElement.isEnabled)
-    {
-        currentManageTextElement.mouseDown(e.clientX, e.clientY, e.button);
-    }
-};
-
-document.onmouseup = function(e)
-{
-    if(currentManageTextElement.isEnabled)
-    {
-        currentManageTextElement.mouseUp(e.button);
-    }
-};
-
-document.onmousemove = function(e)
-{
-    if(currentManageTextElement.isEnabled)
-    {
-        currentManageTextElement.mouseMove(e.clientX, e.clientY);
-    }
-};
-
-document.onkeypress = function(e)
-{
-    if(currentManageTextElement.isEnabled)
-    {
-        currentManageTextElement.keyPress(e.keyCode, e.charCode);
     }
 };
