@@ -26,37 +26,37 @@
                         <ul class="nav navbar-nav">
                             <form class="navbar-form navbar-left" role="search">
                                 <div class="form-group">
-                                    <input class="form-control" onkeyup="verifyFieldTextElement();" id="nameText" type="text" placeHolder="Name">
+                                    <input class="form-control" onkeyup="currentManageTextElement.changeNameText(this.value);" id="nameText" type="text" placeHolder="Name">
                                 </div>
                             </form>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Font <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li id="buttonFont0" class="active"><a href="#" onclick="changeFont('Calibri', 0);">Calibri</a></li>
-                                    <li id="buttonFont1"><a href="#" onclick="changeFont('Times New Roman', 1);">Times New Roman</a></li>
-                                    <li id="buttonFont2"><a href="#" onclick="changeFont('Arial', 2);">Arial</a></li>
-                                    <li id="buttonFont3"><a href="#" onclick="changeFont('Verdana', 3);">Verdana</a></li>
+                                    <li id="buttonFont0" class="active"><a href="#" onclick="currentManageTextElement.changeFont('Calibri', 0);">Calibri</a></li>
+                                    <li id="buttonFont1"><a href="#" onclick="currentManageTextElement.changeFont('Times New Roman', 1);">Times New Roman</a></li>
+                                    <li id="buttonFont2"><a href="#" onclick="currentManageTextElement.changeFont('Arial', 2);">Arial</a></li>
+                                    <li id="buttonFont3"><a href="#" onclick="currentManageTextElement.changeFont('Verdana', 3);">Verdana</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Size <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#"><span id="sizeTextInfo"></span>px</a></li>
-                                    <li><a href="#"><input class="form-control" min="10" max="100" step="2" onchange="writeTextToCanvas(0, 0);" id="sizeText" type="range"></a></li>
+                                    <li><a href="#"><input class="form-control" min="10" max="100" step="2" onchange="currentManageTextElement.changeSizeText(this.value);" id="sizeText" type="range"></a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#"><input class="form-control" onchange="writeTextToCanvas(0, 0);" id="colorText" type="color"></a></li>
+                                    <li><a href="#"><input class="form-control" onchange="currentManageTextElement.changeColor(this.value);" id="colorText" type="color"></a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Align <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li id="buttonTextAlign0" class="active"><a href="#" onclick="alignText('center', 0);">Center</a></li>
-                                    <li id="buttonTextAlign1"><a href="#" onclick="alignText('left', 1);">Left</a></li>
-                                    <li id="buttonTextAlign2"><a href="#" onclick="alignText('right', 2);">Right</a></li>
+                                    <li id="buttonTextAlign0" class="active"><a href="#" onclick="currentManageTextElement.changeTextAlign('center', 0);">Center</a></li>
+                                    <li id="buttonTextAlign1"><a href="#" onclick="currentManageTextElement.changeTextAlign('left', 1);">Left</a></li>
+                                    <li id="buttonTextAlign2"><a href="#" onclick="currentManageTextElement.changeTextAlign('right', 2);">Right</a></li>
                                 </ul>
                             </li>
                         </ul>
