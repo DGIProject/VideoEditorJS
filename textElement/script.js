@@ -8,6 +8,8 @@ var leftClick = false;
 
 var selectedElement = false;
 
+var widthLine = 0;
+
 var contentText = '';
 var currentFont = 'Calibri';
 var alignType = 'center';
@@ -17,18 +19,18 @@ window.onload = function()
     initializeTextElement();
 };
 
-document.getElementById('textElement').onmousedown = function(e)
+document.onmousedown = function(e)
 {
-    if(e.button == 0)
-    {
-        leftClick = true;
-    }
-
     if(detectInZone(e.clientX, e.clientY))
     {
         console.log('true');
 
         selectedElement = true;
+
+        if(e.button == 0)
+        {
+            leftClick = true;
+        }
     }
     else
     {
@@ -61,22 +63,22 @@ document.onmousemove = function(e)
 
         if(xMouse < lastXMouse)
         {
-            x = -1.7;
+            x = -1.35;
         }
 
         if(xMouse > lastXMouse)
         {
-            x = 1.7;
+            x = 1.35;
         }
 
         if(yMouse < lastYMouse)
         {
-            y = -1.7;
+            y = -1.35;
         }
 
         if(yMouse > lastYMouse)
         {
-            y = 1.7;
+            y = 1.35;
         }
 
         lastXMouse = xMouse;
@@ -164,7 +166,6 @@ function writeTextToCanvas(x, y)
     context.fillStyle = document.getElementById('colorText').value;
 
     var enterInContent = contentText.split('|');
-    var widthLine = 0;
 
     for(var i = 0; i < enterInContent.length; i++)
     {
@@ -207,7 +208,21 @@ function detectInZone(xClient, yClient)
     console.log(x, y);
     console.log(posX, posY);
 
-    return x >= posX && y >= posY;
+    var sizeText = document.getElementById('sizeText').value;
+    var enterInContent = contentText.split('|');
+
+    var xWidth = 0;
+
+    if(alignType == 'center')
+    {
+        xWidth = (widthLine / 2);
+    }
+    else if(alignType == 'right')
+    {
+        xWidth = widthLine;
+    }
+
+    return x >= ((posX - xWidth) - 5) && y >= (posY - sizeText) && x <= ((posX - xWidth) + widthLine + 5) && y <= ((posY - sizeText) + (enterInContent.length * sizeText) + 15);
 }
 
 function verifyFieldTextElement()
