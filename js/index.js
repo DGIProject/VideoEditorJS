@@ -176,7 +176,10 @@ function updateTextProject()
 
     if(currentProject.isCreated)
     {
-        document.getElementById('currentProject').innerHTML = 'Projet : ' + currentProject.name + ', dernière sauvegarde : ' + currentProject.lastSave;
+        document.getElementById('currentProject').innerHTML = 'Project : ' + currentProject.name + ', last save : ' + currentProject.lastSave;
+
+        document.getElementById('projectDropdown').innerHTML = 'Project : ' + currentProject.name;
+        document.getElementById('lastSaveDropdown').innerHTML = 'Last save : ' + currentProject.lastSave;
     }
 }
 
@@ -236,6 +239,11 @@ function addFile()
 
         console.log('next');
 
+        if(tabListFiles.length <= 1)
+        {
+            document.getElementById('listFiles').innerHTML = '';
+        }
+
         var iconName = '';
 
         switch(typeFile)
@@ -256,6 +264,7 @@ function addFile()
         var fileE = document.createElement('a');
         fileE.id = 'file' + fileId;
         fileE.href = '#';
+        fileE.setAttribute('fileId', fileId);
         fileE.setAttribute('onclick', 'fileProperties(' + fileId + ');');
         fileE.classList.add('list-group-item');
         fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(currentFile.name) + '</h4><div id="toolsFile' + fileId + '"></div>';
@@ -440,9 +449,15 @@ function saveTextElement()
         console.log('currentItem ' + currentItem);
         tabListFiles.push(currentItem);
 
+        if(tabListFiles.length <= 1)
+        {
+            document.getElementById('listFiles').innerHTML = '';
+        }
+
         var fileE = document.createElement('a');
         fileE.id = 'file' + fileId;
         fileE.href = '#';
+        fileE.setAttribute('fileId', fileId);
         fileE.setAttribute('onclick', 'fileProperties(' + fileId + ');');
         fileE.classList.add('list-group-item');
         fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon glyphicon-text-width"></span> ' + compressName(textElement.nameText) + '</h4><div id="toolsFile' + fileId + '"></div>';
@@ -536,15 +551,9 @@ function removeFile(id)
 
 //TRACK
 
-function addTrack(){
-
-    numberofTrack = tabListTracks.length;
-    var nextId = 0;
-    if (numberofTrack != 0)
-    {
-        var lastId = tabListTracks[numberofTrack-1].id;
-        nextId = lastId+1;
-    }
+function addTrack()
+{
+    var nextId = (tabListTracks.length != 0) ? (tabListTracks[tabListTracks.length - 1].id + 1) : 0;
 
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');
@@ -676,8 +685,11 @@ function stopMoveElement(){
     }
     tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.Object.style.marginLeft.replace('px', ''))
 }
-function addElement(id, idTrack){
-    var info = getInfoForFileId(id, null, "JSon");
+function addElement(id, idTrack)
+{
+    var info = tabListFiles[id];
+
+    console.log(info);
 
     var idElement;
 

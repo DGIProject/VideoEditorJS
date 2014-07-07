@@ -1,22 +1,28 @@
+#globalEdit {
+    text-align: center;
+}
+
 .chronologicalView
 {
     height: 550px;
+    border: 1px solid #E7E7E7;
+    border-radius: 4px;
 }
 
 #tracks
 {
-    height: 94%;
+    height: 485px;
     width: 190px;
     overflow-y: hidden;
     overflow-x: hidden;
     float: left;
-    border-right: 1px solid #575757;
+    border-right: 1px solid #E7E7E7;
 }
 
 .singleTrack
 {
     height: 120px;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #dcdcdc;
     display: inline-block;
 }
 
@@ -48,9 +54,10 @@
 .timeTrack
 {
     width: 100%;
-    padding-left: 20%;
     height: 30px;
-    border-bottom: 1px solid gray;
+    padding-left: 20%;
+    margin-top: 15px;
+    border-bottom: 1px solid #E7E7E7;
 }
 
 .timeLeft
@@ -65,8 +72,8 @@
 
 .videoViewEditor
 {
-    height: 94%;
-    width: 77%;
+    height: 501px;
+    width: 633px;
     float: left;
     overflow-y: auto;
     overflow-x: auto;
@@ -136,15 +143,21 @@
     border: 1px solid blue;
     height: 80%;
     background-color: rosybrown;
-    margin-left: 0px;
+    margin-left: 0;
     resize: none;
     overflow: hidden;
     display: inherit;
 }
 
+.toolbar {
+    position: absolute;
+    bottom: 15px;
+}
+
 .listFiles
 {
-    height: 410px;
+    height: 445px;
+    margin-top: 15px;
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -154,6 +167,8 @@
     height: 550px;
     margin-left: 10px;
     min-width: 204px;
+    border: 1px solid #E7E7E7;
+    border-radius: 4px;
 }
 
 .center
@@ -189,7 +204,14 @@
 }
 
 #textElement {
-    border: 1px solid transparent;
-    border-color: #E7E7E7;
+    border: 1px solid #E7E7E7;
     border-radius: 4px;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #F5F5F5;
 }

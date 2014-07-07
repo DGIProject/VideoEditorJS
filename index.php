@@ -16,22 +16,57 @@ $_SESSION['user'] = 'User'; ?>
 <div class="container">
     <h1>VideoEditorJS</h1>
     <div id="editor">
-        <div id="errors"></div>
-        <div class="toolbar">
-            <button onclick="newProjectModal(true);" class="btn btn-default">New project</button>
-            <button onclick="openProject();" class="btn btn-default">Open project</button>
-            <button onclick="saveProject();" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span></button>
-            <button onclick="addTrack();" class="btn btn-default">New track</button>
-            <button onclick="makeRender();" class="btn btn-default">Render</button>
-            <button class="btn btn-default" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-            <a href="#" onclick="zoomMoins();"><span class="glyphicon glyphicon-zoom-out" ></span></a>
-            <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
-            <a href="#" onclick="zoomPlus();"><span class="glyphicon glyphicon-zoom-in"></span></a>
-            <span id="currentProject">Project : Aucun projet ouvert</span>
-        </div>
-        </br>
-        <div class="row" id="globalEdit"">
-            <div class="col-md-9 chronologicalView well" id="offsetBlank">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Editor</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" onclick="newProjectModal(true);">New project</a></li>
+                                <li><a href="#" onclick="openProject();">Open project</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" onclick="saveProject();">Save project</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" id="projectDropdown">Project : No project</a></li>
+                                <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#" onclick="addTrack();">New track</a></li>
+                        <li><a href="#" onclick="makeRender();">Render</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" onclick="zoomMoins();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
+                                </span>
+                                <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
+                                <span class="input-group-btn">
+                                    <button type="button" onclick="zoomPlus();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-in"></span></button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
+                    <ul class="nav navbar-nav navbar-right">
+                        <p class="navbar-text" id="currentProject">Project : No project</p>
+                        <button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="globalEdit">
+            <div class="col-md-9 chronologicalView" id="offsetBlank">
                 <div class="timeTrack">
                     <span class="timeLeft" id="startTime">0h0m0s</span>
                     <span class="timeRight" id="endTime">0h2m40s</span>
@@ -39,18 +74,16 @@ $_SESSION['user'] = 'User'; ?>
                 <div id="tracks"></div>
                 <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
             </div>
-            <div class="col-md-2 filesList well">
-                <span class="titleSize strong">Eléments</span>
-                </br>
+            <div class="col-md-2 filesList">
+                <div id="listFiles" class="list-group listFiles">Aucun élément.</div>
                 <div class="toolbar">
+                    <hr>
                     <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-file"></span></button>
                     <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
                     <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span></button>
                     <button type="button" class="btn btn-block btn-danger" onclick="currentProject.stopAddFileTrack();" style="margin-top: 5px;display: none;" id="stopAddFileTrackButton">STOP</button>
-                    <hr/>
                     <div style="display: none;"><input type="file" onchange="addFile();" id="fileLoader"/></div>
                 </div>
-                <div id="listFiles" class="list-group listFiles"></div>
             </div>
         </div>
     </div>

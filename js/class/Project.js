@@ -23,10 +23,10 @@ Project.prototype.startAddFileTrack = function(id)
 
     for(var i = 0; i < filesTab.length; i++)
     {
-        var idFile = filesTab[i].getAttribute('idFile');
+        var fileId = filesTab[i].getAttribute('fileId');
 
         filesTab[i].removeAttribute('onclick');
-        filesTab[i].setAttribute('onclick', 'addElement(' + idFile + ', ' + id + ');');
+        filesTab[i].setAttribute('onclick', 'addElement(' + fileId + ', ' + id + ');');
 
         filesTab[i].classList.add('active');
     }
@@ -41,9 +41,9 @@ Project.prototype.stopAddFileTrack = function()
 
     for(var i = 0; i < filesTab.length; i++)
     {
-        var idFile = filesTab[i].getAttribute('idFile');
+        var fileId = filesTab[i].getAttribute('fileId');
 
-        filesTab[i].setAttribute('onclick', 'fileProperties(' + idFile + ');');
+        filesTab[i].setAttribute('onclick', 'fileProperties(' + fileId + ');');
         filesTab[i].classList.remove('active');
     }
 };
