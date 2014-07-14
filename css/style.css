@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+#currentProject {
+    margin-right: 10px;
+}
+
 .chronologicalView
 {
     height: 550px;

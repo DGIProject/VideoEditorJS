@@ -11,9 +11,6 @@ var renderVar;
 var currentUploads = 0;
 var tabFilesUpload = [];
 
-var currentProject;
-var currentManageTextElement;
-
 var textElementId = 0;
 
 //PROJECT
@@ -168,6 +165,37 @@ function saveProject()
     {
         newProjectModal(false);
     }
+}
+
+function getListProjects(id)
+{
+    var OAjax;
+
+    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
+    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
+    OAjax.open('POST', 'php/getListProjects.php', true);
+    OAjax.onreadystatechange = function() {
+        if (OAjax.readyState == 4 && OAjax.status == 200) {
+            console.log(OAjax.responseText);
+
+            var tabListProjects = JSON.parse(OAjax.responseText);
+
+            console.log(tabListProjects.length);
+
+            if(tabListProjects.length > 0)
+            {
+                document.getElementById('listProjects').innerHTML = '';
+
+                for(var i = 0; i < tabListProjects.length; i++)
+                {
+                    document.getElementById('listProjects').innerHTML += '<a onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item">' + tabListProjects[i] + '</a>';
+                }
+            }
+        }
+    };
+
+    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    OAjax.send();
 }
 
 function updateTextProject()

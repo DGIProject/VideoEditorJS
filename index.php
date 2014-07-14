@@ -44,6 +44,14 @@ $_SESSION['user'] = 'User'; ?>
                         <li><a href="#" onclick="addTrack();">New track</a></li>
                         <li><a href="#" onclick="makeRender();">Render</a></li>
                     </ul>
+                    <button onclick="saveProject();" class="btn btn-primary navbar-btn navbar-right"><span class="glyphicon glyphicon-save"></span></button>
+                    <p class="navbar-text navbar-right" id="currentProject">No project</p>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <form class="navbar-form navbar-left">
                         <div class="form-group">
                             <div class="input-group">
@@ -58,10 +66,6 @@ $_SESSION['user'] = 'User'; ?>
                         </div>
                     </form>
                     <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                    <ul class="nav navbar-nav navbar-right">
-                        <p class="navbar-text" id="currentProject">Project : No project</p>
-                        <button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
-                    </ul>
                 </div>
             </div>
         </nav>
@@ -129,25 +133,27 @@ $_SESSION['user'] = 'User'; ?>
             </div>
         </div>
     </div>
-    <div id="startLoadingJS" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="startLoadingEditor" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Bienvenue sur VideoEditorJS</h4>
                 </div>
                 <div class="modal-body">
-                    <p>VideoEditorJS est un projet qui vous permet de faire votre montage vidéo directement en ligne. Il est encore en développement mais pour l'instant vous avez la possibilité d'ajouter des vidéos, musiques, images, titres.</p>
-                    </br>
+                    <p>Découvrez un univers en ligne pour monter vos vidéos.</p>
+                    <hr>
                     <div id="loadingProgressProject">
                         <div class="progress progress-striped active">
-                            <div id="downloadJSProgress" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <div id="progressLoadJS" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                                 <span class="sr-only">0% Complete</span>
                             </div>
                         </div>
                         <span class="marginauto strong">Chargement en cours ... <span id="persentProgress">0%</span></span>
                     </div>
                     <div id="startUseProject" style="display: none;">
-                        <button type="button" class="btn btn-lg btn-block btn-success" data-dismiss="modal">Let's go !</button>
+                        <h2>Projects</h2>
+                        <h4>Existing</h4>
+                        <h4>New</h4>
                     </div>
                 </div>
             </div>
@@ -307,6 +313,11 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/jquery-latest.js"></script>
 <script src="js/jquery.noty.packaged.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/loadEditor.js"></script>
+
+<div id="loadScript"></div>
+
+<!--
 <script src="js/index.js"></script>
 <script src="js/onEvent.js"></script>
 <script src="js/class/Project.js"></script>
@@ -319,7 +330,9 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/readProject.js"></script>
 <script src="js/GenerateFileProject.js"></script>
 <script src="js/lib/terminal.js"></script>
+-->
 
+<!--
 <script type="text/javascript">
     window.onload = function() {
         $('#startLoadingJS').modal('show');
@@ -336,8 +349,6 @@ $_SESSION['user'] = 'User'; ?>
 
         OAjax.onprogress = function(e)
         {
-            console.log(e.loaded);
-
             var persent = Math.ceil((e.loaded/27547136)*100) + '%';
 
             document.getElementById('downloadJSProgress').style.width = persent;
@@ -346,11 +357,8 @@ $_SESSION['user'] = 'User'; ?>
 
         OAjax.onloadend = function(e)
         {
-            console.log('end '+e.loaded);
-
             document.getElementById('loadingProgressProject').style.display = 'none';
             document.getElementById('startUseProject').style.display = '';
-            document.getElementById('startUseProject').setAttribute("onclick", "openProject()");
 
             currentProject.isStarted = true;
 
@@ -360,5 +368,6 @@ $_SESSION['user'] = 'User'; ?>
         OAjax.send();
     }
 </script>
+-->
 </body>
 </html>
