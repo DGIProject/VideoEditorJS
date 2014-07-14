@@ -44,14 +44,6 @@ $_SESSION['user'] = 'User'; ?>
                         <li><a href="#" onclick="addTrack();">New track</a></li>
                         <li><a href="#" onclick="makeRender();">Render</a></li>
                     </ul>
-                    <button onclick="saveProject();" class="btn btn-primary navbar-btn navbar-right"><span class="glyphicon glyphicon-save"></span></button>
-                    <p class="navbar-text navbar-right" id="currentProject">No project</p>
-                </div>
-            </div>
-        </nav>
-        <nav class="navbar navbar-default" role="navigation">
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <form class="navbar-form navbar-left">
                         <div class="form-group">
                             <div class="input-group">
@@ -66,6 +58,8 @@ $_SESSION['user'] = 'User'; ?>
                         </div>
                     </form>
                     <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
+                    <button onclick="saveProject();" class="btn btn-primary navbar-btn navbar-right"><span class="glyphicon glyphicon-save"></span></button>
+                    <p class="navbar-text navbar-right" id="currentProject">No project</p>
                 </div>
             </div>
         </nav>
@@ -153,7 +147,9 @@ $_SESSION['user'] = 'User'; ?>
                     <div id="startUseProject" style="display: none;">
                         <h2>Projects</h2>
                         <h4>Existing</h4>
+                        <div id="listExistingProjects">Loading existing projects ...</div>
                         <h4>New</h4>
+                        <a href="#" onclick="newProjectModal(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
                     </div>
                 </div>
             </div>

@@ -95,7 +95,6 @@ function openProject()
 
 function loadProject(fileName)
 {
-    $('#selectProjectModal').modal('hide');
     $('#loadingDiv').modal('show');
 
     var OAjax;
@@ -184,12 +183,16 @@ function getListProjects(id)
 
             if(tabListProjects.length > 0)
             {
-                document.getElementById('listProjects').innerHTML = '';
+                document.getElementById(id).innerHTML = '';
 
                 for(var i = 0; i < tabListProjects.length; i++)
                 {
-                    document.getElementById('listProjects').innerHTML += '<a onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item">' + tabListProjects[i] + '</a>';
+                    document.getElementById(id).innerHTML += '<a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
                 }
+            }
+            else
+            {
+                document.getElementById(id).innerHTML = 'There is not projects.';
             }
         }
     };

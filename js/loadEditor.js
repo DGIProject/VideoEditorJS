@@ -54,6 +54,8 @@ function getFileJS() {
         document.getElementById('loadingProgressProject').style.display = 'none';
         document.getElementById('startUseProject').style.display = '';
 
+        getListProjects('listExistingProjects');
+
         updateTextProject();
     }
 }
