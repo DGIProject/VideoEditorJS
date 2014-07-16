@@ -18,12 +18,18 @@ var currentFileRow = 0;
 
 var currentProject, currentManageTextElement;
 
+var timerProgress;
+
 window.onload = function() {
     console.log('onload');
 
     $('#startLoadingEditor').modal('show');
 
     getFileJS();
+
+    timerProgress = setInterval(function() {
+        document.getElementById('progressLoadJS').style.width = (parseInt(document.getElementById('progressLoadJS').style.width.replace('%', '')) + 1) + '%';
+    }, 1000);
 };
 
 function getFileJS() {
@@ -36,8 +42,6 @@ function getFileJS() {
         });
 
         currentFileRow++;
-
-        console.log(Math.ceil((currentFileRow / tabFilesJS.length) * 100));
 
         document.getElementById('progressLoadJS').style.width = Math.ceil((currentFileRow / tabFilesJS.length) * 100) + '%';
         document.getElementById('persentProgress').innerHTML = currentFileRow + '/' + tabFilesJS.length;
@@ -54,9 +58,13 @@ function getFileJS() {
         document.getElementById('loadingProgressProject').style.display = 'none';
         document.getElementById('startUseProject').style.display = '';
 
+        clearInterval(timerProgress);
+
         getListProjects('listExistingProjects');
 
-        updateTextProject();
+        makeValues();
+
+        currentProject.updateTextProject();
     }
 }
 
@@ -74,5 +82,5 @@ function loadFileJS(url, callback) {
         }
     }
 
-    document.getElementById('loadScript').appendChild(script);
+    document.getElementById('loadScripts').appendChild(script);
 };

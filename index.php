@@ -32,10 +32,10 @@ $_SESSION['user'] = 'User'; ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="newProjectModal(true);">New project</a></li>
-                                <li><a href="#" onclick="openProject();">Open project</a></li>
+                                <li><a href="#" onclick="currentProject.newProject(true);">New project</a></li>
+                                <li><a href="#" onclick="currentProject.openProject();">Open project</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="saveProject();">Save project</a></li>
+                                <li><a href="#" onclick="currentProject.saveProject();">Save project</a></li>
                                 <li class="divider"></li>
                                 <li><a href="#" id="projectDropdown">Project : No project</a></li>
                                 <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
@@ -149,7 +149,7 @@ $_SESSION['user'] = 'User'; ?>
                         <h4>Existing</h4>
                         <div id="listExistingProjects">Loading existing projects ...</div>
                         <h4>New</h4>
-                        <a href="#" onclick="newProjectModal(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
+                        <a href="#" onclick="currentProject.newProject(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
                     </div>
                 </div>
             </div>
@@ -182,7 +182,7 @@ $_SESSION['user'] = 'User'; ?>
                     <h4 class="modal-title">Choisissez le project</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="listProjects" class="list-group">Aucun projet présent.</div>
+                    <div id="listProjects" class="list-group">Loading projects ...</div>
                     <button type="button" onclick="newProjectModal(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
                 </div>
                 <div class="modal-footer">
@@ -311,7 +311,7 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/loadEditor.js"></script>
 
-<div id="loadScript"></div>
+<div id="loadScripts"></div>
 
 <!--
 <script src="js/index.js"></script>
@@ -365,5 +365,13 @@ $_SESSION['user'] = 'User'; ?>
     }
 </script>
 -->
+
+<script type="text/javascript">
+    function makeValues()
+    {
+        setValues("<?php echo $_SESSION['user']; ?>");
+    }
+</script>
+
 </body>
 </html>

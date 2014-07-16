@@ -1,6 +1,8 @@
-Loader = function(dataLoaded) {
+Loader = function(dataLoaded)
+{
     this.info = dataLoaded;
-}
+};
+
 Loader.prototype.addTrack = function(track){
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');

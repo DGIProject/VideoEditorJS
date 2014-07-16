@@ -15,155 +15,9 @@ var textElementId = 0;
 
 //PROJECT
 
-function newProjectModal(reset)
+function setValues(username)
 {
-    document.getElementById('nameProject').value = '';
-    document.getElementById('buttonNewProject').setAttribute('onclick', 'newProject(' + reset + ');');
-
-    $('#selectProjectModal').modal('hide');
-    $('#newProjectModal').modal('show');
-}
-
-function newProject(reset)
-{
-    var nameProject = document.getElementById('nameProject').value;
-
-    if(nameProject != '')
-    {
-        $('#newProjectModal').modal('hide');
-
-        currentProject.stopAddFileTrack();
-
-        if(reset)
-        {
-            document.getElementById('tracks').innerHTML = '';
-            document.getElementById('VideoView').innerHTML = '';
-
-            tabListElements = [];
-            tabListFiles = [];
-            tabListTracks = [];
-        }
-
-        currentProject.name = document.getElementById('nameProject').value;
-        currentProject.dateCreation = getCurrentDate();
-        currentProject.lastSave = 'aucune';
-
-        updateTextProject();
-        saveProject();
-    }
-    else
-    {
-        var n = noty({layout: 'topRight', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
-    }
-}
-
-function openProject()
-{
-    $('#loadingDiv').modal('show');
-
-    var OAjax;
-
-    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
-    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', 'php/getListProjects.php', true);
-    OAjax.onreadystatechange = function() {
-        if (OAjax.readyState == 4 && OAjax.status == 200) {
-            console.log(OAjax.responseText);
-
-            var tabListProjects = JSON.parse(OAjax.responseText);
-
-            console.log(tabListProjects.length);
-
-            if(tabListProjects.length > 0)
-            {
-                document.getElementById('listProjects').innerHTML = '';
-
-                for(var i = 0; i < tabListProjects.length; i++)
-                {
-                    document.getElementById('listProjects').innerHTML += '<a onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item">' + tabListProjects[i] + '</a>';
-                }
-            }
-
-            $('#loadingDiv').modal('hide');
-            $('#selectProjectModal').modal('show');
-        }
-    };
-
-    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send();
-}
-
-function loadProject(fileName)
-{
-    $('#loadingDiv').modal('show');
-
-    var OAjax;
-
-    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
-    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', 'php/readFileProject.php', true);
-    OAjax.onreadystatechange = function() {
-        if (OAjax.readyState == 4 && OAjax.status == 200) {
-            console.log(OAjax.responseText);
-
-            var save =  JSON.parse(OAjax.responseText);
-            var loader = new Loader(save);
-            loader.load();
-
-            console.log(save);
-
-        }
-    };
-
-    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send('fileName=' + fileName);
-}
-
-function saveProject()
-{
-    if(currentProject.isCreated)
-    {
-        currentProject.loadModal('show');
-
-        var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, tabListElements, tabListFiles, tabListTextElements, tabListTracks);
-        var informations = fileProject.generateMain();
-
-        console.log(informations);
-
-        var OAjax;
-
-        if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
-        else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-        OAjax.open('POST', 'php/addFileProject.php', true);
-        OAjax.onreadystatechange = function() {
-            if(OAjax.readyState == 4 && OAjax.status == 200) {
-                console.log('answer : ' + OAjax.responseText);
-
-                if(OAjax.responseText == 'true')
-                {
-                    currentProject.lastSave = getCurrentDate();
-
-                    uploadAllFiles();
-                    updateTextProject();
-
-                    currentProject.loadModal('hide');
-                }
-                else
-                {
-                    var n = noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
-
-                    currentProject.loadModal('hide');
-                }
-            }
-        };
-
-        OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        OAjax.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(informations));
-    }
-    else
-    {
-        newProjectModal(false);
-    }
+    currentProject.username = username;
 }
 
 function getListProjects(id)
@@ -187,7 +41,7 @@ function getListProjects(id)
 
                 for(var i = 0; i < tabListProjects.length; i++)
                 {
-                    document.getElementById(id).innerHTML += '<a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
+                    document.getElementById(id).innerHTML += '<a href="#" onclick="currentProject.loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
                 }
             }
             else
@@ -199,19 +53,6 @@ function getListProjects(id)
 
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send();
-}
-
-function updateTextProject()
-{
-    console.log('updateTextProject');
-
-    if(currentProject.isCreated)
-    {
-        document.getElementById('currentProject').innerHTML = 'Project : ' + currentProject.name + ', last save : ' + currentProject.lastSave;
-
-        document.getElementById('projectDropdown').innerHTML = 'Project : ' + currentProject.name;
-        document.getElementById('lastSaveDropdown').innerHTML = 'Last save : ' + currentProject.lastSave;
-    }
 }
 
 //FILE
