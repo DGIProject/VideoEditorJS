@@ -433,12 +433,16 @@ function addTrack()
     var newViewTrack = document.createElement('div');
     newTrack.setAttribute('class', 'singleTrack');
     newTrack.setAttribute('id', 'track' + nextId);
+    newTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
+    newTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
     newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
     newViewTrack.setAttribute('style','width: 1000px;');
     newViewTrack.setAttribute('id', 'ViewTrack' + nextId);
+    newViewTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
+    newViewTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
     newViewTrack.innerHTML = '<p id="textViewEditor' + nextId + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
 
@@ -517,6 +521,19 @@ function removeElementFromTrack(trackId, ElementId){
 
 }
 Array.prototype.remove = function(from, to) { var rest = this.slice((to || from) + 1 || this.length); this.length = from < 0 ? this.length + from : from; return this.push.apply(this, rest); };
+
+function hoverTrack(id)
+{
+    document.getElementById('track' + id).style.backgroundColor = '#F4F4F4';
+    document.getElementById('ViewTrack' + id).style.backgroundColor = '#F4F4F4';
+}
+
+function outHoverTrack(id)
+{
+    document.getElementById('track' + id).style.backgroundColor = '#FFFFFF';
+    document.getElementById('ViewTrack' + id).style.backgroundColor = '#FFFFFF';
+}
+
 //SCROLL
 function scroolAllTracks(){
     var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");
