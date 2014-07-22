@@ -58,7 +58,7 @@ $_SESSION['user'] = 'User'; ?>
                         </div>
                     </form>
                     <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                    <button onclick="saveProject();" class="btn btn-primary navbar-btn navbar-right"><span class="glyphicon glyphicon-save"></span></button>
+                    <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn navbar-right"><span class="glyphicon glyphicon-save"></span></button>
                     <p class="navbar-text navbar-right" id="currentProject">No project</p>
                 </div>
             </div>
@@ -146,9 +146,8 @@ $_SESSION['user'] = 'User'; ?>
                     </div>
                     <div id="startUseProject" style="display: none;">
                         <h2>Projects</h2>
-                        <h4>Existing</h4>
                         <div id="listExistingProjects">Loading existing projects ...</div>
-                        <h4>New</h4>
+                        </br>
                         <a href="#" onclick="currentProject.newProject(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
                     </div>
                 </div>
