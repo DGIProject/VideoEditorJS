@@ -181,7 +181,7 @@ $_SESSION['user'] = 'User'; ?>
                 </div>
                 <div class="modal-body">
                     <div id="listProjects" class="list-group">Loading projects ...</div>
-                    <button type="button" onclick="newProjectModal(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
+                    <button type="button" onclick="currentProject.newProject(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>

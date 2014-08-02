@@ -677,7 +677,6 @@ function activeResize() {
 }
 window.onload = function (e) {
     calculateTimeBar();
-    updateTextProject();
 }
 function makeRender(){
    renderVar = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);

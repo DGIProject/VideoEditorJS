@@ -52,6 +52,7 @@ Project.prototype.stopAddFileTrack = function()
 
 Project.prototype.newProject = function(reset)
 {
+
     document.getElementById('nameProject').value = '';
     document.getElementById('buttonNewProject').setAttribute('onclick', 'currentProject.saveNewProject(' + reset + ');');
 
@@ -61,6 +62,7 @@ Project.prototype.newProject = function(reset)
 
 Project.prototype.saveNewProject = function(reset)
 {
+
     var nameProject = document.getElementById('nameProject').value;
 
     if(nameProject != '')
@@ -79,6 +81,8 @@ Project.prototype.saveNewProject = function(reset)
             tabListTracks = [];
         }
 
+        this.isStarted = true;
+        this.isCreated = true;
         this.name = nameProject;
         this.dateCreation = getCurrentDate();
         this.lastSave = 'none';
@@ -145,13 +149,13 @@ Project.prototype.saveProject = function()
 
                 if(OAjax.responseText == 'true')
                 {
-                    this.lastSave = getCurrentDate();
+                    currentProject.lastSave = getCurrentDate();
 
                     uploadAllFiles();
 
-                    this.updateTextProject();
+                    currentProject.updateTextProject();
 
-                    this.loadModal('hide');
+                    currentProject.loadModal('hide');
                 }
                 else
                 {
