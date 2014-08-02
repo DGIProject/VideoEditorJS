@@ -356,7 +356,7 @@ function fileProperties(id){
 
     if(type == TYPE.TEXT || type == TYPE.IMAGE)
     {
-        preview = '<img class="previewFileContent" src="http://clangue.net/testVideo/php/getFile.php?p=' + currentProject.name + '&fileId=' + fileInfo.id + '">';
+        preview = '<img class="previewFileContent" src="php/getFile.php?p=' + currentProject.name + '&fileId=' + fileInfo.id + '">';
     }
     else
     {
@@ -529,11 +529,11 @@ function prepareMoveElement(elementListID){
     divElementSelectedForMove.trackId = tabListElements[elementListID].trackId;
     divElementSelectedForMove.Object = document.getElementById("trackElementId" + tabListElements[elementListID].id);
     canMove = true;
-    console.log('true!')
+    console.log('Can move')
 }
 function stopMoveElement(){
     canMove = false;
-    console.log('false!');
+    console.log('can \'t move');
     if (parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')) <= parseInt(divElementSelectedForMove.Object.style.maxWidth.replace('px', ''))) {
         tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].resize(parseInt(divElementSelectedForMove.Object.style.width.replace('px', '')),parseInt(divElementSelectedForMove.Object.offsetLeft));
     }
@@ -700,7 +700,7 @@ function getCurrentDate(){
 window.onbeforeunload = function (e) {
     e = e || window.event;
 
-    saveProject();
+    currentProject.saveProject();
 
     if(currentUploads > 0)
     {

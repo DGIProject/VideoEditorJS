@@ -35,8 +35,9 @@ document.onmousemove = function(e)
         }
         else
         {
-            e = e || window.event; // IE-ism
             if (canMove && !resizing) {
+                event = e || window.event;
+
                 console.log(divElementSelectedForMove)
                 var elementsIdCurrentTrack = tabListTracks[divElementSelectedForMove.trackId].elementsId;
                 console.log(elementsIdCurrentTrack)
@@ -46,6 +47,7 @@ document.onmousemove = function(e)
                 var offsetWindow = $("#VideoView").offset().left
                 if (posInTabListElements > 0)
                 {
+
                     var beforElement = $("#trackElementId"+parseInt(posInTabListElements-1));
                     console.log(beforElement.offset().left, event.clientX)
                     var extremitBeforElementOffset = beforElement.offset().left + beforElement.width();
@@ -55,24 +57,19 @@ document.onmousemove = function(e)
                     var positionInEditAeraX = event.clientX - extremitBeforElementOffset - divElementSelectedForMove.Object.style.width.replace('px','')/2 - document.getElementById("VideoView").scrollLeft;
                     console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
 
-                    /*             var beforElement = $("#trackElementId"+parseInt(elementIdFinded-1));
-                     var sizetoRemove = beforElement.position().left + beforElement.width()
-                     var positionInEditAeraX = event.clientX - (offsetWindow )  + ($(divElementSelectedForMove.Object.id).width()/2);
-                     console.log("margin calculated !", sizetoRemove, offsetWindow, positionInEditAeraX, beforElement.position().left);
-
-                     var currentLenthTrack = document.getElementById('ViewTrack'+divElementSelectedForMove.trackId).style.width.replace('px',''); */
                 }
                 else
                 {
                     var offsetElement = divElementSelectedForMove.Object.offsetLeft
                     var actualMargin = divElementSelectedForMove.Object.style.marginLeft.replace('px','');
-                    var positionInEditAeraX = event.clientX - offsetWindow  - divElementSelectedForMove.Object.style.width.replace('px','')/2;
+                    var positionInEditAeraX = event.clientX - offsetWindow - divElementSelectedForMove.Object.style.width.replace('px','')/2;
                     console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
                 }
                 if (actualMargin >= 0 || positionInEditAeraX >= 0)
                 {
                     divElementSelectedForMove.Object.style.marginLeft = document.getElementById("VideoView").scrollLeft + positionInEditAeraX + "px";
                 }
+
             }
         }
     }
