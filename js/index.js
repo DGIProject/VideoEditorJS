@@ -15,13 +15,10 @@ var textElementId = 0;
 
 //PROJECT
 
-function setValues(username)
-{
+function setValues(username){
     currentProject.username = username;
 }
-
-function getListProjects(id)
-{
+function getListProjects(id){
     var OAjax;
 
     if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
@@ -54,11 +51,9 @@ function getListProjects(id)
     OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     OAjax.send();
 }
-
 //FILE
 
-function addFile()
-{
+function addFile(){
     currentProject.stopAddFileTrack();
 
     var currentFile = document.getElementById('fileLoader').files[0];
@@ -150,9 +145,7 @@ function addFile()
         var n = noty({layout: 'topRight', type: 'error', text: 'Erreur, ce fichier n\'est pas compatible avec le système.', timeout: '5000'});
     }
 }
-
-function getTypeFile(fileName)
-{
+function getTypeFile(fileName){
     console.log(fileName);
 
     var extension = fileName.split('.').reverse()[0];
@@ -179,14 +172,10 @@ function getTypeFile(fileName)
         return 'ERROR';
     }
 }
-
-function compressName(name)
-{
+function compressName(name){
     return ((name.length > 12) ? name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length) : name);
 }
-
-function uploadFile(id, file)
-{
+function uploadFile(id, file){
     if(currentProject.isCreated)
     {
         currentUploads++;
@@ -257,9 +246,7 @@ function uploadFile(id, file)
         document.getElementById('toolsFile' + id).innerHTML = 'Pas encore envoyé.';
     }
 }
-
-function uploadAllFiles()
-{
+function uploadAllFiles(){
     if(tabFilesUpload.length > 0)
     {
         console.log('filesToUpload');
@@ -276,9 +263,7 @@ function uploadAllFiles()
         console.log('notFilesToUpload');
     }
 }
-
-function newTextElement()
-{
+function newTextElement(){
     console.log('newTextElement');
 
     currentProject.stopAddFileTrack();
@@ -288,18 +273,14 @@ function newTextElement()
 
     $('#textElementModal').modal('show');
 }
-
-function editFileText(id)
-{
+function editFileText(id){
     var textElement = tabListFiles[id].properties;
 
     currentManageTextElement.editTextElement(textElement.id, id, textElement.nameText, textElement.contentText, textElement.fontText, textElement.sizeText, textElement.colorText, textElement.alignText, textElement.posText);
 
     $('#textElementModal').modal('show');
 }
-
-function saveTextElement()
-{
+function saveTextElement(){
     var textElement = currentManageTextElement.getInformationsTextElement();
 
     var fileId;
@@ -360,9 +341,7 @@ function saveTextElement()
 
     $('#textElementModal').modal('hide');
 }
-
-function fileProperties(id)
-{
+function fileProperties(id){
     console.log('fileProperties');
 
     var fileInfo = tabListFiles[id];
@@ -406,14 +385,10 @@ function fileProperties(id)
 
     $('#filePropertiesModal').modal('show');
 }
-
-function editFileImage(id)
-{
+function editFileImage(id){
     console.log('editFileImage');
 }
-
-function removeFile(id)
-{
+function removeFile(id){
     $('#filesPropertiesModal').modal('hide');
 
     tabListFiles[id] = null;
@@ -422,9 +397,7 @@ function removeFile(id)
 }
 
 //TRACK
-
-function addTrack()
-{
+function addTrack(){
     var nextId = (tabListTracks.length != 0) ? (tabListTracks[tabListTracks.length - 1].id + 1) : 0;
 
     var tracks = document.getElementById('tracks');
@@ -488,7 +461,6 @@ function updateVolumeTrack(id, valueVolume){
 
     tabListTracks[id].changeVolume(valueVolume);
 }
-
 function settingsTrack(id){
     console.log('settingsTrack');
 }
@@ -523,18 +495,14 @@ function removeElementFromTrack(trackId, ElementId){
 
 Array.prototype.remove = function(from, to) { var rest = this.slice((to || from) + 1 || this.length); this.length = from < 0 ? this.length + from : from; return this.push.apply(this, rest); };
 
-function hoverTrack(id)
-{
+function hoverTrack(id){
     document.getElementById('track' + id).style.backgroundColor = '#F4F4F4';
     document.getElementById('ViewTrack' + id).style.backgroundColor = '#F4F4F4';
 }
-
-function outHoverTrack(id)
-{
+function outHoverTrack(id){
     document.getElementById('track' + id).style.backgroundColor = '#FFFFFF';
     document.getElementById('ViewTrack' + id).style.backgroundColor = '#FFFFFF';
 }
-
 //SCROLL
 function scroolAllTracks(){
     var tracks = document.getElementById("tracks"), videoTrackView = document.getElementById("VideoView");

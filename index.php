@@ -161,7 +161,7 @@ $_SESSION['user'] = 'User'; ?>
                     <h4 class="modal-title">Entrez le nom de votre projet</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-inline">
+                    <form class="form-inline" onsubmit="return false;">
                         <div class="form-group">
                             <input type="text" id="nameProject" name="nameProject" class="form-control" placeholder="Nom du projet">
                         </div>
@@ -169,7 +169,6 @@ $_SESSION['user'] = 'User'; ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="buttonNewProject" class="btn btn-primary">Créer le projet</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
