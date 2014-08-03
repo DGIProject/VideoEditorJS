@@ -101,6 +101,7 @@ function getDownloadLink(fileData, fileName) {
 
 function initWorker() {
   worker = new Worker("js/lib/worker.js");
+  console.log('initialising Worker .........');
   worker.onmessage = function (event) {
     var message = event.data;
     if (message.type == "ready") {
@@ -137,10 +138,3 @@ function initWorker() {
     }
   };
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  initWorker();
-  retrieveSampleVideo();
-
-});

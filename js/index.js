@@ -107,7 +107,7 @@ function addFile(){
 
         console.log('next');
 
-        if(tabListFiles.length <= 1)
+        if(tabListFiles.length < 1)
         {
             document.getElementById('listFiles').innerHTML = '';
         }
@@ -719,7 +719,7 @@ function startAutoSave(){
 function autoSaveTimeOut(){
     console.log('SetINerval')
     asRunning = true;
-    autoSave = window.setInterval(autoSaveInterval,40000);
+    autoSave = window.setInterval(autoSaveInterval,300000);
 }
 function autoSaveInterval(){
     currentProject.saveProject();

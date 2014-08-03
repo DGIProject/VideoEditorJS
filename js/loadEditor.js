@@ -49,6 +49,10 @@ function getFileJS() {
     else
     {
         console.log('endLoadFileJS');
+        console.log("init");
+
+        initWorker();
+        console.log('inited');
 
         currentProject = new Project('undefined', getCurrentDate());
         currentProject.isStarted = true;
@@ -59,7 +63,6 @@ function getFileJS() {
         document.getElementById('startUseProject').style.display = '';
 
         clearInterval(timerProgress);
-
         getListProjects('listExistingProjects');
 
         makeValues();
