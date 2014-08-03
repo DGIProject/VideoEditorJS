@@ -22,42 +22,48 @@ Loader.prototype.addTrack = function(track){
     var track = new Track( track.id, track.name);
     tabListTracks.push(track);
 }
-Loader.prototype.addElement = function(element){
+Loader.prototype.addElement = function(elementB){
 
-    var info = getInfoForFileId(element.id, null, "JSon");
 
-    var idElement;
+    var ElementToAdd = new Elements(elementB.id,elementB.name, elementB.initialDuration, elementB.fileId, elementB.trackId);
+    ElementToAdd.id = elementB.id;
+    ElementToAdd.name = elementB.name;
+    ElementToAdd.initialDuration = elementB.initialDuration; // in h:m:s
+    ElementToAdd.currentDuration = elementB.currentDuration;
+    ElementToAdd.length = elementB.length; // in px
+    ElementToAdd.maxLength = elementB.maxLength;
+    ElementToAdd.marginXpx = elementB.marginXpx;
+    ElementToAdd.marginXDuration = elementB.marginXDuration;
+    ElementToAdd.marginXsecond = elementB.marginXsecond;
+    ElementToAdd.fileId = elementB.fileId;
+    ElementToAdd.startTime = elementB.startTime; //in second
+    ElementToAdd.startTimePx = elementB.startTimePx;
+    ElementToAdd.trackId = elementB.startTimePx;
+    ElementToAdd.offset = elementB.offset;
 
-    if(tabListElements.length > 0)
-    {
-        idElement = element.id
-    }
-    else
-    {
-        idElement = 0;
-    }
 
-    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, element.fileId, element.trackId);
+    var actualTrack = document.getElementById("ViewTrack" + elementB.trackId);
+    tabListTracks[elementB.trackId].elementsId.push(elementB.id);
 
-    var actualTrack = document.getElementById("ViewTrack" + element.trackId);
-    tabListTracks[element.trackId].elementsId.push(idElement);
+    var element = document.createElement("div");
+    element.setAttribute('class', "trackElement");
+    element.innerHTML = elementB.name + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + elementB.trackId + "," + elementB.id + ")'><span class='glyphicon glyphicon-remove'></span></button>";
+    element.setAttribute('id', 'trackElementId' + elementB.id);
+    element.setAttribute('onmousedown', 'prepareMoveElement(' + elementB.id + ')');
+    element.setAttribute('onmouseup', 'stopMoveElement()');
 
-    var htmlElement = document.createElement("div");
-    htmlElement.setAttribute('class', "trackElement");
-    htmlElement.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + element.trackId + "," + element.id + ")'><span class='glyphicon glyphicon-remove'></span></button>";
-    htmlElement.setAttribute('id', 'trackElementId' + element.id);
-    htmlElement.setAttribute('onmousedown', 'prepareMoveElement(' + element.id + ')');
-    htmlElement.setAttribute('onmouseup', 'stopMoveElement()');
-    ElementToAdd.length = element.length;
-    htmlElement.style.width = ElementToAdd.length + "px";
-    htmlElement.style.cursor = 'move';
-    ElementToAdd.maxLength = element.maxLength
-    htmlElement.style.maxWidth = ElementToAdd.maxLength + 'px';
-    document.getElementById("textViewEditor" + element.trackId).style.display = "none";
+    element.style.width = elementB.length + "px";
+    element.style.cursor = 'move';
+    element.style.maxWidth = elementB.maxLength + 'px';
+    element.style.width = elementB.length + 'px';
+    element.style.marginLeft = elementB.marginXpx +  'px';
 
-    actualTrack.appendChild(htmlElement);
-    ElementToAdd.offset = element.offset
-    $("#"+htmlElement.id).offset({top: $("#"+htmlElement.id).offset().top, left:element.offset});
+
+    actualTrack.appendChild(element);
+//    $("#"+element.id).offset({ top: $("#"+element.id).offset().top, left: elementB.offset})
+
+    document.getElementById("textViewEditor" + elementB.trackId).style.display = "none";
+
     console.log('------------------',ElementToAdd.offset,'-------------------------');
     tabListElements.push(ElementToAdd);
 }
@@ -81,23 +87,39 @@ Loader.prototype.addFile = function(file){
     }
     tabListFiles.push(currentItem);
 
-    var iconeName = ""
-    console.log('typeFile : ' + file.type);
-    if (file.type == "text")
-        iconeName = "glyphicon-text-width"
-    else if (file.type == "audio")
-        iconeName = "glyphicon-music"
-    else if (file.type == "video")
-        iconeName = "glyphicon-film"
-    else
-        iconeName = "glyphicon-file"
-    document.getElementById('listFilesLib').innerHTML += '<a href="#" onclick="fileProperties(' + newId + ', \'' + file.type + '\');" class="list-group-item" id="libFile' + newId + '" idFile="' + newId + '"><h4 id="nameFile' + newId + '" class="list-group-item-heading"><span class="glyphicon '+iconeName+'"></span> ' + compressName(file.fileName) + '</h4><div id="divToolsFile' + newId + '"></div></a>';
+    switch(file.type)
+    {
+        case TYPE.AUDIO :
+            iconName = 'glyphicon-music';
+            break;
+        case TYPE.VIDEO :
+            iconName = 'glyphicon-film';
+            break;
+        case TYPE.IMAGE :
+            iconName = 'glyphicon-picture';
+            break;
+        default :
+            iconName = 'glyphicon-file';
+    }
 
+    var fileE = document.createElement('a');
+    fileE.id = 'file' + file.id;
+    fileE.href = '#';
+    fileE.setAttribute('fileId', file.id);
+    fileE.setAttribute('onclick', 'fileProperties(' + file.id + ');');
+    fileE.classList.add('list-group-item');
+    fileE.innerHTML = '<h4 id="nameFile' + file.id + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(file.fileName) + '</h4><div id="toolsFile' + file.id + '"></div>';
+
+    document.getElementById('listFiles').appendChild(fileE);
 }
 Loader.prototype.load = function()
 {
-    currentProject = this.info.project;
-    updateTextProject();
+
+    currentProject = new Project(this.info.project.name, this.info.project.date);
+    currentProject.lastSave = this.info.project.lastSave;
+    currentProject.isStarted = true;
+    currentProject.resetProject();
+
 
     files = this.info.files
 
@@ -106,11 +128,11 @@ Loader.prototype.load = function()
         this.addFile(files[i]);
     }
 
-    track = this.info.track;
+    tracks = this.info.tracks;
 
-    for (i=0;i<track.length;i++)
+    for (i=0;i<tracks.length;i++)
     {
-        this.addTrack(track[i]);
+        this.addTrack(tracks[i]);
     }
 
     elements = this.info.elements;
@@ -119,6 +141,7 @@ Loader.prototype.load = function()
     {
         this.addElement(elements[i]);
     }
-
-    hideLoadingDiv();
+    $('#loadModal').modal("hide");
+    currentProject.isCreated = true;
+    currentProject.updateTextProject();
 }

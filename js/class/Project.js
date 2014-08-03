@@ -73,12 +73,7 @@ Project.prototype.saveNewProject = function(reset)
 
         if(reset)
         {
-            document.getElementById('tracks').innerHTML = '';
-            document.getElementById('VideoView').innerHTML = '';
-
-            tabListElements = [];
-            tabListFiles = [];
-            tabListTracks = [];
+            this.resetProject();
         }
 
         this.isStarted = true;
@@ -184,4 +179,18 @@ Project.prototype.updateTextProject = function()
         document.getElementById('projectDropdown').innerHTML = 'Project : ' + this.name;
         document.getElementById('lastSaveDropdown').innerHTML = 'Last save : ' + this.lastSave;
     }
+};
+Project.prototype.resetProject = function()
+{
+    document.getElementById('tracks').innerHTML = '';
+    document.getElementById('VideoView').innerHTML = '';
+    document.getElementById('listFiles').innerHTML = '';
+
+    oneSecond = 5;
+    document.getElementById('zoomRange').value = 5;
+    calculateTimeBar();
+
+    tabListElements = [];
+    tabListFiles = [];
+    tabListTracks = [];
 };

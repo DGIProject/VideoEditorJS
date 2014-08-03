@@ -630,9 +630,6 @@ function zoomMoins() {
     calculateNewSize();
 }
 function calculateNewSize() {
-    var newTime = Math.floor(800 / oneSecond);
-    var minutes = Math.floor(newTime / 60);
-    var second = newTime - (60 * minutes);
     calculateTimeBar();
     for (var i = 0; i < tabListElements.length; i++) {
         tabListElements[i].actualiseLenght();
