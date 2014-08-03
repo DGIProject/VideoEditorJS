@@ -151,6 +151,9 @@ Project.prototype.saveProject = function()
                     currentProject.updateTextProject();
 
                     currentProject.loadModal('hide');
+                    if (!asRunning){
+                        startAutoSave();
+                    }
                 }
                 else
                 {

@@ -114,7 +114,7 @@ Loader.prototype.addFile = function(file){
 }
 Loader.prototype.load = function()
 {
-
+    stopAutoSave();
     currentProject = new Project(this.info.project.name, this.info.project.date);
     currentProject.lastSave = this.info.project.lastSave;
     currentProject.isStarted = true;
@@ -144,4 +144,6 @@ Loader.prototype.load = function()
     $('#loadModal').modal("hide");
     currentProject.isCreated = true;
     currentProject.updateTextProject();
+
+    startAutoSave();
 }

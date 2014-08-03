@@ -4,6 +4,7 @@ var tabListTracks = [];
 var divElementSelectedForMove = {id: null, Object: null, trackId: null, elementListID: null}, canMove = false;
 var lastPosition = {x: 0, y: 0};
 var actionWorker;
+var asRunning = false;
 var resizing = false;
 var pixelCalculateTime = {g: 0, d: 800};
 var renderVar;
@@ -710,3 +711,30 @@ window.onbeforeunload = function (e) {
         return msg;
     }
 };
+function startAutoSave(){
+    console.log('StartAutoSave')
+    autoTimeOut = window.setTimeout(autoSaveTimeOut,1000)
+
+}
+function autoSaveTimeOut(){
+    console.log('SetINerval')
+    asRunning = true;
+    autoSave = window.setInterval(autoSaveInterval,40000);
+}
+function autoSaveInterval(){
+    currentProject.saveProject();
+}
+function stopAutoSave(){
+    console.log('StopAutoSave')
+    if (asRunning)
+    {
+        asRunning = false;
+        clearInterval(autoSave);
+        clearTimeout(autoTimeOut);
+    }
+    else
+    {
+        console.log("As not running !")
+    }
+
+}
