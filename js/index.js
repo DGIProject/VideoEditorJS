@@ -738,3 +738,16 @@ function stopAutoSave(){
     }
 
 }
+function enableAutoSave(isChecked){
+    console.log(isChecked);
+    if (isChecked)
+    {
+        startAutoSave();
+        noty({layout: 'top', type: 'success', text: 'Sauvegarde automatique activée', timeout: '3000'});
+    }
+    else{
+        stopAutoSave();
+        noty({layout: 'top', type: 'success', text: 'Sauvegarde automatique désactivée', timeout: '3000'});
+
+    }
+}

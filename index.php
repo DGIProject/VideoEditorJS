@@ -11,6 +11,8 @@ $_SESSION['user'] = 'User'; ?>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap-checkbox.css" rel="stylesheet">
+
 </head>
 <body>
 <div class="container">
@@ -32,10 +34,10 @@ $_SESSION['user'] = 'User'; ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="currentProject.newProject(true);">New project</a></li>
-                                <li><a href="#" onclick="currentProject.openProject();">Open project</a></li>
+                                <li><a href="#" onclick="currentProject.newProject(true);"><span class="glyphicon glyphicon-file"></span> New project</a></li>
+                                <li><a href="#" onclick="currentProject.openProject();"><span class="glyphicon glyphicon-folder-open"></span> Open project</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="currentProject.saveProject();">Save project</a></li>
+                                <li><a href="#" onclick="currentProject.saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Save project</a></li>
                                 <li class="divider"></li>
                                 <li><a href="#" id="projectDropdown">Project : No project</a></li>
                                 <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
@@ -58,8 +60,16 @@ $_SESSION['user'] = 'User'; ?>
                         </div>
                     </form>
                     <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                    <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn navbar-right"><span class="glyphicon glyphicon-save"></span></button>
-                    <p class="navbar-text navbar-right" id="currentProject">No project</p>
+                    <p class="navbar-text " id="currentProject">No project</p>
+                    <form class="navbar-form navbar-right">
+                        <div class="btn-group">
+                            <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
+                            <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><input class="checkbox" type="checkbox" onchange="enableAutoSave(this.checked)" checked data-label="AutoSave"/></li>
+                            </ul>
+                        </div>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -307,6 +317,7 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/jquery-latest.js"></script>
 <script src="js/jquery.noty.packaged.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-checkbox.js"></script>
 <script src="js/loadEditor.js"></script>
 
 <div id="loadScripts"></div>
@@ -369,6 +380,7 @@ $_SESSION['user'] = 'User'; ?>
     {
         setValues("<?php echo $_SESSION['user']; ?>");
     }
+    $('input[type="checkbox"]').checkbox();
 </script>
 
 </body>
