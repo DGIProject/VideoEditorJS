@@ -65,10 +65,19 @@ document.onmousemove = function(e)
                     var positionInEditAeraX = event.clientX - offsetWindow - divElementSelectedForMove.Object.style.width.replace('px','')/2;
                     console.log("margin basique", actualMargin, offsetElement, positionInEditAeraX)
                 }
+
+                if (actualMargin < 0 || positionInEditAeraX < 0 )
+                {
+                    actualMargin = 0;
+                    positionInEditAeraX = 0;
+                    divElementSelectedForMove.Object.style.marginLeft = document.getElementById("VideoView").scrollLeft + positionInEditAeraX + "px";
+                }
+
                 if (actualMargin >= 0 || positionInEditAeraX >= 0)
                 {
                     divElementSelectedForMove.Object.style.marginLeft = document.getElementById("VideoView").scrollLeft + positionInEditAeraX + "px";
                 }
+
 
             }
         }
