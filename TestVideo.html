@@ -1,0 +1,20 @@
+<video autoplay id="vid" style="display:none;"></video>
+<canvas id="canvas" width="200" height="150" style="border:1px solid #d3d3d3;"></canvas><br>
+  <span>sended</span>      <span id="sended"></span><br>
+        <span>Started to</span><span id="st"></span>
+<button onclick="videoRecorder.startRecording()">Take Picture</button>
+<button onclick="videoRecorder.stopRecording()">Stop Picture</button>
+
+<script src="js/class/videoRecorder.js"></script>
+<script type="text/javascript">
+
+   // var video = document.querySelector("#vid");
+   // var canvas = document.querySelector('#canvas');
+    var videoRecorder;
+    window.onload = function()
+    {
+       videoRecorder = new VideoRecorder("#vid","#canvas");
+    }
+
+
+</script>
