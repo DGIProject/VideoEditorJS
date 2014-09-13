@@ -284,14 +284,21 @@ $_SESSION['user'] = 'User'; ?>
                     </div>
                     <div id="videoRecord" style="display: none;">
                         <div class="row">
-
+                            <div class="col-md-6">
+                                <video autoplay id="video" style="display:none;"></video>
+                                <canvas id="videoRecorderCanvas" width="200" height="150" style="border:1px solid #d3d3d3;"></canvas><br>
+                                <button type="button" onclick="videoRecorder = new VideoRecorder('video', 'videoRecorderCanvas',true);document.getElementById('playPauseRecordVideoButton').style.display = 'none';document.getElementById('recordVideoButton').style.display = 'none';" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
+                                <button type="button" onclick="" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
+                                <button type="button" onclick="videoRecorder.stopRecording();document.getElementById('playPauseRecordVideoButton').style.display = '';document.getElementById('recordVideoButton').style.display = '';" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
+                                <br><input type="checkbox" value="false" id="sound"/><span>Capture sonore</span>
+                            </div>
+                            <div class="col-md-4">
+                                Nom : <input class="form-control" id="fileName" type="text"/><br>
+                                Durée : <span id="durationVideoRecord">0s</span><br/>
+                                Nombre d'image <span id="imageNumber">0</span>
+                            </div>
                         </div>
-                        <video autoplay id="video" style="display:none;"></video>
-                        <canvas id="videoRecorderCanvas" width="200" height="150" style="border:1px solid #d3d3d3;"></canvas><br>
-                        <button type="button" onclick="videoRecorder = new VideoRecorder('video', 'videoRecorderCanvas',true);document.getElementById('playPauseRecordVideoButton').style.display = 'none';document.getElementById('recordVideoButton').style.display = 'none';" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
-                        <button type="button" onclick="" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
-                        <button type="button" onclick="videoRecorder.stopRecording();document.getElementById('playPauseRecordVideoButton').style.display = '';document.getElementById('recordVideoButton').style.display = '';" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
-                        <br><input type="checkbox" value="false" id="sound"/><span>Capture sonore</span>
+
                     </div>
                     <div id="audioRecord" style="display: none;">
                         <button type="button" onclick="" id="playRecordAudioButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
