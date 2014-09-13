@@ -60,9 +60,9 @@ $_SESSION['user'] = 'User'; ?>
                         </div>
                     </form>
                     <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                    <p class="navbar-text " id="currentProject">No project</p>
                     <form class="navbar-form navbar-right">
                         <div class="btn-group">
+                            <p class="navbar-text " id="currentProject">No project</p>
                             <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
                             <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
