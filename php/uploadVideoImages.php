@@ -32,7 +32,7 @@ elseif ($_POST['images'] != null)
     $images = json_decode($_POST['images']);
     foreach ($images as $image)
     {
-        $path = "../$DIR_projectsData/" .'User' . '/';
+        $path = "../$DIR_projectsData/" . $_SESSION['user'] . '/';
 
         if(!is_dir($path))
         {
