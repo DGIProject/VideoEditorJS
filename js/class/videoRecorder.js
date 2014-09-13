@@ -1,11 +1,14 @@
 /**
  * Created by Guillaume on 05/08/14.
  */
-VideoRecorder = function(videoElement,canvasElement,framesRate){
+VideoRecorder = function(videoId,canvasId,autostart,framesRate){
     //arg[0] -> frameRate
-    this.videoQuerySelector = videoElement;
-    this.canvasQuerySelector = canvasElement;
-    ctx = document.getElementById('canvas').getContext('2d');
+    //this.videoQuerySelector = videoElement;
+   // this.canvasQuerySelector = canvasElement;
+    this.autostart = autostart | true;
+    canvas = document.getElementById(canvasId);
+    ctx = canvas.getContext('2d');
+    video = document.getElementById(videoId);
     this.images = []; // will save images from webcam
     this.frameRate = framesRate || 6; // number of images per second
     localMediaStream = null;
@@ -13,11 +16,14 @@ VideoRecorder = function(videoElement,canvasElement,framesRate){
     this.OAjax = [];
     this.sendedImage = 0;
     this.st = 0
+    var that = this;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
     window.URL = window.URL || window.webkitURL;
     navigator.getUserMedia({video:true}, function(stream){
-        document.getElementById('vid').src = window.URL.createObjectURL(stream);
+        video.src = window.URL.createObjectURL(stream);
         localMediaStream = stream;
+
+        if (that.autostart){that.startRecording();}
 
     }, this.onCameraFail);
 };
@@ -37,10 +43,12 @@ VideoRecorder.prototype.startRecording = function(maxTime){
         that.SnapInterval = window.setInterval(function(){
             if (localMediaStream) {
                 console.log('ImageTaken')
-                ctx.drawImage(document.getElementById('vid'),0,0,document.getElementById('vid').videoWidth,document.getElementById('vid').videoHeight,0,0,200,150);                that.images.push(document.getElementById('canvas').toDataURL('image/png'));
+                ctx.drawImage(video,0,0,video.videoWidth,video.videoHeight,0,0,200,150);
+                that.images.push(canvas.toDataURL('image/png'));
               //  that.sendImages(that.numberImage);
                 that.numberImage++;
-                document.getElementById('sended').innerHTML = that.numberImage;
+               // document.getElementById('sended').innerHTML = that.numberImage;
+                console.log('ImageNumer '+that.numberImage);
             }
             else{
                 console.log('NotTaken');
@@ -60,6 +68,7 @@ VideoRecorder.prototype.startRecording = function(maxTime){
 VideoRecorder.prototype.stopRecording = function(){
     clearTimeout(this.startTimeOut);
     clearInterval(this.SnapInterval);
+    localMediaStream.stop();
 };
 VideoRecorder.prototype.getImages = function(){
     return this.images;
@@ -78,7 +87,7 @@ VideoRecorder.prototype.sendImages = function(i)
             if(that.OAjax[i].readyState == 4 && that.OAjax[i].status == 200) {
                 console.log(that.OAjax[i].responseText);
                 that.sendedImage++;
-                document.getElementById('sended').innerHTML = that.sendedImage + '/'+that.numberImage;
+               // document.getElementById('sended').innerHTML = that.sendedImage + '/'+that.numberImage;
             }
         };
 

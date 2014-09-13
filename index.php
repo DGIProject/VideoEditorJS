@@ -283,9 +283,15 @@ $_SESSION['user'] = 'User'; ?>
                         <button type="button" onclick="chooseAudioRecord();" id="chooseAudioButton" class="btn btn-block btn-lg btn-default">AUDIO</button>
                     </div>
                     <div id="videoRecord" style="display: none;">
-                        <button type="button" onclick="" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
+                        <div class="row">
+
+                        </div>
+                        <video autoplay id="video" style="display:none;"></video>
+                        <canvas id="videoRecorderCanvas" width="200" height="150" style="border:1px solid #d3d3d3;"></canvas><br>
+                        <button type="button" onclick="videoRecorder = new VideoRecorder('video', 'videoRecorderCanvas',true);document.getElementById('playPauseRecordVideoButton').style.display = 'none';document.getElementById('recordVideoButton').style.display = 'none';" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
                         <button type="button" onclick="" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
-                        <button type="button" onclick="" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
+                        <button type="button" onclick="videoRecorder.stopRecording();document.getElementById('playPauseRecordVideoButton').style.display = '';document.getElementById('recordVideoButton').style.display = '';" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
+                        <br><input type="checkbox" value="false" id="sound"/><span>Capture sonore</span>
                     </div>
                     <div id="audioRecord" style="display: none;">
                         <button type="button" onclick="" id="playRecordAudioButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-play"></span></button>
@@ -321,59 +327,6 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/loadEditor.js"></script>
 
 <div id="loadScripts"></div>
-
-<!--
-<script src="js/index.js"></script>
-<script src="js/onEvent.js"></script>
-<script src="js/class/Project.js"></script>
-<script src="js/class/FileList.js"></script>
-<script src="js/class/ManageTextElement.js"></script>
-<script src="js/class/TextElement.js"></script>
-<script src="js/Element.js"></script>
-<script src="js/Track.js"></script>
-<script src="js/Render.js"></script>
-<script src="js/readProject.js"></script>
-<script src="js/GenerateFileProject.js"></script>
-<script src="js/lib/terminal.js"></script>
--->
-
-<!--
-<script type="text/javascript">
-    window.onload = function() {
-        $('#startLoadingJS').modal('show');
-
-        currentProject = new Project('undefined', getCurrentDate());
-        currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
-
-        var OAjax;
-
-        if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
-        else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-
-        OAjax.open('GET', 'js/lib/ffmpeg.js');
-
-        OAjax.onprogress = function(e)
-        {
-            var persent = Math.ceil((e.loaded/27547136)*100) + '%';
-
-            document.getElementById('downloadJSProgress').style.width = persent;
-            document.getElementById('persentProgress').innerHTML = persent;
-        };
-
-        OAjax.onloadend = function(e)
-        {
-            document.getElementById('loadingProgressProject').style.display = 'none';
-            document.getElementById('startUseProject').style.display = '';
-
-            currentProject.isStarted = true;
-
-            updateTextProject();
-        };
-
-        OAjax.send();
-    }
-</script>
--->
 
 <script type="text/javascript">
     function makeValues()

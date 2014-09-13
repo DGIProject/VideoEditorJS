@@ -9,6 +9,7 @@ var tabFilesJS = [
     'class/Track.js',
     'class/Element.js',
     'class/Render.js',
+    'class/videoRecorder.js',
     'lib/terminal.js',
     'lib/ffmpeg.js',
     'onEvent.js'
@@ -58,6 +59,8 @@ function getFileJS() {
         currentProject.isStarted = true;
 
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
+
+
 
         document.getElementById('loadingProgressProject').style.display = 'none';
         document.getElementById('startUseProject').style.display = '';
