@@ -151,6 +151,7 @@ VideoRecorder.prototype.exportWave = function()
 // our final binary blob that we can hand off
     var blob = new Blob ( [ view ], { type : 'audio/wav' } );
     console.log('exportedWave');
+    return blob;
 };
 
 VideoRecorder.prototype.onCameraFail = function (e) {
@@ -190,7 +191,7 @@ VideoRecorder.prototype.startRecording = function(maxTime){
 VideoRecorder.prototype.stopRecording = function(){
     clearTimeout(this.startTimeOut);
     clearInterval(this.SnapInterval);
-    this.exportWave();
+    this.audio = this.exportWave();
     localMediaStream.stop();
 };
 VideoRecorder.prototype.getImages = function(){
