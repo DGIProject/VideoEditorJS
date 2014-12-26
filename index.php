@@ -46,30 +46,33 @@ $_SESSION['user'] = 'User'; ?>
                         <li><a href="#" onclick="addTrack();">New track</a></li>
                         <li><a href="#" onclick="makeRender();">Render</a></li>
                     </ul>
-                    <form class="navbar-form navbar-left">
+
+                    <form class="navbar-form navbar-left" role="search">
+
+                        <button type="button" onclick="zoomMoins();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
                         <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <button type="button" onclick="zoomMoins();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
-                                </span>
-                                <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
-                                <span class="input-group-btn">
-                                    <button type="button" onclick="zoomPlus();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-in"></span></button>
-                                </span>
-                            </div>
+                            <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
                         </div>
+                        <button type="button" onclick="zoomPlus();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-in"></span></button>
+
                     </form>
-                    <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                    <form class="navbar-form navbar-right">
+                    <ul class="nav navbar-nav">
+                        <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <p class="navbar-text " id="currentProject">No project</p>
+                    </ul>
+                    <ul class="nav navbar-nav">
                         <div class="btn-group">
-                            <p class="navbar-text " id="currentProject">No project</p>
                             <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
                             <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><input class="checkbox" type="checkbox" onchange="enableAutoSave(this.checked)" checked data-label="AutoSave"/></li>
                             </ul>
                         </div>
-                    </form>
+
+                    </ul>
+
                 </div>
             </div>
         </nav>
