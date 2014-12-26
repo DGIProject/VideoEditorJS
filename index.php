@@ -50,8 +50,13 @@ $_SESSION['user'] = 'User'; ?>
                                 <li><a href="#" onclick="addTrack('audio');">Nouvelle piste Audio</a></li>
                             </ul>
                         </li>
-
-                        <li><a href="#" onclick="makeRender();">Render</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Finaliser <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" onclick="makeRender('prev');">Lancer une prévisualisation</a></li>
+                                <li><a href="#" onclick="makeRender('final');">Lancer un rendu final</a></li>
+                            </ul>
+                        </li>
                     </ul>
 
                     <form class="navbar-form navbar-left" role="search">

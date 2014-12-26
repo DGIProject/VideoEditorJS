@@ -1,10 +1,11 @@
-Render = function (tabListElements, tabListFiles, tabListTextElements, tabListTracks) {
+Render = function (tabListElements, tabListFiles, tabListTextElements, tabListTracks, state) {
     this.Elements = tabListElements;
     this.Files = tabListFiles;
-    this.TextElements = tabListTextElements;
     this.Tracks = tabListTracks;
     this.videoLenthPx = 0; //PX !!!
     this.videoDuration = 0 //Secondes !!
+    this.state = state;
+    this.resolution = (state=='prev')? "320x180" : "1280x720";
 
     console.log(this.Files);
     console.log(this.Files.length);
@@ -93,13 +94,13 @@ Render.prototype.makeCommandFile = function () {
 Render.prototype.makeCommandTracks = function () {
 
     this.commandList = [];
-
+    console.log("track are ", this.Tracks);
     for (var avancementPiste =0;avancementPiste<this.Tracks.length;avancementPiste++) // Pour chaque piste
     {
-        var pisteActuelle = this.Tracks[avancementPiste]  // on stoque la piste
+        var pisteActuelle = this.Tracks[avancementPiste]  // on stock la piste
         var elementInPiste = pisteActuelle.elementsId;
 
-        console.log("Piste",pisteActuelle, "Element en Piste", elementInPiste);
+        console.log(avancementPiste, "Piste",pisteActuelle, "Element en Piste", elementInPiste);
 
         for (var avancementElementPiste = 0;avancementElementPiste<elementInPiste.length;avancementElementPiste++) // pour chaque Element de la piste
         {
@@ -125,7 +126,7 @@ Render.prototype.makeCommandTracks = function () {
                         codec = "mjpeg";
                         break
                 }
-                var cmd = "-loop 1 -f image2 -c:v "+codec+" -i file"+curentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -t "+(Math.ceil(curentElement.length/oneSecond))+" -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y "+curentElement.fileId+".mp4";
+                var cmd = "-loop 1 -f image2 -c:v "+codec+" -i file"+curentElement.fileId+".file -i sample.wav -map 0:v -map 1:a -t "+(Math.ceil(curentElement.length/oneSecond))+" -s "+this.resolution+" -c:v libx264  -pix_fmt yuv420p -y "+curentElement.fileId+".mp4";
                 console.log(cmd)
                 this.commandList.push({cmd: cmd, fileId : curentElement.fileId});
             }
@@ -139,7 +140,7 @@ Render.prototype.makeCommandTracks = function () {
                 if (nextElement.marginXsecond != 0)
                 {
                    // console.log("Create blackElement");
-                    var cmd = "-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t "+nextElement.marginXsecond+" -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y "+this.blackFileId+".mp4";
+                    var cmd = "-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t "+nextElement.marginXsecond+" -s "+this.resolution+" -c:v libx264  -pix_fmt yuv420p -y "+this.blackFileId+".mp4";
                     console.log(cmd);
                     this.commandList.push({cmd: cmd, fileId : this.blackFileId});
                 }
@@ -150,7 +151,7 @@ Render.prototype.makeCommandTracks = function () {
 
     this.lastCmd = ''
     complexfliter = '-filter_complex \''
-    ending = "concat=n="+this.commandList.length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]'  -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
+    ending = "concat=n="+this.commandList.length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]'  -aspect 16:9 -s "+this.resolution+" -c:v libx264 -pix_fmt yuv420p -y";
 
     for (i=0;i<this.commandList.length;i++)
     {

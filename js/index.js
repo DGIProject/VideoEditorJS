@@ -393,6 +393,7 @@ function removeFile(id){
     $('#filesPropertiesModal').modal('hide');
 
     tabListFiles[id] = null;
+    tabListFiles.remove(id);
 
     document.getElementById('listFiles').removeChild(document.getElementById('file' + id));
 }
@@ -544,8 +545,7 @@ function stopMoveElement(){
     }
     tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.Object.style.marginLeft.replace('px', ''))
 }
-function addElement(id, idTrack)
-{
+function addElement(id, idTrack){
     var info = tabListFiles[id];
 
     console.log(info);
@@ -677,8 +677,8 @@ function activeResize() {
 window.onload = function (e) {
     calculateTimeBar();
 }
-function makeRender(){
-   renderVar = new Render(tabListElements,tabListFiles,tabListTextElements, tabListTracks);
+function makeRender(state){
+   renderVar = new Render(tabListElements,tabListFiles, tabListTracks, state);
 }
 function getCurrentDate(){
     var date = new Date();
