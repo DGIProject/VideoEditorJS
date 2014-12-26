@@ -80,12 +80,8 @@ Loader.prototype.addFile = function(file){
     }
 
 
-    var currentItem = new FileList(file.id, file.type, file.size, file.fileName, file.format);
-    console.log('currentItem ' + currentItem);
-    if (file.type = "image")
-    {
-        currentItem.setDuration(file.duration)
-    }
+    var currentItem = new FileList(file.id, file.type, file.size, file.fileName, file.compressName, file.format);
+    console.log('currentItem ', currentItem);
     tabListFiles.push(currentItem);
 
     switch(file.type)

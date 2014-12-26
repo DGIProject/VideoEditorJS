@@ -109,7 +109,7 @@ Render.prototype.makeCommandTracks = function () {
             // Creation d'une commande pour l'element
             curentFileforElement = this.getFileInformationById(curentElement.fileId)
 
-            if (curentFileforElement.type == "image" || curentFileforElement.type == "text"){
+            if (curentFileforElement.type == "2" || curentFileforElement.type == "3"){
                 var codec = ""
                 switch (curentFileforElement.format)
                 {
