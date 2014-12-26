@@ -43,7 +43,14 @@ $_SESSION['user'] = 'User'; ?>
                                 <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
                             </ul>
                         </li>
-                        <li><a href="#" onclick="addTrack();">New track</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pistes <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" onclick="addTrack('movie');">Nouvelle piste Video</a></li>
+                                <li><a href="#" onclick="addTrack('audio');">Nouvelle piste Audio</a></li>
+                            </ul>
+                        </li>
+
                         <li><a href="#" onclick="makeRender();">Render</a></li>
                     </ul>
 

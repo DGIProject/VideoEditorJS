@@ -10,16 +10,16 @@ Loader.prototype.addTrack = function(track){
     var newViewTrack = document.createElement('div');
     newTrack.setAttribute('class', 'singleTrack');
     newTrack.setAttribute('id', 'track' + track.id);
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' +  track.id + ', this.value);" class="form-control"  placeholder="Name" value="'+track.name+'"></br><input type="range" step="1" onchange="updateVolumeTrack(' +  track.id + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="addFileTrack(' +  track.id + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' +  track.id + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' +  track.id + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' +  track.id + ', this.value);" class="form-control"  placeholder="Name" value="'+track.name+'"></br><input type="range" step="1" onchange="updateVolumeTrack(' +  track.id + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' +  track.id + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' +  track.id + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' +  track.id + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
     newViewTrack.setAttribute('style','width: 1000px;');
     newViewTrack.setAttribute('id', 'ViewTrack' +  track.id);
-    newViewTrack.innerHTML = '<p id="textViewEditor' +  track.id + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
+    newViewTrack.innerHTML = '<p id="textViewEditor' +  track.id + '" class="textViewEditor">Aucun élément n\'est présent dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
 
-    var track = new Track( track.id, track.name);
+    var track = new Track( track.id, track.name, track.type);
     tabListTracks.push(track);
 }
 Loader.prototype.addElement = function(elementB){
@@ -47,6 +47,7 @@ Loader.prototype.addElement = function(elementB){
 
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");
+    element.style.backgroundColor = tabListTracks[elementB.trackId].color;
     element.innerHTML = elementB.name + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + elementB.trackId + "," + elementB.id + ")'><span class='glyphicon glyphicon-remove'></span></button>";
     element.setAttribute('id', 'trackElementId' + elementB.id);
     element.setAttribute('onmousedown', 'prepareMoveElement(' + elementB.id + ')');

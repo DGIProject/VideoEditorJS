@@ -398,7 +398,7 @@ function removeFile(id){
 }
 
 //TRACK
-function addTrack(){
+function addTrack(type){
     var nextId = (tabListTracks.length != 0) ? (tabListTracks[tabListTracks.length - 1].id + 1) : 0;
 
     var tracks = document.getElementById('tracks');
@@ -409,7 +409,7 @@ function addTrack(){
     newTrack.setAttribute('id', 'track' + nextId);
     newTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
     newTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Undefined"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Sans Nom"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
@@ -417,10 +417,10 @@ function addTrack(){
     newViewTrack.setAttribute('id', 'ViewTrack' + nextId);
     newViewTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
     newViewTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
-    newViewTrack.innerHTML = '<p id="textViewEditor' + nextId + '" class="textViewEditor">Aucune vidéo n\'est présente dans cette piste.</p>';
+    newViewTrack.innerHTML = '<p id="textViewEditor' + nextId + '" class="textViewEditor">Aucun élément n\'est présent dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
 
-    var track = new Track(tabListTracks.length, 'Undefined');
+    var track = new Track(tabListTracks.length, 'Sans Nom', type);
 
     tabListTracks.push(track);
 }
@@ -568,6 +568,7 @@ function addElement(id, idTrack)
 
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");
+    element.style.backgroundColor = tabListTracks[idTrack].color;
     element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + idElement + ")'><span class='glyphicon glyphicon-remove'></span></button>";
     element.setAttribute('id', 'trackElementId' + idElement);
     element.setAttribute('onmousedown', 'prepareMoveElement(' + idElement + ')');
