@@ -1,26 +1,23 @@
 /**
  * Created by Guillaume on 05/08/14.
  */
-VideoRecorder = function(videoId,canvasId,autostart,sound,framesRate){
+VideoRecorder = function(videoId,canvasId,sound,framesRate){
     //arg[0] -> frameRate
     //this.videoQuerySelector = videoElement;
    // this.canvasQuerySelector = canvasElement;
-    this.autostart = autostart | true;
     this.sound = sound | false;
+
     canvas = document.getElementById(canvasId);
     ctx = canvas.getContext('2d');
     video = document.getElementById(videoId);
-    this.images = []; // will save images from webcam
     this.frameRate = framesRate || 6; // number of images per second
     localMediaStream = null;
     this.numberImage = 0;
-    this.OAjax = [];
-    this.sendedImage = 0;
-    this.st = 0;
 
     this.leftchannel = [];
     this.rightchannel = [];
     this.recorder = null;
+    this.recording = false;
     this.recordingLength = 0;
     this.volume = null;
     this.audioInput = null;
@@ -34,43 +31,42 @@ VideoRecorder = function(videoId,canvasId,autostart,sound,framesRate){
         video.src = window.URL.createObjectURL(stream);
         localMediaStream = stream;
 
-        if (that.autostart){that.startRecording();}
-
         if (that.sound){
             console.log('Audio Process');
             that.audioContext = window.AudioContext || window.webkitAudioContext;
             that.context = new that.audioContext();
 
             // creates a gain node
-            that.volume = context.createGain();
+            that.volume = that.context.createGain();
 
             // creates an audio node from the microphone incoming stream
-            that.audioInput = context.createMediaStreamSource(localMediaStream);
+            that.audioInput = that.context.createMediaStreamSource(localMediaStream);
 
             // connect the stream to the gain node
-            that.audioInput.connect(volume);
+            that.audioInput.connect(that.volume);
 
             /* From the spec: This value controls how frequently the audioprocess event is
              dispatched and how many sample-frames need to be processed each call.
              Lower values for buffer size will result in a lower (better) latency.
              Higher values will be necessary to avoid audio breakup and glitches */
-            var bufferSize = 2048;
-            that.recorder = context.createJavaScriptNode(bufferSize, 2, 2);
+             var bufferSize = 256;
+            that.recorder = that.context.createScriptProcessor(bufferSize, 1, 1);
 
-            recorder.onaudioprocess = function(e){
-                console.log ('recording');
-                var left = e.inputBuffer.getChannelData (0);
-                var right = e.inputBuffer.getChannelData (1);
-                // we clone the samples
-                that.leftchannel.push (new Float32Array (left));
-                that.rightchannel.push (new Float32Array (right));
-                that.recordingLength += bufferSize;
+            that.recorder.onaudioprocess = function(e){
+                if (that.recording)
+                {
+                    // we clone the samples
+                    that.leftchannel.push (new Float32Array (e.inputBuffer.getChannelData (0)));
+                    that.recordingLength += bufferSize;
+                }
+
             };
 
             // we connect the recorder
-            that.volume.connect (recorder);
-            that.recorder.connect (context.destination);
+            that.volume.connect (that.recorder);
+            that.recorder.connect (that.context.destination);
         }
+
 
     }, this.onCameraFail);
 };
@@ -112,7 +108,7 @@ VideoRecorder.prototype.exportWave = function()
 {
     // we flat the left and right channels down
     var leftBuffer = this.mergeBuffers ( this.leftchannel, this.recordingLength );
-    var rightBuffer = this.mergeBuffers ( this.rightchannel, this.recordingLength );
+    var rightBuffer = leftBuffer;
 // we interleave both channels together
     var interleaved = this.interleave ( leftBuffer, rightBuffer );
 
@@ -157,98 +153,43 @@ VideoRecorder.prototype.exportWave = function()
 VideoRecorder.prototype.onCameraFail = function (e) {
     console.log('Camera did not work.', e);
 };
-VideoRecorder.prototype.startRecording = function(maxTime){
+VideoRecorder.prototype.startRecording = function(){
     var that = this;
+    this.recording =true;
+    this.gif = new GIF({
+        workers: 2,
+        workerScript: 'js/lib/gif.worker.js',
+        quality: 10,
+        width: video.videoWidth ,
+        height: video.videoHeight
+    });
 
-    this.startTimeOut = window.setTimeout(function(){
-        console.log('StartingRecording ... ');
+    this.gif.on('finished', function(blob) {
+        console.log(URL.createObjectURL(blob));
+    });
+
+    this.gif.on('progress', function(p) {
+        console.log(Math.round(p * 100)+'%');
+    });
+     console.log('StartingRecording ... ');
         var time = Math.ceil(1000/that.frameRate);
         that.SnapInterval = window.setInterval(function(){
-            if (localMediaStream) {
-                console.log('ImageTaken');
-                ctx.drawImage(video,0,0,video.videoWidth,video.videoHeight,0,0,200,150);
-                that.images.push(canvas.toDataURL('image/png'));
-              //  that.sendImages(that.numberImage);
-                that.numberImage++;
-               // document.getElementById('sended').innerHTML = that.numberImage;
-                console.log('ImageNumer '+that.numberImage);
+            if (localMediaStream && that.recording) {
+                ctx.drawImage(video,0,0,video.videoWidth,video.videoHeight,0,0,320,240);
+                that.gif.addFrame(ctx, {copy: true, delay: time})
             }
             else{
                 console.log('NotTaken');
             }
         },time);
-    },1000);
-
-    if (maxTime)
-    {
-        console.log('maxTime set to ....')
-        maxTimeTimeOut = window.setTimeout(function(){
-            that.stopRecording();
-        },maxTime);
-    }
 
 };
 VideoRecorder.prototype.stopRecording = function(){
-    clearTimeout(this.startTimeOut);
     clearInterval(this.SnapInterval);
+    this.recording = false;
     this.audio = this.exportWave();
+    console.log(URL.createObjectURL(this.audio));
     localMediaStream.stop();
-};
-VideoRecorder.prototype.getImages = function(){
-    return this.images;
-};
-VideoRecorder.prototype.sendImages = function(i){
-    if (i)
-    {
-        console.log('i');
-        var that = this;
 
-        if (window.XMLHttpRequest) this.OAjax[i] = new XMLHttpRequest();
-        else if (window.ActiveXObject) this.OAjax[i] = new ActiveXObject('Microsoft.XMLHTTP');
-        this.OAjax[i].open('POST', 'php/uploadVideoImages.php', true);
-        this.OAjax[i].onreadystatechange = function() {
-            if(that.OAjax[i].readyState == 4 && that.OAjax[i].status == 200) {
-                console.log(that.OAjax[i].responseText);
-                that.sendedImage++;
-               // document.getElementById('sended').innerHTML = that.sendedImage + '/'+that.numberImage;
-            }
-        };
-
-        this.OAjax[i].upload.onprogress = function(e) {
-            var done = e.position || e.loaded,
-                total = e.totalSize || e.total;
-
-            console.log('Video upload Progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
-
-        };
-
-        this.OAjax[i].setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        this.OAjax[i].send('image='+this.images[i]+'&it='+i);
-        document.getElementById('st').innerHTML = that.st + '/'+that.numberImage;
-        that.st++;
-    }
-    else{
-        console.log('not i');
-        if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
-        else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-        OAjax.open('POST', 'php/uploadVideoImages.php', true);
-        OAjax.onreadystatechange = function() {
-            if(OAjax.readyState == 4 && OAjax.status == 200) {
-                console.log(OAjax.responseText);
-            }
-        };
-
-        OAjax.upload.onprogress = function(e) {
-            var done = e.position || e.loaded,
-                total = e.totalSize || e.total;
-
-            console.log('Video upload Progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
-
-        };
-
-        OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        OAjax.send('images='+JSON.stringify(this.images));
-    }
-
-
+    this.gif.render();
 };
