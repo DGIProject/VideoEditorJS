@@ -1,4 +1,4 @@
-importScripts('ffmpeg.js');
+importScripts('ffmpeg-all-codecs.js');
 
 var now = Date.now;
 
@@ -15,14 +15,16 @@ onmessage = function(event) {
 
   if (message.type === "command") {
 
+
+
     var Module = {
       print: print,
       printErr: print,
       files: message.files || [],
       arguments: message.arguments || [],
-      TOTAL_MEMORY: message.TOTAL_MEMORY || false
+      //TOTAL_MEMORY: message.TOTAL_MEMORY || false
       // Can play around with this option - must be a power of 2
-      // TOTAL_MEMORY: 268435456
+      TOTAL_MEMORY: 268435456
     };
 
     postMessage({
@@ -48,6 +50,9 @@ onmessage = function(event) {
 
     postMessage({
       'type' : 'done',
+      'action' : message.action,
+      'files' : message.files,
+      'fileType' : message.fileType,
       'data' : result,
       'time' : totalTime
     });

@@ -92,7 +92,9 @@ function addFile(){
                             "name": "fileInput",
                             "data": ElementData
                         }
-                    ]
+                    ],
+                    fileType : typeFile,
+                    action : actionWorker
                 });
 
                 var currentItem = new FileList(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
@@ -101,7 +103,6 @@ function addFile(){
             };
 
             reader.readAsArrayBuffer(currentFile);
-
             currentProject.loadModal('show');
         }
 
@@ -237,7 +238,7 @@ function uploadFile(id, file){
             }
         };
 
-        xhr.open('POST', 'php/uploadFile.php?u=User1&p=' + currentProject.name + '&fileId=' + id, true);
+        xhr.open('POST', 'php/uploadFile.php?p=' + currentProject.name + '&fileId=' + id, true);
         xhr.send(fd);
     }
     else
@@ -359,6 +360,10 @@ function fileProperties(id){
     {
         preview = '<img class="previewFileContent" src="php/getFile.php?p=' + currentProject.name + '&fileId=' + fileInfo.id + '">';
     }
+    else if (type == TYPE.VIDEO)
+    {
+        preview = '<img class="previewFileContent" src="php/getFile.php?p=' + currentProject.name + '&thum=1&fileId=' + fileInfo.id + '">';
+    }
     else
     {
         preview = 'Non disponible';
@@ -397,7 +402,44 @@ function removeFile(id){
 
     document.getElementById('listFiles').removeChild(document.getElementById('file' + id));
 }
+function uploadThumbnail(id, data) {
+    var fd = new FormData();
+    fd.append('multimediaFile', data);
+    var xhr = new XMLHttpRequest();
+    xhr.file = data; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function(e) {
 
+        var done = e.position || e.loaded,
+            total = e.totalSize || e.total;
+
+        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+    }, false);
+    if (xhr.upload) {
+        xhr.upload.onprogress = function(e) {
+            var done = e.position || e.loaded,
+                total = e.totalSize || e.total;
+
+            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+        };
+    }
+    xhr.onreadystatechange = function(e) {
+        if (4 == this.readyState) {
+            console.log('xhr upload complete ' + this.responseText);
+
+            if (this.responseText != "success")
+            {
+                console.log("erreur Upload", this.responseText)
+            }
+            else
+            {
+                var n = noty({layout: 'top', type: 'success', text: 'La vignette a bien été envoyé.', timeout: '5000'});
+            }
+        }
+    };
+
+    xhr.open('POST', 'php/uploadFile.php?p=' + currentProject.name + '&thum=1&fileId=' + id, true);
+    xhr.send(fd);
+}
 //TRACK
 function addTrack(type){
     var nextId = (tabListTracks.length != 0) ? (tabListTracks[tabListTracks.length - 1].id + 1) : 0;
@@ -569,7 +611,7 @@ function addElement(id, idTrack){
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");
     element.style.backgroundColor = tabListTracks[idTrack].color;
-    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + idElement + ")'><span class='glyphicon glyphicon-remove'></span></button>";
+    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + idElement + ")'><span class='glyphicon glyphicon-remove'></span></button>"+ (info.type == TYPE.VIDEO)? "<img src='php/getFile.php?p=" + currentProject.name + "&thum=1&fileId=" + info.id + "' onmousedown='return false' onmousemove='return false'>" : (info.type != TYPE.AUDIO)? "<img src='php/getFile.php?p=" + currentProject.name + "&fileId=" + info.id + "' onmousedown='return false' onmousemove='return false'>" : "" ;
     element.setAttribute('id', 'trackElementId' + idElement);
     element.setAttribute('onmousedown', 'prepareMoveElement(' + idElement + ')');
     element.setAttribute('onmouseup', 'stopMoveElement()');

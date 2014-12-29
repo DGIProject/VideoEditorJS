@@ -2,9 +2,16 @@
 ini_set('display_errors', 'off');
 include "config.php";
 
-if($_GET['u'] != NULL && $_GET['p'] != NULL && $_GET['fileId'] != NULL)
+if($_GET['p'] != NULL && $_GET['fileId'] != NULL)
 {
-    $filename = 'file'.$_GET['fileId'].'.file';
+    if ($_GET['thum'] != 1)
+    {
+        $filename = 'file'.$_GET['fileId'].'.file';
+    }
+    else
+    {
+        $filename = 'thum'.$_GET['fileId'].'.file';
+    }
     $path = "../$DIR_projectsData/" .$_SESSION['user']. '/' . $_GET['p'] . '/';
 
     if(!is_dir($path))
