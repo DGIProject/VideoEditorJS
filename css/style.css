@@ -137,6 +137,13 @@
     overflow-y: auto;
 }
 
+.thumbnailImage
+{
+    margin-left: 5px;
+    margin-top: 5px;
+    border: 1px solid black;
+}
+
 .trackElement
 {
     /*width: 2000px;*/

@@ -611,7 +611,7 @@ function addElement(id, idTrack){
     var element = document.createElement("div");
     element.setAttribute('class', "trackElement");
     element.style.backgroundColor = tabListTracks[idTrack].color;
-    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + idElement + ")'><span class='glyphicon glyphicon-remove'></span></button>"+ ((info.type == TYPE.VIDEO)? "<img src='php/getFile.php?p=" + currentProject.name + "&thum=1&fileId=" + info.id + "' onmousedown='return false' onmousemove='return false'>" : ((info.type != TYPE.AUDIO)? "<img src='php/getFile.php?p=" + currentProject.name + "&fileId=" + info.id + "' onmousedown='return false' onmousemove='return false'>" : "")) ;
+    element.innerHTML = info.fileName + " <button class='btn btn-xs removeElement' onclick='removeElementFromTrack(" + idTrack + "," + idElement + ")'><span class='glyphicon glyphicon-remove'></span></button>"+ ((info.type == TYPE.VIDEO)? "<img height='50px' width='auto' src='php/getFile.php?p=" + currentProject.name + "&thum=1&fileId=" + info.id + "' onmousedown='return false' onmousemove='return false'>" : ((info.type != TYPE.AUDIO)? "<img class='thumbnailImage' src='php/getFile.php?p=" + currentProject.name + "&fileId=" + info.id + "' onmousedown='return false' onmousemove='return false'>" : "")) ;
     element.setAttribute('id', 'trackElementId' + idElement);
     element.setAttribute('onmousedown', 'prepareMoveElement(' + idElement + ')');
     element.setAttribute('onmouseup', 'stopMoveElement()');
