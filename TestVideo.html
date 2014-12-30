@@ -11,9 +11,16 @@
 <script src="//cdn.WebRTC-Experiment.com/RecordRTC.js" type="text/javascript"></script>
 <script type="text/javascript">
 
+    var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+
+    var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+
     var para = {audio:true, video:true};
     var videoa = document.getElementById('vid');
     var audio = document.getElementById('aud');
+    video = videoa;
+
     var startRecording = document.getElementById('start');
     var stopRecording = document.getElementById('stop');
 
@@ -24,11 +31,16 @@
             window.audioVideoRecorder = window.RecordRTC(stream, {
                 type: 'video' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
             });
-            window.audioRecorder = window.RecordRTC(stream, {
-                type: 'audio' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
-            });
+
+            if (isChrome)
+            {
+                window.audioRecorder = window.RecordRTC(stream, {
+                    type: 'audio' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
+                });
+                window.audioRecorder.startRecording();
+            }
             window.audioVideoRecorder.startRecording();
-            window.audioRecorder.startRecording();
+
 
         });
     };
@@ -41,12 +53,18 @@
             video.muted = false;
             video.play();
         });
-        window.audioRecorder.stopRecording(function(url) {
-            console.log("audio" + url);
-            video.src = url;
-            video.muted = false;
-            video.play();
-        });
+        if (isChrome)
+        {
+            window.audioRecorder.stopRecording(function(url) {
+                console.log("audio" + url);
+                video.src = url;
+                video.muted = false;
+                video.play();
+            });
+
+            //TODO: FFmpeg.js -> merge audio and Video When chrome is detected ...
+        }
+
     };
     function captureUserMedia(callback) {
         navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
@@ -60,13 +78,6 @@
             console.error(error);
         });
     }
-   // var video = document.querySelector("#vid");
-   // var canvas = document.querySelector('#canvas');
-    //var videoRecorder;
-  /*  window.onload = function()
-    {
-       videoRecorder = new VideoRecorder("vid","canvas", true);
-    }*/
 
 
 
