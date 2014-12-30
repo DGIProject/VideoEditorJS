@@ -32,15 +32,33 @@
         startRecording.disabled = true;
         stopRecording.disabled = false;
         captureUserMedia(function (stream) {
-            window.audioVideoRecorder = window.RecordRTC(stream, {
-                type: 'video' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
-            });
+
+            if (isFirefox)
+            {
+                window.audioVideoRecorder = window.RecordRTC(stream, {
+                    type: 'video' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
+                });
+            }
+
+
 
             if (isChrome) {
-                window.audioRecorder = window.RecordRTC(stream, {
-                    type: 'audio' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
-                });
-                window.audioRecorder.startRecording();
+
+                if (para.video && para.audio)
+                {
+                    window.audioVideoRecorder = window.RecordRTC(stream, {
+                        type: 'video' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
+                    });
+
+                    window.audioRecorder = window.RecordRTC(stream, {
+                        type: 'audio' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
+                    });
+                    window.audioRecorder.startRecording();
+                }
+                else{
+                    window.audioVideoRecorder = window.RecordRTC(stream);
+                }
+
             }
             window.audioVideoRecorder.startRecording();
 
@@ -50,12 +68,16 @@
     stopRecording.onclick = function () {
         stopRecording.disabled = true;
         startRecording.disabled = false;
+        //recorder.getBlob(); // to get get a blob of what has been recorded ... 
         window.audioVideoRecorder.stopRecording(function (url) {
             console.log(url);
             video.src = url;
             video.muted = false;
             //video.play();
             if (isChrome) {
+
+                if (para.audio && para.video)
+                {
                 window.audioRecorder.stopRecording(function (url) {
                     console.log("audio " + url);
                     audio.src = url;
@@ -67,48 +89,51 @@
                 console.log("Les url sont " + video.src + " et " + audio.src);
 
 
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', video.src, true);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', video.src, true);
 
-                xhr.responseType = 'arraybuffer';
+                    xhr.responseType = 'arraybuffer';
 
-                xhr.onload = function (e) {
+                    xhr.onload = function (e) {
 
 
-                    videoData = new Uint8Array(this.response);
+                        videoData = new Uint8Array(this.response);
 
-                    var xhra = new XMLHttpRequest();
-                    xhra.open('GET', audio.src, true);
+                        var xhra = new XMLHttpRequest();
+                        xhra.open('GET', audio.src, true);
 
-                    xhra.responseType = 'arraybuffer';
+                        xhra.responseType = 'arraybuffer';
 
-                    xhra.onload = function (e) {
+                        xhra.onload = function (e) {
 
-                        audioData = new Uint8Array(this.response);
-                        //console.log("Les data sont donc", audioData, "et vid : ", videoData);
-                        worker.postMessage({
-                            type: "command",
-                            arguments: parseArguments("-i audio -i video -strict -2 -vcodec copy -acodec vorbis out.webm"),
-                            files: [
-                                {
-                                    "name": "audio",
-                                    "data": audioData
-                                },
-                                {
-                                    "name": "video",
-                                    "data": videoData
-                                }
-                            ]
-                        });
+                            audioData = new Uint8Array(this.response);
+                            //console.log("Les data sont donc", audioData, "et vid : ", videoData);
+                            worker.postMessage({
+                                type: "command",
+                                arguments: parseArguments("-i audio -i video -strict -2 -vcodec copy -acodec vorbis out.webm"),
+                                files: [
+                                    {
+                                        "name": "audio",
+                                        "data": audioData
+                                    },
+                                    {
+                                        "name": "video",
+                                        "data": videoData
+                                    }
+                                ]
+                            });
+
+                        };
+
+                        xhra.send();
+
 
                     };
 
-                    xhra.send();
+                    xhr.send();
+                }
 
 
-                };
-
-                xhr.send();
             }
         });
 
