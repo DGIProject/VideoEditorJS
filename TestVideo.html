@@ -1,21 +1,73 @@
-<video autoplay id="vid" style="display:none;"></video>
-<canvas id="canvas" width="320"  height="240" style="border:1px solid #d3d3d3;"></canvas><br>
-  <span>sended</span>      <span id="sended"></span><br>
-        <span>Started to</span><span id="st"></span>
-<button onclick="videoRecorder.startRecording()">Take Picture</button>
-<button onclick="videoRecorder.stopRecording()">Stop Picture</button>
+<video autoplay id="vid" style=""></video>
+<audio autoplay id="aud" style=""></audio>
+<button onclick="" id="start">Take Picture</button>
+<button onclick="" id="stop">Stop Picture</button>
+<button onclick="para = {audio : true, video:false}; video = audio;" id="audio">AudioOnly</button>
+<button onclick="para = {audio : false, video:true}; video = videoa;" id="vidoo">VideoOnly</button>
+<button onclick="para = {audio : true, video:true}; video = videoa" id="vidAud">VideoAndAudio</button>
 
 <script src="js/class/videoRecorder.js"></script>
 <script src="js/lib/gif.js"></script>
+<script src="//cdn.WebRTC-Experiment.com/RecordRTC.js" type="text/javascript"></script>
 <script type="text/javascript">
 
+    var para = {audio:true, video:true};
+    var videoa = document.getElementById('vid');
+    var audio = document.getElementById('aud');
+    var startRecording = document.getElementById('start');
+    var stopRecording = document.getElementById('stop');
+
+    startRecording.onclick = function() {
+        startRecording.disabled = true;
+        stopRecording.disabled = false;
+        captureUserMedia(function(stream) {
+            window.audioVideoRecorder = window.RecordRTC(stream, {
+                type: 'video' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
+            });
+            window.audioRecorder = window.RecordRTC(stream, {
+                type: 'audio' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
+            });
+            window.audioVideoRecorder.startRecording();
+            window.audioRecorder.startRecording();
+
+        });
+    };
+    stopRecording.onclick = function() {
+        stopRecording.disabled = true;
+        startRecording.disabled = false;
+        window.audioVideoRecorder.stopRecording(function(url) {
+            console.log(url);
+            video.src = url;
+            video.muted = false;
+            video.play();
+        });
+        window.audioRecorder.stopRecording(function(url) {
+            console.log("audio" + url);
+            video.src = url;
+            video.muted = false;
+            video.play();
+        });
+    };
+    function captureUserMedia(callback) {
+        navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+        navigator.getUserMedia(para, function(stream) {
+            video.src = URL.createObjectURL(stream);
+            video.muted = true;
+            video.controls = true;
+            video.play();
+            callback(stream);
+        }, function(error) {
+            console.error(error);
+        });
+    }
    // var video = document.querySelector("#vid");
    // var canvas = document.querySelector('#canvas');
-    var videoRecorder;
-    window.onload = function()
+    //var videoRecorder;
+  /*  window.onload = function()
     {
        videoRecorder = new VideoRecorder("vid","canvas", true);
-    }
+    }*/
+
 
 
 </script>
