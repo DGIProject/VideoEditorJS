@@ -170,6 +170,7 @@ function initWorker() {
         outputElement.className = "closed";
       }
       buffers.forEach(function(file) {
+        console.log(getDownloadLink(file.data, file.name))
         filesElement.appendChild(getDownloadLink(file.data, file.name));
       });
     }

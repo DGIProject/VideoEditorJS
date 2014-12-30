@@ -16,24 +16,27 @@
 
     var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
 
-    var para = {audio:true, video:true};
+    var para = {audio: true, video: true};
     var videoa = document.getElementById('vid');
     var audio = document.getElementById('aud');
     video = videoa;
 
+
+    var audioData = null;
+    var videoData = null;
+
     var startRecording = document.getElementById('start');
     var stopRecording = document.getElementById('stop');
 
-    startRecording.onclick = function() {
+    startRecording.onclick = function () {
         startRecording.disabled = true;
         stopRecording.disabled = false;
-        captureUserMedia(function(stream) {
+        captureUserMedia(function (stream) {
             window.audioVideoRecorder = window.RecordRTC(stream, {
                 type: 'video' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
             });
 
-            if (isChrome)
-            {
+            if (isChrome) {
                 window.audioRecorder = window.RecordRTC(stream, {
                     type: 'audio' // don't forget this; otherwise you'll get video/webm instead of audio/ogg
                 });
@@ -44,41 +47,86 @@
 
         });
     };
-    stopRecording.onclick = function() {
+    stopRecording.onclick = function () {
         stopRecording.disabled = true;
         startRecording.disabled = false;
-        window.audioVideoRecorder.stopRecording(function(url) {
+        window.audioVideoRecorder.stopRecording(function (url) {
             console.log(url);
             video.src = url;
             video.muted = false;
-            video.play();
-        });
-        if (isChrome)
-        {
-            window.audioRecorder.stopRecording(function(url) {
-                console.log("audio" + url);
-                video.src = url;
-                video.muted = false;
-                video.play();
-            });
+            //video.play();
+            if (isChrome) {
+                window.audioRecorder.stopRecording(function (url) {
+                    console.log("audio " + url);
+                    audio.src = url;
+                    video.muted = false;
+                    //video.play();
+                });
 
-            //TODO: FFmpeg.js -> merge audio and Video When chrome is detected ...
-        }
+
+                console.log("Les url sont " + video.src + " et " + audio.src);
+
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', video.src, true);
+
+                xhr.responseType = 'arraybuffer';
+
+                xhr.onload = function (e) {
+
+
+                    videoData = new Uint8Array(this.response);
+
+                    var xhra = new XMLHttpRequest();
+                    xhra.open('GET', audio.src, true);
+
+                    xhra.responseType = 'arraybuffer';
+
+                    xhra.onload = function (e) {
+
+                        audioData = new Uint8Array(this.response);
+                        //console.log("Les data sont donc", audioData, "et vid : ", videoData);
+                        worker.postMessage({
+                            type: "command",
+                            arguments: parseArguments("-i audio -i video -strict -2 -vcodec copy -acodec vorbis out.webm"),
+                            files: [
+                                {
+                                    "name": "audio",
+                                    "data": audioData
+                                },
+                                {
+                                    "name": "video",
+                                    "data": videoData
+                                }
+                            ]
+                        });
+
+                    };
+
+                    xhra.send();
+
+
+                };
+
+                xhr.send();
+            }
+        });
+
 
     };
     function captureUserMedia(callback) {
         navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
-        navigator.getUserMedia(para, function(stream) {
+        navigator.getUserMedia(para, function (stream) {
             video.src = URL.createObjectURL(stream);
             video.muted = true;
             video.controls = true;
             video.play();
             callback(stream);
-        }, function(error) {
+        }, function (error) {
             console.error(error);
         });
     }
 
 
-
 </script>
+<script type='text/javascript' src='ffmpegJs/demo/terminal2.js'></script>
