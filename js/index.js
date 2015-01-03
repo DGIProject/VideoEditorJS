@@ -630,24 +630,30 @@ function newRecord(){
 
     document.getElementById('chooseRecordButtons').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
-    document.getElementById('audioRecord').style.display = 'none';
     document.getElementById('saveRecordButton').style.display = 'none';
-
     document.getElementById('saveRecordButton').setAttribute('disabled', '');
 
     $('#recordAudioOrVideoElement').modal('show');
 }
-function chooseVideoRecord(){
+function chooseAudioVideoRecord(audioa){
+
+    videoa.style.display = "none";
+    audio.style.display = "none";
+
+    para = {video:true, audio:true};
+    video = videoa;
+    if (audioa)
+    {
+        para = {video:false,audio:true};
+        video = audio;
+        audio.style.display = '';
+    }
+    video.style.display = '';
+    document.getElementById('chooseRecordButtons').style.display = 'none';
     document.getElementById('videoRecord').style.display = '';
-    document.getElementById('saveRecordButton').style.display = '';
-    document.getElementById('audioRecord').style.display = 'none';
-    document.getElementById('chooseRecordButtons').style.display = 'none';
-}
-function chooseAudioRecord(){
-    document.getElementById('audioRecord').style.display = '';
-    document.getElementById('saveRecordButton').style.display = '';
-    document.getElementById('videoRecord').style.display = 'none';
-    document.getElementById('chooseRecordButtons').style.display = 'none';
+
+    startRecordingbtn.disabled = false;
+    stopRecordingbtn.disabled = true;
 }
 function changeZoom(zoom) {
     document.getElementById('zoomRange').value = zoom;

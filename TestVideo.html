@@ -68,7 +68,7 @@
     stopRecording.onclick = function () {
         stopRecording.disabled = true;
         startRecording.disabled = false;
-        //recorder.getBlob(); // to get get a blob of what has been recorded ... 
+        //recorder.getBlob(); // to get get a blob of what has been recorded ...
         window.audioVideoRecorder.stopRecording(function (url) {
             console.log(url);
             video.src = url;

@@ -106,6 +106,13 @@ function initWorker() {
                     tabListFiles[tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(new Blob([file.data])))
                     uploadThumbnail(message.action[1], blob)
                 }
+
+                if(message.action == "VideoRecorder")
+                {
+                    console.log("Something traite avec le worker en provenance de videoRecorder")
+                    videoRecorderResult = new Blob([file.data]);
+                    video.src = window.URL.createObjectURL(videoRecorderResult);
+                }
             });
             currentProject.loadModal('hide');
         }
