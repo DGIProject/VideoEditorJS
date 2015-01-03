@@ -637,18 +637,15 @@ function newRecord(){
 }
 function chooseAudioVideoRecord(audioa){
 
-    videoa.style.display = "none";
     audio.style.display = "none";
-
     para = {video:true, audio:true};
-    video = videoa;
     if (audioa)
     {
         para = {video:false,audio:true};
-        video = audio;
+        video = document.getElementById('audio');
         audio.style.display = '';
     }
-    video.style.display = '';
+    document.getElementById('video').style.display = '';
     document.getElementById('chooseRecordButtons').style.display = 'none';
     document.getElementById('videoRecord').style.display = '';
 

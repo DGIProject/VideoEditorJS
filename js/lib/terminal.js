@@ -111,7 +111,8 @@ function initWorker() {
                 {
                     console.log("Something traite avec le worker en provenance de videoRecorder")
                     videoRecorderResult = new Blob([file.data]);
-                    video.src = window.URL.createObjectURL(videoRecorderResult);
+                    document.getElementById('video').src = window.URL.createObjectURL(videoRecorderResult);
+                    $('#recordAudioOrVideoElement').modal('show');
                 }
             });
             currentProject.loadModal('hide');

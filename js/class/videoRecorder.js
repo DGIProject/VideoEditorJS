@@ -4,9 +4,7 @@ var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
 
 var para = {audio: true, video: true};
 
-var videoa = document.getElementById('video');
 var audio = document.getElementById('audio');
-video = videoa;
 
 var audioData = null;
 var videoData = null;
@@ -14,23 +12,22 @@ var playPause = document.getElementById('playPauseRecordVideoButton');
 playPause.disabled = true;
 var startRecordingbtn = document.getElementById('recordVideoButton');
 var stopRecordingbtn = document.getElementById('stopRecordVideoButton');
-var pausedRecord = false;
 
-playPause.onclick = function(){
-    console.log("click click click");
-    if (pausedRecord)
-    {
-        document.getElementById('spanPlayPause').className = "glyphicon glyphicon-pause";
-        video.play();
-        pausedRecord = false;
+playPause.onclick = function()
+{
+
+    if(document.getElementById('video').paused) {
+        document.getElementById('video').play();
+        document.getElementById('spanPlayPause').className = "glyphicon glyphicon-play";
     }
     else
     {
-        document.getElementById('spanPlayPause').className = "glyphicon glyphicon-play";
-        video.pause();
-        pausedRecord = true;
+        document.getElementById('video').pause();
+        document.getElementById('spanPlayPause').className = "glyphicon glyphicon-pause";
     }
-};
+
+
+}
 
 
 function captureUserMedia(callback) {
@@ -93,8 +90,8 @@ stopRecordingbtn.onclick = function () {
     //recorder.getBlob(); // to get get a blob of what has been recorded ...
     window.audioVideoRecorder.stopRecording(function (url) {
         console.log(url);
-        video.src = url;
-        video.muted = false;
+        document.getElementById('video').src = url;
+       // video.muted = false;
         videoRecorderResult = window.audioVideoRecorder.getBlob();
 
         if (isChrome) {
@@ -104,16 +101,15 @@ stopRecordingbtn.onclick = function () {
                 window.audioRecorder.stopRecording(function (url) {
                     console.log("audio " + url);
                     audio.src = url;
-                    video.muted = false;
                     //video.play();
                 });
 
 
-                console.log("Les url sont " + video.src + " et " + audio.src);
+                console.log("Les url sont " + document.getElementById('video').src + " et " + audio.src);
 
 
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', video.src, true);
+                xhr.open('GET', document.getElementById('video').src, true);
 
                 xhr.responseType = 'arraybuffer';
 
@@ -131,6 +127,9 @@ stopRecordingbtn.onclick = function () {
 
                         audioData = new Uint8Array(this.response);
                         //console.log("Les data sont donc", audioData, "et vid : ", videoData);
+                        $('#recordAudioOrVideoElement').modal('hide');
+                        currentProject.loadModal('show');
+
                         worker.postMessage({
                             type: "command",
                             arguments: parseArguments("-i audio -i video -strict -2 -vcodec copy -acodec vorbis out.webm"),
@@ -162,9 +161,6 @@ stopRecordingbtn.onclick = function () {
 
         localStream.stop();
     });
-
-    //document.getElementById('durationVideoRecord').innerHTML = Math.ceil(video.duration)+"s";
-
 
 };
 //
