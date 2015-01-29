@@ -54,9 +54,13 @@ function getListProjects(id){
 }
 //FILE
 
-function addFile(){
+function addFile(manualAdd){
     currentProject.stopAddFileTrack();
 
+    if (manualAdd)
+    {
+        console.log('not null !');
+    }
     var currentFile = document.getElementById('fileLoader').files[0];
     console.log(currentFile);
 
@@ -154,7 +158,7 @@ function getTypeFile(fileName){
     console.log(extension);
 
     var tabExtensionAudio = ['mp3', 'wav','wmv'];
-    var tabExtensionVideo = ['avi', 'mp4','wma','flv'];
+    var tabExtensionVideo = ['avi', 'mp4','wma','flv', 'webm'];
     var tabExtensionImage = ['png', 'jpg', 'jpeg','gif'];
 
     if(tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1)

@@ -310,6 +310,7 @@ $_SESSION['user'] = 'User'; ?>
                             <div class="col-md-4">
                                 Nom : <input class="form-control" id="fileName" type="text"/><br>
                                 Durée : <span id="durationVideoRecord">0s</span><br/>
+                                <div id="videoRecorderErrorText" style="display: none" class="alert alert-danger">Pour pouvoir valider l'enregistrement vidéo ou audio vous devez lui donner un nom !</div>
                             </div>
                         </div>
 
@@ -317,7 +318,7 @@ $_SESSION['user'] = 'User'; ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" onclick="" id="saveRecordButton" class="btn btn-primary" data-dismiss="modal" style="display: none;" disabled="">Save record</button>
+                    <button type="button" id="saveRecordButton" class="btn btn-primary" style="display: none;">Save record</button>
                 </div>
             </div>
         </div>

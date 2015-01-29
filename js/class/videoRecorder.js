@@ -84,6 +84,8 @@ startRecordingbtn.onclick = function () {
 };
 stopRecordingbtn.onclick = function () {
 
+    document.getElementById('saveRecordButton').style.display = '';
+
     stopRecordingbtn.disabled = true;
     startRecordingbtn.removeAttribute("disabled");
     playPause.removeAttribute("disabled");
@@ -163,4 +165,24 @@ stopRecordingbtn.onclick = function () {
     });
 
 };
-//
+document.getElementById('saveRecordButton').onclick = function()
+{
+    if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0)
+    {
+        addFile({
+                fileName : document.getElementById('fileName').value+".webm",
+                data : videoRecorderResult,
+                dataURL : document.getElementById('video').src
+        });
+
+
+        document.getElementById('videoRecorderErrorText').style.display = 'none';
+        $('#recordAudioOrVideoElement').modal('hide');
+
+    }
+    else
+    {
+        document.getElementById('videoRecorderErrorText').style.display = '';
+
+    }
+};
