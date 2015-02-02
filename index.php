@@ -79,7 +79,7 @@ $_SESSION['user'] = 'User'; ?>
                             <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
                             <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><input class="checkbox" type="checkbox" onchange="enableAutoSave(this.checked)" checked data-label="AutoSave"/></li>
+                                <li><input class="checkbox" type="checkbox" onchange="currentProject.switchAutoSave();" checked data-label="AutoSave"/></li>
                             </ul>
                         </div>
 
