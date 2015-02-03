@@ -2,31 +2,42 @@
  * Created by Guillaume on 03/02/2015.
  */
 
+Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+};
+
 Terminal = function(){
-    this.alias = {"ffmpeg" : "ffmpeg.js", "list" : "bin/list.js"}
+    this.alias = {"ffmpeg" : "ffmpeg.js", "list" : "bin/list.js", "ff":"ff.js"};
     this.lastCommands = [];
     this.Workers = [];
+    this.Files = [];
 }
 Terminal.prototype.exist = function(bin){
     var found = false;
     for(var key in this.alias)
     {
-        console.log(key);
-        found = (key==bin)
+        console.log("-"+key);
+        if (key===bin)
+        {
+            found = true;
+            break;
+        }
     }
     return found;
 }
 Terminal.prototype.processCmd = function(cmd)
 {
     that = this;
-    console.log(cmd);
+    console.log(cmd, cmd.split(" ")[0]);
     if (this.exist(cmd.split(" ")[0]))
     {
         document.getElementById('returnInfo').innerHTML += "... <br/>";
         var workerId = this.GenerateWorkerId();
         this.Workers.push({ worker : new Worker(this.alias[cmd.split(" ")[0]]), id :workerId});
         this.lastCommands.push(cmd)
-        this.startWorker(workerId);
+        this.startWorker(workerId, cmd.replace(cmd.split(" ")[0],'').trim());
     }
     else
     {
@@ -44,8 +55,8 @@ Terminal.prototype.onWorkerMessage = function(e, index){
     else if(message.type == "stop")
     {
         document.getElementById('returnInfo').innerHTML += "Executed in "+message.time+"ms<br/>";
-        this.Workers[index].terminate();
-        this.Workers.splice(index, 1);
+        this.Workers[index].worker.terminate();
+       // this.Workers.remove(index);
     }
 }
 Terminal.prototype.GenerateWorkerId = function(){
@@ -58,7 +69,7 @@ Terminal.prototype.GenerateWorkerId = function(){
         return this.Workers[this.Workers.length-1].id + 1;
     }
 };
-Terminal.prototype.startWorker = function(id){
+Terminal.prototype.startWorker = function(id, argv){
     var foundIndex = -1;
     for (i=0; i<this.Workers.length;i++)
     {
@@ -78,7 +89,9 @@ Terminal.prototype.startWorker = function(id){
         this.Workers[foundIndex].worker.postMessage({
             "id": that.Workers[foundIndex].id,
             "status": that.alias,
-            "command": "start"
+            "command": "start",
+            "files" : that.files,
+            "argv" : argv
         });
     }
     else
