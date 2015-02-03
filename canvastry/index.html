@@ -19,10 +19,17 @@
   <body>
     <h1>Hello, world!</h1>
 
+    <!--
     <div id="divCanvas" style="width: 450px;overflow: scroll;">
         <canvas id="canvas" width="500" height="100" style="border: 1px solid;"></canvas>
     </div>
+    -->
+
+    <canvas id="canvas" width="500" height="100" style="border: 1px solid;"></canvas>
+
     <button type="button" onclick="addElement();">Add Element</button>
+    <button type="button" onmousemove="plusScroll();"><span class="glyphicon glyphicon-plus"></span></button>
+    <button type="button" onmousemove="lessScroll();"><span class="glyphicon glyphicon-minus"></span></button>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

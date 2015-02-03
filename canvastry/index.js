@@ -75,8 +75,10 @@ c.onmouseup = function(e) {
         {
             console.log('collision after');
 
-            //tabElement[i].marginLeft = tabElement[currentRow].marginLeft;
-            //tabElement[i].width = (tabElement[i].marginLeft + tabElement[i].width) - (tabElement[currentRow].marginLeft + tabElement[currentRow].width);
+            console.log((tabElement[i].marginLeft + tabElement[i].width) - (tabElement[currentRow].marginLeft + tabElement[currentRow].width));
+
+            tabElement[i].marginLeft = (tabElement[i].marginLeft + tabElement[i].width) - ((tabElement[i].marginLeft + tabElement[i].width) - (tabElement[currentRow].marginLeft + tabElement[currentRow].width));
+            tabElement[i].width = (tabElement[i].marginLeft + tabElement[i].width) - (tabElement[currentRow].marginLeft + tabElement[currentRow].width);
         }
     }
 
@@ -94,6 +96,7 @@ c.onmousemove = function(e) {
     }
 };
 
+/*
 document.getElementById('divCanvas').onscroll = function() {
     console.log(this.scrollLeft);
 
@@ -103,6 +106,20 @@ document.getElementById('divCanvas').onscroll = function() {
     ctx.width = ctx.width + 2;
     ctx.height = 100;
 };
+*/
+
+function plusScroll() {
+    scroll += 2;
+    drawElements();
+}
+
+function lessScroll() {
+    if(scroll >= 2)
+    {
+        scroll -= 2;
+        drawElements();
+    }
+}
 
 function rowTabElement(x) {
     currentRow = 'none';
@@ -149,7 +166,7 @@ function drawElements() {
         ctx.beginPath();
         ctx.lineWidth = 1;
         ctx.strokeStyle = (tabElement[i].selected) ? 'blue' : 'gray';
-        ctx.fillStyle = '#66CCFF;';
+        ctx.fillStyle = '#66CCFF';
         ctx.rect(tabElement[i].marginLeft - scroll, 0, tabElement[i].width, 100);
         ctx.stroke();
 
@@ -163,6 +180,6 @@ function drawElements() {
 
         console.log(showWidth, (80 - (tabElement[i].width - 20)), (((80 - (tabElement[i].width - 20)) / 80) * imageThumbnail.width), imageThumbnail.width);
 
-        ctx.drawImage(imageThumbnail, 0, 0, showWidth, imageThumbnail.height, (tabElement[i].marginLeft + 10), 35, (80 - (80 - (tabElement[i].width - 20))) - scroll, 80 * (imageThumbnail.height / imageThumbnail.width));
+        ctx.drawImage(imageThumbnail, 0, 0, showWidth, imageThumbnail.height, (tabElement[i].marginLeft + 10) - scroll, 35, (80 - (80 - (tabElement[i].width - 20))), 80 * (imageThumbnail.height / imageThumbnail.width));
     }
 }
