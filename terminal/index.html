@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Programms</title>
+    <script src="terminal-Js.js"></script>
+    <script type="text/javascript">
+        term = new Terminal();
+    </script>
+</head>
+<body>
+<input type="text" id="command"/><input type="button" onclick="term.processCmd(document.getElementById('command').value);"  value="send"/>
+<br/>
+    <div id="returnInfo" style="border: solid 1px #000000; width: 500px; height: 500px"></div>
+</body>
+</html>
