@@ -9,7 +9,7 @@ Array.prototype.remove = function(from, to) {
 };
 
 Terminal = function(){
-    this.alias = {"ffmpeg" : "ffmpeg.js", "list" : "bin/list.js", "ff":"ff.js"};
+    this.alias = {"ffmpeg" : "bin/ffmpeg.js", "list" : "bin/list.js", "gnuplot":"bin/gnuplot.js"};
     this.lastCommands = [];
     this.Workers = [];
     this.Files = [];
@@ -48,7 +48,7 @@ Terminal.prototype.processCmd = function(cmd)
 Terminal.prototype.onWorkerMessage = function(e, index){
     console.log(e, "index" + index);
     var message = e.data;
-    if (message.type == "out")
+    if (message.type == "stdout")
     {
         document.getElementById('returnInfo').innerHTML += message.text+"<br/>";
     }

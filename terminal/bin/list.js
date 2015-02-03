@@ -10,7 +10,7 @@ onmessage = function(event) {
     if (message.command == "start")
     {
         postMessage({
-            type : "out",
+            type : "stdout",
             text : "Available programs are :"
         });
 
