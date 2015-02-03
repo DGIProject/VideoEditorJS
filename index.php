@@ -76,7 +76,7 @@ $_SESSION['user'] = 'User'; ?>
                     </ul>
                     <ul class="nav navbar-nav">
                         <div class="btn-group">
-                            <button onclick="currentProject.saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
+                            <button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
                             <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><input class="checkbox" type="checkbox" onchange="currentProject.switchAutoSave();" checked data-label="AutoSave"/></li>
@@ -174,7 +174,7 @@ $_SESSION['user'] = 'User'; ?>
                         <h2>Projects</h2>
                         <div id="listExistingProjects">Loading existing projects ...</div>
                         </br>
-                        <a href="#" onclick="currentProject.newProject(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
+                        <a href="#" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
                     </div>
                 </div>
             </div>
@@ -207,7 +207,7 @@ $_SESSION['user'] = 'User'; ?>
                 </div>
                 <div class="modal-body">
                     <div id="listProjects" class="list-group">Loading projects ...</div>
-                    <button type="button" onclick="currentProject.newProject(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
+                    <button type="button" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>

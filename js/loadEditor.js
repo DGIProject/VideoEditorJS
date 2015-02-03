@@ -49,12 +49,12 @@ function getFileJS() {
         initWorker();
         console.log('inited');
 
-        makeValues();
+        //makeValues();
 
         currentProject = new Project('undefined', getCurrentDate());
         currentProject.isStarted = true;
 
-        updateTextProject();
+        currentProject.updateText();
 
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
 
