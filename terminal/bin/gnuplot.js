@@ -82,6 +82,7 @@ onmessage = function(event) {
                     }
                     var ab = new Uint8Array(e.content);
                     var blob = new Blob([ab], {"type": "image\/svg+xml"});
+                    //var blob = new Blob([ab], {"type": "image/png"});
                     postMessage({
                         type : "stdout",
                         text : "url is "

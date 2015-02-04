@@ -51,6 +51,7 @@ var Module = {
     printErr: function(text) {
         self.postMessage({'transaction': -2, 'content': text});
     },
+    TOTAL_MEMORY: 268435456
 };
 function gnuplot_create() {
 // Note: For maximum-speed code, see "Optimizing Code" on the Emscripten wiki, https://github.com/kripken/emscripten/wiki/Optimizing-Code

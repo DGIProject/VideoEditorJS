@@ -1,7 +1,7 @@
 // This is a minimal interface to the gnuplot worker. More sophisticated include virtual file-system lists and a reset function.
 
-var Gnuplot = function(js_filename) {
-        this.worker = new Worker(js_filename);
+var Gnuplot = function() {
+        this.worker = new Worker("gnuplot.js");
         this.output = [];
         this.error = [];
         this.isRunning = false;
