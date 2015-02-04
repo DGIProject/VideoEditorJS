@@ -55,6 +55,12 @@ Terminal.prototype.onWorkerMessage = function(e, index){
         document.getElementById('returnInfo').innerHTML += "Executed in "+message.time+"ms<br/>";
         this.Workers[index].worker.terminate();
        // this.Workers.remove(index);
+        if (message.hasOwnProperty("data"))
+        {
+            window.URL = window.URL || window.webkitURL;
+            url = window.URL.createObjectURL(message.data);
+            console.log("URL IS "+url);
+        }
     }
 };
 Terminal.prototype.GenerateWorkerId = function(){
