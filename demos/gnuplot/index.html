@@ -92,6 +92,7 @@ splot '++' using 1:2:(Z($1,$2)):(color($1,$2)) with pm3d title "4 data columns x
                     document.getElementById('output').value += 'ERR: ' + text + '\n';
                     document.getElementById('output').scrollTop = 99999;
                 };
+
                 var lastTAContent = '';
                 function scriptChange() {
                     var val = document.getElementById("gnuplot").value;
@@ -104,13 +105,14 @@ splot '++' using 1:2:(Z($1,$2)):(color($1,$2)) with pm3d title "4 data columns x
                         lastTAContent = val;
                         runScript();
                     }
-                }
-                ;
+                };
                 files = {};
+
                 if (localStorage["gnuplot.files"])
                     files = JSON.parse(localStorage["gnuplot.files"]);
                 for (var key in files)
                     gnuplot.onOutput("Found locally stored file: " + key + " with " + files[key].length + " bytes.");
+
                 var runScript = function() {
                     var editor = document.getElementById('gnuplot');   // textarea
                     var start = Date.now();
