@@ -32,29 +32,24 @@ var tabElement = [];
 var currentRow = 0;
 
 var MODE = {
-    MOVE: 0,
-    RESIZE: 1
-}
-
-c.onclick = function(e) {
-    /*
-     console.log('click');
-
-     var x = e.offsetX==undefined?e.layerX:e.offsetX;
-     var y = e.offsetY==undefined?e.layerY:e.offsetY;
-
-     console.log(x, y);
-
-     rowTabElement(x);
-     drawElements();
-     */
+    NONE: 0,
+    MOVE: 1,
+    RESIZE: {
+        LEFT: 2,
+        RIGHT: 3
+    },
+    REMOVE: 4
 };
+
+var currentMode = MODE.NONE;
 
 c.onmousedown = function(e) {
     console.log('mousedown');
 
     mousedown = true;
+    gap = (currentRow != 'none') ? (tabElement[currentRow].marginLeft + tabElement[currentRow].width - ((e.offsetX == undefined)?e.layerX:e.offsetX)) : 0;
 
+    /*
     var x = e.offsetX==undefined?e.layerX:e.offsetX;
     var y = e.offsetY==undefined?e.layerY:e.offsetY;
 
@@ -62,6 +57,7 @@ c.onmousedown = function(e) {
 
     rowTabElement(x);
     drawElements();
+    */
 };
 
 c.onmouseup = function(e) {
@@ -91,23 +87,78 @@ c.onmouseup = function(e) {
 c.onmousemove = function(e) {
     var x = e.offsetX==undefined?e.layerX:e.offsetX;
 
-    if(currentRow != 'none')
+    if(mousedown)
     {
-        if(mousedown)
+        if(currentMode == MODE.MOVE)
         {
-            tabElement[currentRow].marginLeft = x - gap;
+            //console.log(gap, x, (x - gap));
 
-            drawElements();
+            tabElement[currentRow].marginLeft = x - gap;
         }
-        else if(x >= (tabElement[currentRow].marginLeft - 2) && x <= (tabElement[currentRow].marginLeft + 2))
+        else if(currentMode == MODE.RESIZE.LEFT)
         {
-            c.style.cursor = 'w-resize';
+            console.log('resize left');
+        }
+        else if(currentMode == MODE.RESIZE.RIGHT)
+        {
+            //console.log('resize right');
+            //console.log(x-gap);
+
+            if((x - gap) > 0)
+            {
+                if(tabElement[currentRow].width < tabElement[currentRow].maxWidth)
+                {
+                    //console.log('good');
+
+                    tabElement[currentRow].width++;
+                    gap = x;
+                }
+            }
+            else
+            {
+                if(tabElement[currentRow].width > tabElement[currentRow].minWidth)
+                {
+                    //console.log('good');
+
+                    tabElement[currentRow].width--;
+                    gap = x;
+                }
+            }
+        }
+    }
+    else
+    {
+        rowTabElement(x);
+
+        if(currentRow != 'none')
+        {
+            if(x >= (tabElement[currentRow].marginLeft - 2) && x <= (tabElement[currentRow].marginLeft + 2))
+            {
+                currentMode = MODE.RESIZE.LEFT;
+                c.style.cursor = 'w-resize';
+            }
+            else if(x >= (tabElement[currentRow].marginLeft + tabElement[currentRow].width - 2) && x <= (tabElement[currentRow].marginLeft + tabElement[currentRow].width + 2))
+            {
+                currentMode = MODE.RESIZE.RIGHT;
+                c.style.cursor = 'w-resize';
+            }
+            else
+            {
+                currentMode = MODE.MOVE;
+                c.style.cursor = 'all-scroll';
+            }
         }
         else
         {
-            c.style.cursor = 'default';
+            if(!mousedown)
+            {
+                currentMode = MODE.NONE;
+                c.style.cursor = 'default';
+            }
         }
     }
+
+    drawElements();
 };
 
 /*
@@ -145,7 +196,6 @@ function rowTabElement(x) {
             console.log('row : ', i);
 
             currentRow = i;
-            gap = x - tabElement[i].marginLeft;
 
             tabElement[i].selected = true;
         }
