@@ -17,13 +17,13 @@ onmessage = function(event) {
         for(var key in message.status)
         {
             postMessage({
-                type : "out",
+                type : "stdout",
                 text : "- "+key
             });
         }
     }
     postMessage({
-        type : "out",
+        type : "stdout",
         text : "----------"
     });
     postMessage({

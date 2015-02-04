@@ -13,17 +13,34 @@ function print(text) {
     });
 }
 
+function parseArguments(text) {
+   // text = text.replace(/\s+/g, ' ');
+    var args = [];
+    // Allow double quotes to not split args.
+    text.split('"').forEach(function(t, i) {
+        t = t.trim();
+        if ((i % 2) === 1) {
+            args.push(t);
+        } else {
+            args = args.concat(t.split(" "));
+        }
+    });
+    return args;
+}
+
 onmessage = function(event) {
 
     var message = event.data;
-
+    console.log("argument are ", message.argv)
+    console.log("Paresed argv are", parseArguments(message.argv))
     if (message.command === "start") {
+
 
         var Module = {
             print: print,
             printErr: print,
             files: message.files || [],
-            arguments: message.argv || [],
+            arguments: parseArguments(message.argv) || [],
             TOTAL_MEMORY: 268435456
             // Can play around with this option - must be a power of 2
             // TOTAL_MEMORY: 268435456

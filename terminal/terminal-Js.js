@@ -13,7 +13,7 @@ Terminal = function(){
     this.lastCommands = [];
     this.Workers = [];
     this.Files = [];
-}
+};
 Terminal.prototype.exist = function(bin){
     var found = false;
     for(var key in this.alias)
@@ -26,9 +26,8 @@ Terminal.prototype.exist = function(bin){
         }
     }
     return found;
-}
-Terminal.prototype.processCmd = function(cmd)
-{
+};
+Terminal.prototype.processCmd = function(cmd){
     that = this;
     console.log(cmd, cmd.split(" ")[0]);
     if (this.exist(cmd.split(" ")[0]))
@@ -43,8 +42,7 @@ Terminal.prototype.processCmd = function(cmd)
     {
         document.getElementById('returnInfo').innerHTML += "Command not found <br/> Type <i>list</i> to have the list of available commands<br/>";
     }
-}
-
+};
 Terminal.prototype.onWorkerMessage = function(e, index){
     console.log(e, "index" + index);
     var message = e.data;
@@ -58,7 +56,7 @@ Terminal.prototype.onWorkerMessage = function(e, index){
         this.Workers[index].worker.terminate();
        // this.Workers.remove(index);
     }
-}
+};
 Terminal.prototype.GenerateWorkerId = function(){
     if (this.Workers.length == 0)
     {
@@ -90,7 +88,7 @@ Terminal.prototype.startWorker = function(id, argv){
             "id": that.Workers[foundIndex].id,
             "status": that.alias,
             "command": "start",
-            "files" : that.files,
+            "files" : that.Files,
             "argv" : argv
         });
     }
@@ -98,4 +96,26 @@ Terminal.prototype.startWorker = function(id, argv){
     {
         console.log("cant't start ...")
     }
-}
+};
+Terminal.prototype.loadFile = function(url, name){
+    that = this;
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", url, true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function (oEvent) {
+        var arrayBuffer = oReq.response; // Note: not oReq.responseText
+        if (arrayBuffer) {
+            var byteArray = new Uint8Array(arrayBuffer);
+            that.Files.push({data : byteArray, name: name})
+            console.log("File"+name+" loaded !");
+        }
+        else
+        {
+            console.log("Unable to load file as ArrayBuffer");
+        }
+    };
+
+    oReq.send(null);
+
+};
