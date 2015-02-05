@@ -43,12 +43,8 @@ $_SESSION['user'] = 'User'; ?>
                                 <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pistes <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="addTrack('movie');">Nouvelle piste Video</a></li>
-                                <li><a href="#" onclick="addTrack('audio');">Nouvelle piste Audio</a></li>
-                            </ul>
+                        <li>
+                            <a href="#" onclick="addTrack();">Ajouter une piste</a>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Finaliser <span class="caret"></span></a>
@@ -94,8 +90,16 @@ $_SESSION['user'] = 'User'; ?>
                     <span class="timeLeft" id="startTime">0h0m0s</span>
                     <span class="timeRight" id="endTime">0h2m40s</span>
                 </div>
-                <div id="tracks"></div>
-                <div id="VideoView" onscroll="scroolAllTracks();" class="videoViewEditor"></div>
+                <div id="tracks">
+                    <div id="videoTracks">
+                        <div id="videoInfo" class="trackInfo"></div>
+                        <div id="videoView" class="trackView"></div>
+                    </div>
+                    <div id="audioTracks">
+                        <div id="audioInfo" class="trackInfo"></div>
+                        <div id="audioView" class="trackView"></div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-2 filesList">
                 <div id="listFiles" class="list-group listFiles">Aucun élément.</div>

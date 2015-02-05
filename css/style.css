@@ -11,12 +11,19 @@
 
 #tracks
 {
-    height: 485px;
-    width: 190px;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    height: 501px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.trackInfo {
     float: left;
-    border-right: 1px solid #E7E7E7;
+    width: 190px;
+}
+
+.trackView {
+    float: left;
+    width: 610px;
 }
 
 .singleTrack
@@ -24,11 +31,6 @@
     height: 120px;
     border-bottom: 1px solid #dcdcdc;
     display: inline-block;
-}
-
-.singleTrack:hover
-{
-    background-color: #b6ddf3;
 }
 
 .optionsTrack
@@ -68,15 +70,6 @@
 .timeRight
 {
     float: right;
-}
-
-.videoViewEditor
-{
-    height: 501px;
-    width: 633px;
-    float: left;
-    overflow-y: auto;
-    overflow-x: auto;
 }
 
 .textViewEditor

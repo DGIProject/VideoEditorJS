@@ -1,19 +1,35 @@
-Track = function(id, name, type) {
+var MODE = {
+    NONE: 0,
+    MOVE: 1,
+    RESIZE: {
+        LEFT: 2,
+        RIGHT: 3
+    },
+    REMOVE: 4
+};
+
+Track = function(id, type, canvas) {
     this.id = id;
-    this.name = name;
-    this.volume = 0; // under 100
-    this.elementsId = [];
-    this.data = null;
     this.type = type;
-    this.color = (type=="movie")? "#A3BDDE" : "#74E4BC";
-}
 
-Track.prototype.changeName = function(newName)
-{
-    this.name = newName;
-}
+    this.canvas = canvas;
 
-Track.prototype.changeVolume = function(newLevel)
-{
+    this.canvas.context.width = this.canvas.element.width;
+    this.canvas.context.height = this.canvas.element.height;
+
+    this.mode = MODE.NONE;
+
+    this.mousedown = false;
+    this.gap = 0;
+    this.scroll = 0;
+
+    this.volume = 0;
+    this.data = null;
+
+    this.tabElements = [];
+    this.currentRow = 0;
+};
+
+Track.prototype.upVolume = function(newLevel) {
     this.volume = newLevel;
-}
+};

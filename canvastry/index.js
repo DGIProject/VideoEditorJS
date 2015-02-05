@@ -48,16 +48,6 @@ c.onmousedown = function(e) {
 
     mousedown = true;
     gap = (currentRow != 'none') ? (tabElement[currentRow].marginLeft + tabElement[currentRow].width - ((e.offsetX == undefined)?e.layerX:e.offsetX)) : 0;
-
-    /*
-    var x = e.offsetX==undefined?e.layerX:e.offsetX;
-    var y = e.offsetY==undefined?e.layerY:e.offsetY;
-
-    console.log(x, y);
-
-    rowTabElement(x);
-    drawElements();
-    */
 };
 
 c.onmouseup = function(e) {
@@ -261,9 +251,9 @@ function element(row) {
 
     ctx.drawImage(imageClose, (tabElement[row].marginLeft + tabElement[row].width - 20) - scroll, 5, 15, 15);
 
-    var showWidth = imageThumbnail.width - (((80 - (tabElement[row].width - 20)) / 80) * imageThumbnail.width);
+    var showWidth = (tabElement[row].width < 100) ? (imageThumbnail.width - (((80 - (tabElement[row].width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
 
     //console.log(showWidth, (80 - (tabElement[row].width - 20)), (((80 - (tabElement[row].width - 20)) / 80) * imageThumbnail.width), imageThumbnail.width);
 
-    ctx.drawImage(imageThumbnail, 0, 0, showWidth, imageThumbnail.height, (tabElement[row].marginLeft + 10) - scroll, 35, (80 - (80 - (tabElement[row].width - 20))), 80 * (imageThumbnail.height / imageThumbnail.width));
+    ctx.drawImage(imageThumbnail, 0, 0, showWidth, imageThumbnail.height, (tabElement[row].marginLeft + 10) - scroll, 35, (tabElement[row].width < 100) ? (80 - (80 - (tabElement[row].width - 20))) : 80, 80 * (imageThumbnail.height / imageThumbnail.width));
 }

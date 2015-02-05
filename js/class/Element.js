@@ -1,29 +1,48 @@
 oneSecond = 5; // in px
 
-Elements = function(id, name, initialDuration, fileId, trackId) {
+Element = function(id, name, initialDuration, fileId, trackId, marginLeft, parent) {
     this.id = id;
     this.name = name;
-    this.initialDuration = initialDuration; // in h:m:s
-    this.currentDuration = initialDuration;
+    this.fileId = fileId;
+
+    this.trackId = trackId;
+
+    this.totalDuration = this.timeToSecond(initialDuration); // in h:m:s
+    this.currentDuration = this.totalDuration;
+
+    this.width = this.calculateWidth();
+    this.minWidth = 20;
+    this.maxWidth = this.width;
+
+    this.marginLeft = marginLeft;
+
+    this.parent = parent;
+
+    this.selected = true;
+
+    /*
     this.length = this.calculateLenght(); // in px
     this.maxLength = this.calculateMaxLenght();
     this.marginXpx = 0;
     this.marginXDuration = 0;
     this.marginXsecond = 0;
-    this.fileId = fileId;
     this.startTime = "0"; //in second
     this.startTimePx = 0;
-    this.trackId = trackId;
     this.offset = null;
-}
-Elements.prototype.changeLength = function(newLength) {
-    this.length = newLength;
-}
-Elements.prototype.getDurationInSecondFromLength = function () {
+    */
+};
 
-    return  Math.ceil(this.length / oneSecond);
+Element.prototype.timeToSecond = function(initialDuration) {
+    var time = initialDuration.split(':');
 
-}
+    return (parseInt(time[0]) * 3600) + (parseInt(time[1] * 60)) + parseInt(time[2].split('.')[0]);
+};
+
+Element.prototype.calculateWidth = function() {
+    return this.totalDuration * oneSecond;
+};
+
+/*
 Elements.prototype.getDurationWithFormat = function() {
     var numberOfSecond = Math.ceil(this.length / oneSecond);
     var convertedTime = new Date();
@@ -86,3 +105,4 @@ Elements.prototype.setMarginX = function(marginPx){
 Elements.prototype.calculateMarginX = function(){
     this.marginXpx = this.marginXsecond * oneSecond;
 }
+*/

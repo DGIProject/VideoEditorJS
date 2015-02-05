@@ -576,32 +576,73 @@ function uploadThumbnail(id, data) {
     xhr.send(fd);
 }
 //TRACK
-function addTrack(type){
+function addTrack(){
     var nextId = (currentProject.tabListTracks.length != 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
 
+    var videoInfo = document.createElement('div');
+    videoInfo.classList.add('singleTrack');
+    videoInfo.innerHTML = '<div class="valuesTrack"><span>VIDEO ' + nextId + '</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+
+    var videoView = document.createElement('canvas');
+    videoView.id = 'videoView' + nextId;
+    videoView.classList.add('singleTrack');
+    videoView.style.width = '100%';
+
+    videoView.onmousedown = mouseDown;
+    videoView.onmouseup = mouseUp;
+    videoView.onmousemove = mouseMove;
+
+    document.getElementById('videoInfo').appendChild(videoInfo);
+    document.getElementById('videoView').appendChild(videoView);
+
+    currentProject.tabListTracks.push(new Track(nextId, 'VIDEO', {element: videoView, context: videoView.getContext('2d')}));
+
+    drawElements(currentProject.tabListTracks.length - 1);
+
+    nextId = (currentProject.tabListTracks.length != 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
+
+    var audioInfo = document.createElement('div');
+    audioInfo.classList.add('singleTrack');
+    audioInfo.innerHTML = '<div class="valuesTrack"><span>AUDIO ' + nextId + '</span></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+
+    var audioView = document.createElement('canvas');
+    audioView.id = 'audioView' + nextId;
+    audioView.classList.add('singleTrack');
+    audioView.style.width = '100%';
+
+    audioView.onmousedown = mouseDown;
+    audioView.onmouseup = mouseUp;
+    audioView.onmousemove = mouseMove;
+
+    document.getElementById('audioInfo').appendChild(audioInfo);
+    document.getElementById('audioView').appendChild(audioView);
+
+    currentProject.tabListTracks.push(new Track(nextId, 'AUDIO', {element: audioView, context: audioView.getContext('2d')}));
+
+    drawElements(currentProject.tabListTracks.length - 1);
+
+    /*
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');
     var newTrack = document.createElement('div');
-    var newViewTrack = document.createElement('div');
+    var newViewTrack = document.createElement('canvas');
     newTrack.setAttribute('class', 'singleTrack');
     newTrack.setAttribute('id', 'track' + nextId);
-    newTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
-    newTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
-    newTrack.innerHTML = '<div class="valuesTrack"><input type="text" onkeyup="updateNameTrack(' + nextId + ', this.value);" class="form-control"  placeholder="Name" value="Sans Nom"></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    //newTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
+    //newTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
+    newTrack.innerHTML = '<div class="valuesTrack"><span>Track ' + nextId + '</span></br><input type="range" step="1" onchange="updateVolumeTrack(' + nextId + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="currentProject.startAddFileTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-plus"></span></button><button type="button" onclick="settingsTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrack(' + nextId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
     tracks.appendChild(newTrack);
 
     newViewTrack.setAttribute('class', 'singleTrack');
     newViewTrack.setAttribute('style','width: 1000px;');
     newViewTrack.setAttribute('id', 'ViewTrack' + nextId);
-    newViewTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
-    newViewTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
-    newViewTrack.innerHTML = '<p id="textViewEditor' + nextId + '" class="textViewEditor">Aucun élément n\'est présent dans cette piste.</p>';
+    //newViewTrack.setAttribute('onmouseover', 'hoverTrack(' + nextId + ');');
+    //newViewTrack.setAttribute('onmouseout', 'outHoverTrack(' + nextId + ');');
+    //newViewTrack.innerHTML = '<p id="textViewEditor' + nextId + '" class="textViewEditor">Aucun élément n\'est présent dans cette piste.</p>';
     videoView.appendChild(newViewTrack);
-
-    var track = new Track(currentProject.tabListTracks.length, 'Sans Nom', type);
-
-    currentProject.tabListTracks.push(track);
+    */
 }
+
 function deleteTrack(id){
     var tracks = document.getElementById('tracks');
     var videoView = document.getElementById('VideoView');
@@ -630,15 +671,10 @@ function deleteTrack(id){
 
     currentProject.stopAddFileTrack();
 }
-function updateNameTrack(id, nameTrack){
-    console.log(nameTrack);
-
-    currentProject.tabListTracks[id].changeName(nameTrack);
-}
 function updateVolumeTrack(id, valueVolume){
     console.log('updateVolumeTrack');
 
-    currentProject.tabListTracks[id].changeVolume(valueVolume);
+    currentProject.tabListTracks[id].upVolume(valueVolume);
 }
 function settingsTrack(id){
     console.log('settingsTrack');
@@ -722,24 +758,29 @@ function stopMoveElement(){
     }
     currentProject.tabListElements[parseInt(divElementSelectedForMove.Object.id.replace('trackElementId', ''))].setMarginX(divElementSelectedForMove.Object.style.marginLeft.replace('px', ''))
 }
-function addElement(id, idTrack){
+
+function addElement(id, idTrack) {
     var info = currentProject.tabListFiles[id];
 
     console.log(info);
 
-    var idElement;
+    var idElement = (currentProject.tabListElements.length > 0) ? currentProject.tabListElements[currentProject.tabListElements.length-1].id + 1 : 0;
 
-    if(currentProject.tabListElements.length > 0)
+    var marginLeft = 0;
+
+    for(var i = 0; i < currentProject.tabListTracks.length; i++)
     {
-        idElement = currentProject.tabListElements[currentProject.tabListElements.length-1].id + 1;
-    }
-    else
-    {
-        idElement = 0;
+        for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
+        {
+            marginLeft = (currentProject.tabListTracks[i].tabElements[x].marginLeft > marginLeft) ? currentProject.tabListTracks[i].tabElements[x].marginLeft : marginLeft;
+        }
     }
 
-    var ElementToAdd = new Elements(idElement, info.fileName, info.duration, id, idTrack);
+    currentProject.tabListTracks[idTrack].tabElements.push(new Element(idElement, info.fileName, info.duration, id, idTrack, marginLeft, false));
 
+    drawElements(idTrack);
+
+    /*
     var actualTrack = document.getElementById("ViewTrack" + idTrack);
     currentProject.tabListTracks[idTrack].elementsId.push(idElement);
 
@@ -759,6 +800,7 @@ function addElement(id, idTrack){
     ElementToAdd.offset = $("#"+element.id).offset().left
     console.log('------------------',ElementToAdd.offset,'-------------------------');
     currentProject.tabListElements.push(ElementToAdd);
+    */
 }
 function newRecord(){
     currentProject.stopAddFileTrack();

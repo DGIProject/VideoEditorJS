@@ -1,5 +1,6 @@
 var tabFilesJS = [
     'index.js',
+    'canvasTrack.js',
     'class/Project.js',
     'class/ReadProject.js',
     'class/GenerateFileProject.js',
@@ -62,6 +63,8 @@ function getFileJS() {
         document.getElementById('startUseProject').style.display = '';
 
         getListProjects('listExistingProjects');
+
+        $('#startLoadingEditor').modal('hide');
     }
 }
 
