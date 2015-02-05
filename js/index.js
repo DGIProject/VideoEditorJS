@@ -586,16 +586,22 @@ function addTrack(){
     var videoView = document.createElement('canvas');
     videoView.id = 'videoView' + nextId;
     videoView.classList.add('singleTrack');
-    videoView.style.width = '100%';
 
     videoView.onmousedown = mouseDown;
     videoView.onmouseup = mouseUp;
     videoView.onmousemove = mouseMove;
 
+    videoView.width = 633;
+    videoView.height = 120;
+
+    var contextVideoView = videoView.getContext('2d');
+    contextVideoView.width = 633;
+    contextVideoView.height = 120;
+
     document.getElementById('videoInfo').appendChild(videoInfo);
     document.getElementById('videoView').appendChild(videoView);
 
-    currentProject.tabListTracks.push(new Track(nextId, 'VIDEO', {element: videoView, context: videoView.getContext('2d')}));
+    currentProject.tabListTracks.push(new Track(nextId, 'VIDEO', {element: videoView, context: contextVideoView}));
 
     drawElements(currentProject.tabListTracks.length - 1);
 
@@ -608,16 +614,22 @@ function addTrack(){
     var audioView = document.createElement('canvas');
     audioView.id = 'audioView' + nextId;
     audioView.classList.add('singleTrack');
-    audioView.style.width = '100%';
 
     audioView.onmousedown = mouseDown;
     audioView.onmouseup = mouseUp;
     audioView.onmousemove = mouseMove;
 
+    audioView.width = 633;
+    audioView.height = 120;
+
+    var contextAudioView = audioView.getContext('2d');
+    contextAudioView.width = 633;
+    contextAudioView.height = 120;
+
     document.getElementById('audioInfo').appendChild(audioInfo);
     document.getElementById('audioView').appendChild(audioView);
 
-    currentProject.tabListTracks.push(new Track(nextId, 'AUDIO', {element: audioView, context: audioView.getContext('2d')}));
+    currentProject.tabListTracks.push(new Track(nextId, 'AUDIO', {element: audioView, context: contextAudioView}));
 
     drawElements(currentProject.tabListTracks.length - 1);
 

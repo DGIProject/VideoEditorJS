@@ -14,9 +14,6 @@ Track = function(id, type, canvas) {
 
     this.canvas = canvas;
 
-    this.canvas.context.width = this.canvas.element.width;
-    this.canvas.context.height = this.canvas.element.height;
-
     this.mode = MODE.NONE;
 
     this.mousedown = false;

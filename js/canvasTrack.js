@@ -79,7 +79,7 @@ function mouseMove(e) {
 
             if((x - currentProject.tabListTracks[row].gap) > 0)
             {
-                if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width < currentProject.tabListTracks[row][row].tabElements[currentProject.tabListTracks[row][row].currentRow].maxWidth)
+                if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width < currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].maxWidth)
                 {
                     //console.log('good');
 
