@@ -1,10 +1,11 @@
 oneSecond = 5; // in px
 
-Element = function(id, name, initialDuration, fileId, trackId, marginLeft, parent) {
+Element = function(id, name, miniature, initialDuration, fileId, trackId, marginLeft, parent) {
     this.id = id;
     this.name = name;
-    this.fileId = fileId;
+    this.miniature = miniature;
 
+    this.fileId = fileId;
     this.trackId = trackId;
 
     this.totalDuration = this.timeToSecond(initialDuration); // in h:m:s

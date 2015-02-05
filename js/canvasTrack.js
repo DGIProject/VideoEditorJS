@@ -221,7 +221,7 @@ function element(rowTrack, row) {
 
     currentProject.tabListTracks[rowTrack].canvas.context.font = '15px Calibri';
     currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = '#000000';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillText('Test', (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - scroll, 15);
+    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListTracks[rowTrack].tabElements[row].name), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - scroll, 15);
 
     currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageClose, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + currentProject.tabListTracks[rowTrack].tabElements[row].width - 20) - scroll, 5, 15, 15);
 

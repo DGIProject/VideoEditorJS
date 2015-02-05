@@ -367,7 +367,7 @@ function uploadAllFiles() {
 }
 
 function addFileList(fileId, currentFile, typeFile) {
-    if(currentProject.tabListFiles.length < 1)
+    if(currentProject.tabListFiles.length < 2)
     {
         document.getElementById('listFiles').innerHTML = '';
     }
@@ -788,7 +788,7 @@ function addElement(id, idTrack) {
         }
     }
 
-    currentProject.tabListTracks[idTrack].tabElements.push(new Element(idElement, info.fileName, info.duration, id, idTrack, marginLeft, false));
+    currentProject.tabListTracks[idTrack].tabElements.push(new Element(idElement, info.fileName, null, info.duration, id, idTrack, marginLeft, false));
 
     drawElements(idTrack);
 
