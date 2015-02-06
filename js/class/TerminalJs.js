@@ -9,7 +9,7 @@ Array.prototype.remove = function(from, to) {
 };
 
 Terminal = function(){
-    this.alias = {"ffmpeg" : "bin/ffmpeg.js", "list" : "bin/list.js", "gnuplot":"bin/gnuplot.js"};
+    this.alias = {"ffmpeg" : "js/bin/ffmpeg.js", "list" : "js/bin/list.js", "gnuplot":"js/bin/gnuplot.js"};
     this.lastCommands = [];
     this.Workers = [];
     this.Files = [];
@@ -32,7 +32,6 @@ Terminal.prototype.processCmd = function(cmd, callback){
     console.log(cmd, cmd.split(" ")[0]);
     if (this.exist(cmd.split(" ")[0]))
     {
-        document.getElementById('returnInfo').innerHTML += "... <br/>";
         var workerId = this.GenerateWorkerId();
         this.Workers.push({ worker : new Worker(this.alias[cmd.split(" ")[0]]), id :workerId});
         this.lastCommands.push(cmd)
@@ -40,7 +39,7 @@ Terminal.prototype.processCmd = function(cmd, callback){
     }
     else
     {
-        document.getElementById('returnInfo').innerHTML += "Command not found <br/> Type <i>list</i> to have the list of available commands<br/>";
+        console.log("Command not found");;
     }
 };
 Terminal.prototype.onWorkerMessage = function(e, index){
@@ -48,11 +47,11 @@ Terminal.prototype.onWorkerMessage = function(e, index){
     var message = e.data;
     if (message.type == "stdout")
     {
-        document.getElementById('returnInfo').innerHTML += message.text+"<br/>";
+        console.log(message.text);
     }
     else if(message.type == "stop")
     {
-        document.getElementById('returnInfo').innerHTML += "Executed in "+message.time+"ms<br/>";
+        console.log("Executed in "+message.time+"ms");
         this.Workers[index].worker.terminate();
        // this.Workers.remove(index);
         if (message.hasOwnProperty("data"))

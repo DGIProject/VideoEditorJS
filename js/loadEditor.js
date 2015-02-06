@@ -49,6 +49,8 @@ function getFileJS() {
         console.log("init");
 
         initWorker();
+        terminal = new Terminal();
+
         console.log('inited');
 
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
