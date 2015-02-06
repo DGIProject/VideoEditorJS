@@ -7,7 +7,6 @@ Project = function(name, dateCreation) {
 
     this.autoSave = false;
 
-    this.tabListElements = [];
     this.tabListFiles = [];
     this.tabListTracks = [];
 

@@ -125,7 +125,7 @@ function saveProject() {
                 currentProject.lastSave = getCurrentDate();
                 currentProject.updateText();
 
-                uploadAllFiles();
+                //uploadAllFiles();
 
                 var n = noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
             }
@@ -188,7 +188,7 @@ function addFile(){
         {
             var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
             currentItem.setDuration('00:00:20');
-            currentItem.setThumbnailImage(currentFile);
+            currentItem.setThumbnailImage(window.URL.createObjectURL(new Blob([currentFile])));
 
             currentProject.tabListFiles.push(currentItem);
         }
@@ -468,7 +468,7 @@ function saveTextElement() {
         currentItem.setDuration('00:00:20');
 
         document.getElementById('textElement').toBlob(function(blob) {
-            currentItem.setThumbnailImage(blob);
+            currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
         }, 'image/png');
 
         currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
@@ -530,7 +530,7 @@ function fileProperties(id) {
 
     if(type == TYPE.TEXT || type == TYPE.IMAGE || type == TYPE.VIDEO)
     {
-        preview = '<img class="previewFileContent" src="' + window.URL.createObjectURL(new Blob([fileInfo.thumbnail.i])) + '">';
+        preview = '<img class="previewFileContent" src="' + fileInfo.thumbnail.i + '">';
     }
     else
     {
