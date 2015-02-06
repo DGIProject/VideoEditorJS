@@ -338,8 +338,7 @@ $_SESSION['user'] = 'User'; ?>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-checkbox.js"></script>
 <script src="js/loadEditor.js"></script>
-<script src="//cdn.WebRTC-Experiment.com/RecordRTC.js" type="text/javascript"></script>
-
+<script src="//recordrtc.org/latest.js"></script>
 <div id="loadScripts"></div>
 
 <script type="text/javascript">

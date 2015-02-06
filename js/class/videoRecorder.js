@@ -130,24 +130,35 @@ stopRecordingbtn.onclick = function () {
                         audioData = new Uint8Array(this.response);
                         //console.log("Les data sont donc", audioData, "et vid : ", videoData);
                         $('#recordAudioOrVideoElement').modal('hide');
-                        currentProject.loadModal('show');
+                        loadM();
+                        var time = Date.now();
 
-                        worker.postMessage({
-                            type: "command",
-                            arguments: parseArguments("-i audio -i video -strict -2 -vcodec copy -acodec vorbis out.webm"),
-                            files: [
+                        terminal.Files.push({name:"audio"+time, data: audioData});
+                        terminal.Files.push({name:"video"+time, data: videoData});
+
+                        terminal.processCmd("ffmpeg -i audio"+time+" -i video"+time+" -strict -2 -vcodec copy -acodec vorbis out.webm",function(e,index){
+                            var message = e.data;
+                            if (message.type == "stdout")
+                            {
+                                console.log(message.text);
+                            }
+                            else if(message.type == "stop") {
+                                console.log("Executed in " + message.time + "ms");
+                                terminal.Workers[index].worker.terminate();
+
+                                if (message.hasOwnProperty("data"))
                                 {
-                                    "name": "audio",
-                                    "data": audioData
-                                },
-                                {
-                                    "name": "video",
-                                    "data": videoData
+                                    window.URL = window.URL || window.webkitURL;
+                                    var buffers = message.data;
+                                    buffers.forEach(function (file) {
+                                        console.log("Something traite avec le worker en provenance de videoRecorder")
+                                        videoRecorderResult = new Blob([file.data]);
+                                        document.getElementById('video').src = window.URL.createObjectURL(videoRecorderResult);
+                                        $('#recordAudioOrVideoElement').modal('show');
+                                    });
                                 }
-                            ],
-                            action : "VideoRecorder"
+                            }
                         });
-
                     };
 
                     xhra.send();
