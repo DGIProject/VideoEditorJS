@@ -3,3 +3,5 @@
 *.db
 webcam/
 ajaxupload/
+status/*
+status
