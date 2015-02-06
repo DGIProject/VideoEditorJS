@@ -22,10 +22,12 @@ var scroll = 0;
 function mouseDown(e) {
     console.log('mousedown');
 
+    var x = ((e.offsetX == undefined)?e.layerX:e.offsetX) - 190;
     var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')));
 
     currentProject.tabListTracks[row].mousedown = true;
-    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow != 'none') ? (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - ((e.offsetX == undefined)?e.layerX:e.offsetX)) : 0;
+    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow != 'none') ? (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - x) : 0;
+    currentProject.tabListTracks[row].lastX = x;
 }
 
 function mouseUp(e) {
@@ -58,13 +60,13 @@ function mouseMove(e) {
     var x = (e.offsetX==undefined?e.layerX:e.offsetX) - 190;
     var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')));
 
-    console.log('row:' + row, x);
+    //console.log('row:' + row, x);
 
     if(currentProject.tabListTracks[row].mousedown)
     {
         if(currentProject.tabListTracks[row].mode == MODE.MOVE)
         {
-            //console.log(gap, x, (x - gap));
+            //console.log(x, currentProject.tabListTracks[row].gap, (x - currentProject.tabListTracks[row].gap));
 
             currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = x - currentProject.tabListTracks[row].gap;
         }
@@ -75,13 +77,16 @@ function mouseMove(e) {
         else if(currentProject.tabListTracks[row].mode == MODE.RESIZE.RIGHT)
         {
             //console.log('resize right');
-            //console.log(x-gap);
 
-            if((x - currentProject.tabListTracks[row].gap) > 0)
+            //console.log(x, currentProject.tabListTracks[row].lastX, (x - currentProject.tabListTracks[row].lastX));
+
+            if((x - currentProject.tabListTracks[row].lastX) > 0)
             {
+                //console.log('ok1');
+
                 if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width < currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].maxWidth)
                 {
-                    //console.log('good');
+                    //console.log('good1');
 
                     currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width++;
                     currentProject.tabListTracks[row].gap = x;
@@ -89,14 +94,18 @@ function mouseMove(e) {
             }
             else
             {
+                //console.log('ok2');
+
                 if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width > currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].minWidth)
                 {
-                    //console.log('good');
+                    //console.log('good2');
 
                     currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width--;
                     currentProject.tabListTracks[row].gap = x;
                 }
             }
+
+            currentProject.tabListTracks[row].lastX = x;
         }
     }
     else
@@ -169,7 +178,7 @@ function rowTabElement(x, row) {
     {
         if(currentProject.tabListTracks[row].tabElements[i].marginLeft <= x && (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) >= x)
         {
-            console.log('row : ', i);
+            //console.log('row : ', i);
 
             currentProject.tabListTracks[row].currentRow = i;
 
@@ -207,8 +216,8 @@ function drawElements(row) {
 }
 
 function element(rowTrack, row) {
-    console.log('test:' + rowTrack, row);
-    console.log(currentProject.tabListTracks[rowTrack].tabElements[row].selected);
+    //console.log('test:' + rowTrack, row);
+    //console.log(currentProject.tabListTracks[rowTrack].tabElements[row].selected);
 
     currentProject.tabListTracks[rowTrack].canvas.context.beginPath();
     currentProject.tabListTracks[rowTrack].canvas.context.lineWidth = 1;

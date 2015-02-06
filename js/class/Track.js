@@ -18,6 +18,7 @@ Track = function(id, type, canvas) {
 
     this.mousedown = false;
     this.gap = 0;
+    this.lastX = 0;
     this.scroll = 0;
 
     this.volume = 0;

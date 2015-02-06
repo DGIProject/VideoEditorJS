@@ -784,7 +784,7 @@ function addElement(id, idTrack) {
     {
         for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
         {
-            marginLeft = (currentProject.tabListTracks[i].tabElements[x].marginLeft > marginLeft) ? currentProject.tabListTracks[i].tabElements[x].marginLeft : marginLeft;
+            marginLeft = ((currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) > marginLeft) ? (currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) : marginLeft;
         }
     }
 
