@@ -186,8 +186,9 @@ function addFile(){
 
         if(typeFile == TYPE.IMAGE)
         {
-            var currentItem = new FileList(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
+            var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
             currentItem.setDuration('00:00:20');
+            currentItem.setThumbnailImage(currentFile);
 
             currentProject.tabListFiles.push(currentItem);
         }
@@ -470,7 +471,7 @@ function saveTextElement(){
 
     $('#textElementModal').modal('hide');
 }
-function fileProperties(id){
+function fileProperties(id) {
     console.log('fileProperties');
 
     var fileInfo = currentProject.tabListFiles[id];
@@ -483,13 +484,9 @@ function fileProperties(id){
 
     var preview;
 
-    if(type == TYPE.TEXT || type == TYPE.IMAGE)
+    if(type == TYPE.TEXT || type == TYPE.IMAGE || type == TYPE.VIDEO)
     {
-        preview = '<img class="previewFileContent" src="php/getFile.php?p=' + currentProject.name + '&fileId=' + fileInfo.id + '">';
-    }
-    else if (type == TYPE.VIDEO)
-    {
-        preview = '<img class="previewFileContent" src="php/getFile.php?p=' + currentProject.name + '&thum=1&fileId=' + fileInfo.id + '">';
+        preview = '<img class="previewFileContent" src="' + window.URL.createObjectURL(new Blob([fileInfo.thumbnail.i])) + '">';
     }
     else
     {
@@ -506,7 +503,7 @@ function fileProperties(id){
     else if(type == TYPE.IMAGE)
     {
         document.getElementById('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
-        document.getElementById('fileEditButton').style.display = '';
+        document.getElementById('fileEditButton').style.display = 'none';
     }
     else
     {
@@ -518,10 +515,12 @@ function fileProperties(id){
 
     $('#filePropertiesModal').modal('show');
 }
-function editFileImage(id){
+
+function editFileImage(id) {
     console.log('editFileImage');
 }
-function removeFile(id){
+
+function removeFile(id) {
     $('#filesPropertiesModal').modal('hide');
 
     currentProject.tabListFiles[id] = null;
@@ -529,6 +528,7 @@ function removeFile(id){
 
     document.getElementById('listFiles').removeChild(document.getElementById('file' + id));
 }
+
 function uploadThumbnail(id, data) {
     var fd = new FormData();
     fd.append('multimediaFile', data);
@@ -567,8 +567,9 @@ function uploadThumbnail(id, data) {
     xhr.open('POST', 'php/uploadFile.php?p=' + currentProject.name + '&thum=1&fileId=' + id, true);
     xhr.send(fd);
 }
+
 //TRACK
-function addTrack(){
+function addTrack() {
     var nextId = (currentProject.tabListTracks.length != 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
 
     var videoInfo = document.createElement('div');
