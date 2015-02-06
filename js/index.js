@@ -410,7 +410,8 @@ function editFileText(id){
 
     $('#textElementModal').modal('show');
 }
-function saveTextElement(){
+
+function saveTextElement() {
     var textElement = currentManageTextElement.getInformationsTextElement();
 
     var fileId;
@@ -425,8 +426,13 @@ function saveTextElement(){
     {
         fileId = currentProject.tabListFiles.length;
 
-        var currentItem = new FileList(fileId, TYPE.TEXT, 0, textElement.nameText, compressName(textElement.nameText), 'png');
+        var currentItem = new File(fileId, TYPE.TEXT, 0, textElement.nameText, compressName(textElement.nameText), 'png');
         currentItem.setDuration('00:00:20');
+
+        document.getElementById('textElement').toBlob(function(blob) {
+            currentItem.setThumbnailImage(blob);
+        }, 'image/png');
+
         currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
 
         console.log('currentItem ' + currentItem);

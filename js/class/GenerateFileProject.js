@@ -9,6 +9,7 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListFiles
 };
 
 GenerateFileProject.prototype.generateMain = function() {
+    console.log(this.tabListFiles);
 
     return {
         project : {
