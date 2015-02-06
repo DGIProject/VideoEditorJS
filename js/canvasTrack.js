@@ -68,7 +68,14 @@ function mouseMove(e) {
         {
             //console.log(x, currentProject.tabListTracks[row].gap, (x - currentProject.tabListTracks[row].gap));
 
-            currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = x - currentProject.tabListTracks[row].gap;
+            if((x - currentProject.tabListTracks[row].gap) > 0)
+            {
+                currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = x - currentProject.tabListTracks[row].gap;
+            }
+            else
+            {
+                currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = 0;
+            }
         }
         else if(currentProject.tabListTracks[row].mode == MODE.RESIZE.LEFT)
         {
@@ -230,7 +237,7 @@ function element(rowTrack, row) {
 
     currentProject.tabListTracks[rowTrack].canvas.context.font = '15px Calibri';
     currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = '#000000';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListTracks[rowTrack].tabElements[row].name), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - scroll, 15);
+    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListTracks[rowTrack].tabElements[row].fileId), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - scroll, 15);
 
     currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageClose, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + currentProject.tabListTracks[rowTrack].tabElements[row].width - 20) - scroll, 5, 15, 15);
 

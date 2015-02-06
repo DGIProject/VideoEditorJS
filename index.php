@@ -34,10 +34,11 @@ $_SESSION['user'] = 'User'; ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="currentProject.newProject(true);"><span class="glyphicon glyphicon-file"></span> New project</a></li>
-                                <li><a href="#" onclick="currentProject.openProject();"><span class="glyphicon glyphicon-folder-open"></span> Open project</a></li>
+                                <li><a href="#" onclick="newProject();"><span class="glyphicon glyphicon-file"></span> New project</a></li>
+                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-folder-open"></span> Open project</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="currentProject.saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Save project</a></li>
+                                <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Save project</a></li>
+                                <li><input class="checkbox" type="checkbox" id="autoSaveProject" onchange="currentProject.switchAutoSave();" checked data-label="AutoSave"/></li>
                                 <li class="divider"></li>
                                 <li><a href="#" id="projectDropdown">Project : No project</a></li>
                                 <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
@@ -59,27 +60,16 @@ $_SESSION['user'] = 'User'; ?>
 
                         <button type="button" onclick="zoomMoins();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
                         <div class="form-group">
-                            <input  class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
+                            <input class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="10">
                         </div>
                         <button type="button" onclick="zoomPlus();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-in"></span></button>
 
                     </form>
-                    <ul class="nav navbar-nav">
-                        <button class="btn btn-default navbar-btn" id="btnResize" onclick="activeResize();"><span class="glyphicon glyphicon-resize-small"></span></button>
-                    </ul>
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav navbar-right">
                         <p class="navbar-text " id="currentProject">No project</p>
+                        <button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
                     </ul>
-                    <ul class="nav navbar-nav">
-                        <div class="btn-group">
-                            <button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
-                            <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><input class="checkbox" type="checkbox" onchange="currentProject.switchAutoSave();" checked data-label="AutoSave"/></li>
-                            </ul>
-                        </div>
 
-                    </ul>
 
                 </div>
             </div>
@@ -198,7 +188,7 @@ $_SESSION['user'] = 'User'; ?>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="buttonNewProject" class="btn btn-primary">Créer le projet</button>
+                    <button type="button" id="buttonNewProject" onclick="saveNewProject();" class="btn btn-primary">Créer le projet</button>
                 </div>
             </div>
         </div>
@@ -211,7 +201,7 @@ $_SESSION['user'] = 'User'; ?>
                 </div>
                 <div class="modal-body">
                     <div id="listProjects" class="list-group">Loading projects ...</div>
-                    <button type="button" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
+                    <button type="button" onclick="newProject();" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>

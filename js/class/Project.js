@@ -1,11 +1,10 @@
 Project = function(name, dateCreation) {
     this.name = name;
     this.dateCreation = dateCreation;
-    this.lastSave = 'none';
+    this.lastSave = 'None';
 
     this.username = 'demo';
 
-    this.isCreated = false;
     this.autoSave = false;
 
     this.tabListElements = [];
@@ -51,13 +50,10 @@ Project.prototype.stopAddFileTrack = function()
 };
 
 Project.prototype.updateText = function() {
-    if(this.isCreated)
-    {
-        document.getElementById('currentProject').innerHTML = 'Project : ' + this.name + ', last save : ' + this.lastSave;
+    document.getElementById('currentProject').innerHTML = 'Project : ' + this.name + ', last save : ' + this.lastSave;
 
-        document.getElementById('projectDropdown').innerHTML = 'Project : ' + this.name;
-        document.getElementById('lastSaveDropdown').innerHTML = 'Last save : ' + this.lastSave;
-    }
+    document.getElementById('projectDropdown').innerHTML = 'Project : ' + this.name;
+    document.getElementById('lastSaveDropdown').innerHTML = 'Last save : ' + this.lastSave;
 };
 
 Project.prototype.switchAutoSave = function() {

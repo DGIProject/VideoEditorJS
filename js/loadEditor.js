@@ -18,7 +18,7 @@ var tabFilesJS = [
 
 var currentFileRow = 0;
 
-var currentProject, currentManageTextElement;
+var currentProject = false, currentManageTextElement = false;
 
 window.onload = function() {
     console.log('onload');
@@ -50,21 +50,12 @@ function getFileJS() {
         initWorker();
         console.log('inited');
 
-        //makeValues();
-
-        currentProject = new Project('undefined', getCurrentDate());
-        currentProject.isStarted = true;
-
-        currentProject.updateText();
-
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
 
         document.getElementById('loadingProgressProject').style.display = 'none';
         document.getElementById('startUseProject').style.display = '';
 
         getListProjects('listExistingProjects');
-
-        $('#startLoadingEditor').modal('hide');
     }
 }
 

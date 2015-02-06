@@ -1,9 +1,5 @@
-oneSecond = 5; // in px
-
-Element = function(id, name, miniature, initialDuration, fileId, trackId, marginLeft, parent) {
+Element = function(id, initialDuration, fileId, trackId, marginLeft, parent) {
     this.id = id;
-    this.name = name;
-    this.miniature = miniature;
 
     this.fileId = fileId;
     this.trackId = trackId;

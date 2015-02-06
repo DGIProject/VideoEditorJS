@@ -5,6 +5,8 @@ var resizing = false;
 var pixelCalculateTime = {g: 0, d: 800};
 var renderVar;
 
+var oneSecond = 5;
+
 var textElementId = 0;
 
 //PROJECT
@@ -47,35 +49,27 @@ function getListProjects(id){
     xmlhttp.send();
 }
 
-function newProject(reset) {
+function newProject() {
     document.getElementById('nameProject').value = '';
-    document.getElementById('buttonNewProject').setAttribute('onclick', 'saveNewProject(' + reset + ');');
 
     $('#selectProjectModal').modal('hide');
     $('#newProjectModal').modal('show');
 }
 
-function saveNewProject(reset) {
+function saveNewProject() {
     var nameProject = document.getElementById('nameProject').value;
 
     if(nameProject != '')
     {
         $('#newProjectModal').modal('hide');
 
-        currentProject.stopAddFileTrack();
+        resetInterface();
 
-        if(reset)
-        {
-            currentProject.resetProject();
-        }
+        currentProject = new Project(nameProject.deleteAccent().replace(' ', '_').toUpperCase(), getCurrentDate());
+        currentProject.updateText();
+        currentProject.switchAutoSave();
 
-        currentProject.isCreated = true;
-        currentProject.name = nameProject;
-        currentProject.dateCreation = getCurrentDate();
-        currentProject.lastSave = 'none';
-
-        updateTextProject();
-        startAutoSave();
+        saveProject();
     }
     else
     {
@@ -111,60 +105,58 @@ function loadProject(fileName) {
 }
 
 function saveProject() {
-    if(currentProject.isCreated)
+    console.log('saving project ...');
+
+    loadM();
+
+    var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
+    var contentFile = fileProject.generateMain();
+
+    var xmlhttp = xmlHTTP();
+
+    xmlhttp.onreadystatechange=function()
     {
-        loadM();
-
-        var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListElements, currentProject.tabListFiles, currentProject.tabListTracks);
-        var contentFile = fileProject.generateMain();
-
-        var xmlhttp = xmlHTTP();
-
-        xmlhttp.onreadystatechange=function()
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            console.log('answer : ' + xmlhttp.responseText);
+
+            if(xmlhttp.responseText == 'true')
             {
-                console.log('answer : ' + xmlhttp.responseText);
+                currentProject.lastSave = getCurrentDate();
+                currentProject.updateText();
 
-                if(xmlhttp.responseText == 'true')
-                {
-                    currentProject.lastSave = getCurrentDate();
-                    currentProject.updateText();
+                uploadAllFiles();
 
-                    uploadAllFiles();
-                    loadM();
-                }
-                else
-                {
-                    var n = noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
-
-                    loadM();
-                }
+                var n = noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
             }
-        };
+            else
+            {
+                var n = noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
+            }
 
-        xmlhttp.open("POST", "php/addFileProject.php", true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send('nameProject=' + this.name + '&contentFile=' + JSON.stringify(contentFile));
-    }
-    else
-    {
-        newProject(false);
-    }
+            loadM();
+        }
+    };
+
+    xmlhttp.open("POST", "php/addFileProject.php", true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile));
 }
 
-function resetProject() {
-    document.getElementById('tracks').innerHTML = '';
-    document.getElementById('VideoView').innerHTML = '';
+function resetInterface() {
+    document.getElementById('videoInfo').innerHTML = '';
+    document.getElementById('videoView').innerHTML = '';
+
+    document.getElementById('audioInfo').innerHTML = '';
+    document.getElementById('audioView').innerHTML = '';
+
     document.getElementById('listFiles').innerHTML = '';
+
+    document.getElementById('autoSaveProject').removeAttribute('checked');
 
     oneSecond = 5;
     document.getElementById('zoomRange').value = 5;
     calculateTimeBar();
-
-    currentProject.tabListElements = [];
-    currentProject.tabListFiles = [];
-    currentProject.tabListTracks = [];
 }
 
 function autoSaveInterval() {
@@ -788,7 +780,7 @@ function addElement(id, idTrack) {
         }
     }
 
-    currentProject.tabListTracks[idTrack].tabElements.push(new Element(idElement, info.fileName, null, info.duration, id, idTrack, marginLeft, false));
+    currentProject.tabListTracks[idTrack].tabElements.push(new Element(idElement, info.duration, id, idTrack, marginLeft, false));
 
     drawElements(idTrack);
 
@@ -893,28 +885,34 @@ function calculateTimeBar() {
     document.getElementById('startTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
 
 }
-function activeResize() {
-    $("#btnResize").button('toggle');
-    if (resizing) {
-        resizing = false;
-        for (i = 0; i < currentProject.tabListElements.length; i++) {
-            document.getElementById('trackElementId' + currentProject.tabListElements[i].id).style.resize = "none";
-        }
-    }
-    else {
-        resizing = true;
-        for (i = 0; i < currentProject.tabListElements.length; i++) {
-            document.getElementById('trackElementId' + currentProject.tabListElements[i].id).style.resize = "horizontal";
-        }
-    }
-}
 window.onload = function (e) {
     calculateTimeBar();
 }
 function makeRender(state){
    renderVar = new Render(currentProject.tabListElements, currentProject.tabListFiles, currentProject.tabListTracks, state);
 }
-function getCurrentDate(){
+
+String.prototype.deleteAccent = function(){
+    var accent = [
+        /[\300-\306]/g, /[\340-\346]/g, // A, a
+        /[\310-\313]/g, /[\350-\353]/g, // E, e
+        /[\314-\317]/g, /[\354-\357]/g, // I, i
+        /[\322-\330]/g, /[\362-\370]/g, // O, o
+        /[\331-\334]/g, /[\371-\374]/g, // U, u
+        /[\321]/g, /[\361]/g, // N, n
+        /[\307]/g, /[\347]/g, // C, c
+    ];
+    var noaccent = ['A','a','E','e','I','i','O','o','U','u','N','n','C','c'];
+
+    var str = this;
+    for(var i = 0; i < accent.length; i++){
+        str = str.replace(accent[i], noaccent[i]);
+    }
+
+    return str;
+};
+
+function getCurrentDate() {
     var date = new Date();
 
     var dayOfMonth = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
@@ -924,12 +922,9 @@ function getCurrentDate(){
     var minute = (date.getMinutes() < 10) ? '0' + date.getMinutes() : date.getMinutes();
     var second = (date.getSeconds() < 10) ? '0' + date.getSeconds() : date.getSeconds();
 
-    var currentDate = dayOfMonth + '/' + month + '/' + date.getFullYear() + ' ' + hour + ':' + minute + ':' + second;
-
-    console.log('currentDate : ' + currentDate);
-
-    return currentDate;
+    return dayOfMonth + '/' + month + '/' + date.getFullYear() + ' ' + hour + ':' + minute + ':' + second;
 }
+
 window.onbeforeunload = function (e) {
     e = e || window.event;
 

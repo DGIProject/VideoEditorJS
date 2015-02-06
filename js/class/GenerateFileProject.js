@@ -1,10 +1,9 @@
-GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListElements, tabListFiles, tabListTracks)
+GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListFiles, tabListTracks)
 {
     this.nameProject = nameProject;
     this.dateCreation = dateCreation;
     this.lastSave = lastSave;
 
-    this.tabListElements = tabListElements;
     this.tabListFiles = tabListFiles;
     this.tabListTracks = tabListTracks;
 };
@@ -18,7 +17,6 @@ GenerateFileProject.prototype.generateMain = function() {
             lastSave: this.lastSave
         },
         files : this.tabListFiles,
-        tracks : this.tabListTracks,
-        elements : this.tabListElements
+        tracks : this.tabListTracks
     };
 };
