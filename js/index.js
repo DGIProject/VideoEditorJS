@@ -194,7 +194,6 @@ function addFile(){
         }
         else
         {
-            actionWorker = "getDurationFile";
             var reader = new FileReader();
 
             reader.onload = function (e) {
@@ -202,20 +201,59 @@ function addFile(){
 
                 var ElementData = new Uint8Array(data);
 
-                worker.postMessage({
-                    type: "command",
-                    arguments: ["-i", "fileInput"],
-                    files: [
-                        {
-                            "name": "fileInput",
-                            "data": ElementData
+                terminal.Files.push({name : currentFile.name, data : ElementData});
+
+                terminal.processCmd("ffmpeg -i "+currentFile.name, function (e, index) {
+
+                    var message = e.data;
+
+                    if (message.type == "stdout")
+                    {
+                        console.log(message.text);
+                        if (message.text.substring(0, 11) == "  Duration:") {
+                            DurationString = message.text;
+                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setDuration(DurationString.substring(11, DurationString.indexOf(',')).replace(' ', ''))
                         }
-                    ],
-                    fileType : typeFile,
-                    action : actionWorker
+
+                    }
+                    else if(message.type == "stop")
+                    {
+                        console.log("Executed in "+message.time+"ms");
+                        terminal.Workers[index].worker.terminate();
+                        // this.Workers.remove(index);
+                        if(typeFile == TYPE.VIDEO)
+                        {
+                            terminal.processCmd("ffmpeg -i "+currentFile.name+" -f image2 -vf scale=-1:50 -an -ss "+Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond()/2)+" thumbnail.jpg", function(e,index){
+
+                                var message = e.data;
+
+                                if (message.type == "stdout")
+                                {
+                                    console.log(message.text);
+                                }
+                                else if(message.type == "stop") {
+                                    console.log("Executed in " + message.time + "ms");
+                                    terminal.Workers[index].worker.terminate();
+
+                                    if (message.hasOwnProperty("data"))
+                                    {
+                                        window.URL = window.URL || window.webkitURL;
+                                        var buffers = message.data;
+                                        buffers.forEach(function (file) {
+                                            var blob = new Blob([file.data]);
+                                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(new Blob([file.data])))
+                                            //uploadThumbnail(message.action[1], blob)
+                                        });
+                                    }
+                                }
+
+
+                            });
+                        }
+                    }
                 });
 
-                var currentItem = new FileList(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
+                var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, compressName(currentFile.name), currentFile.name.split('.').pop());
                 console.log('currentItem ' + currentItem);
 
                 currentProject.tabListFiles.push(currentItem);

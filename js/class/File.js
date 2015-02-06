@@ -42,3 +42,12 @@ File.prototype.setThumbnailAudio = function(blobImageUrl)
 {
     this.thumbnail.a = blobImageUrl;
 };
+File.prototype.getDurationInSecond = function()
+{
+    var splitedValueFromText = this.duration.split(':')
+    var minute = splitedValueFromText[1]
+    var seconde = splitedValueFromText[2].split('.')[0]
+    var heure = splitedValueFromText[0]
+    var totalseconde = (3600 * heure) + (60 * minute) + parseInt(seconde)
+    return totalseconde;
+};
