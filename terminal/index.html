@@ -9,7 +9,7 @@
     </script>
 </head>
 <body>
-<input type="text" id="command"/><input type="button" onclick="term.processCmd(document.getElementById('command').value);"  value="send"/>
+<input type="text" id="command"/><input type="button" onclick="term.processCmd(document.getElementById('command').value, function(e, index){console.log(e)});"  value="send"/>
 <br/>
     <div id="returnInfo" style="border: solid 1px #000000; width: 500px; height: 500px"></div>
 </body>

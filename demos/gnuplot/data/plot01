@@ -1,4 +1,4 @@
-set terminal svg enhanced size 5000,500;
+set terminal svg enhanced size 500,50;
 set output 'out.svg';
 unset key;
 unset tics;

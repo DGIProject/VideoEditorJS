@@ -27,7 +27,7 @@ Terminal.prototype.exist = function(bin){
     }
     return found;
 };
-Terminal.prototype.processCmd = function(cmd){
+Terminal.prototype.processCmd = function(cmd, callback){
     that = this;
     console.log(cmd, cmd.split(" ")[0]);
     if (this.exist(cmd.split(" ")[0]))
@@ -36,7 +36,7 @@ Terminal.prototype.processCmd = function(cmd){
         var workerId = this.GenerateWorkerId();
         this.Workers.push({ worker : new Worker(this.alias[cmd.split(" ")[0]]), id :workerId});
         this.lastCommands.push(cmd)
-        this.startWorker(workerId, cmd.replace(cmd.split(" ")[0],'').trim());
+        this.startWorker(workerId, cmd.replace(cmd.split(" ")[0],'').trim(), callback);
     }
     else
     {
@@ -73,7 +73,7 @@ Terminal.prototype.GenerateWorkerId = function(){
         return this.Workers[this.Workers.length-1].id + 1;
     }
 };
-Terminal.prototype.startWorker = function(id, argv){
+Terminal.prototype.startWorker = function(id, argv, callback){
     var foundIndex = -1;
     for (i=0; i<this.Workers.length;i++)
     {
@@ -87,8 +87,15 @@ Terminal.prototype.startWorker = function(id, argv){
     that = this;
 
     if (foundIndex != -1) {
+
         this.Workers[foundIndex].worker.onmessage = function (e) {
-            that.onWorkerMessage(e, foundIndex)
+            if(callback && typeof callback == "function") {
+                callback(e, foundIndex);
+            }
+            else
+            {
+                that.onWorkerMessage(e, foundIndex)
+            }
         };
         this.Workers[foundIndex].worker.postMessage({
             "id": that.Workers[foundIndex].id,
