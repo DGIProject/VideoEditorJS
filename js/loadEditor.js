@@ -12,7 +12,6 @@ var tabFilesJS = [
     'class/Render.js',
     'class/videoRecorder.js',
     'class/TerminalJs.js',
-    'lib/terminal.js',
     //'lib/ffmpeg-all-codecs.js',
     'onEvent.js'
 ];
