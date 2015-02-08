@@ -13,9 +13,20 @@ File = function(id, type, size, fileName, compressName, format) {
     this.compressName = compressName;
     this.format = format;
 
+    this.isVideo = false;
+    this.isAudio = false;
+
     this.thumbnail = {i: null, a: null};
 
     this.isUploaded = false;
+};
+
+File.prototype.makeVideo = function() {
+    this.isVideo = true;
+};
+
+File.prototype.makeAudio = function() {
+    this.isAudio = true;
 };
 
 File.prototype.setDuration = function(duration)

@@ -331,6 +331,22 @@ $_SESSION['user'] = 'User'; ?>
             </div>
         </div>
     </div>
+    <div id="deleteTrackModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Supprimer une piste</h4>
+                </div>
+                <div class="modal-body">
+                    Cette opération supprimera tous les élements de la piste ainsi que la piste parente <span id="parentTrack"></span>.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="buttonDeleteTrack" class="btn btn-danger">Continuer</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="js/jquery-latest.js"></script>

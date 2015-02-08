@@ -8,7 +8,7 @@ var MODE = {
     REMOVE: 4
 };
 
-Track = function(id, type, canvas) {
+Track = function(id, type, canvas, parent) {
     this.id = id;
     this.type = type;
 
@@ -26,6 +26,12 @@ Track = function(id, type, canvas) {
 
     this.tabElements = [];
     this.currentRow = 0;
+
+    this.parent = parent;
+};
+
+Track.prototype.setParent = function(id) {
+    this.parent = id;
 };
 
 Track.prototype.upVolume = function(newLevel) {

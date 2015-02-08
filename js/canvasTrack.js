@@ -23,7 +23,7 @@ function mouseDown(e) {
     console.log('mousedown');
 
     var x = ((e.offsetX == undefined)?e.layerX:e.offsetX) - 190;
-    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')));
+    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     currentProject.tabListTracks[row].mousedown = true;
     currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow != 'none') ? (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - x) : 0;
@@ -31,7 +31,7 @@ function mouseDown(e) {
 }
 
 function mouseUp(e) {
-    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')));
+    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     currentProject.tabListTracks[row].mousedown = false;
 
@@ -58,7 +58,7 @@ function mouseUp(e) {
 
 function mouseMove(e) {
     var x = (e.offsetX==undefined?e.layerX:e.offsetX) - 190;
-    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')));
+    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     //console.log('row:' + row, x);
 
@@ -148,21 +148,6 @@ function mouseMove(e) {
     }
 
     drawElements(row);
-}
-
-function rowById(id)
-{
-    var row = -1;
-
-    for(var i = 0; i < currentProject.tabListTracks.length; i++)
-    {
-        if(currentProject.tabListTracks[i].id == id)
-        {
-            row = i;
-        }
-    }
-
-    return row;
 }
 
 function plusScroll() {
