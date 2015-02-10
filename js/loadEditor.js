@@ -18,6 +18,7 @@ var tabFilesJS = [
     'manage/mElements.js',
     'manage/mRecords.js',
     'manage/mRender.js',
+    'manage/mErrors.js',
     //'lib/ffmpeg-all-codecs.js',
     'onEvent.js'
 ];

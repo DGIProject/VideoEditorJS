@@ -212,7 +212,7 @@ function element(rowTrack, row) {
 
     currentProject.tabListTracks[rowTrack].canvas.context.font = '15px Calibri';
     currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = '#000000';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListTracks[rowTrack].tabElements[row].fileName), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - pixelTimeBar.g, 15);
+    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListFiles[rowById(currentProject.tabListTracks[rowTrack].tabElements[row].fileId, currentProject.tabListFiles)].fileName), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - pixelTimeBar.g, 15);
 
     currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageClose, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + currentProject.tabListTracks[rowTrack].tabElements[row].width - 20) - pixelTimeBar.g, 5, 15, 15);
 

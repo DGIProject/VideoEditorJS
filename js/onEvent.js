@@ -6,11 +6,6 @@ document.onmousedown = function(e)
         {
             currentManageTextElement.mouseDown(e.clientX, e.clientY, e.button);
         }
-        else
-        {
-            lastPosition.x = e.clientX;
-            lastPosition.y = e.clientY;
-        }
     }
 };
 

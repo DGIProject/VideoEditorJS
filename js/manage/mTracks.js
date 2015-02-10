@@ -183,7 +183,7 @@ function plusScroll() {
     pixelTimeBar.d += 2;
 
     calculateTimeBar();
-    drawElements();
+    drawElementsTracks();
 }
 
 function lessScroll() {
@@ -193,7 +193,7 @@ function lessScroll() {
         pixelTimeBar.d -= 2;
 
         calculateTimeBar();
-        drawElements();
+        drawElementsTracks();
     }
 }
 
@@ -226,8 +226,19 @@ function calculateElementsPixel() {
             var element = currentProject.tabListTracks[i].tabElements[x];
 
             element.width = (element.width / lastZoom) * oneSecond;
-        }
-    }
+            element.minWidth = (element.minWidth / lastZoom) * oneSecond;
+            element.maxWidth = (element.maxWidth / lastZoom) * oneSecond;
 
-    drawElements();
+            element.marginLeft = (element.marginLeft / lastZoom) * oneSecond;
+        }
+
+        drawElements(i);
+    }
+}
+
+function drawElementsTracks() {
+    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    {
+        drawElements(i);
+    }
 }
