@@ -22,6 +22,8 @@ document.onmouseup = function(e)
         {
             currentManageTextElement.mouseUp(e.button);
         }
+
+        deselectFiles();
     }
 };
 

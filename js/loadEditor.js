@@ -12,6 +12,12 @@ var tabFilesJS = [
     'class/Render.js',
     'class/videoRecorder.js',
     'class/TerminalJs.js',
+    'manage/mProjects.js',
+    'manage/mFiles.js',
+    'manage/mTracks.js',
+    'manage/mElements.js',
+    'manage/mRecords.js',
+    'manage/mRender.js',
     //'lib/ffmpeg-all-codecs.js',
     'onEvent.js'
 ];
@@ -77,4 +83,8 @@ function loadFileJS(url, callback) {
     }
 
     document.getElementById('loadScripts').appendChild(script);
+}
+
+function setValues(username) {
+    currentProject.username = username;
 }

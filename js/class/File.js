@@ -19,6 +19,7 @@ File = function(id, type, size, fileName, compressName, format) {
     this.thumbnail = {i: null, a: null};
 
     this.isUploaded = false;
+    this.isSelected = false;
 };
 
 File.prototype.makeVideo = function() {
