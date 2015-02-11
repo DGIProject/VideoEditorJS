@@ -5,4 +5,4 @@ webcam/
 ajaxupload/
 status/*
 status
-demos/ffmpegJs/build/ffmpeg-all-codecs.js
+demos/ffmpegJs/build/*
