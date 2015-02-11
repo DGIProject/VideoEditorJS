@@ -52,9 +52,6 @@ function getFileJS() {
     else
     {
         console.log('endLoadFileJS');
-        console.log("init");
-
-        // initWorker();
 
         terminal = new Terminal();
 

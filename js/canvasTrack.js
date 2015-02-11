@@ -56,7 +56,9 @@ function mouseUp(e) {
 
 function mouseMove(e) {
     var x = (e.offsetX==undefined?e.layerX:e.offsetX) - 190;
-    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
+
+    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var row = rowById(id, currentProject.tabListTracks);
 
     //console.log('row:' + row, x);
 
@@ -147,7 +149,27 @@ function mouseMove(e) {
             {
                 if(currentProject.tabListFiles[i].isSelected)
                 {
-                    console.log('newElement');
+                    if(currentProject.tabListTracks[row].tabElements.length > 0)
+                    {
+                        if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].tabElements.length - 1].fileId != currentProject.tabListFiles[i].id)
+                        {
+                            console.log('newElementlength');
+
+                            addElement(i, id, x);
+                        }
+                        else
+                        {
+                            console.log('alreadyCreated');
+
+                            currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[i].tabElements.length - 1].marginLeft = x;
+                        }
+                    }
+                    else
+                    {
+                        console.log('newElement0');
+
+                        addElement(i, id, x);
+                    }
                 }
             }
         }

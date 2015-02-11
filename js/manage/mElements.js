@@ -2,7 +2,7 @@
  * Created by Dylan on 10/02/2015.
  */
 
-function addElement(id, idTrack) {
+function addElement(id, idTrack, posX) {
     var info = currentProject.tabListFiles[id];
 
     console.log(info);
@@ -11,11 +11,18 @@ function addElement(id, idTrack) {
 
     var marginLeft = 0;
 
-    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    if(posX != undefined)
     {
-        for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
+        marginLeft = posX;
+    }
+    else
+    {
+        for(var i = 0; i < currentProject.tabListTracks.length; i++)
         {
-            marginLeft = ((currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) > marginLeft) ? (currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) : marginLeft;
+            for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
+            {
+                marginLeft = ((currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) > marginLeft) ? (currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) : marginLeft;
+            }
         }
     }
 

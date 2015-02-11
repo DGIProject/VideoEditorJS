@@ -23,6 +23,10 @@ function loadM() {
     $('#loadModal').modal('toggle');
 }
 
+function compressName(name) {
+    return ((name.length > 12) ? name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length) : name);
+}
+
 function rowById(id, tab)
 {
     var row = -1;

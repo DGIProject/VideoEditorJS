@@ -5,12 +5,11 @@ var TYPE = {
     TEXT : 3
 };
 
-File = function(id, type, size, fileName, compressName, format) {
+File = function(id, type, size, fileName, format) {
     this.id = id;
     this.type = type;
     this.size = size;
     this.fileName = fileName;
-    this.compressName = compressName;
     this.format = format;
 
     this.isVideo = false;
@@ -18,8 +17,12 @@ File = function(id, type, size, fileName, compressName, format) {
 
     this.thumbnail = {i: null, a: null};
 
-    this.isUploaded = false;
     this.isSelected = false;
+
+    //upload
+    this.isUploaded = false;
+    this.uploadFile = 0;
+    this.uploadThumbnail = 0;
 };
 
 File.prototype.makeVideo = function() {

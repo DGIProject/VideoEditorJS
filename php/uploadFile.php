@@ -1,32 +1,24 @@
 <?php
-ini_set('display_errors', 'off');
-include "config.php";
+include_once 'config.php';
 
-if($_GET['p'] != NULL && $_GET['fileId'] != NULL)
+if($_GET['projectName'] != NULL && $_GET['fileId'] != NULL)
 {
-    if ($_GET['thum'] != 1)
-    {
-        $filename = 'file'.$_GET['fileId'].'.file';
-    }
-    else
-    {
-        $filename = 'thum'.$_GET['fileId'].'.file';
-    }
-    $path = "../$DIR_projectsData/" .$_SESSION['user']. '/' . $_GET['p'] . '/';
+    $filename = (($_GET['typeFile'] == 'file') ? 'file' : 'thumbnail') . $_GET['fileId'] . '.data';
+
+    $path = '../' . $DIR_projectsData . '/' . $_GET['projectName'] . '/';
 
     if(!is_dir($path))
     {
-        mkdir("../$DIR_projectsData/". $_SESSION['user'] . '/');
         mkdir($path);
     }
 
     $pathToFilename = $path . $filename;
 
-    if (is_uploaded_file($_FILES['multimediaFile']['tmp_name']))
+    if (is_uploaded_file($_FILES['fileData']['tmp_name']))
     {
-        echo 'success';
+        echo 'true';
 
-        move_uploaded_file($_FILES['multimediaFile']['tmp_name'], $pathToFilename);
+        move_uploaded_file($_FILES['fileData']['tmp_name'], $pathToFilename);
     }
     else
     {
@@ -37,5 +29,3 @@ else
 {
     echo 'error1';
 }
-
-

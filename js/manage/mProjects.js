@@ -9,7 +9,7 @@ function getListProjects(id){
     {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
-            console.log(xmlhttp.responseText);
+            console.log(xmlhttp.responseText + 'ok');
 
             var tabListProjects = JSON.parse(xmlhttp.responseText);
 
