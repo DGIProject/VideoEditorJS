@@ -15,6 +15,9 @@ Element = function(id, thumbnail, initialDuration, fileId, trackId, marginLeft, 
 
     this.marginLeft = marginLeft;
 
+    this.leftGap = 0;
+    this.rightGap = 0;
+
     this.parent = parent;
 
     this.selected = true;
