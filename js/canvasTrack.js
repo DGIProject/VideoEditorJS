@@ -1,13 +1,6 @@
 /**
  * Created by Dylan on 04/02/2015.
  */
-var imageThumbnail = new Image();
-
-imageThumbnail.onload = function() {
-    console.log('loaded thumbnail');
-};
-
-imageThumbnail.src = 'http://clangue.net/other/testVideo/canvastry/img/thumbnail.png';
 
 var imageClose = new Image();
 
@@ -223,24 +216,46 @@ function drawElements(row) {
 }
 
 function element(rowTrack, row) {
-    currentProject.tabListTracks[rowTrack].canvas.context.beginPath();
-    currentProject.tabListTracks[rowTrack].canvas.context.lineWidth = 1;
-    currentProject.tabListTracks[rowTrack].canvas.context.strokeStyle = (currentProject.tabListTracks[rowTrack].tabElements[row].selected) ? 'blue' : 'gray';
-    currentProject.tabListTracks[rowTrack].canvas.context.rect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
-    currentProject.tabListTracks[rowTrack].canvas.context.stroke();
+    var currentElement = currentProject.tabListTracks[rowTrack].tabElements[row];
+    var context = currentProject.tabListTracks[rowTrack].canvas.context;
 
-    currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = (currentProject.tabListTracks[rowTrack].type == 'VIDEO') ? '#A3BDDE' : '#74E4BC';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillRect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
+    context.beginPath();
+    context.lineWidth = 1;
+    context.strokeStyle = (currentProject.tabListTracks[rowTrack].tabElements[row].selected) ? 'blue' : 'gray';
+    context.rect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
+    context.stroke();
 
-    currentProject.tabListTracks[rowTrack].canvas.context.font = '15px Calibri';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = '#000000';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListFiles[rowById(currentProject.tabListTracks[rowTrack].tabElements[row].fileId, currentProject.tabListFiles)].fileName), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - pixelTimeBar.g, 15);
+    context.fillStyle = (currentProject.tabListTracks[rowTrack].type == 'VIDEO') ? '#A3BDDE' : '#74E4BC';
+    context.fillRect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
 
-    currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageClose, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + currentProject.tabListTracks[rowTrack].tabElements[row].width - 20) - pixelTimeBar.g, 5, 15, 15);
+    context.font = '15px Calibri';
+    context.fillStyle = '#000000';
 
-    var showWidth = (currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (imageThumbnail.width - (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
+    //TEXT
+    context.fillText(compressName(currentProject.tabListFiles[rowById(currentProject.tabListTracks[rowTrack].tabElements[row].fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + 2) - pixelTimeBar.g, 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
 
-    //console.log(showWidth, (80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)), (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width), imageThumbnail.width);
+    //CLOSE IMAGE
+    if(currentElement.width >= 16)
+    {
+        context.drawImage(imageClose, (currentElement.marginLeft + currentElement.width - 15) - pixelTimeBar.g, 0, 15, 15);
+    }
 
-    currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageThumbnail, 0, 0, showWidth, imageThumbnail.height, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - pixelTimeBar.g, 35, (currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (80 - (80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20))) : 80, 80 * (imageThumbnail.height / imageThumbnail.width));
+    //THUMBNAIL IMAGE
+    var imageThumbnail = currentElement.thumbnail;
+
+    var newWidth = (imageThumbnail.width * 75) / imageThumbnail.height;
+
+    var sWidth = (newWidth > (currentElement.width - 7)) ? (((currentElement.width - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
+    //(currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (imageThumbnail.width - (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
+    var sHeight = imageThumbnail.height;
+
+    var xThumbnail = (currentElement.marginLeft + 2) - pixelTimeBar.g;
+    var yThumbnail = 20;
+
+    var widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
+    var heightThumbnail = 75;
+
+    //console.log(sWidth, sHeight, xThumbnail, yThumbnail, newWidth, widthThumbnail, heightThumbnail);
+
+    context.drawImage(imageThumbnail, 0, 0, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
 }

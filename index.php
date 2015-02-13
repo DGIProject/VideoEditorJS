@@ -362,6 +362,7 @@ $_SESSION['user'] = 'User'; ?>
     {
         setValues("<?php echo $_SESSION['user']; ?>");
     }
+
     $('input[type="checkbox"]').checkbox();
 </script>
 

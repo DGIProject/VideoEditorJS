@@ -1,8 +1,10 @@
-Element = function(id, initialDuration, fileId, trackId, marginLeft, parent) {
+Element = function(id, thumbnail, initialDuration, fileId, trackId, marginLeft, parent) {
     this.id = id;
 
     this.fileId = fileId;
     this.trackId = trackId;
+
+    this.thumbnail = thumbnail;
 
     this.totalDuration = this.timeToSecond(initialDuration); // in h:m:s
     this.currentDuration = this.totalDuration;

@@ -3,11 +3,10 @@
  */
 
 function addElement(id, idTrack, posX) {
-    var info = currentProject.tabListFiles[id];
+    var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
+    var track = currentProject.tabListTracks[rowById(idTrack, currentProject.tabListTracks)];
 
-    console.log(info);
-
-    var idElement = (currentProject.tabListTracks[idTrack].tabElements.length > 0) ? currentProject.tabListTracks[idTrack].tabElements[currentProject.tabListTracks[idTrack].tabElements.length-1].id + 1 : 0;
+    var idElement = (track.tabElements.length > 0) ? track.tabElements[track.tabElements.length - 1].id + 1 : 0;
 
     var marginLeft = 0;
 
@@ -26,7 +25,13 @@ function addElement(id, idTrack, posX) {
         }
     }
 
-    currentProject.tabListTracks[idTrack].tabElements.push(new Element(idElement, info.duration, id, idTrack, marginLeft, false));
+    var imageThumbnail = new Image();
 
-    drawElements(idTrack);
+    imageThumbnail.onload = function() {
+        track.tabElements.push(new Element(idElement, imageThumbnail, file.duration, id, idTrack, marginLeft, false));
+
+        drawElements(idTrack);
+    };
+
+    imageThumbnail.src = (track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a;
 }
