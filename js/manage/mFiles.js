@@ -53,6 +53,22 @@ function addFile(){
                             var durationString = message.text;
                             currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setDuration(durationString.substring(11, durationString.indexOf(',')).replace(' ', ''))
                         }
+                       // "    Stream #0:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 22050 Hz, mono, s16, 352 kb/s"
+                        if (message.text.substring(0,10) == "    Stream")
+                        {
+                            if (message.text.search("Audio") != -1)
+                            {
+                                console.log("audio");
+                                currentProject.tabListFiles[currentProject.tabListFiles.length - 1].makeAudio();
+                            }
+
+                            if (message.text.search("Video") != -1)
+                            {
+                                console.log("video");
+                                currentProject.tabListFiles[currentProject.tabListFiles.length - 1].makeVideo();
+                            }
+
+                        }
 
                     }
                     else if(message.type == "stop")
@@ -104,15 +120,19 @@ function addFile(){
                                                 terminal.Files.push({name : name, data: bufView});
                                                 terminal.processCmd("gnuplot "+name+" audioDat.wav", function(e,i){
                                                     console.log(e.data)
+                                                    if(e.data.type == "stop") {
+                                                        console.log("Executed in " + message.time + "ms");
+                                                        terminal.Workers[i].worker.terminate();
 
-                                                    if (e.data.hasOwnProperty("data"))
-                                                    {
-                                                        window.URL = window.URL || window.webkitURL;
-                                                        console.log("Blob URL", window.URL.createObjectURL(e.data.data));
-                                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].thumbnail.a = window.URL.createObjectURL(e.data.data);
+                                                        if (e.data.hasOwnProperty("data"))
+                                                        {
+                                                            window.URL = window.URL || window.webkitURL;
+                                                            console.log("Blob URL", window.URL.createObjectURL(e.data.data));
+                                                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].thumbnail.a = window.URL.createObjectURL(e.data.data);
+                                                        }
+                                                        terminal.Files.remove(terminal.Files.length-1);
+                                                        terminal.Files.remove(terminal.Files.length-2);
                                                     }
-                                                    terminal.Files.remove(terminal.Files.length-1);
-                                                    terminal.Files.remove(terminal.Files.length-2);
                                                 });
 
 
