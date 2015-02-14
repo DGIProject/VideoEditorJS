@@ -1,13 +1,6 @@
 /**
  * Created by Dylan on 04/02/2015.
  */
-var imageThumbnail = new Image();
-
-imageThumbnail.onload = function() {
-    console.log('loaded thumbnail');
-};
-
-imageThumbnail.src = 'http://clangue.net/other/testVideo/canvastry/img/thumbnail.png';
 
 var imageClose = new Image();
 
@@ -24,7 +17,7 @@ function mouseDown(e) {
     var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     currentProject.tabListTracks[row].mousedown = true;
-    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow != 'none') ? (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - x) : 0;
+    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - x) : 0;
     currentProject.tabListTracks[row].lastX = x;
 }
 
@@ -33,25 +26,28 @@ function mouseUp(e) {
 
     currentProject.tabListTracks[row].mousedown = false;
 
-    for(var i = 0; i < currentProject.tabListTracks[row].tabElements.length; i++)
+    if(currentProject.tabListTracks[row].currentRow >= 0)
     {
-        if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft > currentProject.tabListTracks[row].tabElements[i].marginLeft && currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
+        for(var i = 0; i < currentProject.tabListTracks[row].tabElements.length; i++)
         {
-            console.log('collision before');
+            if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft > currentProject.tabListTracks[row].tabElements[i].marginLeft && currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
+            {
+                console.log('collision before');
 
-            currentProject.tabListTracks[row].tabElements[i].width = currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - currentProject.tabListTracks[row].tabElements[i].marginLeft;
+                currentProject.tabListTracks[row].tabElements[i].width = currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - currentProject.tabListTracks[row].tabElements[i].marginLeft;
+            }
+
+            if((currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) > currentProject.tabListTracks[row].tabElements[i].marginLeft && (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
+            {
+                console.log('collision after');
+
+                currentProject.tabListTracks[row].tabElements[i].width = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width);
+                currentProject.tabListTracks[row].tabElements[i].marginLeft = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - ((currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width));
+            }
         }
 
-        if((currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) > currentProject.tabListTracks[row].tabElements[i].marginLeft && (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
-        {
-            console.log('collision after');
-
-            currentProject.tabListTracks[row].tabElements[i].width = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width);
-            currentProject.tabListTracks[row].tabElements[i].marginLeft = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - ((currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width));
-        }
+        drawElements(row);
     }
-
-    drawElements(row);
 }
 
 function mouseMove(e) {
@@ -60,98 +56,111 @@ function mouseMove(e) {
     var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
     var row = rowById(id, currentProject.tabListTracks);
 
+    var track = currentProject.tabListTracks[row];
+
     //console.log('row:' + row, x);
 
-    if(currentProject.tabListTracks[row].mousedown)
+    if(track.mousedown)
     {
-        if(currentProject.tabListTracks[row].mode == MODE.MOVE)
+        if(track.mode == MODE.MOVE)
         {
-            //console.log(x, currentProject.tabListTracks[row].gap, (x - currentProject.tabListTracks[row].gap));
+            //console.log(x, track.gap, (x - track.gap));
 
-            if((x - currentProject.tabListTracks[row].gap) > 0)
+            if((x - track.gap) > 0)
             {
-                currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = x - currentProject.tabListTracks[row].gap;
+                track.tabElements[track.currentRow].marginLeft = x - track.gap;
             }
             else
             {
-                currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = 0;
+                track.tabElements[track.currentRow].marginLeft = 0;
             }
         }
-        else if(currentProject.tabListTracks[row].mode == MODE.RESIZE.LEFT)
+        else if(track.mode == MODE.RESIZE.LEFT)
         {
-            console.log('resize left');
-        }
-        else if(currentProject.tabListTracks[row].mode == MODE.RESIZE.RIGHT)
-        {
-            //console.log('resize right');
-
-            //console.log(x, currentProject.tabListTracks[row].lastX, (x - currentProject.tabListTracks[row].lastX));
-
-            if((x - currentProject.tabListTracks[row].lastX) > 0)
+            if((x - track.lastX) > 0)
             {
-                //console.log('ok1');
-
-                if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width < currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].maxWidth)
+                if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth)
                 {
-                    //console.log('good1');
+                    track.tabElements[track.currentRow].width--;
+                    track.tabElements[track.currentRow].marginLeft++;
 
-                    currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width++;
-                    currentProject.tabListTracks[row].gap = x;
+                    track.tabElements[track.currentRow].leftGap++;
                 }
             }
             else
             {
-                //console.log('ok2');
-
-                if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width > currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].minWidth)
+                if(track.tabElements[track.currentRow].leftGap > 0)
                 {
-                    //console.log('good2');
+                    track.tabElements[track.currentRow].width++;
+                    track.tabElements[track.currentRow].marginLeft--;
 
-                    currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width--;
-                    currentProject.tabListTracks[row].gap = x;
+                    track.tabElements[track.currentRow].leftGap--;
                 }
             }
 
-            currentProject.tabListTracks[row].lastX = x;
+            track.lastX = x;
+        }
+        else if(track.mode == MODE.RESIZE.RIGHT)
+        {
+            if((x - track.lastX) > 0)
+            {
+                if(track.tabElements[track.currentRow].rightGap > 0)
+                {
+                    track.tabElements[track.currentRow].width++;
+
+                    track.tabElements[track.currentRow].rightGap--;
+                }
+            }
+            else
+            {
+                if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth)
+                {
+                    track.tabElements[track.currentRow].width--;
+
+                    track.tabElements[track.currentRow].rightGap++;
+                }
+            }
+
+            track.lastX = x;
         }
     }
     else
     {
         rowTabElement(x, row);
 
-        if(currentProject.tabListTracks[row].currentRow != 'none')
+        if(track.currentRow >= 0)
         {
-            if(x >= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - 2) && x <= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + 2))
+            if(x >= (track.tabElements[track.currentRow].marginLeft - 2) && x <= (track.tabElements[track.currentRow].marginLeft + 2))
             {
-                currentProject.tabListTracks[row].mode = MODE.RESIZE.LEFT;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'w-resize';
+                track.mode = MODE.RESIZE.LEFT;
+                track.canvas.element.style.cursor = 'w-resize';
             }
-            else if(x >= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - 2) && x <= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width + 2))
+            else if(x >= (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width - 2) && x <= (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width + 2))
             {
-                currentProject.tabListTracks[row].mode = MODE.RESIZE.RIGHT;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'w-resize';
+                track.mode = MODE.RESIZE.RIGHT;
+                track.canvas.element.style.cursor = 'w-resize';
             }
             else
             {
-                currentProject.tabListTracks[row].mode = MODE.MOVE;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'all-scroll';
+                track.mode = MODE.MOVE;
+                track.canvas.element.style.cursor = 'all-scroll';
             }
         }
         else
         {
-            if(!currentProject.tabListTracks[row].mousedown)
+            if(!track.mousedown)
             {
-                currentProject.tabListTracks[row].mode = MODE.NONE;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'default';
+                track.mode = MODE.NONE;
+                track.canvas.element.style.cursor = 'default';
             }
 
             for(var i = 0; i < currentProject.tabListFiles.length; i++)
             {
                 if(currentProject.tabListFiles[i].isSelected)
                 {
-                    if(currentProject.tabListTracks[row].tabElements.length > 0)
+                    if(track.tabElements.length > 0)
                     {
-                        if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].tabElements.length - 1].fileId != currentProject.tabListFiles[i].id)
+                        if(track.tabElements[track.tabElements.length - 1].fileId != currentProject.tabListFiles[i].id)
                         {
                             console.log('newElementlength');
 
@@ -161,7 +170,7 @@ function mouseMove(e) {
                         {
                             console.log('alreadyCreated');
 
-                            currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[i].tabElements.length - 1].marginLeft = x;
+                            track.tabElements[currentProject.tabListTracks[i].tabElements.length - 1].marginLeft = x;
                         }
                     }
                     else
@@ -179,7 +188,7 @@ function mouseMove(e) {
 }
 
 function rowTabElement(x, row) {
-    currentProject.tabListTracks[row].currentRow = 'none';
+    currentProject.tabListTracks[row].currentRow = -1;
 
     for(var i = 0; i < currentProject.tabListTracks[row].tabElements.length; i++)
     {
@@ -223,24 +232,46 @@ function drawElements(row) {
 }
 
 function element(rowTrack, row) {
-    currentProject.tabListTracks[rowTrack].canvas.context.beginPath();
-    currentProject.tabListTracks[rowTrack].canvas.context.lineWidth = 1;
-    currentProject.tabListTracks[rowTrack].canvas.context.strokeStyle = (currentProject.tabListTracks[rowTrack].tabElements[row].selected) ? 'blue' : 'gray';
-    currentProject.tabListTracks[rowTrack].canvas.context.rect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
-    currentProject.tabListTracks[rowTrack].canvas.context.stroke();
+    var currentElement = currentProject.tabListTracks[rowTrack].tabElements[row];
+    var context = currentProject.tabListTracks[rowTrack].canvas.context;
 
-    currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = (currentProject.tabListTracks[rowTrack].type == 'VIDEO') ? '#A3BDDE' : '#74E4BC';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillRect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
+    context.beginPath();
+    context.lineWidth = 1;
+    context.strokeStyle = (currentProject.tabListTracks[rowTrack].tabElements[row].selected) ? 'blue' : 'gray';
+    context.rect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
+    context.stroke();
 
-    currentProject.tabListTracks[rowTrack].canvas.context.font = '15px Calibri';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillStyle = '#000000';
-    currentProject.tabListTracks[rowTrack].canvas.context.fillText(compressName(currentProject.tabListFiles[rowById(currentProject.tabListTracks[rowTrack].tabElements[row].fileId, currentProject.tabListFiles)].fileName), (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - pixelTimeBar.g, 15);
+    context.fillStyle = (currentProject.tabListTracks[rowTrack].type == 'VIDEO') ? '#A3BDDE' : '#74E4BC';
+    context.fillRect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
 
-    currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageClose, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + currentProject.tabListTracks[rowTrack].tabElements[row].width - 20) - pixelTimeBar.g, 5, 15, 15);
+    context.font = '15px Calibri';
+    context.fillStyle = '#000000';
 
-    var showWidth = (currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (imageThumbnail.width - (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
+    //TEXT
+    context.fillText(compressName(currentProject.tabListFiles[rowById(currentProject.tabListTracks[rowTrack].tabElements[row].fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + 2) - pixelTimeBar.g, 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
 
-    //console.log(showWidth, (80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)), (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width), imageThumbnail.width);
+    //CLOSE IMAGE
+    if(currentElement.width >= 16)
+    {
+        context.drawImage(imageClose, (currentElement.marginLeft + currentElement.width - 15) - pixelTimeBar.g, 0, 15, 15);
+    }
 
-    currentProject.tabListTracks[rowTrack].canvas.context.drawImage(imageThumbnail, 0, 0, showWidth, imageThumbnail.height, (currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft + 10) - pixelTimeBar.g, 35, (currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (80 - (80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20))) : 80, 80 * (imageThumbnail.height / imageThumbnail.width));
+    //THUMBNAIL IMAGE
+    var imageThumbnail = currentElement.thumbnail;
+
+    var newWidth = (imageThumbnail.width * 75) / imageThumbnail.height;
+
+    var sWidth = (newWidth > (currentElement.width - 7)) ? (((currentElement.width - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
+    //(currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (imageThumbnail.width - (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
+    var sHeight = imageThumbnail.height;
+
+    var xThumbnail = (currentElement.marginLeft + 2) - pixelTimeBar.g;
+    var yThumbnail = 20;
+
+    var widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
+    var heightThumbnail = 75;
+
+    //console.log(sWidth, sHeight, xThumbnail, yThumbnail, newWidth, widthThumbnail, heightThumbnail);
+
+    context.drawImage(imageThumbnail, 0, 0, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
 }

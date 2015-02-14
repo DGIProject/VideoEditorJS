@@ -25,12 +25,17 @@ function addFile(){
             currentItem.uploadThumbnail = 100;
 
             currentProject.tabListFiles.push(currentItem);
+
+            addFileList(fileId, currentFile.name, typeFile);
+            uploadFile(fileId, (currentProject.tabListFiles.length - 1), currentFile, 'FILE');
         }
         else
         {
             var reader = new FileReader();
 
             reader.onload = function (e) {
+                loadM();
+
                 var data = e.target.result;
 
                 var ElementData = new Uint8Array(data);
@@ -136,13 +141,23 @@ function addFile(){
                                         window.URL = window.URL || window.webkitURL;
                                         var buffers = message.data;
                                         buffers.forEach(function (file) {
+                                            console.log('finish');
+
                                             var blob = new Blob([file.data]);
-                                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(new Blob([file.data])))
-                                            //uploadThumbnail(message.action[1], blob)
+
+                                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(blob));
+
+                                            addFileList(fileId, currentFile.name, typeFile);
+                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles.length - 1, blob, 'THUMBNAIL_I');
+                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles.length - 1, currentFile, 'FILE');
+                                            loadM();
                                         });
                                     }
                                 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 97baeaa2918c090af0924a4ab8029fe11d24dfe6
                             });
                         }
                     }
@@ -155,14 +170,9 @@ function addFile(){
             };
 
             reader.readAsArrayBuffer(currentFile);
-
-            loadM();
         }
 
         console.log('next');
-
-        addFileList(fileId, currentFile.name, typeFile);
-        uploadFile(fileId, currentProject.tabListFiles.length - 1, currentFile, 'FILE');
     }
     else
     {
@@ -198,95 +208,6 @@ function getTypeFile(fileName) {
     }
 }
 
-function uploadFile(id, row, file, type) {
-    currentProject.currentUploads++;
-
-    var formData = new FormData();
-    formData.append('fileData', file);
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener('progress', function(e) {
-
-        var done = e.position || e.loaded,
-            total = e.totalSize || e.total;
-
-        document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-
-    }, false);
-
-    if (xhr.upload) {
-        xhr.upload.onprogress = function(e) {
-            var done = e.position || e.loaded,
-                total = e.totalSize || e.total;
-
-            console.log(row);
-
-            if(type == 'FILE')
-            {
-                currentProject.tabListFiles[row].uploadFile = (Math.floor(done / total * 1000) / 10)
-            }
-            else
-            {
-                currentProject.tabListFiles[row].uploadThumbnail = (Math.floor(done / total * 1000) / 10);
-            }
-
-            document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
-        };
-    }
-
-    xhr.onreadystatechange = function(e) {
-        if (4 == this.readyState) {
-            console.log('xhr upload complete ' + this.responseText);
-
-            currentProject.currentUploads--;
-
-            if (this.responseText != 'true')
-            {
-                currentProject.tabFilesUpload[currentProject.tabFilesUpload.length] = [id, file];
-
-                var n = noty({layout: 'top', type: 'error', text: 'Nous n\'avons pas réussi à envoyer ce fichier', timeout: '5000'});
-
-                var buttonRetryUpload = document.createElement('button');
-                buttonRetryUpload.setAttribute('type', 'button');
-                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + file + '\', \'' + type + '\');');
-                buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
-                buttonRetryUpload.innerHTML = 'Réessayer';
-
-                document.getElementById('toolsFile' + id).innerHTML = '';
-                document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
-            }
-            else
-            {
-                var n = noty({layout: 'top', type: 'success', text: 'Le fichier ' + file.name + ' a bien été envoyé.', timeout: '5000'});
-
-                document.getElementById('toolsFile' + id).innerHTML = 'Ready!';
-            }
-        }
-    };
-
-    xhr.open('POST', 'php/uploadFile.php?projectName=' + currentProject.name + '&fileId=' + id + '&typeFile=' + ((type == 'FILE') ? 'file' : 'thumbnail'), true);
-    xhr.send(formData);
-}
-
-function uploadAllFiles() {
-    if(currentProject.tabFilesUpload.length > 0)
-    {
-        console.log('filesToUpload');
-
-        for(var i = 0; i < currentProject.tabFilesUpload.length; i++)
-        {
-            uploadFile(currentProject.tabFilesUpload[i][0], currentProject.tabFilesUpload[i][1]);
-        }
-
-        currentProject.tabFilesUpload = [];
-    }
-    else
-    {
-        console.log('notFilesToUpload');
-    }
-}
-
 function addFileList(fileId, fileName, typeFile) {
     if(currentProject.tabListFiles.length < 2)
     {
@@ -315,7 +236,6 @@ function addFileList(fileId, fileName, typeFile) {
 
     var fileE = document.createElement('a');
     fileE.id = 'file' + fileId;
-    fileE.setAttribute('fileId', fileId);
     fileE.style.cursor = 'pointer';
     fileE.onclick = fileProperties;
     fileE.onmousedown = selectFile;
@@ -345,78 +265,6 @@ function deselectFiles() {
     }
 }
 
-function newTextElement(){
-    console.log('newTextElement');
-
-    currentProject.stopAddFileTrack();
-    currentManageTextElement.newTextElement(textElementId);
-
-    textElementId++;
-
-    $('#textElementModal').modal('show');
-}
-function editFileText(id){
-    var textElement = currentProject.tabListFiles[id].properties;
-
-    currentManageTextElement.editTextElement(textElement.id, id, textElement.nameText, textElement.contentText, textElement.fontText, textElement.sizeText, textElement.colorText, textElement.alignText, textElement.posText);
-
-    $('#textElementModal').modal('show');
-}
-
-function saveTextElement() {
-    var textElement = currentManageTextElement.getInformationsTextElement();
-
-    var fileId;
-
-    if(currentManageTextElement.isEditing)
-    {
-        fileId = currentManageTextElement.fileId;
-
-        currentProject.tabListFiles[fileId].properties.updateValuesElement(textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement);
-    }
-    else
-    {
-        fileId = currentProject.tabListFiles.length;
-
-        var currentItem = new File(fileId, TYPE.TEXT, 0, textElement.nameText, compressName(textElement.nameText), 'png');
-        currentItem.makeVideo();
-        currentItem.setDuration('00:00:20');
-
-        document.getElementById('textElement').toBlob(function(blob) {
-            currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
-        }, 'image/png');
-
-        currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
-
-        console.log('currentItem ' + currentItem);
-        currentProject.tabListFiles.push(currentItem);
-
-        addFileList(fileId, textElement.nameText, TYPE.TEXT);
-    }
-
-    var OAjax;
-
-    if (window.XMLHttpRequest) OAjax = new XMLHttpRequest();
-    else if (window.ActiveXObject) OAjax = new ActiveXObject('Microsoft.XMLHTTP');
-    OAjax.open('POST', 'php/uploadPngTitle.php?u=User1&p=' + currentProject.name, true);
-    OAjax.onreadystatechange = function() {
-        if(OAjax.readyState == 4 && OAjax.status == 200) {
-            console.log(OAjax.responseText);
-
-            if (OAjax.responseText == 'true')
-            {
-                console.log('upload');
-            }
-        }
-    };
-
-    OAjax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    OAjax.send('&nameId=' + fileId + '&imageDataURL=' + document.getElementById('textElement').toDataURL('image/png'));
-
-    var n = noty({layout: 'topRight', type: 'success', text: 'Le texte a bien été sauvegardé.', timeout: '5000'});
-
-    $('#textElementModal').modal('hide');
-}
 function fileProperties() {
     console.log('fileProperties');
 
@@ -477,41 +325,89 @@ function removeFile(id) {
     document.getElementById('listFiles').removeChild(document.getElementById('file' + id));
 }
 
-function uploadThumbnail(id, data) {
-    var fd = new FormData();
-    fd.append('multimediaFile', data);
+//UPLOAD
+function uploadFile(id, row, file, type) {
+    currentProject.currentUploads++;
+
+    var formData = new FormData();
+    formData.append('fileData', file);
+
     var xhr = new XMLHttpRequest();
-    xhr.file = data; // not necessary if you create scopes like this
-    xhr.addEventListener('progress', function(e) {
 
-        var done = e.position || e.loaded,
-            total = e.totalSize || e.total;
-
-        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
-    }, false);
     if (xhr.upload) {
         xhr.upload.onprogress = function(e) {
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
 
-            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+            console.log(row);
+
+            if(type == 'FILE')
+            {
+                currentProject.tabListFiles[row].uploadFile = (Math.floor(done / total * 1000) / 10)
+            }
+            else if(type == 'THUMBNAIL_I')
+            {
+                currentProject.tabListFiles[row].uploadThumbnail.i = (Math.floor(done / total * 1000) / 10);
+            }
+            else
+            {
+                currentProject.tabListFiles[row].uploadThumbnail.a = (Math.floor(done / total * 1000) / 10);
+            }
+
+            console.log((Math.floor(done / total * 1000) / 10));
+
+            //document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
         };
     }
+
     xhr.onreadystatechange = function(e) {
         if (4 == this.readyState) {
             console.log('xhr upload complete ' + this.responseText);
 
-            if (this.responseText != "success")
+            currentProject.currentUploads--;
+
+            if (this.responseText != 'true')
             {
-                console.log("erreur Upload", this.responseText)
+                currentProject.tabFilesUpload[currentProject.tabFilesUpload.length] = [id, file];
+
+                var n = noty({layout: 'top', type: 'error', text: 'Nous n\'avons pas réussi à envoyer ce fichier', timeout: '5000'});
+
+                var buttonRetryUpload = document.createElement('button');
+                buttonRetryUpload.setAttribute('type', 'button');
+                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + file + '\', \'' + type + '\');');
+                buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
+                buttonRetryUpload.innerHTML = 'Réessayer';
+
+                document.getElementById('toolsFile' + id).innerHTML = '';
+                document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
             }
             else
             {
-                var n = noty({layout: 'top', type: 'success', text: 'La vignette a bien été envoyé.', timeout: '5000'});
+                var n = noty({layout: 'top', type: 'success', text: 'Le fichier ' + file.name + ' a bien été envoyé.', timeout: '5000'});
+
+                document.getElementById('toolsFile' + id).innerHTML = 'Ready!';
             }
         }
     };
 
-    xhr.open('POST', 'php/uploadFile.php?p=' + currentProject.name + '&thum=1&fileId=' + id, true);
-    xhr.send(fd);
+    xhr.open('POST', 'php/uploadFile.php?projectName=' + currentProject.name + '&fileId=' + id + '&typeFile=' + type, true);
+    xhr.send(formData);
+}
+
+function uploadAllFiles() {
+    if(currentProject.tabFilesUpload.length > 0)
+    {
+        console.log('filesToUpload');
+
+        for(var i = 0; i < currentProject.tabFilesUpload.length; i++)
+        {
+            uploadFile(currentProject.tabFilesUpload[i][0], currentProject.tabFilesUpload[i][1]);
+        }
+
+        currentProject.tabFilesUpload = [];
+    }
+    else
+    {
+        console.log('notFilesToUpload');
+    }
 }

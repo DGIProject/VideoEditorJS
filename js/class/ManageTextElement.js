@@ -1,6 +1,12 @@
 ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
     this.canvasId = canvasId;
+
     this.canvas = document.getElementById(canvasId);
+    this.canvas.onmousemove = this.mouseMove;
+    this.canvas.onmousedown = this.mouseDown;
+    this.canvas.onmouseup = this.mouseUp;
+    this.canvas.onkeydown = this.keyPress;
+
     this.context = this.canvas.getContext('2d');
 
     this.canvas.width = canvasWidth;
@@ -49,16 +55,16 @@ ManageTextElement.prototype.newTextElement = function(id) {
     this.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.editTextElement = function(id, fileId, nameText, text, font, sizeText, color, textAlign, posElement) {
+ManageTextElement.prototype.editTextElement = function(fileId, properties) {
     //Editor
-    this.id = id;
+    this.id = properties.id;
     this.fileId = fileId;
-    this.nameText = nameText;
-    this.text = text;
-    this.font = font;
-    this.sizeText = sizeText;
-    this.color = color;
-    this.textAlign = textAlign;
+    this.nameText = properties.nameText;
+    this.text = properties.text;
+    this.font = properties.font;
+    this.sizeText = properties.sizeText;
+    this.color = properties.color;
+    this.textAlign = properties.textAlign;
 
     //TextElement
     this.posElement = posElement;
@@ -213,12 +219,12 @@ ManageTextElement.prototype.getInformationsTextElement = function() {
     return {id : this.id, nameText : this.nameText, text : this.text, font : this.font, sizeText : this.sizeText, color : this.color, textAlign : this.textAlign, posElement : this.posElement};
 };
 
-ManageTextElement.prototype.mouseDown = function(xClient, yClient, buttonClient) {
-    if(this.isOnArea(xClient, yClient))
+ManageTextElement.prototype.mouseDown = function(e) {
+    if(this.isOnArea(e.clientX, e.clientY))
     {
         this.selectedElement = true;
 
-        if(buttonClient == 0)
+        if(e.button == 0)
         {
             this.leftClick = true;
         }
@@ -231,18 +237,18 @@ ManageTextElement.prototype.mouseDown = function(xClient, yClient, buttonClient)
     this.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.mouseUp = function(buttonClient) {
-    if(buttonClient == 0)
+ManageTextElement.prototype.mouseUp = function(e) {
+    if(e.button == 0)
     {
         this.leftClick = false;
     }
 };
 
-ManageTextElement.prototype.mouseMove = function(xClient, yClient) {
+ManageTextElement.prototype.mouseMove = function(e) {
     if(this.leftClick)
     {
-        var xMouse = xClient + window.scrollX;
-        var yMouse = yClient + window.scrollY;
+        var xMouse = e.clientX + window.scrollX;
+        var yMouse = e.clientY + window.scrollY;
 
         var x = 0, y = 0;
 
@@ -273,21 +279,21 @@ ManageTextElement.prototype.mouseMove = function(xClient, yClient) {
     }
 };
 
-ManageTextElement.prototype.keyPress = function(keyCodeClient, charCodeClient)
+ManageTextElement.prototype.keyPress = function(e)
 {
     if(this.selectedElement)
     {
-        if(keyCodeClient == 8)
+        if(e.keyCode == 8)
         {
             this.text = this.text.substr(0, (this.text.length - 1));
         }
-        else if(keyCodeClient == 13)
+        else if(e.keyCode == 13)
         {
             this.text += '|';
         }
         else
         {
-            this.text += String.fromCharCode((charCodeClient));
+            this.text += String.fromCharCode((e.charCode));
         }
 
         this.writeTextToCanvas();

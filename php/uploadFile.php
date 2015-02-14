@@ -3,7 +3,7 @@ include_once 'config.php';
 
 if($_GET['projectName'] != NULL && $_GET['fileId'] != NULL)
 {
-    $filename = (($_GET['typeFile'] == 'file') ? 'file' : 'thumbnail') . $_GET['fileId'] . '.data';
+    $filename = $_GET['typeFile'] . $_GET['fileId'] . '.data';
 
     $path = '../' . $DIR_projectsData . '/' . $_GET['projectName'] . '/';
 
