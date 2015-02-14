@@ -56,98 +56,111 @@ function mouseMove(e) {
     var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
     var row = rowById(id, currentProject.tabListTracks);
 
+    var track = currentProject.tabListTracks[row];
+
     //console.log('row:' + row, x);
 
-    if(currentProject.tabListTracks[row].mousedown)
+    if(track.mousedown)
     {
-        if(currentProject.tabListTracks[row].mode == MODE.MOVE)
+        if(track.mode == MODE.MOVE)
         {
-            //console.log(x, currentProject.tabListTracks[row].gap, (x - currentProject.tabListTracks[row].gap));
+            //console.log(x, track.gap, (x - track.gap));
 
-            if((x - currentProject.tabListTracks[row].gap) > 0)
+            if((x - track.gap) > 0)
             {
-                currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = x - currentProject.tabListTracks[row].gap;
+                track.tabElements[track.currentRow].marginLeft = x - track.gap;
             }
             else
             {
-                currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft = 0;
+                track.tabElements[track.currentRow].marginLeft = 0;
             }
         }
-        else if(currentProject.tabListTracks[row].mode == MODE.RESIZE.LEFT)
+        else if(track.mode == MODE.RESIZE.LEFT)
         {
-            console.log('resize left');
-        }
-        else if(currentProject.tabListTracks[row].mode == MODE.RESIZE.RIGHT)
-        {
-            //console.log('resize right');
-
-            //console.log(x, currentProject.tabListTracks[row].lastX, (x - currentProject.tabListTracks[row].lastX));
-
-            if((x - currentProject.tabListTracks[row].lastX) > 0)
+            if((x - track.lastX) > 0)
             {
-                //console.log('ok1');
-
-                if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width < currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].maxWidth)
+                if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth)
                 {
-                    //console.log('good1');
+                    track.tabElements[track.currentRow].width--;
+                    track.tabElements[track.currentRow].marginLeft++;
 
-                    currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width++;
-                    currentProject.tabListTracks[row].gap = x;
+                    track.tabElements[track.currentRow].leftGap++;
                 }
             }
             else
             {
-                //console.log('ok2');
-
-                if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width > currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].minWidth)
+                if(track.tabElements[track.currentRow].leftGap > 0)
                 {
-                    //console.log('good2');
+                    track.tabElements[track.currentRow].width++;
+                    track.tabElements[track.currentRow].marginLeft--;
 
-                    currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width--;
-                    currentProject.tabListTracks[row].gap = x;
+                    track.tabElements[track.currentRow].leftGap--;
                 }
             }
 
-            currentProject.tabListTracks[row].lastX = x;
+            track.lastX = x;
+        }
+        else if(track.mode == MODE.RESIZE.RIGHT)
+        {
+            if((x - track.lastX) > 0)
+            {
+                if(track.tabElements[track.currentRow].rightGap > 0)
+                {
+                    track.tabElements[track.currentRow].width++;
+
+                    track.tabElements[track.currentRow].rightGap--;
+                }
+            }
+            else
+            {
+                if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth)
+                {
+                    track.tabElements[track.currentRow].width--;
+
+                    track.tabElements[track.currentRow].rightGap++;
+                }
+            }
+
+            track.lastX = x;
         }
     }
     else
     {
         rowTabElement(x, row);
 
-        if(currentProject.tabListTracks[row].currentRow >= 0)
+        if(track.currentRow >= 0)
         {
-            if(x >= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - 2) && x <= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + 2))
+            if(x >= (track.tabElements[track.currentRow].marginLeft - 2) && x <= (track.tabElements[track.currentRow].marginLeft + 2))
             {
-                currentProject.tabListTracks[row].mode = MODE.RESIZE.LEFT;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'w-resize';
+                track.mode = MODE.RESIZE.LEFT;
+                track.canvas.element.style.cursor = 'w-resize';
             }
-            else if(x >= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - 2) && x <= (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width + 2))
+            else if(x >= (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width - 2) && x <= (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width + 2))
             {
-                currentProject.tabListTracks[row].mode = MODE.RESIZE.RIGHT;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'w-resize';
+                track.mode = MODE.RESIZE.RIGHT;
+                track.canvas.element.style.cursor = 'w-resize';
             }
             else
             {
-                currentProject.tabListTracks[row].mode = MODE.MOVE;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'all-scroll';
+                track.mode = MODE.MOVE;
+                track.canvas.element.style.cursor = 'all-scroll';
             }
         }
         else
         {
-            if(!currentProject.tabListTracks[row].mousedown)
+            if(!track.mousedown)
             {
-                currentProject.tabListTracks[row].mode = MODE.NONE;
-                currentProject.tabListTracks[row].canvas.element.style.cursor = 'default';
+                track.mode = MODE.NONE;
+                track.canvas.element.style.cursor = 'default';
             }
 
             for(var i = 0; i < currentProject.tabListFiles.length; i++)
             {
                 if(currentProject.tabListFiles[i].isSelected)
                 {
-                    if(currentProject.tabListTracks[row].tabElements.length > 0)
+                    if(track.tabElements.length > 0)
                     {
-                        if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].tabElements.length - 1].fileId != currentProject.tabListFiles[i].id)
+                        if(track.tabElements[track.tabElements.length - 1].fileId != currentProject.tabListFiles[i].id)
                         {
                             console.log('newElementlength');
 
@@ -157,7 +170,7 @@ function mouseMove(e) {
                         {
                             console.log('alreadyCreated');
 
-                            currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[i].tabElements.length - 1].marginLeft = x;
+                            track.tabElements[currentProject.tabListTracks[i].tabElements.length - 1].marginLeft = x;
                         }
                     }
                     else

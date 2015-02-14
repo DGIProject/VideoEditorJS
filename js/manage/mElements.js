@@ -28,7 +28,7 @@ function addElement(id, idTrack, posX) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        track.tabElements.push(new Element(idElement, imageThumbnail, file.duration, id, idTrack, marginLeft, false));
+        track.tabElements.push(new Element(idElement, imageThumbnail, {total: file.duration, begin: 0}, id, idTrack, marginLeft, false));
 
         drawElements(idTrack);
     };
