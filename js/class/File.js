@@ -22,7 +22,7 @@ File = function(id, type, size, fileName, format) {
     //upload
     this.isUploaded = false;
     this.uploadFile = 0;
-    this.uploadThumbnail = 0;
+    this.uploadThumbnail = {i: 0, a: 0};
 };
 
 File.prototype.makeVideo = function() {
@@ -57,12 +57,10 @@ File.prototype.setThumbnailAudio = function(blobImageUrl)
 {
     this.thumbnail.a = blobImageUrl;
 };
+
 File.prototype.getDurationInSecond = function()
 {
-    var splitedValueFromText = this.duration.split(':')
-    var minute = splitedValueFromText[1]
-    var seconde = splitedValueFromText[2].split('.')[0]
-    var heure = splitedValueFromText[0]
-    var totalseconde = (3600 * heure) + (60 * minute) + parseInt(seconde)
-    return totalseconde;
+    var time = this.duration.split(':');
+
+    return (parseInt(time[0]) * 3600) + (parseInt(time[1] * 60)) + parseInt(time[2].split('.')[0]);
 };

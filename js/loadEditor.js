@@ -14,6 +14,7 @@ var tabFilesJS = [
     'class/TerminalJs.js',
     'manage/mProjects.js',
     'manage/mFiles.js',
+    'manage/mTextElement.js',
     'manage/mTracks.js',
     'manage/mElements.js',
     'manage/mRecords.js',

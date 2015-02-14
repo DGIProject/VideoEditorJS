@@ -55,16 +55,16 @@ ManageTextElement.prototype.newTextElement = function(id) {
     this.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.editTextElement = function(id, fileId, nameText, text, font, sizeText, color, textAlign, posElement) {
+ManageTextElement.prototype.editTextElement = function(fileId, properties) {
     //Editor
-    this.id = id;
+    this.id = properties.id;
     this.fileId = fileId;
-    this.nameText = nameText;
-    this.text = text;
-    this.font = font;
-    this.sizeText = sizeText;
-    this.color = color;
-    this.textAlign = textAlign;
+    this.nameText = properties.nameText;
+    this.text = properties.text;
+    this.font = properties.font;
+    this.sizeText = properties.sizeText;
+    this.color = properties.color;
+    this.textAlign = properties.textAlign;
 
     //TextElement
     this.posElement = posElement;
