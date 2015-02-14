@@ -154,10 +154,6 @@ function addFile(){
                                         });
                                     }
                                 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 97baeaa2918c090af0924a4ab8029fe11d24dfe6
                             });
                         }
                     }
