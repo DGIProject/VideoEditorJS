@@ -55,6 +55,68 @@ function addFile(){
                         console.log("Executed in "+message.time+"ms");
                         terminal.Workers[index].worker.terminate();
                         // this.Workers.remove(index);
+                        terminal.processCmd("ffmpeg -i "+currentFile.name+" -c:a pcm_s16le audioDat.wav", function(e,index){
+
+                            var message = e.data;
+
+                            if (message.type == "stdout")
+                            {
+                                console.log(message.text);
+                            }
+                            else if(message.type == "stop") {
+                                console.log("Executed in " + message.time + "ms");
+                                terminal.Workers[index].worker.terminate();
+
+                                if (message.hasOwnProperty("data"))
+                                {
+                                    window.URL = window.URL || window.webkitURL;
+                                    var buffers = message.data;
+                                    buffers.forEach(function (file) {
+                                        var blob = new Blob([file.data]);
+
+                                        terminal.loadFile(window.URL.createObjectURL(blob), "audioDat.wav",function(onEnd){
+
+                                            var sizeX = currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond();
+
+                                                var gnuplotScript = "set terminal svg size "+sizeX+",119;" +
+                                                    "set output 'out.svg';" +
+                                                    "unset key;"+
+                                                    "unset tics;"+
+                                                    "unset border;"+
+                                                    "set lmargin 0;"+
+                                                    "set rmargin 0;"+
+                                                    "set tmargin 0;"+
+                                                    "set bmargin 0;" +
+                                                    "plot 'audioDat.wav' binary filetype=bin format='%int16' endian=little array=1:0 with lines;";
+
+                                                var buf = new ArrayBuffer(gnuplotScript.length*2); // 2 bytes for each char
+                                                var bufView = new Uint16Array(buf);
+                                                for (var i=0, strLen=gnuplotScript.length; i<strLen; i++) {
+                                                    bufView[i] = gnuplotScript.charCodeAt(i);
+                                                }
+                                                var name = "script"+Date.now();
+
+                                                terminal.Files.push({name : name, data: bufView});
+                                                terminal.processCmd("gnuplot "+name+" audioDat.wav", function(e,i){
+                                                    console.log(e.data)
+
+                                                    if (e.data.hasOwnProperty("data"))
+                                                    {
+                                                        window.URL = window.URL || window.webkitURL;
+                                                        console.log("Blob URL", window.URL.createObjectURL(e.data.data));
+                                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].thumbnail.a = window.URL.createObjectURL(e.data.data);
+                                                    }
+                                                    terminal.Files.remove(terminal.Files.length-1);
+                                                    terminal.Files.remove(terminal.Files.length-2);
+                                                });
+
+
+                                        });
+                                    });
+                                }
+                            }
+                        });
+
                         if(typeFile == TYPE.VIDEO)
                         {
                             terminal.processCmd("ffmpeg -i "+currentFile.name+" -f image2 -vf scale=-1:50 -an -ss "+Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond()/2)+" thumbnail.jpg", function(e,index){
@@ -80,7 +142,6 @@ function addFile(){
                                         });
                                     }
                                 }
-
 
                             });
                         }

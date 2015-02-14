@@ -109,23 +109,27 @@ Terminal.prototype.startWorker = function(id, argv, callback){
         console.log("cant't start ...")
     }
 };
-Terminal.prototype.loadFile = function(url, name){
+Terminal.prototype.loadFile = function(url, name, callback){
     that = this;
     var oReq = new XMLHttpRequest();
     oReq.open("GET", url, true);
     oReq.responseType = "arraybuffer";
 
     oReq.onload = function (oEvent) {
-        var arrayBuffer = oReq.response; // Note: not oReq.responseText
-        if (arrayBuffer) {
-            var byteArray = new Uint8Array(arrayBuffer);
-            that.Files.push({data : byteArray, name: name})
-            console.log("File"+name+" loaded !");
-        }
-        else
-        {
-            console.log("Unable to load file as ArrayBuffer");
-        }
+            var arrayBuffer = oReq.response; // Note: not oReq.responseText
+            if (arrayBuffer) {
+                var byteArray = new Uint8Array(arrayBuffer);
+                that.Files.push({data : byteArray, name: name})
+                console.log("File"+name+" loaded !");
+                if(callback && typeof callback == "function") {
+                    oReq.onload = callback(oEvent);
+                }
+            }
+            else
+            {
+                console.log("Unable to load file as ArrayBuffer");
+            }
+
     };
 
     oReq.send(null);
