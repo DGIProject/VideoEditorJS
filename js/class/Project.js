@@ -23,7 +23,7 @@ Project.prototype.startAddFileTrack = function(id)
 
     for(var i = 0; i < filesTab.length; i++)
     {
-        var fileId = filesTab[i].getAttribute('fileId');
+        var fileId = filesTab[i].id.replace('file', '');
 
         filesTab[i].removeAttribute('onclick');
         filesTab[i].setAttribute('onclick', 'addElement(' + fileId + ', ' + id + ');');
@@ -41,9 +41,9 @@ Project.prototype.stopAddFileTrack = function()
 
     for(var i = 0; i < filesTab.length; i++)
     {
-        var fileId = filesTab[i].getAttribute('fileId');
+        var fileId = filesTab[i].id.replace('file', '');
 
-        filesTab[i].setAttribute('onclick', 'fileProperties(' + fileId + ');');
+        filesTab[i].onclick = fileProperties;
         filesTab[i].classList.remove('active');
     }
 };

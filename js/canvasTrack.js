@@ -13,11 +13,11 @@ imageClose.src = 'http://clangue.net/other/testVideo/canvastry/img/close.png';
 function mouseDown(e) {
     console.log('mousedown');
 
-    var x = ((e.offsetX == undefined)?e.layerX:e.offsetX) - 190;
+    var x = ((e.offsetX == undefined)?e.layerX:e.offsetX);
     var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     currentProject.tabListTracks[row].mousedown = true;
-    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width - x) : 0;
+    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft) : 0;
     currentProject.tabListTracks[row].lastX = x;
 }
 
@@ -28,6 +28,11 @@ function mouseUp(e) {
 
     if(currentProject.tabListTracks[row].currentRow >= 0)
     {
+        if(currentProject.tabListTracks[row].mode == MODE.REMOVE)
+        {
+            deleteElement(row, currentProject.tabListTracks[row].currentRow);
+        }
+
         for(var i = 0; i < currentProject.tabListTracks[row].tabElements.length; i++)
         {
             if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft > currentProject.tabListTracks[row].tabElements[i].marginLeft && currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
@@ -51,7 +56,10 @@ function mouseUp(e) {
 }
 
 function mouseMove(e) {
-    var x = (e.offsetX==undefined?e.layerX:e.offsetX) - 190;
+    var x = (e.offsetX == undefined) ? e.layerX : e.offsetX;
+    var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
+
+    //console.log(e, x);
 
     var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
     var row = rowById(id, currentProject.tabListTracks);
@@ -139,6 +147,11 @@ function mouseMove(e) {
             {
                 track.mode = MODE.RESIZE.RIGHT;
                 track.canvas.element.style.cursor = 'w-resize';
+            }
+            else if(track.tabElements[track.currentRow].width >= 16 && x >= ((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - 15) && x <= (((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - 2)) && y <= 10)
+            {
+                track.mode = MODE.REMOVE;
+                track.canvas.element.style.cursor = 'pointer';
             }
             else
             {

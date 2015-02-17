@@ -6,6 +6,8 @@ function addElement(id, idTrack, posX) {
     var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
     var track = currentProject.tabListTracks[rowById(idTrack, currentProject.tabListTracks)];
 
+    console.log(file);
+
     var idElement = (track.tabElements.length > 0) ? track.tabElements[track.tabElements.length - 1].id + 1 : 0;
 
     var marginLeft = 0;
@@ -34,4 +36,8 @@ function addElement(id, idTrack, posX) {
     };
 
     imageThumbnail.src = (track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a;
+}
+
+function deleteElement(rowTrack, rowElement) {
+    currentProject.tabListTracks[rowTrack].tabElements.remove(rowElement);
 }

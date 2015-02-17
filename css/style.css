@@ -23,7 +23,15 @@
 
 .trackView {
     float: left;
-    width: 610px;
+    width: 630px;
+}
+
+#videoView {
+    overflow-x: hidden;
+}
+
+#audioView {
+    overflow-x: auto;
 }
 
 .singleTrack

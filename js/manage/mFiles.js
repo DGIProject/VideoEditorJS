@@ -20,7 +20,8 @@ function addFile() {
             currentItem.setDuration('00:00:20');
             currentItem.setThumbnailImage(window.URL.createObjectURL(new Blob([currentFile])));
 
-            currentItem.uploadThumbnail = 100;
+            currentItem.uploadThumbnail.i = 100;
+            currentItem.uploadThumbnail.a = 100;
 
             currentProject.tabListFiles.push(currentItem);
 

@@ -53,6 +53,9 @@ function saveTextElement() {
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
+        currentItem.uploadThumbnail.i = 100;
+        currentItem.uploadThumbnail.a = 100;
+
         document.getElementById('textElement').toBlob(function(blob) {
             currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
             currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
