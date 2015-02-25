@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+
+    <script type="text/javascript" src="//raw.githubusercontent.com/bbcrd/waveform-data.js/master/dist/waveform-data.min.js"></script>
+    <title>Wave-Form data view</title>
+</head>
+<body>
+    <p>
+        Audio data to waveForm with canvas
+    </p>
+    <canvas id="can" height="150" width="600"></canvas>
+</body>
+<script type="text/javascript">
+    var xhr = new XMLHttpRequest();
+    var canvas = document.getElementById('can');
+
+    xhr.open("GET", "http://clangue.net/other/testVideo/demos/gnuplot/data/audioDat");
+    xhr.responseType = "arraybuffer";
+    xhr.addEventListener("load", function onResponse(progressEvent){
+        var waveform = WaveformData.create(progressEvent.target);
+        var interpolateHeight = function interpolateHeightGenerator (total_height){
+            var amplitude = 256;
+            return function interpolateHeight (size){
+                return total_height - ((size + 128) * total_height) / amplitude;
+            };
+        };
+        var y = interpolateHeight(canvas.height);
+        var ctx = canvas.getContext('2d');
+        ctx.beginPath();
+
+        // from 0 to 100
+        waveform.min.forEach(function(val, x){
+            ctx.lineTo(x + 0.5, y(val) + 0.5);
+        });
+
+        // then looping back from 100 to 0
+        waveform.max.reverse().forEach(function(val, x){
+            ctx.lineTo((waveform.offset_length - x) + 0.5, y(val) + 0.5);
+        });
+
+        ctx.closePath();
+        ctx.strokeStyle="red";
+        ctx.stroke();
+        //console.log(waveform.duration);
+    });
+    xhr.send();
+</script>
+</html>
