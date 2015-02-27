@@ -167,6 +167,7 @@ function mouseMove(e) {
                 track.canvas.element.style.cursor = 'default';
             }
 
+            /*
             for(var i = 0; i < currentProject.tabListFiles.length; i++)
             {
                 if(currentProject.tabListFiles[i].isSelected)
@@ -194,6 +195,7 @@ function mouseMove(e) {
                     }
                 }
             }
+            */
         }
     }
 

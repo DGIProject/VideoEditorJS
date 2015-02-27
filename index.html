@@ -1,8 +1,3 @@
-<?php
-session_start();
-
-$_SESSION['user'] = 'User'; ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,9 +90,10 @@ $_SESSION['user'] = 'User'; ?>
                 <div id="listFiles" class="list-group listFiles">Aucun élément.</div>
                 <div class="toolbar">
                     <hr>
-                    <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-file"></span></button>
-                    <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-plus"></span> <span class="glyphicon glyphicon-text-width"></span></button>
+                    <button type="button" class="btn btn-default" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-file"></span></button>
+                    <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-text-width"></span></button>
                     <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span></button>
+                    <button type="button" class="btn btn-default" onclick="uploadManagerModal();"><span id="countUploads" class="badge">0</span></button>
                     <button type="button" class="btn btn-block btn-danger" onclick="currentProject.stopAddFileTrack();" style="margin-top: 5px;display: none;" id="stopAddFileTrackButton">STOP</button>
                     <div style="display: none;"><input type="file" onchange="addFile();" id="fileLoader"/></div>
                 </div>
@@ -164,6 +160,16 @@ $_SESSION['user'] = 'User'; ?>
                         </div>
                         <span class="marginauto strong">Chargement en cours ... <span id="persentProgress">0%</span></span>
                     </div>
+                    <div id="enterUsername" style="display: none;">
+                        <form method="post" onsubmit="setUsername(this.usernameSession.value);return false" class="form-horizontal">
+                            <div class="form-group">
+                                <input type="text" name="usernameSession" class="form-control" placeholder="Pseudo">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Connexion</button>
+                            </div>
+                        </form>
+                    </div>
                     <div id="startUseProject" style="display: none;">
                         <h2>Projects</h2>
                         <div id="listExistingProjects">Loading existing projects ...</div>
@@ -209,6 +215,21 @@ $_SESSION['user'] = 'User'; ?>
             </div>
         </div>
     </div>
+    <div id="uploadManagerModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Manager</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="listUploads" class="list-group">No uploads.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="textElementModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -228,7 +249,7 @@ $_SESSION['user'] = 'User'; ?>
                                 </button>
                                 <a class="navbar-brand" href="#">Text Element</a>
                             </div>
-                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <div class="collapse navbar-collapse">
                                 <ul class="nav navbar-nav">
                                     <form class="navbar-form navbar-left" role="search">
                                         <div class="form-group">
@@ -285,7 +306,7 @@ $_SESSION['user'] = 'User'; ?>
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Enregistrer un élément audio/vidéo</h4>
+                    <h4 class="modal-title">Enregistrer un élément audio/vidéo</h4>
                 </div>
                 <div class="modal-body">
                     <div id="chooseRecordButtons">
@@ -358,11 +379,6 @@ $_SESSION['user'] = 'User'; ?>
 <div id="loadScripts"></div>
 
 <script type="text/javascript">
-    function makeValues()
-    {
-        setValues("<?php echo $_SESSION['user']; ?>");
-    }
-
     $('input[type="checkbox"]').checkbox();
 </script>
 

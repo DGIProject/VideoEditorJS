@@ -5,6 +5,7 @@ var tabFilesJS = [
     'class/ReadProject.js',
     'class/GenerateFileProject.js',
     'class/File.js',
+    'class/FileUpload.js',
     'class/ManageTextElement.js',
     'class/TextElement.js',
     'class/Track.js',
@@ -27,6 +28,10 @@ var tabFilesJS = [
 var currentFileRow = 0;
 
 var currentProject = false, currentManageTextElement = false;
+
+var usernameSession;
+
+var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
 window.onload = function() {
     console.log('onload');
@@ -61,9 +66,7 @@ function getFileJS() {
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
 
         document.getElementById('loadingProgressProject').style.display = 'none';
-        document.getElementById('startUseProject').style.display = '';
-
-        getListProjects('listExistingProjects');
+        document.getElementById('enterUsername').style.display = '';
     }
 }
 
@@ -84,6 +87,11 @@ function loadFileJS(url, callback) {
     document.getElementById('loadScripts').appendChild(script);
 }
 
-function setValues(username) {
-    currentProject.username = username;
+function setUsername(username) {
+    usernameSession = username.deleteAccent().replace(' ', '_').toUpperCase();
+
+    document.getElementById('enterUsername').style.display = 'none';
+    document.getElementById('startUseProject').style.display = '';
+
+    getListProjects('listExistingProjects', usernameSession);
 }

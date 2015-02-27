@@ -23,6 +23,9 @@ function addTrack() {
     videoView.onmouseup = mouseUp;
     videoView.onmousemove = mouseMove;
 
+    videoView.ondragover = allowDrop;
+    videoView.ondrop = dropFile;
+
     videoView.width = 633;
     videoView.height = 120;
 
@@ -241,4 +244,18 @@ function drawElementsTracks() {
     {
         drawElements(i);
     }
+}
+
+function allowDrop(e) {
+    e.preventDefault();
+}
+
+function dropFile(e) {
+    e.preventDefault();
+
+    var fileId = e.dataTransfer.getData('fileId');
+
+    console.log(fileId);
+
+    addElement(fileId, parseInt(this.id.replace('videoView', '')));
 }

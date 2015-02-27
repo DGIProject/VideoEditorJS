@@ -20,13 +20,10 @@ function addFile() {
             currentItem.setDuration('00:00:20');
             currentItem.setThumbnailImage(window.URL.createObjectURL(new Blob([currentFile])));
 
-            currentItem.uploadThumbnail.i = 100;
-            currentItem.uploadThumbnail.a = 100;
-
             currentProject.tabListFiles.push(currentItem);
 
             addFileList(fileId, currentFile.name, typeFile);
-            uploadFile(fileId, (currentProject.tabListFiles.length - 1), currentFile, 'FILE');
+            uploadFile(fileId, currentFile.name, currentFile, 'FILE');
         }
         else {
             var reader = new FileReader();
@@ -172,8 +169,8 @@ function addFile() {
                                             currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(blob));
 
                                             addFileList(fileId, currentFile.name, typeFile);
-                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles.length - 1, blob, 'THUMBNAIL_I');
-                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles.length - 1, currentFile, 'FILE');
+                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_I');
+                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, currentFile, 'FILE');
                                             loadM();
                                         });
                                     }
@@ -254,23 +251,33 @@ function addFileList(fileId, fileName, typeFile) {
 
     var fileE = document.createElement('a');
     fileE.id = 'file' + fileId;
+    fileE.draggable = true;
     fileE.style.cursor = 'pointer';
     fileE.onclick = fileProperties;
-    fileE.onmousedown = selectFile;
+    fileE.ondragstart = selectFile;
+    fileE.ondragend = deselectFile;
     fileE.classList.add('list-group-item');
-    fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h4><div id="toolsFile' + fileId + '"><div class="progress"><div id="progressFile' + fileId + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></div>';
+    fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h4><div id="toolsFile' + fileId + '">Sending ...</div>';
 
     document.getElementById('listFiles').appendChild(fileE);
 }
 
-function selectFile() {
+function selectFile(e) {
     console.log('selectFile');
     console.log(this.id);
+
+    this.classList.add('active');
 
     var id = this.id.replace('file', '');
     var row = rowById(id, currentProject.tabListFiles);
 
     currentProject.tabListFiles[row].isSelected = true;
+
+    e.dataTransfer.setData('fileId', id);
+}
+
+function deselectFile(e) {
+    this.classList.remove('active');
 }
 
 function deselectFiles() {
@@ -337,8 +344,24 @@ function removeFile(id) {
 }
 
 //UPLOAD
-function uploadFile(id, row, file, type) {
-    currentProject.currentUploads++;
+function uploadFile(id, name, file, type) {
+    document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) + 1;
+
+    var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1] + 1) : 0
+    var fileUpload = new FileUpload(idFileUpload, id, name, type);
+
+    currentProject.tabFilesUpload.push(fileUpload);
+
+    if(currentProject.tabFilesUpload.length < 2)
+    {
+        document.getElementById('listUploads').innerHTML = '';
+    }
+
+    var element = document.createElement('div');
+    element.classList.add('list-group-item');
+    element.innerHTML = '<h4 class="list-group-item-heading">' + fileUpload.name + ' - ' + fileUpload.type + '</h4><p class="list-group-item-text"><div class="progress"><div id="progressFile' + idFileUpload + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></p>';
+
+    document.getElementById('listUploads').appendChild(element);
 
     var formData = new FormData();
     formData.append('fileData', file);
@@ -350,21 +373,11 @@ function uploadFile(id, row, file, type) {
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
 
-            console.log(row);
+            fileUpload.setProgress((Math.floor(done / total * 1000) / 10));
 
-            if (type == 'FILE') {
-                currentProject.tabListFiles[row].uploadFile = (Math.floor(done / total * 1000) / 10)
-            }
-            else if (type == 'THUMBNAIL_I') {
-                currentProject.tabListFiles[row].uploadThumbnail.i = (Math.floor(done / total * 1000) / 10);
-            }
-            else {
-                currentProject.tabListFiles[row].uploadThumbnail.a = (Math.floor(done / total * 1000) / 10);
-            }
+            document.getElementById('progressFile' + idFileUpload).style.width = fileUpload.progress + '%';
 
             console.log((Math.floor(done / total * 1000) / 10));
-
-            //document.getElementById('progressFile' + id).style.width = (Math.floor(done / total * 1000) / 10) + '%';
         };
     }
 
@@ -372,11 +385,7 @@ function uploadFile(id, row, file, type) {
         if (4 == this.readyState) {
             console.log('xhr upload complete ' + this.responseText);
 
-            currentProject.currentUploads--;
-
             if (this.responseText != 'true') {
-                currentProject.tabFilesUpload[currentProject.tabFilesUpload.length] = [id, file];
-
                 var n = noty({
                     layout: 'top',
                     type: 'error',
@@ -384,14 +393,15 @@ function uploadFile(id, row, file, type) {
                     timeout: '5000'
                 });
 
+                /*
                 var buttonRetryUpload = document.createElement('button');
                 buttonRetryUpload.setAttribute('type', 'button');
                 buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + file + '\', \'' + type + '\');');
                 buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
                 buttonRetryUpload.innerHTML = 'Réessayer';
+                */
 
-                document.getElementById('toolsFile' + id).innerHTML = '';
-                document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
+                document.getElementById('toolsFile' + id).innerHTML = 'Envoi impossible.';
             }
             else {
                 var n = noty({
@@ -403,6 +413,8 @@ function uploadFile(id, row, file, type) {
 
                 document.getElementById('toolsFile' + id).innerHTML = 'Ready!';
             }
+
+            document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) - 1;
         }
     };
 
@@ -410,17 +422,6 @@ function uploadFile(id, row, file, type) {
     xhr.send(formData);
 }
 
-function uploadAllFiles() {
-    if (currentProject.tabFilesUpload.length > 0) {
-        console.log('filesToUpload');
-
-        for (var i = 0; i < currentProject.tabFilesUpload.length; i++) {
-            uploadFile(currentProject.tabFilesUpload[i][0], currentProject.tabFilesUpload[i][1]);
-        }
-
-        currentProject.tabFilesUpload = [];
-    }
-    else {
-        console.log('notFilesToUpload');
-    }
+function uploadManagerModal() {
+    $('#uploadManagerModal').modal('show');
 }

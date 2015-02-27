@@ -18,11 +18,7 @@ File = function(id, type, size, fileName, format) {
     this.thumbnail = {i: null, a: null};
 
     this.isSelected = false;
-
-    //upload
     this.isUploaded = false;
-    this.uploadFile = 0;
-    this.uploadThumbnail = {i: 0, a: 0};
 };
 
 File.prototype.makeVideo = function() {

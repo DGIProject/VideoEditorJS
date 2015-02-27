@@ -2,7 +2,9 @@
  * Created by Dylan on 10/02/2015.
  */
 
-function getListProjects(id){
+function getListProjects(id, username){
+    console.log(username);
+
     var xmlhttp = xmlHTTP();
 
     xmlhttp.onreadystatechange=function()
@@ -31,9 +33,9 @@ function getListProjects(id){
         }
     };
 
-    xmlhttp.open("POST", "php/getListProjects.php", true);
+    xmlhttp.open("POST", remoteAPIPath + "php/getListProjects.php", true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send();
+    xmlhttp.send('username=' + username);
 }
 
 function newProject() {
@@ -52,7 +54,7 @@ function saveNewProject() {
 
         resetInterface();
 
-        currentProject = new Project(nameProject.deleteAccent().replace(' ', '_').toUpperCase(), getCurrentDate());
+        currentProject = new Project(nameProject.deleteAccent().replace(' ', '_').toUpperCase(), usernameSession, getCurrentDate());
         currentProject.updateText();
         currentProject.switchAutoSave();
 
@@ -86,7 +88,7 @@ function loadProject(fileName) {
         }
     };
 
-    xmlhttp.open("POST", "php/readFileProject.php", true);
+    xmlhttp.open("POST", remoteAPIPath + "php/readFileProject.php", true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send('fileName=' + fileName);
 }
@@ -125,7 +127,7 @@ function saveProject() {
         }
     };
 
-    xmlhttp.open("POST", "php/addFileProject.php", true);
+    xmlhttp.open("POST", remoteAPIPath + "php/addFileProject.php", true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile));
 }

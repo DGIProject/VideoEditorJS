@@ -1,9 +1,9 @@
-Project = function(name, dateCreation) {
+Project = function(name, username, dateCreation) {
     this.name = name;
     this.dateCreation = dateCreation;
     this.lastSave = 'None';
 
-    this.username = 'demo';
+    this.username = username;
 
     this.autoSave = false;
 
@@ -11,7 +11,6 @@ Project = function(name, dateCreation) {
     this.tabListTracks = [];
 
     this.tabFilesUpload = [];
-    this.currentUploads = 0;
 };
 
 Project.prototype.startAddFileTrack = function(id)
