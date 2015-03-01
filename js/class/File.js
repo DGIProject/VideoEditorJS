@@ -17,7 +17,6 @@ File = function(id, type, size, fileName, format) {
 
     this.thumbnail = {i: null, a: null};
 
-    this.isSelected = false;
     this.isUploaded = false;
 };
 

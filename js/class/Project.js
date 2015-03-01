@@ -13,40 +13,6 @@ Project = function(name, username, dateCreation) {
     this.tabFilesUpload = [];
 };
 
-Project.prototype.startAddFileTrack = function(id)
-{
-    document.getElementById('stopAddFileTrackButton').style.display = '';
-
-    var listFilesLib = document.getElementById('listFiles');
-    var filesTab = listFilesLib.getElementsByTagName('a');
-
-    for(var i = 0; i < filesTab.length; i++)
-    {
-        var fileId = filesTab[i].id.replace('file', '');
-
-        filesTab[i].removeAttribute('onclick');
-        filesTab[i].setAttribute('onclick', 'addElement(' + fileId + ', ' + id + ');');
-
-        filesTab[i].classList.add('active');
-    }
-};
-
-Project.prototype.stopAddFileTrack = function()
-{
-    document.getElementById('stopAddFileTrackButton').style.display = 'none';
-
-    var listFilesLib = document.getElementById('listFiles');
-    var filesTab = listFilesLib.getElementsByTagName('a');
-
-    for(var i = 0; i < filesTab.length; i++)
-    {
-        var fileId = filesTab[i].id.replace('file', '');
-
-        filesTab[i].onclick = fileProperties;
-        filesTab[i].classList.remove('active');
-    }
-};
-
 Project.prototype.updateText = function() {
     document.getElementById('currentProject').innerHTML = 'Project : ' + this.name + ', last save : ' + this.lastSave;
 

@@ -1,7 +1,5 @@
-document.onmouseup = function(e)
-{
-    if(currentProject)
-    {
-        //deselectFiles();
+document.onclick = function() {
+    if(currentProject) {
+        hideContextMenu();
     }
 };

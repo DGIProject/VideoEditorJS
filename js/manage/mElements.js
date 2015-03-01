@@ -27,15 +27,18 @@ function addElement(id, idTrack, posX) {
         }
     }
 
-    var imageThumbnail = new Image();
+    if(track.type == TYPE.VIDEO)
+    {
+        var imageThumbnail = new Image();
 
-    imageThumbnail.onload = function() {
-        track.tabElements.push(new Element(idElement, imageThumbnail, {total: file.duration, begin: 0}, id, idTrack, marginLeft, false));
+        imageThumbnail.onload = function() {
+            track.tabElements.push(new Element(idElement, imageThumbnail, {total: file.duration, begin: 0}, id, idTrack, marginLeft, false));
 
-        drawElements(idTrack);
-    };
+            drawElements(idTrack);
+        };
 
-    imageThumbnail.src = (track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a;
+        imageThumbnail.src = (track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a;
+    }
 }
 
 function deleteElement(rowTrack, rowElement) {

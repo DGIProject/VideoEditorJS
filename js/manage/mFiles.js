@@ -3,8 +3,6 @@
  */
 
 function addFile() {
-    currentProject.stopAddFileTrack();
-
     var currentFile = document.getElementById('fileLoader').files[0];
     console.log(currentFile);
 
@@ -263,29 +261,13 @@ function addFileList(fileId, fileName, typeFile) {
 }
 
 function selectFile(e) {
-    console.log('selectFile');
-    console.log(this.id);
-
     this.classList.add('active');
 
-    var id = this.id.replace('file', '');
-    var row = rowById(id, currentProject.tabListFiles);
-
-    currentProject.tabListFiles[row].isSelected = true;
-
-    e.dataTransfer.setData('fileId', id);
+    e.dataTransfer.setData('fileId', parseInt(this.id.replace('file', '')));
 }
 
 function deselectFile(e) {
     this.classList.remove('active');
-}
-
-function deselectFiles() {
-    console.log('deselectFiles');
-
-    for (var i = 0; i < currentProject.tabListFiles.length; i++) {
-        currentProject.tabListFiles[i].isSelected = false;
-    }
 }
 
 function fileProperties() {

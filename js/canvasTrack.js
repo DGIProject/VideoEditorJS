@@ -22,32 +22,51 @@ function mouseDown(e) {
 }
 
 function mouseUp(e) {
-    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
+    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var row = rowById(id, currentProject.tabListTracks);
 
-    currentProject.tabListTracks[row].mousedown = false;
+    var track = currentProject.tabListTracks[row];
+    var currentElement = track.tabElements[track.currentRow];
 
-    if(currentProject.tabListTracks[row].currentRow >= 0)
+    track.mousedown = false;
+
+    if(track.currentRow >= 0)
     {
-        if(currentProject.tabListTracks[row].mode == MODE.REMOVE)
+        if(track.mode == MODE.REMOVE)
         {
-            deleteElement(row, currentProject.tabListTracks[row].currentRow);
+            deleteElement(row, track.currentRow);
         }
 
-        for(var i = 0; i < currentProject.tabListTracks[row].tabElements.length; i++)
+        for(var i = 0; i < track.tabElements.length; i++)
         {
-            if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft > currentProject.tabListTracks[row].tabElements[i].marginLeft && currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
-            {
-                console.log('collision before');
+            var element = track.tabElements[i];
 
-                currentProject.tabListTracks[row].tabElements[i].width = currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - currentProject.tabListTracks[row].tabElements[i].marginLeft;
+            if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
+            {
+                console.log('collision between');
+
+                element.width = currentElement.marginLeft - element.marginLeft;
+
+                addElement(element.fileId, id, (currentElement.marginLeft + currentElement.width));
             }
 
             if((currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) > currentProject.tabListTracks[row].tabElements[i].marginLeft && (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
             {
-                console.log('collision after');
+                console.log('collision before');
+
+                currentProject.tabListTracks[row].tabElements[i].leftGap += (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) - currentProject.tabListTracks[row].tabElements[i].marginLeft;
 
                 currentProject.tabListTracks[row].tabElements[i].width = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width);
                 currentProject.tabListTracks[row].tabElements[i].marginLeft = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - ((currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width));
+            }
+
+            if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft > currentProject.tabListTracks[row].tabElements[i].marginLeft && currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
+            {
+                console.log('collision after');
+
+                currentProject.tabListTracks[row].tabElements[i].rightGap += (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft;
+
+                currentProject.tabListTracks[row].tabElements[i].width = currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - currentProject.tabListTracks[row].tabElements[i].marginLeft;
             }
         }
 
@@ -56,17 +75,13 @@ function mouseUp(e) {
 }
 
 function mouseMove(e) {
-    var x = (e.offsetX == undefined) ? e.layerX : e.offsetX;
-    var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
-
-    //console.log(e, x);
-
     var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
     var row = rowById(id, currentProject.tabListTracks);
 
     var track = currentProject.tabListTracks[row];
 
-    //console.log('row:' + row, x);
+    var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX) + pixelTimeBar.g;
+    var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
 
     if(track.mousedown)
     {
@@ -200,6 +215,21 @@ function mouseMove(e) {
     }
 
     drawElements(row);
+}
+
+function showContextMenu(e) {
+    console.log(e.clientX, e.clientY);
+
+    document.getElementById('contextMenu').style.left = document.body.scrollLeft + e.clientX + 'px';
+    document.getElementById('contextMenu').style.top = document.body.scrollTop + e.clientY + 'px';
+
+    document.getElementById('contextMenu').style.display = 'initial';
+
+    return false;
+};
+
+function hideContextMenu() {
+    document.getElementById('contextMenu').style.display = 'none';
 }
 
 function rowTabElement(x, row) {
