@@ -42,6 +42,12 @@ function rowById(id, tab)
     return row;
 }
 
+function timeToSeconds(time) {
+    var timeSplit = time.split(':');
+
+    return (parseInt(timeSplit[0]) * 3600) + (parseInt(timeSplit[1] * 60)) + parseInt(timeSplit[2].split('.')[0]);
+}
+
 function getCurrentDate() {
     var date = new Date();
 

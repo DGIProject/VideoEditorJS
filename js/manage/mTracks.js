@@ -55,6 +55,11 @@ function addTrack() {
     audioView.onmouseup = mouseUp;
     audioView.onmousemove = mouseMove;
 
+    audioView.ondragover = allowDrop;
+    audioView.ondrop = dropFile;
+
+    audioView.oncontextmenu = showContextMenu;
+
     audioView.width = 633;
     audioView.height = 120;
 
@@ -93,8 +98,6 @@ function deleteTrackModal(id) {
 
 function deleteTrack(id) {
     $('#deleteTrackModal').modal('hide');
-
-    currentProject.stopAddFileTrack();
 
     var rowTrack1 = rowById(id, currentProject.tabListTracks);
 
@@ -249,15 +252,28 @@ function drawElementsTracks() {
 }
 
 function allowDrop(e) {
-    e.preventDefault();
+    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var fileId = parseInt(e.dataTransfer.getData('fileId'));
+
+    var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
+    var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
+
+    if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+    {
+        console.log('yes');
+
+        e.preventDefault();
+    }
+    else
+    {
+        console.log('no');
+
+        //return false;
+    }
 }
 
 function dropFile(e) {
     e.preventDefault();
 
-    var fileId = e.dataTransfer.getData('fileId');
-
-    console.log(fileId);
-
-    addElement(fileId, parseInt(this.id.replace('videoView', '')));
+    addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0);
 }

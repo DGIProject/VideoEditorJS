@@ -6,9 +6,9 @@ Element = function(id, thumbnail, duration, fileId, trackId, marginLeft, parent)
 
     this.thumbnail = thumbnail;
 
-    this.totalDuration = this.timeToSecond(duration.total);
+    this.totalDuration = duration.total;
     this.beginDuration = duration.begin;
-    this.currentDuration = this.totalDuration;
+    this.currentDuration = this.totalDuration - this.beginDuration;
 
     this.width = this.calculateWidth();
     this.minWidth = 20;
@@ -24,12 +24,6 @@ Element = function(id, thumbnail, duration, fileId, trackId, marginLeft, parent)
     this.selected = true;
 };
 
-Element.prototype.timeToSecond = function(initialDuration) {
-    var time = initialDuration.split(':');
-
-    return (parseInt(time[0]) * 3600) + (parseInt(time[1] * 60)) + parseInt(time[2].split('.')[0]);
-};
-
 Element.prototype.calculateWidth = function() {
-    return this.totalDuration * oneSecond;
+    return this.currentDuration * oneSecond;
 };

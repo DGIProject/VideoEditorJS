@@ -45,9 +45,13 @@ function mouseUp(e) {
             {
                 console.log('collision between');
 
+                var widthNewElement = element.marginLeft - (currentElement.marginLeft - element.marginLeft);
+
                 element.width = currentElement.marginLeft - element.marginLeft;
 
-                addElement(element.fileId, id, (currentElement.marginLeft + currentElement.width));
+                addElement(element.fileId, id, (currentElement.marginLeft + currentElement.width), (currentElement.marginLeft - element.marginLeft) / oneSecond);
+
+                track.tabElements[track.tabElements.length - 1].width = widthNewElement;
             }
 
             if((currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) > currentProject.tabListTracks[row].tabElements[i].marginLeft && (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
@@ -146,6 +150,8 @@ function mouseMove(e) {
 
             track.lastX = x;
         }
+
+        haveParent(track, track.tabElements[track.currentRow]);
     }
     else
     {
@@ -181,52 +187,30 @@ function mouseMove(e) {
                 track.mode = MODE.NONE;
                 track.canvas.element.style.cursor = 'default';
             }
-
-            /*
-            for(var i = 0; i < currentProject.tabListFiles.length; i++)
-            {
-                if(currentProject.tabListFiles[i].isSelected)
-                {
-                    if(track.tabElements.length > 0)
-                    {
-                        if(track.tabElements[track.tabElements.length - 1].fileId != currentProject.tabListFiles[i].id)
-                        {
-                            console.log('newElementlength');
-
-                            addElement(i, id, x);
-                        }
-                        else
-                        {
-                            console.log('alreadyCreated');
-
-                            track.tabElements[currentProject.tabListTracks[i].tabElements.length - 1].marginLeft = x;
-                        }
-                    }
-                    else
-                    {
-                        console.log('newElement0');
-
-                        addElement(i, id, x);
-                    }
-                }
-            }
-            */
         }
     }
 
     drawElements(row);
 }
 
-function showContextMenu(e) {
-    console.log(e.clientX, e.clientY);
+function haveParent(track, element) {
+    if(element.parent >= 0)
+    {
+        var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
+        var parentElement = parentTrack.tabElements[rowById(element.parent, parentTrack.tabElements)];
+    }
+}
 
-    document.getElementById('contextMenu').style.left = document.body.scrollLeft + e.clientX + 'px';
-    document.getElementById('contextMenu').style.top = document.body.scrollTop + e.clientY + 'px';
+function showContextMenu(e) {
+    console.log(e.clientX, e.clientY, e.offsetX, e.offsetY, e.layerX, e.layerY);
+
+    document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - ((e.offsetX == undefined) ? e.layerX : e.offsetX)) + 'px';
+    document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - ((e.offsetY == undefined) ? e.layerY : e.offsetY)) + 'px';
 
     document.getElementById('contextMenu').style.display = 'initial';
 
     return false;
-};
+}
 
 function hideContextMenu() {
     document.getElementById('contextMenu').style.display = 'none';
@@ -286,7 +270,7 @@ function element(rowTrack, row) {
     context.rect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
     context.stroke();
 
-    context.fillStyle = (currentProject.tabListTracks[rowTrack].type == 'VIDEO') ? '#A3BDDE' : '#74E4BC';
+    context.fillStyle = (currentProject.tabListTracks[rowTrack].type == TYPE.VIDEO) ? '#A3BDDE' : '#74E4BC';
     context.fillRect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
 
     context.font = '15px Calibri';
