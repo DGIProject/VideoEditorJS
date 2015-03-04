@@ -329,7 +329,7 @@ function removeFile(id) {
 function uploadFile(id, name, file, type) {
     document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) + 1;
 
-    var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1] + 1) : 0
+    var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1] + 1) : 0;
     var fileUpload = new FileUpload(idFileUpload, id, name, type);
 
     currentProject.tabFilesUpload.push(fileUpload);
@@ -341,7 +341,7 @@ function uploadFile(id, name, file, type) {
 
     var element = document.createElement('div');
     element.classList.add('list-group-item');
-    element.innerHTML = '<h4 class="list-group-item-heading">' + fileUpload.name + ' - ' + fileUpload.type + '</h4><p class="list-group-item-text"><div class="progress"><div id="progressFile' + idFileUpload + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></p>';
+    element.innerHTML = '<h4 class="list-group-item-heading">' + fileUpload.name + ' - ' + fileUpload.type + '</h4><p id="contentFileUpload" class="list-group-item-text"><div class="progress"><div id="progressFile' + idFileUpload + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></p>';
 
     document.getElementById('listUploads').appendChild(element);
 
@@ -375,15 +375,15 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                /*
+                document.getElementById('contentFileUpload').innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
+
                 var buttonRetryUpload = document.createElement('button');
                 buttonRetryUpload.setAttribute('type', 'button');
-                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + file + '\', \'' + type + '\');');
+                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + name + '\', \'' + file + '\', \'' + type + '\');');
                 buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
                 buttonRetryUpload.innerHTML = 'Réessayer';
-                */
 
-                document.getElementById('toolsFile' + id).innerHTML = 'Envoi impossible.';
+                document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
             }
             else {
                 var n = noty({
@@ -393,7 +393,12 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                document.getElementById('toolsFile' + id).innerHTML = 'Ready!';
+                if(isUploadedFile(id))
+                {
+                    currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded = true;
+
+                    document.getElementById('toolsFile' + id).innerHTML = 'Ready!';
+                }
             }
 
             document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) - 1;
@@ -402,6 +407,20 @@ function uploadFile(id, name, file, type) {
 
     xhr.open('POST', 'php/uploadFile.php?projectName=' + currentProject.name + '&fileId=' + id + '&typeFile=' + type, true);
     xhr.send(formData);
+}
+
+function isUploadedFile(id) {
+    var isUploaded = true;
+
+    for(var i = 0; i < currentProject.tabFilesUpload.length; i++)
+    {
+        if(currentProject.tabFilesUpload[i].id == id && currentProject.tabFilesUpload[i].progress < 100)
+        {
+            isUploaded = false
+        }
+    }
+
+    return isUploaded;
 }
 
 function uploadManagerModal() {

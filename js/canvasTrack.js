@@ -190,7 +190,7 @@ function mouseMove(e) {
         }
     }
 
-    drawElements(row);
+    drawElementsTracks();
 }
 
 function haveParent(track, element) {
@@ -198,14 +198,22 @@ function haveParent(track, element) {
     {
         var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
         var parentElement = parentTrack.tabElements[rowById(element.parent, parentTrack.tabElements)];
+
+        parentElement.width = element.width;
+
+        parentElement.marginLeft = element.marginLeft;
+
+        parentElement.leftGap = element.leftGap;
+        parentElement.rightGap = element.rightGap;
     }
 }
 
 function showContextMenu(e) {
-    console.log(e.clientX, e.clientY, e.offsetX, e.offsetY, e.layerX, e.layerY);
+    var track = currentProject.tabListTracks[rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks)];
+    var element = track.tabElements[track.currentRow];
 
-    document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - ((e.offsetX == undefined) ? e.layerX : e.offsetX)) + 'px';
-    document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - ((e.offsetY == undefined) ? e.layerY : e.offsetY)) + 'px';
+    document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
+    document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
 
     document.getElementById('contextMenu').style.display = 'initial';
 
@@ -266,18 +274,19 @@ function element(rowTrack, row) {
 
     context.beginPath();
     context.lineWidth = 1;
-    context.strokeStyle = (currentProject.tabListTracks[rowTrack].tabElements[row].selected) ? 'blue' : 'gray';
-    context.rect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
+    context.strokeStyle = (currentElement.selected) ? 'blue' : 'gray';
+    context.rect(currentElement.marginLeft - pixelTimeBar.g, 0, currentElement.width, 100);
     context.stroke();
 
-    context.fillStyle = (currentProject.tabListTracks[rowTrack].type == TYPE.VIDEO) ? '#A3BDDE' : '#74E4BC';
-    context.fillRect(currentProject.tabListTracks[rowTrack].tabElements[row].marginLeft - pixelTimeBar.g, 0, currentProject.tabListTracks[rowTrack].tabElements[row].width, 100);
+    //context.fillStyle = (currentProject.tabListTracks[rowTrack].type == TYPE.VIDEO) ? '#A3BDDE' : '#74E4BC';
+    context.fillStyle = currentElement.color;
+    context.fillRect(currentElement.marginLeft - pixelTimeBar.g, 0, currentElement.width, 100);
 
     context.font = '15px Calibri';
     context.fillStyle = '#000000';
 
     //TEXT
-    context.fillText(compressName(currentProject.tabListFiles[rowById(currentProject.tabListTracks[rowTrack].tabElements[row].fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + 2) - pixelTimeBar.g, 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
+    context.fillText(compressName(currentProject.tabListFiles[rowById(currentElement.fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + 2) - pixelTimeBar.g, 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
 
     //CLOSE IMAGE
     if(currentElement.width >= 16)
@@ -291,7 +300,7 @@ function element(rowTrack, row) {
     var newWidth = (imageThumbnail.width * 75) / imageThumbnail.height;
 
     var sWidth = (newWidth > (currentElement.width - 7)) ? (((currentElement.width - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
-    //(currentProject.tabListTracks[rowTrack].tabElements[row].width < 100) ? (imageThumbnail.width - (((80 - (currentProject.tabListTracks[rowTrack].tabElements[row].width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
+    //(currentElement.width < 100) ? (imageThumbnail.width - (((80 - (currentElement.width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
     var sHeight = imageThumbnail.height;
 
     var xThumbnail = (currentElement.marginLeft + 2) - pixelTimeBar.g;

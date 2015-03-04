@@ -260,15 +260,7 @@ function allowDrop(e) {
 
     if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
     {
-        console.log('yes');
-
         e.preventDefault();
-    }
-    else
-    {
-        console.log('no');
-
-        //return false;
     }
 }
 

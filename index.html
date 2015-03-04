@@ -10,17 +10,19 @@
 
 </head>
 <body>
-<div class="container">
+<div id="containerEditor" class="container">
     <h1>VideoEditorJS</h1>
     <div id="editor">
         <div class="dropdown">
             <ul id="contextMenu" class="dropdown-menu">
-                <li role="presentation" class="dropdown-header">Dropdown header</li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                <li role="presentation" class="dropdown-header">Dropdown header</li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+                <li id="elementNameCM" role="presentation" class="dropdown-header">Element</li>
+                <li role="presentation"><a id="buttonBreakLinkCM" tabindex="-1" href="#">Rompre le lien</a></li>
+                <li role="presentation"><a id="buttonPropertiesCM" tabindex="-1" href="#">Propriétés</a></li>
+                <li role="presentation"><a id="buttonRemoveCM" tabindex="-1" href="#">Supprimer</a></li>
+                <li role="presentation" class="dropdown-header">Personnalisation</li>
+                <li role="presentation"><a id="buttonEffetsCM" tabindex="-1" href="#">Effets</a></li>
+                <li role="presentation"><a id="buttonOpacityCM" tabindex="-1" href="#">Opacité</a></li>
+                <li role="presentation"><a id="buttonVolumeCM" tabindex="-1" href="#">Volume</a></li>
             </ul>
         </div>
         <nav class="navbar navbar-default" role="navigation">

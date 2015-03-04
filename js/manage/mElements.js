@@ -30,16 +30,18 @@ function addElement(id, trackId, posX, timeBegin) {
         }
     }
 
+    var color = randomColor();
+
     file.thumbnail.a = file.thumbnail.i;
 
     if(file.isVideo && file.isAudio)
     {
-        elementTrack(track, id1, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, id2);
-        elementTrack(parentTrack, id2, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, id1);
+        elementTrack(track, id1, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, id2);
+        elementTrack(parentTrack, id2, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, marginLeft, id1);
     }
     else
     {
-        elementTrack(track, id1, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, false);
+        elementTrack(track, id1, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, false);
     }
 
     /*
@@ -58,11 +60,11 @@ function addElement(id, trackId, posX, timeBegin) {
     */
 }
 
-function elementTrack(track, elementId, thumbnailData, time, fileId, trackId, marginLeft, parent) {
+function elementTrack(track, elementId, thumbnailData, color, time, fileId, trackId, marginLeft, parent) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        track.tabElements.push(new Element(elementId, imageThumbnail, time, fileId, trackId, marginLeft, parent));
+        track.tabElements.push(new Element(elementId, imageThumbnail, color, time, fileId, trackId, marginLeft, parent));
 
         drawElements(trackId);
     };
@@ -70,6 +72,29 @@ function elementTrack(track, elementId, thumbnailData, time, fileId, trackId, ma
     imageThumbnail.src = thumbnailData;
 }
 
+function breakLinkElements(id, trackId) {
+    var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
+    var element = track.tabElements[rowById(id, track.tabElements)];
+
+    if(element.parent >= 0)
+    {
+        var parentElement = track.tabElements[rowById(track.parent, track.tabElements)];
+        parentElement.parent = false;
+        parentElement.color = randomColor();
+
+        element.parent = false;
+    }
+
+    drawElementsTracks();
+}
+
 function deleteElement(rowTrack, rowElement) {
-    currentProject.tabListTracks[rowTrack].tabElements.remove(rowElement);
+    var track = currentProject.tabListTracks[rowTrack];
+
+    if(track.tabElements[rowElement].parent >= 0)
+    {
+        track.tabElements.remove(rowById(track.tabElements[rowElement].parent, track.tabElements));
+    }
+
+    track.tabElements.remove(rowElement);
 }

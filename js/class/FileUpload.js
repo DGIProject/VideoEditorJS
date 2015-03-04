@@ -6,7 +6,6 @@ FileUpload = function(id, fileId, name, type) {
     this.type = type;
 
     this.progress = 0; //in %
-    this.isUploading = false;
 };
 
 FileUpload.prototype.setProgress = function(progress) {
