@@ -13,7 +13,7 @@ function addTrack() {
     var videoInfo = document.createElement('div');
     videoInfo.id = 'videoInfo' + idTrack1;
     videoInfo.classList.add('singleTrack');
-    videoInfo.innerHTML = '<div class="valuesTrack"><span>VIDEO ' + idTrack1 + '</span></div><div class="optionsTrack"><button type="button" onclick="settingsTrack(' + idTrack1 + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrackModal(' + idTrack1 + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    videoInfo.innerHTML = '<div class="valuesTrack"><span class="bold">VIDEO ' + idTrack1 + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + idTrack1 + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
 
     var videoView = document.createElement('canvas');
     videoView.id = 'videoView' + idTrack1;
@@ -28,11 +28,11 @@ function addTrack() {
 
     videoView.oncontextmenu = showContextMenu;
 
-    videoView.width = 633;
+    videoView.width = 730;
     videoView.height = 120;
 
     var contextVideoView = videoView.getContext('2d');
-    contextVideoView.width = 633;
+    contextVideoView.width = 730;
     contextVideoView.height = 120;
 
     document.getElementById('videoInfo').appendChild(videoInfo);
@@ -45,7 +45,7 @@ function addTrack() {
     var audioInfo = document.createElement('div');
     audioInfo.id = 'audioInfo' + idTrack2;
     audioInfo.classList.add('singleTrack');
-    audioInfo.innerHTML = '<div class="valuesTrack"><span>AUDIO ' + idTrack2 + '</span></br><input type="range" step="1" onchange="updateVolumeTrack(' + idTrack2 + ', this.value);" min="1" max="100" class="form-control"><span class="posMinVolume">0</span><span class="posMaxVolume">100</span></div><div class="optionsTrack"><button type="button" onclick="settingsTrack(' + idTrack2 + ');" class="btn btn-link"><span class="glyphicon glyphicon-cog"></span></button><button type="button" onclick="deleteTrackModal(' + idTrack2 + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    audioInfo.innerHTML = '<div class="valuesTrack"><span class="bold">AUDIO ' + idTrack1 + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + idTrack2 + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
 
     var audioView = document.createElement('canvas');
     audioView.id = 'audioView' + idTrack2;
@@ -60,11 +60,11 @@ function addTrack() {
 
     audioView.oncontextmenu = showContextMenu;
 
-    audioView.width = 633;
+    audioView.width = 730;
     audioView.height = 120;
 
     var contextAudioView = audioView.getContext('2d');
-    contextAudioView.width = 633;
+    contextAudioView.width = 730;
     contextAudioView.height = 120;
 
     document.getElementById('audioInfo').appendChild(audioInfo);
@@ -73,18 +73,6 @@ function addTrack() {
     currentProject.tabListTracks.push(new Track(idTrack2, TYPE.AUDIO, {element: audioView, context: contextAudioView}, idTrack1));
 
     drawElements(currentProject.tabListTracks.length - 1);
-}
-
-function updateVolumeTrack(id, valueVolume)
-{
-    console.log('updateVolumeTrack');
-
-    currentProject.tabListTracks[id].upVolume(valueVolume);
-}
-
-function settingsTrack(id)
-{
-    console.log('settingsTrack');
 }
 
 function deleteTrackModal(id) {

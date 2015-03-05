@@ -270,10 +270,19 @@ function deselectFile(e) {
     this.classList.remove('active');
 }
 
-function fileProperties() {
+function fileProperties(fileId) {
     console.log('fileProperties');
 
-    var id = this.id.replace('file', '');
+    var id;
+
+    if(fileId == undefined)
+    {
+        id = this.id.replace('file', '')
+    }
+    else
+    {
+        id = fileId;
+    }
 
     var fileInfo = currentProject.tabListFiles[id];
     var type = currentProject.tabListFiles[id].type;

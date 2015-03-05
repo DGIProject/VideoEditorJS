@@ -72,6 +72,7 @@ function elementTrack(track, elementId, thumbnailData, color, time, fileId, trac
     imageThumbnail.src = thumbnailData;
 }
 
+//BREAK LINK
 function breakLinkElements(id, trackId) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
     var element = track.tabElements[rowById(id, track.tabElements)];
@@ -86,6 +87,42 @@ function breakLinkElements(id, trackId) {
     }
 
     drawElementsTracks();
+}
+
+//OPACITY
+function opacityElementModal(id, trackId, name) {
+    document.getElementById('opacityElement').innerHTML = name;
+    document.getElementById('opacityRange').onchange = setOpacityElement(id, trackId);
+    document.getElementById('opacityRangeValue').innerHTML = '0';
+
+    $('#opacityElementModal').modal('show');
+}
+
+function setOpacityElement(id, trackId) {
+    var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
+    var element = track.tabElements[rowById(id, track.tabElements)];
+
+    element.opacity = this.value;
+
+    document.getElementById('opacityRangeValue').innerHTML = this.value;
+}
+
+//VOLUME
+function volumeElementModal(id, trackId, name) {
+    document.getElementById('volumeElement').innerHTML = name;
+    document.getElementById('volumeRange').onchange = setOpacityElement(id, trackId);
+    document.getElementById('volumeRangeValue').innerHTML = '0';
+
+    $('#volumeElementValue').modal('show');
+}
+
+function setVolumeElement(id, trackId) {
+    var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
+    var element = track.tabElements[rowById(id, track.tabElements)];
+
+    element.volume = this.value;
+
+    document.getElementById('volumeRangeValue').innerHTML = this.value;
 }
 
 function deleteElement(rowTrack, rowElement) {

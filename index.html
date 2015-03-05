@@ -18,10 +18,10 @@
                 <li id="elementNameCM" role="presentation" class="dropdown-header">Element</li>
                 <li role="presentation"><a id="buttonBreakLinkCM" tabindex="-1" href="#">Rompre le lien</a></li>
                 <li role="presentation"><a id="buttonPropertiesCM" tabindex="-1" href="#">Propriétés</a></li>
-                <li role="presentation"><a id="buttonRemoveCM" tabindex="-1" href="#">Supprimer</a></li>
+                <li role="presentation"><a id="buttonDeleteCM" tabindex="-1" href="#">Supprimer</a></li>
                 <li role="presentation" class="dropdown-header">Personnalisation</li>
-                <li role="presentation"><a id="buttonEffetsCM" tabindex="-1" href="#">Effets</a></li>
-                <li role="presentation"><a id="buttonOpacityCM" tabindex="-1" href="#">Opacité</a></li>
+                <li role="presentation"><a id="buttonEffetsCM" tabindex="-1" href="#" disabled>Effets</a></li>
+                <li role="presentation"><a id="buttonOpacityCM" tabindex="-1" href="#" disabled>Opacité</a></li>
                 <li role="presentation"><a id="buttonVolumeCM" tabindex="-1" href="#">Volume</a></li>
             </ul>
         </div>
@@ -360,6 +360,44 @@
                         </div>
                     </div>
                     <span id="renderText" class="marginauto"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="opacityElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="opacityElement" class="modal-title">Opacity Element</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="range" id="opacityRange" step="1" min="0" max="100" class="form-control">
+                    <span>
+                        <span id="opacityRangeValue">0</span>
+                        /100
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Finish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="volumeElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="volumeElement" class="modal-title">Volume Element</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="range" id="volumeRange" step="1" min="0" max="100" class="form-control">
+                    <span>
+                        <span id="volumeRangeValue">0</span>
+                        /100
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Finish</button>
                 </div>
             </div>
         </div>
