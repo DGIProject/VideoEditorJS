@@ -95,7 +95,7 @@ function mouseMove(e) {
 
             if((x - track.gap) > 0)
             {
-                track.tabElements[track.currentRow].marginLeft = x - track.gap;
+                track.tabElements[track.currentRow].marginLeft = x;
             }
             else
             {
@@ -261,6 +261,13 @@ function rowTabElement(x, row) {
         {
             currentProject.tabListTracks[row].tabElements[i].selected = false;
         }
+    }
+}
+
+function drawElementsTracks() {
+    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    {
+        drawElements(i);
     }
 }
 

@@ -270,19 +270,10 @@ function deselectFile(e) {
     this.classList.remove('active');
 }
 
-function fileProperties(fileId) {
+function fileProperties() {
     console.log('fileProperties');
 
-    var id;
-
-    if(fileId == undefined)
-    {
-        id = this.id.replace('file', '')
-    }
-    else
-    {
-        id = fileId;
-    }
+    var id = this.id.replace('file', '');
 
     var fileInfo = currentProject.tabListFiles[id];
     var type = currentProject.tabListFiles[id].type;
@@ -336,6 +327,7 @@ function removeFile(id) {
 
 //UPLOAD
 function uploadFile(id, name, file, type) {
+    document.getElementById('toolsFile' + id).innerHTML = 'Sending ...';
     document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) + 1;
 
     var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1] + 1) : 0;
@@ -350,7 +342,14 @@ function uploadFile(id, name, file, type) {
 
     var element = document.createElement('div');
     element.classList.add('list-group-item');
-    element.innerHTML = '<h4 class="list-group-item-heading">' + fileUpload.name + ' - ' + fileUpload.type + '</h4><p id="contentFileUpload" class="list-group-item-text"><div class="progress"><div id="progressFile' + idFileUpload + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0% Complete</span></div></div></p>';
+    element.innerHTML = '<h4 class="list-group-item-heading">' + fileUpload.name + ' - ' + fileUpload.type + '</h4>' +
+    '<div id="contentFileUpload' + idFileUpload + '" class="list-group-item-text">' +
+    '<div class="progress">' +
+    '<div id="progressFile' + idFileUpload + '" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">' +
+    '<span class="sr-only">0% Complete</span>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
 
     document.getElementById('listUploads').appendChild(element);
 
@@ -384,11 +383,13 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                document.getElementById('contentFileUpload').innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
+                document.getElementById('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
+
+                document.getElementById('toolsFile' + id).innerHTML = '';
 
                 var buttonRetryUpload = document.createElement('button');
                 buttonRetryUpload.setAttribute('type', 'button');
-                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + name + '\', \'' + file + '\', \'' + type + '\');');
+                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + name + '\', ' + file + ', \'' + type + '\');');
                 buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
                 buttonRetryUpload.innerHTML = 'Réessayer';
 

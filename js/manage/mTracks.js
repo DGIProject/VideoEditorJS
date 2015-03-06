@@ -3,8 +3,9 @@
  */
 
 var oneSecond = 5;
-var pixelTimeBar = {g: 0, d: 633};
+var pixelTimeBar = {g: 0, d: 710};
 var lastZoom = 5;
+var scrollTracks = 0;
 
 function addTrack() {
     var idTrack1 = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
@@ -170,26 +171,42 @@ function zoomMoins() {
     console.log(oneSecond);
 }
 
+function calculateElementsPixel() {
+    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    {
+        for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
+        {
+            var element = currentProject.tabListTracks[i].tabElements[x];
 
-//SCROLL
-function plusScroll() {
-    console.log('plusScroll');
+            element.width = (element.width / lastZoom) * oneSecond;
+            element.minWidth = (element.minWidth / lastZoom) * oneSecond;
+            element.maxWidth = (element.maxWidth / lastZoom) * oneSecond;
 
-    pixelTimeBar.g += 2;
-    pixelTimeBar.d += 2;
+            element.marginLeft = (element.marginLeft / lastZoom) * oneSecond;
+        }
 
-    calculateTimeBar();
-    drawElementsTracks();
+        drawElements(i);
+    }
 }
 
-function lessScroll() {
-    if(pixelTimeBar.g >= 2)
-    {
-        pixelTimeBar.g -= 2;
-        pixelTimeBar.d -= 2;
 
-        calculateTimeBar();
-        drawElementsTracks();
+//SCROLL
+function scrollPlusTracks() {
+    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    {
+        currentProject.tabListTracks[i].canvas.element.width += 10;
+        currentProject.tabListTracks[i].canvas.context.width += 10;
+    }
+}
+
+function scrollLessTracks() {
+    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    {
+        if(currentProject.tabListTracks[i].canvas.element.width > 730)
+        {
+            currentProject.tabListTracks[i].canvas.element.width -= 10;
+            currentProject.tabListTracks[i].canvas.context.width -= 10;
+        }
     }
 }
 
@@ -214,31 +231,7 @@ function calculateTimeBar() {
     document.getElementById('startTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
 }
 
-function calculateElementsPixel() {
-    for(var i = 0; i < currentProject.tabListTracks.length; i++)
-    {
-        for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
-        {
-            var element = currentProject.tabListTracks[i].tabElements[x];
-
-            element.width = (element.width / lastZoom) * oneSecond;
-            element.minWidth = (element.minWidth / lastZoom) * oneSecond;
-            element.maxWidth = (element.maxWidth / lastZoom) * oneSecond;
-
-            element.marginLeft = (element.marginLeft / lastZoom) * oneSecond;
-        }
-
-        drawElements(i);
-    }
-}
-
-function drawElementsTracks() {
-    for(var i = 0; i < currentProject.tabListTracks.length; i++)
-    {
-        drawElements(i);
-    }
-}
-
+//DROP ELEMENT
 function allowDrop(e) {
     var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
     var fileId = parseInt(e.dataTransfer.getData('fileId'));
