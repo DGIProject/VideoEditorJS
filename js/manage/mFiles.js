@@ -71,61 +71,6 @@ function addFile() {
                     else if (message.type == "stop") {
                         console.log("Executed in " + message.time + "ms");
                         terminal.Workers[index].worker.terminate();
-                        // this.Workers.remove(index);
-                        if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
-                        {
-                            terminal.processCmd("ffmpeg -i " + currentFile.name + " audioDat.wav", function (e, index) {
-
-                                var message = e.data;
-
-                                if (message.type == "stdout") {
-                                    console.log(message.text);
-                                }
-                                else if (message.type == "stop") {
-                                    console.log("Executed in " + message.time + "ms");
-                                    terminal.Workers[index].worker.terminate();
-
-                                    if (message.hasOwnProperty("data")) {
-                                        window.URL = window.URL || window.webkitURL;
-                                        var buffers = message.data;
-                                        buffers.forEach(function (file) {
-                                            var blob = new Blob([file.data]);
-                                            var audioUrl = URL.createObjectURL(blob);
-                                            // create audio waveform
-                                            var wavesurfer = Object.create(WaveSurfer);
-                                            wavesurfer.on('ready', function () {
-                                                //wavesurfer.play();
-                                                URL.revokeObjectURL(audioUrl);
-                                                var canvas = findFirstDescendant("waveform", "canvas");
-                                                canvas.toBlob(function(blob) {
-                                                    url = URL.createObjectURL(blob);
-                                                    console.log("wavefor URL", url);
-                                                    uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMNAIL_A');
-                                                    currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
-                                                }, "image/png");
-
-                                                wavesurfer.destroy();
-                                            });
-
-                                            // Report errors
-                                            wavesurfer.on('error', function (err) {
-                                                console.error(err);
-                                            });
-                                            var options = {
-                                                container     : document.querySelector('#waveform'),
-                                                waveColor     : 'violet',
-                                                progressColor : 'violet'
-                                            };
-
-                                            // Init
-                                            wavesurfer.init(options);
-                                            // Load audio from URL
-                                            wavesurfer.load(audioUrl);
-                                        });
-                                    }
-                                }
-                            });
-                        }
 
                         if (typeFile == TYPE.VIDEO) {
                             terminal.processCmd("ffmpeg -i " + currentFile.name + " -f image2 -vf scale=-1:50 -an -ss " + Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond() / 2) + " thumbnail.jpg", function (e, index) {
@@ -150,7 +95,57 @@ function addFile() {
                                             currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(blob));
 
                                             uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_I');
-                                            loadM();
+                                            if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
+                                            {
+                                                terminal.processCmd("ffmpeg -i " + currentFile.name + " audioDat.wav", function (e, index) {
+
+                                                    var message = e.data;
+
+                                                    if (message.type == "stdout") {
+                                                        console.log(message.text);
+                                                    }
+                                                    else if (message.type == "stop") {
+                                                        console.log("Executed in " + message.time + "ms");
+                                                        terminal.Workers[index].worker.terminate();
+
+                                                        if (message.hasOwnProperty("data")) {
+                                                            window.URL = window.URL || window.webkitURL;
+                                                            var buffers = message.data;
+                                                            buffers.forEach(function (file) {
+                                                                var blob = new Blob([file.data]);
+                                                                var audioUrl = URL.createObjectURL(blob);
+                                                                // create audio waveform
+                                                                var wavesurfer = Object.create(WaveSurfer);
+                                                                wavesurfer.on('ready', function () {
+                                                                    //wavesurfer.play();
+                                                                    URL.revokeObjectURL(audioUrl);
+                                                                    var canvas = findFirstDescendant("waveform", "canvas");
+                                                                    canvas.toBlob(function(blob) {
+                                                                        url = URL.createObjectURL(blob);
+                                                                        console.log("wavefor URL", url);
+                                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMNAIL_A');
+                                                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
+                                                                    }, "image/png");
+
+                                                                    wavesurfer.destroy();
+
+                                                                });
+
+                                                                wavesurfer.init({
+                                                                    container     : document.querySelector('#waveform'),
+                                                                    waveColor     : 'violet',
+                                                                    progressColor : 'violet'
+                                                                });
+                                                                wavesurfer.load(audioUrl);
+                                                                loadM();
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                            else{
+                                                loadM();
+                                            }
                                         });
                                     }
                                 }
@@ -158,7 +153,57 @@ function addFile() {
                         }
                         else
                         {
-                            loadM();
+                            if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
+                            {
+                                terminal.processCmd("ffmpeg -i " + currentFile.name + " audioDat.wav", function (e, index) {
+
+                                    var message = e.data;
+
+                                    if (message.type == "stdout") {
+                                        console.log(message.text);
+                                    }
+                                    else if (message.type == "stop") {
+                                        console.log("Executed in " + message.time + "ms");
+                                        terminal.Workers[index].worker.terminate();
+
+                                        if (message.hasOwnProperty("data")) {
+                                            window.URL = window.URL || window.webkitURL;
+                                            var buffers = message.data;
+                                            buffers.forEach(function (file) {
+                                                var blob = new Blob([file.data]);
+                                                var audioUrl = URL.createObjectURL(blob);
+                                                // create audio waveform
+                                                var wavesurfer = Object.create(WaveSurfer);
+                                                wavesurfer.on('ready', function () {
+                                                    //wavesurfer.play();
+                                                    URL.revokeObjectURL(audioUrl);
+                                                    var canvas = findFirstDescendant("waveform", "canvas");
+                                                    canvas.toBlob(function(blob) {
+                                                        url = URL.createObjectURL(blob);
+                                                        console.log("wavefor URL", url);
+                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMNAIL_A');
+                                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
+                                                    }, "image/png");
+
+                                                    wavesurfer.destroy();
+
+                                                });
+
+                                                wavesurfer.init({
+                                                    container     : document.querySelector('#waveform'),
+                                                    waveColor     : 'violet',
+                                                    progressColor : 'violet'
+                                                });
+                                                wavesurfer.load(audioUrl);
+                                                loadM();
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                            else{
+                                loadM();
+                            }
                         }
                     }
                 });
@@ -267,6 +312,10 @@ function fileProperties() {
 
     if (type == TYPE.TEXT || type == TYPE.IMAGE || type == TYPE.VIDEO) {
         preview = '<img class="previewFileContent" src="' + fileInfo.thumbnail.i + '">';
+    }
+    else if (type == TYPE.AUDIO)
+    {
+        preview = '<img class="previewAudioFileContent" src="' + fileInfo.thumbnail.a + '">';
     }
     else {
         preview = 'Non disponible';

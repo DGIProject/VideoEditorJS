@@ -205,6 +205,13 @@
     border: 1px solid #000000;
 }
 
+.previewAudioFileContent
+{
+    width: 400px;
+    height: auto;
+    border: 1px solid #000000;
+}
+
 .propertiesDivText
 {
     height: 350px;

@@ -2,7 +2,7 @@
  * Created by Guillaume on 03/02/2015.
  */
 
-importScripts('../../demos/ffmpegJs/build/ffmpeg-all-codecs.js');
+importScripts('../../../../demos/ffmpegJs/build/ffmpeg-all-codecs.js');
 
 var now = Date.now;
 
