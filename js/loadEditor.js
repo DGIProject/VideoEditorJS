@@ -21,6 +21,11 @@ var tabFilesJS = [
     'manage/mRecords.js',
     'manage/mRender.js',
     'manage/mErrors.js',
+    '../demos/wavesurfer.js/src/wavesurfer.js',
+    '../demos/wavesurfer.js/src/util.js',
+    '../demos/wavesurfer.js/src/webaudio.js',
+    '../demos/wavesurfer.js/src/drawer.js',
+    '../demos/wavesurfer.js/src/drawer.canvas.js',
     //'lib/ffmpeg-all-codecs.js',
     'onEvent.js'
 ];

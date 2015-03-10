@@ -29,6 +29,14 @@ function addFile() {
             reader.onload = function (e) {
                 loadM();
 
+                var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
+                console.log('currentItem ' + currentItem);
+
+                currentProject.tabListFiles.push(currentItem);
+                addFileList((currentProject.tabListFiles.length-1), currentFile.name, typeFile);
+
+                uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, currentFile, 'FILE');
+
                 var data = e.target.result;
 
                 var ElementData = new Uint8Array(data);
@@ -64,85 +72,60 @@ function addFile() {
                         console.log("Executed in " + message.time + "ms");
                         terminal.Workers[index].worker.terminate();
                         // this.Workers.remove(index);
-                        terminal.processCmd("ffmpeg -i " + currentFile.name + " -c:a pcm_s16le audioDat.wav", function (e, index) {
+                        if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
+                        {
+                            terminal.processCmd("ffmpeg -i " + currentFile.name + " audioDat.wav", function (e, index) {
 
-                            var message = e.data;
+                                var message = e.data;
 
-                            if (message.type == "stdout") {
-                                console.log(message.text);
-                            }
-                            else if (message.type == "stop") {
-                                console.log("Executed in " + message.time + "ms");
-                                terminal.Workers[index].worker.terminate();
+                                if (message.type == "stdout") {
+                                    console.log(message.text);
+                                }
+                                else if (message.type == "stop") {
+                                    console.log("Executed in " + message.time + "ms");
+                                    terminal.Workers[index].worker.terminate();
 
-                                if (message.hasOwnProperty("data")) {
-                                    window.URL = window.URL || window.webkitURL;
-                                    var buffers = message.data;
-                                    buffers.forEach(function (file) {
-                                        var blob = new Blob([file.data]);
+                                    if (message.hasOwnProperty("data")) {
+                                        window.URL = window.URL || window.webkitURL;
+                                        var buffers = message.data;
+                                        buffers.forEach(function (file) {
+                                            var blob = new Blob([file.data]);
+                                            var audioUrl = URL.createObjectURL(blob);
+                                            // create audio waveform
+                                            var wavesurfer = Object.create(WaveSurfer);
+                                            wavesurfer.on('ready', function () {
+                                                //wavesurfer.play();
+                                                URL.revokeObjectURL(audioUrl);
+                                                var canvas = findFirstDescendant("waveform", "canvas");
+                                                canvas.toBlob(function(blob) {
+                                                    url = URL.createObjectURL(blob);
+                                                    console.log("wavefor URL", url);
+                                                    uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMNAIL_A');
+                                                    currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
+                                                }, "image/png");
 
-                                        terminal.loadFile(window.URL.createObjectURL(blob), "audioDat.wav", function (onEnd) {
-
-                                            var sizeX = currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond();
-
-                                            var gnuplotScript = "set terminal svg size " + sizeX + ",119;" +
-                                                "set output 'out.svg';" +
-                                                "unset key;" +
-                                                "unset tics;" +
-                                                "unset border;" +
-                                                "set lmargin 0;" +
-                                                "set rmargin 0;" +
-                                                "set tmargin 0;" +
-                                                "set bmargin 0;" +
-                                                "plot 'audioDat.wav' binary filetype=bin format='%int16' endian=little array=1:0 with lines;";
-
-                                            var buf = new ArrayBuffer(gnuplotScript.length * 2); // 2 bytes for each char
-                                            var bufView = new Uint16Array(buf);
-                                            for (var i = 0, strLen = gnuplotScript.length; i < strLen; i++) {
-                                                bufView[i] = gnuplotScript.charCodeAt(i);
-                                            }
-                                            var name = "script" + Date.now();
-
-                                            terminal.Files.push({name: name, data: bufView});
-                                            terminal.processCmd("gnuplot " + name + " audioDat.wav", function (e, i) {
-                                                console.log(e.data)
-                                                if (e.data.type == "stop") {
-                                                    console.log("Executed in " + message.time + "ms");
-                                                    terminal.Workers[i].worker.terminate();
-
-                                                    if (e.data.hasOwnProperty("data")) {
-                                                        window.URL = window.URL || window.webkitURL;
-                                                        console.log("Blob URL", window.URL.createObjectURL(e.data.data));
-                                                        /* To transform SVG to png */
-                                                        var canvas = document.createElement("canvas");
-                                                        canvas.setAttribute("id", "canvasTest");
-                                                        canvas.style.display = "none";
-                                                        canvas.width = sizeX;
-                                                        canvas.height = 119;
-                                                        document.appendChild(canvas);
-                                                        var context = canvas.getContext("2d");
-                                                        var img = new Image();
-                                                        var text;
-                                                        img.onload = function () {
-                                                            context.drawImage(img, 0, 0);
-                                                            text = canvas.toDataURL("image/png");
-                                                            console.log(text);
-                                                        };
-                                                        img.src = window.URL.createObjectURL(e.data.data);
-                                                        /*----------*/
-                                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].thumbnail.a = window.URL.createObjectURL(e.data.data) | text;
-                                                    }
-                                                    terminal.Files.remove(terminal.Files.length - 1);
-                                                    terminal.Files.remove(terminal.Files.length - 2);
-                                                }
+                                                wavesurfer.destroy();
                                             });
 
+                                            // Report errors
+                                            wavesurfer.on('error', function (err) {
+                                                console.error(err);
+                                            });
+                                            var options = {
+                                                container     : document.querySelector('#waveform'),
+                                                waveColor     : 'violet',
+                                                progressColor : 'violet'
+                                            };
 
+                                            // Init
+                                            wavesurfer.init(options);
+                                            // Load audio from URL
+                                            wavesurfer.load(audioUrl);
                                         });
-                                    });
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
 
                         if (typeFile == TYPE.VIDEO) {
                             terminal.processCmd("ffmpeg -i " + currentFile.name + " -f image2 -vf scale=-1:50 -an -ss " + Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond() / 2) + " thumbnail.jpg", function (e, index) {
@@ -166,22 +149,19 @@ function addFile() {
 
                                             currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(blob));
 
-                                            addFileList(fileId, currentFile.name, typeFile);
                                             uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_I');
-                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, currentFile, 'FILE');
                                             loadM();
                                         });
                                     }
                                 }
                             });
                         }
+                        else
+                        {
+                            loadM();
+                        }
                     }
                 });
-
-                var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
-                console.log('currentItem ' + currentItem);
-
-                currentProject.tabListFiles.push(currentItem);
             };
 
             reader.readAsArrayBuffer(currentFile);

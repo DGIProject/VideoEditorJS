@@ -92,3 +92,12 @@ String.prototype.deleteAccent = function(){
 
     return str;
 };
+
+function findFirstDescendant(parent, tagname)
+{
+    parent = document.getElementById(parent);
+    var descendants = parent.getElementsByTagName(tagname);
+    if ( descendants.length )
+        return descendants[0];
+    return null;
+}
