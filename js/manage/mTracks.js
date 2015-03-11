@@ -215,7 +215,7 @@ function scrollLessTracks() {
 function calculateTimeBar() {
     var timeGauche = Math.floor(pixelTimeBar.g / oneSecond);
     var timeDroit = Math.floor(pixelTimeBar.d / oneSecond);
-    console.log(timeDroit, timeGauche);
+    //console.log(timeDroit, timeGauche);
     // calcule du temp a droite !
     var heure = Math.floor(timeDroit / 3600)
     timeDroit = timeDroit - (3600 * heure);

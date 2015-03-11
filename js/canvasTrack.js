@@ -101,6 +101,8 @@ function mouseMove(e) {
             {
                 track.tabElements[track.currentRow].marginLeft = 0;
             }
+
+            haveParent(track, track.tabElements[track.currentRow]);
         }
         else if(track.mode == MODE.RESIZE.LEFT)
         {
@@ -126,6 +128,8 @@ function mouseMove(e) {
             }
 
             track.lastX = x;
+
+            haveParent(track, track.tabElements[track.currentRow]);
         }
         else if(track.mode == MODE.RESIZE.RIGHT)
         {
@@ -149,9 +153,9 @@ function mouseMove(e) {
             }
 
             track.lastX = x;
-        }
 
-        haveParent(track, track.tabElements[track.currentRow]);
+            haveParent(track, track.tabElements[track.currentRow]);
+        }
     }
     else
     {

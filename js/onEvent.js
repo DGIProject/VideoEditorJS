@@ -5,7 +5,7 @@ document.onclick = function() {
 };
 
 document.getElementById('audioView').onscroll = function() {
-    console.log(this.scrollLeft);
+    //console.log(this.scrollLeft);
 
     document.getElementById('videoView').scrollLeft = this.scrollLeft;
 

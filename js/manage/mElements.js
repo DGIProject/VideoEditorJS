@@ -32,8 +32,6 @@ function addElement(id, trackId, posX, timeBegin) {
 
     var color = randomColor();
 
-    file.thumbnail.a = file.thumbnail.i;
-
     if(file.isVideo && file.isAudio)
     {
         elementTrack(track, id1, track.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id2);

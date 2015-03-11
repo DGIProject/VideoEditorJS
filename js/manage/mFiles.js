@@ -123,7 +123,7 @@ function addFile() {
                                                                     canvas.toBlob(function(blob) {
                                                                         url = URL.createObjectURL(blob);
                                                                         console.log("wavefor URL", url);
-                                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMNAIL_A');
+                                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_A');
                                                                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
                                                                     }, "image/png");
 
@@ -181,7 +181,7 @@ function addFile() {
                                                     canvas.toBlob(function(blob) {
                                                         url = URL.createObjectURL(blob);
                                                         console.log("wavefor URL", url);
-                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMNAIL_A');
+                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_A');
                                                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
                                                     }, "image/png");
 

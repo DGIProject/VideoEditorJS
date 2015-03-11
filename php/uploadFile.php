@@ -3,16 +3,16 @@ include_once 'config.php';
 
 if($_GET['projectName'] != NULL && $_GET['fileId'] != NULL)
 {
-    $filename = $_GET['typeFile'] . $_GET['fileId'] . '.data';
+    $filename = $_GET['typeFile'] . '_' . $_GET['fileId'] . '.data';
 
-    $path = $DIR_projectsData . $_GET['projectName'];
+    $path = '../' . $DIR_projectsData . $_GET['projectName'] . '/';
 
     if(!is_dir($path))
     {
         mkdir($path);
     }
 
-    $pathToFilename = $path . '/' . $filename;
+    $pathToFilename = $path . $filename;
 
     //echo $pathToFilename;
 
