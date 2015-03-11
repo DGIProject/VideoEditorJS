@@ -13,7 +13,9 @@ function makeRender(state){
     var i;
     for (t=0;t<tracks.length;t++)
     {
-        elementInTrack = tracks[t].tabElements;
+        elementInTrack = tracks[t].tabElements.sort(function(a, b){
+            return a.marginLeft-b.marginLeft
+        }); //sort pour avoir les element dans le bon ordre des marges
         //fileContent += "\n track "+t;
         console.log("track ",t);
         for (e =0;e<elementInTrack.length;e++){
