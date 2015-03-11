@@ -1,14 +1,15 @@
-Element = function(id, thumbnail, color, duration, fileId, trackId, marginLeft, parent) {
+Element = function(id, type, thumbnail, color, duration, fileId, trackId, marginLeft, properties, parent) {
     this.id = id;
 
     this.fileId = fileId;
     this.trackId = trackId;
 
+    this.type = type;
+
     this.thumbnail = thumbnail;
     this.color = color;
 
-    this.opacity = 0;
-    this.volume = 100;
+    this.properties = properties;
 
     this.totalDuration = duration.total;
     this.beginDuration = duration.begin;

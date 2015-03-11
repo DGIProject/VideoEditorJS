@@ -217,6 +217,10 @@
     height: 350px;
 }
 
+#canvasProperties {
+    border: 1px solid #cbcbcb;
+}
+
 #textElement {
     border: 1px solid #E7E7E7;
     border-radius: 4px;
@@ -229,6 +233,7 @@
     height: 60px;
     background-color: #F5F5F5;
 }
+
 body
 {
     -moz-user-select: none;

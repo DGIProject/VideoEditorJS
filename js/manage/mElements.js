@@ -36,35 +36,20 @@ function addElement(id, trackId, posX, timeBegin) {
 
     if(file.isVideo && file.isAudio)
     {
-        elementTrack(track, id1, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, id2);
-        elementTrack(parentTrack, id2, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, marginLeft, id1);
+        elementTrack(track, id1, track.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id2);
+        elementTrack(parentTrack, id2, track.type, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id1);
     }
     else
     {
-        elementTrack(track, id1, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, -1);
+        elementTrack(track, id1, track.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), -1);
     }
-
-    /*
-    if(track.type == TYPE.VIDEO)
-    {
-        var imageThumbnail = new Image();
-
-        imageThumbnail.onload = function() {
-            track.tabElements.push(new Element(idElement, imageThumbnail, {total: timeToSeconds(file.duration), begin: timeBegin}, id, idTrack, marginLeft, false));
-
-            drawElements(idTrack);
-        };
-
-        imageThumbnail.src = (track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a;
-    }
-    */
 }
 
-function elementTrack(track, elementId, thumbnailData, color, time, fileId, trackId, marginLeft, parent) {
+function elementTrack(track, elementId, type, thumbnailData, color, time, fileId, trackId, marginLeft, properties, parent) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        track.tabElements.push(new Element(elementId, imageThumbnail, color, time, fileId, trackId, marginLeft, parent));
+        track.tabElements.push(new Element(elementId, type, imageThumbnail, color, time, fileId, trackId, marginLeft, properties, parent));
 
         drawElements(trackId);
     };
@@ -87,6 +72,17 @@ function breakLinkElements(id, trackId) {
     }
 
     drawElementsTracks();
+}
+
+//ELEMENT PROPERTIES
+function elementProperties(element) {
+    console.log('elementProperties');
+
+    var contextCProperties = document.getElementById('canvasProperties').getContext('2d');
+    contextCProperties.fillStyle = '#FF0000';
+    contextCProperties.fillRect(0, 0, 50, 50);
+
+    $('#elementPropertiesModal').modal('show');
 }
 
 //OPACITY

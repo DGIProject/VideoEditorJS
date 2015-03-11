@@ -213,29 +213,33 @@ function showContextMenu(e) {
     var rowTrack = rowById(trackId, currentProject.tabListTracks);
 
     var track = currentProject.tabListTracks[rowTrack];
-    var element = track.tabElements[track.currentRow];
-    var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)].fileName;
 
-    document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
-    document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
-
-    document.getElementById('buttonBreakLinkCM').onclick = breakLinkElements(element.id, trackId);
-    document.getElementById('buttonPropertiesCM').onclick = fileProperties(element.fileId);
-    document.getElementById('buttonDeleteCM').onclick = deleteElement(rowTrack, track.currentRow);
-
-    document.getElementById('buttonEffectsCM').disabled = true;
-    document.getElementById('buttonOpacityCM').disabled = true;
-
-    if(track.type = TYPE.AUDIO)
+    if(track.currentRow >= 0)
     {
-        document.getElementById('buttonVolumeCM').onclick = volumeElementModal(element.id, trackId, file.fileName);
-    }
-    else
-    {
-        document.getElementById('buttonVolumeCM').disabled = true;
-    }
+        var element = track.tabElements[track.currentRow];
+        var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)].fileName;
 
-    document.getElementById('contextMenu').style.display = 'initial';
+        document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
+        document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
+
+        document.getElementById('buttonBreakLinkCM').onclick = breakLinkElements(element.id, trackId);
+        document.getElementById('buttonPropertiesCM').onclick = elementProperties(element);
+        document.getElementById('buttonDeleteCM').onclick = deleteElement(rowTrack, track.currentRow);
+
+        document.getElementById('buttonEffectsCM').disabled = true;
+        document.getElementById('buttonOpacityCM').disabled = true;
+
+        if(track.type = TYPE.AUDIO)
+        {
+            document.getElementById('buttonVolumeCM').onclick = volumeElementModal(element.id, trackId, file.fileName);
+        }
+        else
+        {
+            document.getElementById('buttonVolumeCM').disabled = true;
+        }
+
+        document.getElementById('contextMenu').style.display = 'initial';
+    }
 
     return false;
 }
