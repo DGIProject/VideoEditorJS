@@ -58,15 +58,20 @@ function elementTrack(track, elementId, type, thumbnailData, color, time, fileId
 //BREAK LINK
 function breakLinkElements(id, trackId) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
+    var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
+
     var element = track.tabElements[rowById(id, track.tabElements)];
 
     if(element.parent >= 0)
     {
-        var parentElement = track.tabElements[rowById(track.parent, track.tabElements)];
-        parentElement.parent = false;
+        var parentElement = parentTrack.tabElements[rowById(element.parent, parentTrack.tabElements)];
+
+        console.log(parentElement, element, rowById(element.parent, parentTrack.tabElements));
+
+        parentElement.parent = -1;
         parentElement.color = randomColor();
 
-        element.parent = false;
+        element.parent = -1;
     }
 
     drawElementsTracks();
@@ -90,6 +95,8 @@ function elementProperties(rowTrack, rowElement) {
     var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');
 
     var pixelValue = element.maxWidth / 100;
+
+    console.log(pixelValue);
 
     contextCProperties.fillStyle = element.color;
     contextCProperties.fillRect((pixelValue * element.leftGap), 0, (100 - (pixelValue * element.rightGap)), 50);

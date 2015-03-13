@@ -411,7 +411,7 @@ function uploadFile(id, name, file, type) {
 
             document.getElementById('progressFile' + idFileUpload).style.width = fileUpload.progress + '%';
 
-            console.log((Math.floor(done / total * 1000) / 10));
+            //console.log((Math.floor(done / total * 1000) / 10));
         };
     }
 
@@ -421,7 +421,7 @@ function uploadFile(id, name, file, type) {
 
             if (this.responseText != 'true') {
                 noty({
-                    layout: 'top',
+                    layout: 'topRight',
                     type: 'error',
                     text: 'Nous n\'avons pas réussi à envoyer ce fichier',
                     timeout: '5000'
@@ -441,7 +441,7 @@ function uploadFile(id, name, file, type) {
             }
             else {
                 noty({
-                    layout: 'top',
+                    layout: 'topRight',
                     type: 'success',
                     text: 'Le fichier ' + file.name + ' a bien été envoyé.',
                     timeout: '5000'
