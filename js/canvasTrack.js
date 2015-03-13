@@ -8,7 +8,7 @@ imageClose.onload = function() {
     console.log('loaded close');
 };
 
-imageClose.src = 'http://clangue.net/other/testVideo/canvastry/img/close.png';
+imageClose.src = 'http://clangue.net/other/testVideo/demos/canvastry/img/close.png';
 
 function mouseDown(e) {
     console.log('mousedown');
