@@ -106,8 +106,7 @@
                     <button type="button" class="btn btn-default" onclick="newTextElement();"><span class="glyphicon glyphicon-text-width"></span></button>
                     <button type="button" class="btn btn-default" onclick="newRecord();"><span class="glyphicon glyphicon-record"></span></button>
                     <button type="button" class="btn btn-default" onclick="uploadManagerModal();"><span id="countUploads" class="badge">0</span></button>
-                    <button type="button" class="btn btn-block btn-danger" onclick="currentProject.stopAddFileTrack();" style="margin-top: 5px;display: none;" id="stopAddFileTrackButton">STOP</button>
-                    <div style="display: none;"><input type="file" onchange="addFile();" id="fileLoader"/></div>
+                    <div style="display: none;"><input type="file" onchange="addFile(this.files[0]);" id="fileLoader"/></div>
                 </div>
             </div>
         </div>

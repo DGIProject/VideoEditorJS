@@ -2,9 +2,8 @@
  * Created by Dylan on 10/02/2015.
  */
 
-function addFile() {
-    var currentFile = document.getElementById('fileLoader').files[0];
-    console.log(currentFile);
+function addFile(currentFile) {
+    console.log('currentFile : ' + currentFile);
 
     var typeFile = getTypeFile(currentFile.name);
     console.log(typeFile);
@@ -214,7 +213,8 @@ function addFile() {
 
         console.log('next');
     }
-    else {
+    else
+    {
         var n = noty({
             layout: 'topRight',
             type: 'error',

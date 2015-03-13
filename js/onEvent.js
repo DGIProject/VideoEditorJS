@@ -26,30 +26,27 @@ document.getElementById('audioView').onscroll = function() {
 };
 
 document.getElementById('listFiles').ondragover = function(e) {
-
+    e.stopPropagation();
     e.preventDefault();
-
-    var files = e.dataTransfer.files,
-        filesLen = files.length,
-        filenames = "";
-
-    for(var i = 0 ; i < filesLen ; i++) {
-        filenames += '\n' + files[i].name;
-    }
-
-    console.log(files.length + ' fichier(s) :\n' + filenames);
-
-    var myFileReader = new FileReader();
-    //var myFile = e.dataTransfer.files[0];
-
-    console.log(/*myFileReader.readAsDataURL(myFile),*/ e.dataTransfer.types);
+    e.dataTransfer.dropEffect = 'copy';
 };
 
 document.getElementById('listFiles').ondrop = function(e) {
     console.log('dropFile');
 
+    e.stopPropagation();
+    e.preventDefault();
+
+    var files = e.dataTransfer.files;
+
+    addFile(files[0]);
+
+    console.log(files[0]);
+
+    /*
     var myFileReader = new FileReader();
     var myFile = e.dataTransfer.files[0];
 
     console.log(myFileReader.readAsDataURL(myFile));
+    */
 };
