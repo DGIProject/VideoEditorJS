@@ -117,19 +117,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Informations & options</h4>
+                    <h4 class="modal-title">Propriétés fichier</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="panel panel-primary">
+                    <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title" id="FileListName">Undefined</h3>
+                            <h3 id="nameFileP" class="panel-title">File</h3>
                         </div>
-                        <div class="panel-body">
-                            Taille: <span id="FileListSize"></span><br/>
-                            Format: <span id="FileListFormat"></span><br/>
-                            Durée: <span id="FileListDuration"></span><br/>
-                            Aperçu: <span id="FileListPreview" style="width: 100px;height: 100px;"></span>
-                        </div>
+                        <table class="table">
+                            <tbody>
+                            <tr><td class="titleTableProperties">Taille</td><td id="sizeFileP"></td></tr>
+                            <tr><td class="titleTableProperties">Format</td><td id="formatFileP"></td></tr>
+                            <tr><td class="titleTableProperties">Durée</td><td id="durationFileP"></td></tr>
+                            <tr><td class="titleTableProperties">Aperçu</td><td id="previewFileP"></td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">

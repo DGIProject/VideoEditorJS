@@ -303,25 +303,25 @@ function fileProperties() {
     var fileInfo = currentProject.tabListFiles[id];
     var type = currentProject.tabListFiles[id].type;
 
-    document.getElementById('FileListName').innerHTML = fileInfo.fileName;
-    document.getElementById('FileListSize').innerHTML = fileInfo.size + ' Octets';
-    document.getElementById('FileListFormat').innerHTML = fileInfo.format;
-    document.getElementById('FileListDuration').innerHTML = fileInfo.duration;
+    document.getElementById('nameFileP').innerHTML = fileInfo.fileName;
+    document.getElementById('sizeFileP').innerHTML = sizeFile(fileInfo.size);
+    document.getElementById('formatFileP').innerHTML = fileInfo.format;
+    document.getElementById('durationFileP').innerHTML = fileInfo.duration;
 
     var preview;
 
     if (type == TYPE.TEXT || type == TYPE.IMAGE || type == TYPE.VIDEO) {
-        preview = '<img class="previewFileContent" src="' + fileInfo.thumbnail.i + '">';
+        preview = '<a href="#" class="thumbnail"><img class="previewFileContent" src="' + fileInfo.thumbnail.i + '"></a>';
     }
     else if (type == TYPE.AUDIO)
     {
-        preview = '<img class="previewAudioFileContent" src="' + fileInfo.thumbnail.a + '">';
+        preview = '<a href="#" class="thumbnail"><img class="previewAudioFileContent" src="' + fileInfo.thumbnail.a + '"></a>';
     }
     else {
         preview = 'Non disponible';
     }
 
-    document.getElementById('FileListPreview').innerHTML = preview;
+    document.getElementById('previewFileP').innerHTML = preview;
 
     if (type == TYPE.TEXT) {
         document.getElementById('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
@@ -339,6 +339,21 @@ function fileProperties() {
     document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
     $('#filePropertiesModal').modal('show');
+}
+
+function sizeFile(size) {
+    if(size > 1000)
+    {
+        return Math.floor(size/1000) + ' Ko';
+    }
+    else if(size > 1000000)
+    {
+        return Math.flooor(size/1000000) + ' Mo';
+    }
+    else
+    {
+        return size + ' Octets';
+    }
 }
 
 function editFileImage(id) {

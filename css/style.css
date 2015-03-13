@@ -212,6 +212,11 @@
     border: 1px solid #000000;
 }
 
+.titleTableProperties {
+    vertical-align: text-top;
+    font-weight: bold;
+}
+
 .propertiesDivText
 {
     height: 350px;
