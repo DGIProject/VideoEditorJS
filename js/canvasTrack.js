@@ -17,7 +17,7 @@ function mouseDown(e) {
     var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     currentProject.tabListTracks[row].mousedown = true;
-    currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft) : 0;
+    //currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft) : 0;
     currentProject.tabListTracks[row].lastX = x;
 }
 
@@ -32,11 +32,6 @@ function mouseUp(e) {
 
     if(track.currentRow >= 0)
     {
-        if(track.mode == MODE.REMOVE)
-        {
-            deleteElement(row, track.currentRow);
-        }
-
         for(var i = 0; i < track.tabElements.length; i++)
         {
             var element = track.tabElements[i];
@@ -72,6 +67,11 @@ function mouseUp(e) {
 
                 currentProject.tabListTracks[row].tabElements[i].width = currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - currentProject.tabListTracks[row].tabElements[i].marginLeft;
             }
+        }
+
+        if(track.mode == MODE.REMOVE)
+        {
+            deleteElement(row, track.currentRow);
         }
 
         drawElements(row);
@@ -183,6 +183,8 @@ function mouseMove(e) {
                 track.mode = MODE.MOVE;
                 track.canvas.element.style.cursor = 'all-scroll';
             }
+
+            console.log(track.mode);
         }
         else
         {
