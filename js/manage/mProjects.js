@@ -114,8 +114,6 @@ function saveProject() {
                 currentProject.lastSave = getCurrentDate();
                 currentProject.updateText();
 
-                //uploadAllFiles();
-
                 var n = noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
             }
             else
@@ -139,7 +137,7 @@ function resetInterface() {
     document.getElementById('audioInfo').innerHTML = '';
     document.getElementById('audioView').innerHTML = '';
 
-    document.getElementById('listFiles').innerHTML = '';
+    document.getElementById('listFiles').innerHTML = 'Aucun élément.';
 
     document.getElementById('autoSaveProject').removeAttribute('checked');
 

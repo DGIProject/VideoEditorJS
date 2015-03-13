@@ -2,9 +2,7 @@
  * Created by Dylan on 10/02/2015.
  */
 
-function newRecord(){
-    currentProject.stopAddFileTrack();
-
+function newRecord() {
     document.getElementById('chooseRecordButtons').style.display = '';
     document.getElementById('videoRecord').style.display = 'none';
     document.getElementById('saveRecordButton').style.display = 'none';
@@ -12,6 +10,7 @@ function newRecord(){
 
     $('#recordAudioOrVideoElement').modal('show');
 }
+
 function chooseAudioVideoRecord(audioa){
 
     audio.style.display = "none";

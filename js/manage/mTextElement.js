@@ -5,8 +5,6 @@
 function newTextElement(){
     console.log('newTextElement');
 
-    currentProject.stopAddFileTrack();
-
     var id = 0;
 
     for(var i = 0; i < currentProject.tabListFiles.length; i++)

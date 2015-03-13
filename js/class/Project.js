@@ -25,13 +25,13 @@ Project.prototype.switchAutoSave = function() {
     {
         this.autoSave = setInterval(autoSaveInterval,300000);
 
-        noty({layout: 'top', type: 'success', text: 'Sauvegarde automatique activée', timeout: '5000'});
+        noty({layout: 'topRight', type: 'success', text: 'Sauvegarde automatique activée.', timeout: '5000'});
     }
     else
     {
         clearInterval(this.autoSave);
         this.autoSave = false;
 
-        noty({layout: 'top', type: 'success', text: 'Sauvegarde automatique désactivée', timeout: '5000'});
+        noty({layout: 'topRight', type: 'success', text: 'Sauvegarde automatique désactivée', timeout: '5000'});
     }
 };

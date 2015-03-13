@@ -228,16 +228,16 @@ function showContextMenu(e) {
         document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
         document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
 
-        document.getElementById('buttonBreakLinkCM').onclick = breakLinkElements(element.id, trackId);
-        document.getElementById('buttonPropertiesCM').onclick = elementProperties(element);
-        document.getElementById('buttonDeleteCM').onclick = deleteElement(rowTrack, track.currentRow);
+        document.getElementById('buttonBreakLinkCM').setAttribute('onclick', 'breakLinkElements(' + element.id + ', ' + trackId + ');');
+        document.getElementById('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
+        document.getElementById('buttonDeleteCM').setAttribute('onclick', 'deleteElement(' + rowTrack + ',' + track.currentRow + ');');
 
-        document.getElementById('buttonEffectsCM').disabled = true;
+        //document.getElementById('buttonEffectsCM').disabled = true;
         document.getElementById('buttonOpacityCM').disabled = true;
 
         if(track.type = TYPE.AUDIO)
         {
-            document.getElementById('buttonVolumeCM').onclick = volumeElementModal(element.id, trackId, file.fileName);
+            document.getElementById('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ',\'' + file.fileName + '\');');
         }
         else
         {

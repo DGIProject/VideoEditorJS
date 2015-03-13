@@ -215,7 +215,7 @@ function addFile(currentFile) {
     }
     else
     {
-        var n = noty({
+        noty({
             layout: 'topRight',
             type: 'error',
             text: 'Erreur, ce fichier n\'est pas compatible avec le système.',
@@ -280,7 +280,7 @@ function addFileList(fileId, fileName, typeFile) {
     fileE.ondragstart = selectFile;
     fileE.ondragend = deselectFile;
     fileE.classList.add('list-group-item');
-    fileE.innerHTML = '<h4 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h4><div id="toolsFile' + fileId + '">Sending ...</div>';
+    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">Sending ...</div>';
 
     document.getElementById('listFiles').appendChild(fileE);
 }
@@ -420,7 +420,7 @@ function uploadFile(id, name, file, type) {
             console.log('xhr upload complete ' + this.responseText);
 
             if (this.responseText != 'true') {
-                var n = noty({
+                noty({
                     layout: 'top',
                     type: 'error',
                     text: 'Nous n\'avons pas réussi à envoyer ce fichier',
@@ -440,7 +440,7 @@ function uploadFile(id, name, file, type) {
                 document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
             }
             else {
-                var n = noty({
+                noty({
                     layout: 'top',
                     type: 'success',
                     text: 'Le fichier ' + file.name + ' a bien été envoyé.',

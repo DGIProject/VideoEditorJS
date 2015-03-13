@@ -20,9 +20,6 @@ Track = function(id, type, canvas, parent) {
     this.gap = 0;
     this.lastX = 0;
 
-    this.volume = 0;
-    this.data = null;
-
     this.tabElements = [];
     this.currentRow = 0;
 

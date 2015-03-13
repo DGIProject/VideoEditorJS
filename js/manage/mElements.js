@@ -73,12 +73,32 @@ function breakLinkElements(id, trackId) {
 }
 
 //ELEMENT PROPERTIES
-function elementProperties(element) {
+function elementProperties(rowTrack, rowElement) {
     console.log('elementProperties');
 
-    var contextCProperties = document.getElementById('canvasProperties').getContext('2d');
-    contextCProperties.fillStyle = '#FF0000';
-    contextCProperties.fillRect(0, 0, 50, 50);
+    var element = currentProject.tabListTracks[rowTrack].tabElements[rowElement];
+    var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+
+    console.log(element);
+
+    eId('fileElementP').innerHTML = file.fileName;
+    eId('typeElementP').innerHTML = (element.type == 1) ? 'VIDEO' : 'AUDIO';
+    eId('parentElementP').innerHTML = (element.parent >= 0) ? 'Oui' : 'Non';
+    eId('colorElementP').innerHTML = element.color;
+    eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type == 1) ? file.thumbnail.i : file.thumbnail.a) + '" class="previewFileContent"></a>';
+
+    var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');
+
+    var pixelValue = element.maxWidth / 100;
+
+    contextCProperties.fillStyle = element.color;
+    contextCProperties.fillRect((pixelValue * element.leftGap), 0, (100 - (pixelValue * element.rightGap)), 50);
+
+    eId('totalDElementP').innerHTML = element.totalDuration + 's';
+    eId('initialDElementP').innerHTML = element.currentDuration + 's';
+    eId('resizeLElementP').innerHTML = element.leftGap + 'px';
+    eId('resizeRElementP').innerHTML = element.rightGap + 'px';
+    eId('positionElementP').innerHTML = element.marginLeft + 'px';
 
     $('#elementPropertiesModal').modal('show');
 }

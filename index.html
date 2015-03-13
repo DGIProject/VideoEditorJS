@@ -370,12 +370,37 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Element properties</h4>
+                    <h4 class="modal-title">Propriétés élement</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="panel panel-default">
-                        <div id="elementNameP" class="panel-heading">Element</div>
-                        <table id="tableElementProperties" class="table"></table>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 id="nameElementP" class="panel-title">Element</h3>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                            <tr><td class="titleTableProperties">Fichier</td><td id="fileElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Type</td><td id="typeElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Ami</td><td id="parentElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Couleur</td><td id="colorElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Dimensions</td><td id="sizeElementP"><canvas id="canvasElementProperties" width="100" height="50"></canvas></td></tr>
+                            <tr><td class="titleTableProperties">Aperçu</td><td id="previewElementP"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Durées</h3>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                            <tr><td class="titleTableProperties">Durée totale</td><td id="totalDElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Durée initiale</td><td id="initialDElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Redimension gauche</td><td id="resizeLElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Redimention droite</td><td id="resizeRElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Position piste</td><td id="positionElementP"></td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">
