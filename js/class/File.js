@@ -52,10 +52,3 @@ File.prototype.setThumbnailAudio = function(blobImageUrl)
 {
     this.thumbnail.a = blobImageUrl;
 };
-
-File.prototype.getDurationInSecond = function()
-{
-    var time = this.duration.split(':');
-
-    return (parseInt(time[0]) * 3600) + (parseInt(time[1] * 60)) + parseInt(time[2].split('.')[0]);
-};

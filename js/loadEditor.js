@@ -2,7 +2,7 @@ var tabFilesJS = [
     'index.js',
     'canvasTrack.js',
     'class/Project.js',
-    'class/ReadProject.js',
+    'class/ReadFileProject.js',
     'class/GenerateFileProject.js',
     'class/File.js',
     'class/FileUpload.js',

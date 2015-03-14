@@ -282,7 +282,7 @@ function addFileList(fileId, fileName, typeFile) {
     fileE.ondragstart = selectFile;
     fileE.ondragend = deselectFile;
     fileE.classList.add('list-group-item');
-    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">Sending ...</div>';
+    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">Ready!</div>';
 
     document.getElementById('listFiles').appendChild(fileE);
 }

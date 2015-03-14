@@ -83,8 +83,14 @@ function loadProject(fileName) {
         {
             console.log(xmlhttp.responseText);
 
-            var loader = new Loader(JSON.parse(xmlhttp.responseText));
-            loader.load();
+            //var loader = new Loader(JSON.parse(xmlhttp.responseText));
+            //loader.load();
+
+            var readFileProject = new ReadFileProject(xmlhttp.responseText);
+            readFileProject.setProject();
+            readFileProject.setListFiles();
+
+            loadM();
         }
     };
 

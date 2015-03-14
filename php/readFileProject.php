@@ -1,14 +1,11 @@
 <?php
 include "config.php";
 
-$fileName = $_POST['fileName'];
+$path = '../' . $DIR_projects . $_POST['fileName'];
 
-if (!$fp = fopen("../$DIR_projects/" .$_SESSION['user'].'/'. $fileName, "r"))
+if (!$fp = fopen($path, "r"))
 {
-    echo "Echec de l'ouverture du fichier";
-
-    exit;
-
+    echo 'error';
 }
 else
 {
