@@ -117,3 +117,35 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
     xmlhttp.send('projectName=' + this.infoProject.name + '&fileName=' + fileName);
     */
 };
+
+ReadFileProject.prototype.setTracks = function() {
+    for(var i = 0; i < (this.listTracks.length / 2); i++)
+    {
+        addTrack();
+    }
+
+    for(var x = 0; x < this.listTracks.length; x++)
+    {
+        currentProject.tabListTracks[x].tabElements = this.listTracks[x].tabElements;
+        this.setElementsThumbnail(x);
+
+        drawElements(x);
+    }
+};
+
+ReadFileProject.prototype.setElementsThumbnail = function(rowTrack) {
+    for(var i = 0; i < currentProject.tabListTracks[rowTrack].tabElements.length; i++)
+    {
+        var element = currentProject.tabListTracks[rowTrack].tabElements[i];
+        var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+
+        if(element.type == TYPE.VIDEO)
+        {
+            element.thumbnail = file.thumbnail.i;
+        }
+        else
+        {
+            element.thumbnail = file.thumbnail.a;
+        }
+    }
+};

@@ -5,7 +5,6 @@
 var oneSecond = 5;
 var pixelTimeBar = {g: 0, d: 710};
 var lastZoom = 5;
-var scrollTracks = 0;
 
 function addTrack() {
     var idTrack1 = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;

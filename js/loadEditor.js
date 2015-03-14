@@ -10,7 +10,7 @@ var tabFilesJS = [
     'class/TextElement.js',
     'class/Track.js',
     'class/Element.js',
-    'class/Render.js',
+    'class/RenderProject.js',
     'class/videoRecorder.js',
     'lib/TerminalJs/TerminalJs.js',
     'manage/mProjects.js',

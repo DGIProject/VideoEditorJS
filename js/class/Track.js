@@ -29,7 +29,3 @@ Track = function(id, type, canvas, parent) {
 Track.prototype.setParent = function(id) {
     this.parent = id;
 };
-
-Track.prototype.upVolume = function(newLevel) {
-    this.volume = newLevel;
-};

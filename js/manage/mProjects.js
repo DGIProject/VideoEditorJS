@@ -89,6 +89,7 @@ function loadProject(fileName) {
             var readFileProject = new ReadFileProject(xmlhttp.responseText);
             readFileProject.setProject();
             readFileProject.setListFiles();
+            readFileProject.setTracks();
 
             loadM();
         }
