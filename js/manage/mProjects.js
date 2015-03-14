@@ -54,7 +54,7 @@ function saveNewProject() {
 
         resetInterface();
 
-        currentProject = new Project(nameProject.deleteAccent().replace(' ', '_').toUpperCase(), usernameSession, getCurrentDate());
+        currentProject = new Project(nameProject.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, getCurrentDate());
         currentProject.updateText();
         currentProject.switchAutoSave();
 

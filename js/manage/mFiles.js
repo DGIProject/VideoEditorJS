@@ -5,22 +5,24 @@
 function addFile(currentFile) {
     console.log('currentFile : ' + currentFile);
 
-    var typeFile = getTypeFile(currentFile.name);
+    var fileName = currentFile.name.deleteAccent().replace(new RegExp(' ', 'g'), '_');
+
+    var typeFile = getTypeFile(fileName);
     console.log(typeFile);
 
     if (typeFile != 'ERROR') {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
 
         if (typeFile == TYPE.IMAGE) {
-            var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
+            var currentItem = new File(fileId, typeFile, currentFile.size, fileName, fileName.split('.').pop());
             currentItem.makeVideo();
             currentItem.setDuration('00:00:20');
             currentItem.setThumbnailImage(window.URL.createObjectURL(new Blob([currentFile])));
 
             currentProject.tabListFiles.push(currentItem);
 
-            addFileList(fileId, currentFile.name, typeFile);
-            uploadFile(fileId, currentFile.name, currentFile, 'FILE');
+            addFileList(fileId, fileName, typeFile);
+            uploadFile(fileId, fileName, currentFile, 'FILE');
         }
         else {
             var reader = new FileReader();
@@ -28,21 +30,21 @@ function addFile(currentFile) {
             reader.onload = function (e) {
                 loadM();
 
-                var currentItem = new File(fileId, typeFile, currentFile.size, currentFile.name, currentFile.name.split('.').pop());
+                var currentItem = new File(fileId, typeFile, currentFile.size, fileName, fileName.split('.').pop());
                 console.log('currentItem ' + currentItem);
 
                 currentProject.tabListFiles.push(currentItem);
-                addFileList((currentProject.tabListFiles.length-1), currentFile.name, typeFile);
+                addFileList((currentProject.tabListFiles.length-1), fileName, typeFile);
 
-                uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, currentFile, 'FILE');
+                uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileName, currentFile, 'FILE');
 
                 var data = e.target.result;
 
                 var ElementData = new Uint8Array(data);
 
-                terminal.Files.push({name: currentFile.name, data: ElementData});
+                terminal.Files.push({name: fileName, data: ElementData});
 
-                terminal.processCmd("ffmpeg -i " + currentFile.name, function (e, index) {
+                terminal.processCmd("ffmpeg -i " + fileName, function (e, index) {
 
                     var message = e.data;
 
@@ -72,7 +74,7 @@ function addFile(currentFile) {
                         terminal.Workers[index].worker.terminate();
 
                         if (typeFile == TYPE.VIDEO) {
-                            terminal.processCmd("ffmpeg -i " + currentFile.name + " -f image2 -vf scale=-1:50 -an -ss " + Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond() / 2) + " thumbnail.jpg", function (e, index) {
+                            terminal.processCmd("ffmpeg -i " + fileName + " -f image2 -vf scale=-1:50 -an -ss " + Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond() / 2) + " thumbnail.jpg", function (e, index) {
 
                                 var message = e.data;
 
@@ -93,10 +95,10 @@ function addFile(currentFile) {
 
                                             currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(blob));
 
-                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_I');
+                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileName, blob, 'THUMBNAIL_I');
                                             if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
                                             {
-                                                terminal.processCmd("ffmpeg -i " + currentFile.name + " audioDat.wav", function (e, index) {
+                                                terminal.processCmd("ffmpeg -i " + fileName + " audioDat.wav", function (e, index) {
 
                                                     var message = e.data;
 
@@ -122,7 +124,7 @@ function addFile(currentFile) {
                                                                     canvas.toBlob(function(blob) {
                                                                         url = URL.createObjectURL(blob);
                                                                         console.log("wavefor URL", url);
-                                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_A');
+                                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileName, blob, 'THUMBNAIL_A');
                                                                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
                                                                     }, "image/png");
 
@@ -154,7 +156,7 @@ function addFile(currentFile) {
                         {
                             if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
                             {
-                                terminal.processCmd("ffmpeg -i " + currentFile.name + " audioDat.wav", function (e, index) {
+                                terminal.processCmd("ffmpeg -i " + fileName + " audioDat.wav", function (e, index) {
 
                                     var message = e.data;
 
@@ -180,7 +182,7 @@ function addFile(currentFile) {
                                                     canvas.toBlob(function(blob) {
                                                         url = URL.createObjectURL(blob);
                                                         console.log("wavefor URL", url);
-                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentFile.name, blob, 'THUMBNAIL_A');
+                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileName, blob, 'THUMBNAIL_A');
                                                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
                                                     }, "image/png");
 

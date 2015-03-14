@@ -239,6 +239,8 @@ function allowDrop(e) {
     var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
     var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
+    console.log(file, track.type);
+
     if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
     {
         e.preventDefault();
