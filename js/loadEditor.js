@@ -93,10 +93,17 @@ function loadFileJS(url, callback) {
 }
 
 function setUsername(username) {
-    usernameSession = username.deleteAccent().replace(' ', '_').toUpperCase();
+    if(username != '')
+    {
+        usernameSession = username.deleteAccent().replace(' ', '_').toUpperCase();
 
-    document.getElementById('enterUsername').style.display = 'none';
-    document.getElementById('startUseProject').style.display = '';
+        document.getElementById('enterUsername').style.display = 'none';
+        document.getElementById('startUseProject').style.display = '';
 
-    getListProjects('listExistingProjects', usernameSession);
+        getListProjects('listExistingProjects', usernameSession);
+    }
+    else
+    {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, veuillez entrer un pseudo.', timeout: '5000'});
+    }
 }

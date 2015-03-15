@@ -34,32 +34,27 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Editor</a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Projet <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="newProject();"><span class="glyphicon glyphicon-file"></span> New project</a></li>
-                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-folder-open"></span> Open project</a></li>
+                                <li><a href="#" onclick="newProject(true);"><span class="glyphicon glyphicon-plus"></span> Nouveau</a></li>
+                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-folder-open"></span> Ouvrir</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Save project</a></li>
-                                <li><input class="checkbox" type="checkbox" id="autoSaveProject" onchange="currentProject.switchAutoSave();" checked data-label="AutoSave"/></li>
+                                <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Sauvegarder</a></li>
+                                <li><a href="#" onclick="currentProject.switchAutoSave();"><span id="iconAutoSave" class="glyphicon glyphicon-unchecked"></span> Sauvegarde Automatique</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" id="projectDropdown">Project : No project</a></li>
-                                <li><a href="#" id="lastSaveDropdown">Last save : None</a></li>
+                                <li><a href="#">Projet : <span id="projectDropdown">--</span></a></li>
+                                <li><a href="#">Dernière sauvegarde : <span id="lastSaveDropdown">--</span></a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#" onclick="addTrack();">Ajouter une piste</a>
+                            <a href="#" onclick="addTrack();"><span class="glyphicon glyphicon-plus"></span> Piste</a>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Finaliser <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="makeRender('prev');">Lancer une prévisualisation</a></li>
-                                <li><a href="#" onclick="makeRender('final');">Lancer un rendu final</a></li>
-                            </ul>
+                            <a href="#" onclick="makeRender();"><span class="glyphicon glyphicon-blackboard"></span> Rendu</a>
                         </li>
                     </ul>
 
@@ -73,7 +68,7 @@
 
                     </form>
                     <ul class="nav navbar-nav navbar-right">
-                        <p class="navbar-text " id="currentProject">No project</p>
+                        <p id="currentProject" class="navbar-text strong">Aucun projet</p>
                         <button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button>
                     </ul>
 
@@ -163,8 +158,6 @@
                     <h4 class="modal-title">Bienvenue sur VideoEditorJS</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Découvrez un univers en ligne pour monter vos vidéos.</p>
-                    <hr>
                     <div id="loadingProgressProject">
                         <div class="progress progress-striped active">
                             <div id="progressLoadJS" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -176,18 +169,23 @@
                     <div id="enterUsername" style="display: none;">
                         <form method="post" onsubmit="setUsername(this.usernameSession.value);return false" class="form-horizontal">
                             <div class="form-group">
-                                <input type="text" name="usernameSession" class="form-control" placeholder="Pseudo">
+                                <label class="col-sm-2 control-label">Pseudo</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="usernameSession" class="form-control" placeholder="Pseudo">
+                                    <span class="textInput">Le compte sera automatiquement crée s'il n'existe pas.</span>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">Connexion</button>
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Continuer</button>
+                                </div>
                             </div>
                         </form>
                     </div>
                     <div id="startUseProject" style="display: none;">
-                        <h2>Projects</h2>
-                        <div id="listExistingProjects">Loading existing projects ...</div>
-                        </br>
-                        <a href="#" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal">New Project</a>
+                        <div id="listExistingProjects">Chargement des projets ...</div>
+                        <hr>
+                        <a href="#" onclick="newProject(false);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> Projet</a>
                     </div>
                 </div>
             </div>
@@ -197,17 +195,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Entrez le nom de votre projet</h4>
+                    <h4 class="modal-title">Nouveau project</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-inline" onsubmit="return false;">
+                    <form method="post" onsubmit="saveNewProject(this.nameProject.value);return false" class="form-horizontal">
                         <div class="form-group">
-                            <input type="text" id="nameProject" name="nameProject" class="form-control" placeholder="Nom du projet">
+                            <label class="col-sm-2 control-label">Nom</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="nameProject" name="nameProject" class="form-control" placeholder="Nom">
+                                <span class="textInput">Pour une compatibilité maximale, les accents et les majuscules seront retirés.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                <button type="button" id="buttonBackAddProject" class="btn btn-default" data-dismiss="modal">Retour</button>
+                            </div>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="buttonNewProject" onclick="saveNewProject();" class="btn btn-primary">Créer le projet</button>
                 </div>
             </div>
         </div>
@@ -216,14 +221,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choisissez le project</h4>
+                    <h4 class="modal-title">Ouvrir un projet</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="listProjects" class="list-group">Loading projects ...</div>
-                    <button type="button" onclick="newProject();" class="btn btn-primary" data-dismiss="modal">Nouveau projet</button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <div id="listProjects" class="list-group">Chargement des projets ...</div>
+                    <hr>
+                    <button type="button" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> Projet</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Retour</button>
                 </div>
             </div>
         </div>

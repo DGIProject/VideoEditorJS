@@ -19,16 +19,16 @@ function getListProjects(id, username){
 
             if(tabListProjects.length > 0)
             {
-                document.getElementById(id).innerHTML = '';
+                eId(id).innerHTML = '';
 
                 for(var i = 0; i < tabListProjects.length; i++)
                 {
-                    document.getElementById(id).innerHTML += '<a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
+                    eId(id).innerHTML += '<a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
                 }
             }
             else
             {
-                document.getElementById(id).innerHTML = 'There is not projects.';
+                eId(id).innerHTML = 'Aucun project.';
             }
         }
     };
@@ -38,16 +38,15 @@ function getListProjects(id, username){
     xmlhttp.send('username=' + username);
 }
 
-function newProject() {
-    document.getElementById('nameProject').value = '';
+function newProject(buttonBack) {
+    eId('nameProject').value = '';
+    eId('buttonBackAddProject').style.display = (buttonBack) ? 'initial' : 'none';
 
     $('#selectProjectModal').modal('hide');
     $('#newProjectModal').modal('show');
 }
 
-function saveNewProject() {
-    var nameProject = document.getElementById('nameProject').value;
-
+function saveNewProject(nameProject) {
     if(nameProject != '')
     {
         $('#newProjectModal').modal('hide');
@@ -62,7 +61,7 @@ function saveNewProject() {
     }
     else
     {
-        var n = noty({layout: 'topRight', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
+        noty({layout: 'topRight', type: 'error', text: 'Vous devez renseigner le nom du projet.', timeout: '5000'});
     }
 }
 
@@ -118,14 +117,13 @@ function saveProject() {
 
             if(xmlhttp.responseText == 'true')
             {
-                currentProject.lastSave = getCurrentDate();
+                currentProject.lastSave = getHour();
                 currentProject.updateText();
-
-                var n = noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
+                noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
             }
             else
             {
-                var n = noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
+                noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
             }
 
             loadM();
@@ -138,18 +136,19 @@ function saveProject() {
 }
 
 function resetInterface() {
-    document.getElementById('videoInfo').innerHTML = '';
-    document.getElementById('videoView').innerHTML = '';
+    eId('videoInfo').innerHTML = '';
+    eId('videoView').innerHTML = '';
 
-    document.getElementById('audioInfo').innerHTML = '';
-    document.getElementById('audioView').innerHTML = '';
+    eId('audioInfo').innerHTML = '';
+    eId('audioView').innerHTML = '';
 
-    document.getElementById('listFiles').innerHTML = 'Aucun élément.';
+    eId('listFiles').innerHTML = 'Aucun élément.';
 
-    document.getElementById('autoSaveProject').removeAttribute('checked');
+    eId('iconAutoSave').classList.remove('glyphicon-check');
+    eId('iconAutoSave').classList.add('glyphicon-unchecked');
 
     oneSecond = 5;
-    document.getElementById('zoomRange').value = 5;
+    eId('zoomRange').value = 5;
     calculateTimeBar();
 }
 

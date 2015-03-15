@@ -231,6 +231,11 @@
     border-radius: 4px;
 }
 
+.textInput {
+    font-style: italic;
+    font-size: 10px;
+}
+
 #footer {
     position: absolute;
     bottom: 0;
