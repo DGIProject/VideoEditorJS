@@ -87,7 +87,7 @@
             </div>
         </nav>
         <div id="globalEdit">
-            <div class="col-md-9 chronologicalView" id="offsetBlank">
+            <div class="col-md-9 chronologicalView">
                 <div class="timeTrack">
                     <span class="timeLeft" id="startTime">0h0m0s</span>
                     <span class="timeRight" id="endTime">0h2m40s</span>
@@ -114,37 +114,10 @@
             </div>
         </div>
     </div>
+    <footer>
+        <p><a href="#">VideoEditorJS</a> par Dylan Delaporte et Guillaume Villena - Project d'ISN 2015</p>
+    </footer>
 
-    <div id="filePropertiesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Propriétés fichier</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 id="nameFileP" class="panel-title">File</h3>
-                        </div>
-                        <table class="table">
-                            <tbody>
-                            <tr><td class="titleTableProperties">Taille</td><td id="sizeFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Format</td><td id="formatFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Durée</td><td id="durationFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Aperçu</td><td id="previewFileP"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-info" id="fileEditButton" data-dismiss="modal">Edit</button>
-                    <button type="button" class="btn btn-danger" id="fileRemoveButton" data-dismiss="modal">Remove</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -255,6 +228,36 @@
             </div>
         </div>
     </div>
+    <div id="filePropertiesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Propriétés du fichier</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 id="nameFileP" class="panel-title">File</h3>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                            <tr><td class="titleTableProperties">Taille</td><td id="sizeFileP"></td></tr>
+                            <tr><td class="titleTableProperties">Format</td><td id="formatFileP"></td></tr>
+                            <tr><td class="titleTableProperties">Durée</td><td id="durationFileP"></td></tr>
+                            <tr><td class="titleTableProperties">Aperçu</td><td id="previewFileP"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info" id="fileEditButton" data-dismiss="modal">Edit</button>
+                    <button type="button" class="btn btn-danger" id="fileRemoveButton" data-dismiss="modal">Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="textElementModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -326,23 +329,19 @@
             </div>
         </div>
     </div>
-    <div id="recordAudioOrVideoElement" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="recordFileModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Enregistrer un élément audio/vidéo</h4>
+                    <h4 class="modal-title">Enregistrement fichier Vidéo/Audio</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="chooseRecordButtons">
-                        <button type="button" onclick="chooseAudioVideoRecord(false);" id="chooseVideoButton" class="btn btn-block btn-lg btn-default">VIDEO</button>
-                        <button type="button" onclick="chooseAudioVideoRecord(true);" id="chooseAudioButton" class="btn btn-block btn-lg btn-default">AUDIO</button>
-                    </div>
-                    <div id="videoRecord" style="display: none;">
+                    <div id="videoRecord">
                         <div class="row">
                             <div class="col-md-6">
-                                <video  id="video" height="auto" width="100%"></video>
-                                <audio  id="audio" width="100%" ></audio>
+                                <video id="video" height="auto" width="100%"></video>
+                                <audio id="audio" width="100%" style="display: none;"></audio>
                                 <button type="button" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
                                 <button type="button" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span id="spanPlayPause" class="glyphicon glyphicon-play"></span></button>
                                 <button type="button" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
@@ -353,12 +352,12 @@
                                 <div id="videoRecorderErrorText" style="display: none" class="alert alert-danger">Pour pouvoir valider l'enregistrement vidéo ou audio vous devez lui donner un nom !</div>
                             </div>
                         </div>
-
                     </div>
+                    <div id="audioRecord" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="saveRecordButton" class="btn btn-primary" style="display: none;">Save record</button>
+                    <button type="button" id="buttonSaveRecord" class="btn btn-primary" disabled>Save record</button>
                 </div>
             </div>
         </div>
@@ -382,7 +381,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Propriétés élement</h4>
+                    <h4 class="modal-title">Propriétés de l'élement</h4>
                 </div>
                 <div class="modal-body">
                     <div class="panel panel-info">
