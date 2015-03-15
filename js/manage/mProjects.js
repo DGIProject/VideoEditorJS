@@ -142,7 +142,7 @@ function resetInterface() {
     eId('audioInfo').innerHTML = '';
     eId('audioView').innerHTML = '';
 
-    eId('listFiles').innerHTML = 'Aucun élément.';
+    eId('listFiles').innerHTML = '<span>Aucun fichier.</span><span class="textNote">Glissez des fichiers ou cliquez sur ajouter.</span>';
 
     eId('iconAutoSave').classList.remove('glyphicon-check');
     eId('iconAutoSave').classList.add('glyphicon-unchecked');

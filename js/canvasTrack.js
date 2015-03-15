@@ -21,60 +21,60 @@ function mouseDown(e) {
     currentProject.tabListTracks[row].lastX = x;
 }
 
-function mouseUp(e) {
-    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
-    var row = rowById(id, currentProject.tabListTracks);
-
-    var track = currentProject.tabListTracks[row];
-    var currentElement = track.tabElements[track.currentRow];
-
-    track.mousedown = false;
-
-    if(track.currentRow >= 0)
+function mouseUp() {
+    for(var x = 0; x < currentProject.tabListTracks.length; x++)
     {
-        for(var i = 0; i < track.tabElements.length; i++)
+        var track = currentProject.tabListTracks[x];
+        var currentElement = track.tabElements[track.currentRow];
+
+        track.mousedown = false;
+
+        if(track.currentRow >= 0)
         {
-            var element = track.tabElements[i];
-
-            if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
+            for(var i = 0; i < track.tabElements.length; i++)
             {
-                console.log('collision between');
+                var element = track.tabElements[i];
 
-                var widthNewElement = element.marginLeft - (currentElement.marginLeft - element.marginLeft);
+                if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
+                {
+                    console.log('collision between');
 
-                element.width = currentElement.marginLeft - element.marginLeft;
+                    var widthNewElement = element.marginLeft - (currentElement.marginLeft - element.marginLeft);
 
-                addElement(element.fileId, id, (currentElement.marginLeft + currentElement.width), (currentElement.marginLeft - element.marginLeft) / oneSecond);
+                    element.width = currentElement.marginLeft - element.marginLeft;
 
-                track.tabElements[track.tabElements.length - 1].width = widthNewElement;
+                    addElement(element.fileId, track.id, (currentElement.marginLeft + currentElement.width), (currentElement.marginLeft - element.marginLeft) / oneSecond);
+
+                    track.tabElements[track.tabElements.length - 1].width = widthNewElement;
+                }
+
+                if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                {
+                    console.log('collision before');
+
+                    track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
+
+                    track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
+                    track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
+                }
+
+                if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                {
+                    console.log('collision after');
+
+                    track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
+
+                    track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
+                }
             }
 
-            if((currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) > currentProject.tabListTracks[row].tabElements[i].marginLeft && (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
+            if(track.mode == MODE.REMOVE)
             {
-                console.log('collision before');
-
-                currentProject.tabListTracks[row].tabElements[i].leftGap += (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width) - currentProject.tabListTracks[row].tabElements[i].marginLeft;
-
-                currentProject.tabListTracks[row].tabElements[i].width = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width);
-                currentProject.tabListTracks[row].tabElements[i].marginLeft = (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - ((currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - (currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft + currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].width));
+                deleteElement(x, track.currentRow);
             }
 
-            if(currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft > currentProject.tabListTracks[row].tabElements[i].marginLeft && currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft < (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width))
-            {
-                console.log('collision after');
-
-                currentProject.tabListTracks[row].tabElements[i].rightGap += (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft;
-
-                currentProject.tabListTracks[row].tabElements[i].width = currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft - currentProject.tabListTracks[row].tabElements[i].marginLeft;
-            }
+            drawElements(x);
         }
-
-        if(track.mode == MODE.REMOVE)
-        {
-            deleteElement(row, track.currentRow);
-        }
-
-        drawElements(row);
     }
 }
 

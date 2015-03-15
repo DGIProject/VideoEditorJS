@@ -51,9 +51,6 @@ function saveTextElement() {
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
-        currentItem.uploadThumbnail.i = 100;
-        currentItem.uploadThumbnail.a = 100;
-
         document.getElementById('textElement').toBlob(function(blob) {
             currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
             currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
@@ -64,8 +61,6 @@ function saveTextElement() {
             addFileList(fileId, textElement.nameText, TYPE.TEXT);
             uploadFile(fileId, (currentProject.tabListFiles.length - 1), blob, 'FILE');
         }, 'image/png');
-
-
     }
 
     var n = noty({layout: 'topRight', type: 'success', text: 'Le texte a bien été sauvegardé.', timeout: '5000'});

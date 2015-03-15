@@ -5,6 +5,7 @@
 var oneSecond = 5;
 var pixelTimeBar = {g: 0, d: 710};
 var lastZoom = 5;
+var scrollTracks = 0;
 
 function addTrack() {
     var idTrack1 = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
@@ -20,7 +21,7 @@ function addTrack() {
     videoView.classList.add('singleTrack');
 
     videoView.onmousedown = mouseDown;
-    videoView.onmouseup = mouseUp;
+    //videoView.onmouseup = mouseUp;
     videoView.onmousemove = mouseMove;
 
     videoView.ondragover = allowDrop;
@@ -52,7 +53,7 @@ function addTrack() {
     audioView.classList.add('singleTrack');
 
     audioView.onmousedown = mouseDown;
-    audioView.onmouseup = mouseUp;
+    //audioView.onmouseup = mouseUp;
     audioView.onmousemove = mouseMove;
 
     audioView.ondragover = allowDrop;

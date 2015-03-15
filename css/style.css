@@ -173,7 +173,7 @@
 {
     height: 550px;
     margin-left: 10px;
-    min-width: 204px;
+    min-width: 22%;
     border: 1px solid #E7E7E7;
     border-radius: 4px;
 }
@@ -231,9 +231,11 @@
     border-radius: 4px;
 }
 
-.textInput {
+.textNote {
     font-style: italic;
     font-size: 10px;
+    display: block;
+    margin-top: 5px;
 }
 
 #footer {

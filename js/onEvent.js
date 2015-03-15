@@ -4,6 +4,12 @@ document.onclick = function() {
     }
 };
 
+document.onmouseup = function() {
+    if(currentProject) {
+        mouseUp();
+    }
+};
+
 document.getElementById('audioView').onscroll = function() {
     //console.log(this.scrollLeft);
 
