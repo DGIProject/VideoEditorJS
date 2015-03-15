@@ -235,7 +235,7 @@ function showContextMenu(e) {
         //document.getElementById('buttonEffectsCM').disabled = true;
         document.getElementById('buttonOpacityCM').disabled = true;
 
-        if(track.type = TYPE.AUDIO)
+        if(track.type == TYPE.AUDIO)
         {
             document.getElementById('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ',\'' + file.fileName + '\');');
         }

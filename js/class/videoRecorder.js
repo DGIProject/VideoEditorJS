@@ -84,7 +84,7 @@ startRecordingbtn.onclick = function () {
 };
 stopRecordingbtn.onclick = function () {
 
-    document.getElementById('saveRecordButton').style.display = '';
+    document.getElementById('buttonSaveRecord').style.display = '';
 
     stopRecordingbtn.disabled = true;
     startRecordingbtn.removeAttribute("disabled");
@@ -176,7 +176,7 @@ stopRecordingbtn.onclick = function () {
     });
 
 };
-document.getElementById('saveRecordButton').onclick = function()
+document.getElementById('buttonSaveRecord').onclick = function()
 {
     if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0)
     {
