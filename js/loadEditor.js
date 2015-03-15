@@ -26,7 +26,6 @@ var tabFilesJS = [
     'lib/waveform/webaudio.js',
     'lib/waveform/drawer.js',
     'lib/waveform/drawer.canvas.js',
-    //'lib/ffmpeg-all-codecs.js',
     'onEvent.js'
 ];
 
