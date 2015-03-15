@@ -252,7 +252,7 @@ function getTypeFile(fileName) {
 
 function addFileList(fileId, fileName, typeFile) {
     if (currentProject.tabListFiles.length < 2) {
-        document.getElementById('listFiles').innerHTML = '';
+        eId('listFiles').innerHTML = '';
     }
 
     var iconName = '';
@@ -284,7 +284,7 @@ function addFileList(fileId, fileName, typeFile) {
     fileE.classList.add('list-group-item');
     fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">Ready!</div>';
 
-    document.getElementById('listFiles').appendChild(fileE);
+    eId('listFiles').appendChild(fileE);
 }
 
 function selectFile(e) {
@@ -305,10 +305,10 @@ function fileProperties() {
     var fileInfo = currentProject.tabListFiles[id];
     var type = currentProject.tabListFiles[id].type;
 
-    document.getElementById('nameFileP').innerHTML = fileInfo.fileName;
-    document.getElementById('sizeFileP').innerHTML = sizeFile(fileInfo.size);
-    document.getElementById('formatFileP').innerHTML = fileInfo.format;
-    document.getElementById('durationFileP').innerHTML = fileInfo.duration;
+    eId('nameFileP').innerHTML = fileInfo.fileName;
+    eId('sizeFileP').innerHTML = sizeFile(fileInfo.size);
+    eId('formatFileP').innerHTML = fileInfo.format;
+    eId('durationFileP').innerHTML = fileInfo.duration;
 
     var preview;
 
@@ -323,22 +323,22 @@ function fileProperties() {
         preview = 'Non disponible';
     }
 
-    document.getElementById('previewFileP').innerHTML = preview;
+    eId('previewFileP').innerHTML = preview;
 
     if (type == TYPE.TEXT) {
-        document.getElementById('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
-        document.getElementById('fileEditButton').style.display = '';
+        eId('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
+        eId('fileEditButton').style.display = '';
     }
     else if (type == TYPE.IMAGE) {
-        document.getElementById('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
-        document.getElementById('fileEditButton').style.display = 'none';
+        eId('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
+        eId('fileEditButton').style.display = 'none';
     }
     else {
-        document.getElementById('fileEditButton').removeAttribute('onclick');
-        document.getElementById('fileEditButton').style.display = 'none';
+        eId('fileEditButton').removeAttribute('onclick');
+        eId('fileEditButton').style.display = 'none';
     }
 
-    document.getElementById('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
+    eId('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
     $('#filePropertiesModal').modal('show');
 }
@@ -368,13 +368,15 @@ function removeFile(id) {
     currentProject.tabListFiles[id] = null;
     currentProject.tabListFiles.remove(id);
 
-    document.getElementById('listFiles').removeChild(document.getElementById('file' + id));
+    eId('listFiles').removeChild(eId('file' + id));
 }
 
 //UPLOAD
 function uploadFile(id, name, file, type) {
-    document.getElementById('toolsFile' + id).innerHTML = 'Sending ...';
-    document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) + 1;
+    rLog('uploadFile : ' + id + name + file + type);
+    
+    eId('toolsFile' + id).innerHTML = 'Sending ...';
+    eId('countUploads').innerHTML = parseInt(eId('countUploads').innerHTML) + 1;
 
     var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1] + 1) : 0;
     var fileUpload = new FileUpload(idFileUpload, id, name, type);
@@ -383,7 +385,7 @@ function uploadFile(id, name, file, type) {
 
     if(currentProject.tabFilesUpload.length < 2)
     {
-        document.getElementById('listUploads').innerHTML = '';
+        eId('listUploads').innerHTML = '';
     }
 
     var element = document.createElement('div');
@@ -397,7 +399,7 @@ function uploadFile(id, name, file, type) {
     '</div>' +
     '</div>';
 
-    document.getElementById('listUploads').appendChild(element);
+    eId('listUploads').appendChild(element);
 
     var formData = new FormData();
     formData.append('fileData', file);
@@ -411,7 +413,7 @@ function uploadFile(id, name, file, type) {
 
             fileUpload.setProgress((Math.floor(done / total * 1000) / 10));
 
-            document.getElementById('progressFile' + idFileUpload).style.width = fileUpload.progress + '%';
+            eId('progressFile' + idFileUpload).style.width = fileUpload.progress + '%';
 
             //console.log((Math.floor(done / total * 1000) / 10));
         };
@@ -419,7 +421,7 @@ function uploadFile(id, name, file, type) {
 
     xhr.onreadystatechange = function (e) {
         if (4 == this.readyState) {
-            console.log('xhr upload complete ' + this.responseText);
+            rLog('finish upload ' + this.responseText);
 
             if (this.responseText != 'true') {
                 noty({
@@ -429,9 +431,9 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                document.getElementById('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
+                eId('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
 
-                document.getElementById('toolsFile' + id).innerHTML = '';
+                eId('toolsFile' + id).innerHTML = '';
 
                 var buttonRetryUpload = document.createElement('button');
                 buttonRetryUpload.setAttribute('type', 'button');
@@ -439,13 +441,30 @@ function uploadFile(id, name, file, type) {
                 buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
                 buttonRetryUpload.innerHTML = 'Réessayer';
 
-                document.getElementById('toolsFile' + id).appendChild(buttonRetryUpload);
+                eId('toolsFile' + id).appendChild(buttonRetryUpload);
             }
             else {
+                rLog('file : ' + file.name + id + name + type);
+
+                var text = '';
+
+                if(type == 'THUMBNAIL_I')
+                {
+                    text = 'La miniature vidéo du fichier ' + name + ' a bien été envoyée.';
+                }
+                else if(type == 'THUMBNAIL_A')
+                {
+                    text = 'La miniature audio du fichier ' + name + ' a bien été envoyée.';
+                }
+                else
+                {
+                    text = 'Le fichier ' + name + ' a bien été envoyé.';
+                }
+
                 noty({
                     layout: 'topRight',
                     type: 'success',
-                    text: 'Le fichier ' + file.name + ' a bien été envoyé.',
+                    text: text,
                     timeout: '5000'
                 });
 
@@ -453,11 +472,11 @@ function uploadFile(id, name, file, type) {
                 {
                     currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded = true;
 
-                    document.getElementById('toolsFile' + id).innerHTML = 'Ready!';
+                    eId('toolsFile' + id).innerHTML = 'Ready!';
                 }
             }
 
-            document.getElementById('countUploads').innerHTML = parseInt(document.getElementById('countUploads').innerHTML) - 1;
+            eId('countUploads').innerHTML = parseInt(eId('countUploads').innerHTML) - 1;
         }
     };
 

@@ -38,8 +38,6 @@ var usernameSession;
 var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
 window.onload = function() {
-    console.log('onload');
-
     $('#startLoadingEditor').modal('show');
 
     getFileJS();
@@ -48,7 +46,7 @@ window.onload = function() {
 function getFileJS() {
     if(currentFileRow != tabFilesJS.length)
     {
-        console.log('getFileJS : ' + tabFilesJS[currentFileRow]);
+        console.log('load file : ' + tabFilesJS[currentFileRow]);
 
         loadFileJS('js/' + tabFilesJS[currentFileRow], function() {
             getFileJS();
@@ -61,13 +59,12 @@ function getFileJS() {
     }
     else
     {
-        console.log('endLoadFileJS');
+        console.log('finish load JS');
 
         terminal = new Terminal();
-
-        console.log('inited');
-
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement'});
+
+        console.log('initialed classes');
 
         document.getElementById('loadingProgressProject').style.display = 'none';
         document.getElementById('enterUsername').style.display = '';

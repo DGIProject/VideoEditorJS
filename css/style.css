@@ -238,6 +238,11 @@
     margin-top: 5px;
 }
 
+#console {
+    height: 200px;
+    overflow-y: auto;
+}
+
 footer {
     margin-top: 590px;
     color: #777;

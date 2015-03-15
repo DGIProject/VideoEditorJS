@@ -27,6 +27,10 @@ function eId(id) {
     return document.getElementById(id);
 }
 
+function rLog(text) {
+    eId('console').innerHTML += '</br>' + text;
+}
+
 function compressName(name) {
     return ((name.length > 12) ? name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length) : name);
 }
