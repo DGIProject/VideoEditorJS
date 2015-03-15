@@ -51,7 +51,7 @@ RenderP = function () {
 
         var lastCmd = ''
         var complexfliter = '-filter_complex \'';
-        var ending = (this.tracks[t].type == TYPE.AUDIO)?"concat=n="+this.commands[t].length+":a=1:unsafe=1 [a]' -map '[v]' -map '[a]' -y":"concat=n="+this.commands[t].length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]' -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
+        var ending = (this.tracks[t].type == TYPE.AUDIO)?"concat=n="+this.commands[t].length+":a=1:unsafe=1 [a]' -map '[a]' -y":"concat=n="+this.commands[t].length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]' -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
         for (i=0;i<this.commands[t].length;i++)
         {
             lastCmd += (this.tracks[t].type == TYPE.AUDIO)?'-i '+i+'.mp3 ':'-i '+i+'.mp4 ';
