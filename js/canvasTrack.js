@@ -346,7 +346,7 @@ function element(rowTrack, row) {
     var widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
     var heightThumbnail = 75;
 
-    //console.log(sWidth, sHeight, xThumbnail, yThumbnail, newWidth, widthThumbnail, heightThumbnail);
+    console.log(sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + newWidth + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
 
     context.drawImage(imageThumbnail, 0, 0, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
 }

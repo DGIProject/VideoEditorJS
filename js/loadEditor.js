@@ -37,6 +37,8 @@ var usernameSession;
 
 var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
+var lastRLog = '';
+
 window.onload = function() {
     $('#startLoadingEditor').modal('show');
 

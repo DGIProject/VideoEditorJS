@@ -28,7 +28,12 @@ function eId(id) {
 }
 
 function rLog(text) {
-    eId('console').innerHTML += '</br>' + text;
+    if(text != lastRLog)
+    {
+        eId('console').innerHTML += '</br>' + text;
+    }
+
+    lastRLog = text;
 }
 
 function compressName(name) {
