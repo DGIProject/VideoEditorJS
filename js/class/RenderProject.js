@@ -155,3 +155,18 @@ RenderP.prototype.getFileInformationById = function (id) {
     }
     return file;
 }
+RenderP.prototype.uploadCommands = function(){
+    var finalString = "";
+
+    for (i=0;i<this.commandList.length;i++)
+    {
+        finalString += this.commandList[i];
+        if (i!= this.commandList.length-2)
+        {
+            finalString += "\n"
+        }
+    }
+
+    var txtFile = new Blob([finalString], {type:'text/plain', name:"command.ffm"});
+    uploadFile(-1,"renderFile", txtFile, "RENDER");
+}

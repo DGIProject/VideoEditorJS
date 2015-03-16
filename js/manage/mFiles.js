@@ -375,7 +375,7 @@ function removeFile(id) {
 function uploadFile(id, name, file, type) {
     rLog('uploadFile : ' + id + name + file + type);
     
-    eId('toolsFile' + id).innerHTML = 'Sending ...';
+    (id!=-1)?eId('toolsFile' + id).innerHTML = 'Sending ...':null;
     eId('countUploads').innerHTML = parseInt(eId('countUploads').innerHTML) + 1;
 
     var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1] + 1) : 0;
@@ -431,17 +431,21 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                eId('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
+                if(id !=-1)
+                {
+                    eId('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
 
-                eId('toolsFile' + id).innerHTML = '';
+                    eId('toolsFile' + id).innerHTML = '';
 
-                var buttonRetryUpload = document.createElement('button');
-                buttonRetryUpload.setAttribute('type', 'button');
-                buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + name + '\', ' + file + ', \'' + type + '\');');
-                buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
-                buttonRetryUpload.innerHTML = 'Réessayer';
+                    var buttonRetryUpload = document.createElement('button');
+                    buttonRetryUpload.setAttribute('type', 'button');
+                    buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + name + '\', ' + file + ', \'' + type + '\');');
+                    buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
+                    buttonRetryUpload.innerHTML = 'Réessayer';
 
-                eId('toolsFile' + id).appendChild(buttonRetryUpload);
+                    eId('toolsFile' + id).appendChild(buttonRetryUpload);
+                }
+
             }
             else {
                 rLog('file : ' + file.name + id + name + type);
@@ -456,6 +460,10 @@ function uploadFile(id, name, file, type) {
                 {
                     text = 'La miniature audio du fichier ' + name + ' a bien été envoyée.';
                 }
+                else if (type == 'RENDER')
+                {
+                    text = 'Le fichier de rendu à bien été envoyée. Il devrait être traité d\'ici peu de temps';
+                }
                 else
                 {
                     text = 'Le fichier ' + name + ' a bien été envoyé.';
@@ -468,7 +476,7 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                if(isUploadedFile(id))
+                if(isUploadedFile(id) && id != -1)
                 {
                     currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded = true;
 
