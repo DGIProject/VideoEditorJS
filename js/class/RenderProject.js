@@ -76,6 +76,9 @@ RenderP = function () {
     this.commandList.push(cmd);
 
     // merge audio and video
+
+    //Upload the command File
+    this.uploadCommands();
 };
 RenderP.prototype.addCommandV = function (e) {
     this.elementEnd = e.marginLeft + e.width
