@@ -88,11 +88,11 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 
         if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
         {
+            console.log('done');
+
             //readFileProject.dispatchEvent(listfilesend);
 
-            //readFileProject.setTracks();
-
-            console.log('done');
+            readFileProject.setTracks();
         }
     };
 
@@ -107,10 +107,18 @@ ReadFileProject.prototype.setTracks = function() {
 
     for(var x = 0; x < this.listTracks.length; x++)
     {
-        currentProject.tabListTracks[x].tabElements = this.listTracks[x].tabElements;
-        this.setElementsThumbnail(x);
+        this.countLoadElement = 0;
+        this.totalLoadElement = this.listTracks[x].tabElements.length;
 
-        drawElements(x);
+        currentProject.tabListTracks[x].tabElements = this.listTracks[x].tabElements;
+
+        for(var y = 0; y < currentProject.tabListTracks[x].tabElements.length; y++)
+        {
+            var element = currentProject.tabListTracks[x].tabElements[i];
+            var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+
+            this.setElementThumbnail(element, file.thumbnail, x);
+        }
     }
 
     //this.dispatchEvent(classend);
@@ -118,19 +126,22 @@ ReadFileProject.prototype.setTracks = function() {
     loadM();
 };
 
-ReadFileProject.prototype.setElementsThumbnail = function(rowTrack) {
-    for(var i = 0; i < currentProject.tabListTracks[rowTrack].tabElements.length; i++)
-    {
-        var element = currentProject.tabListTracks[rowTrack].tabElements[i];
-        var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail, rowTrack) {
+    var imageThumbnail = new Image();
 
-        if(element.type == TYPE.VIDEO)
+    imageThumbnail.onload = function() {
+        console.log(element.id);
+        console.log(imageThumbnail);
+
+        element.thumbnail = imageThumbnail;
+
+        readFileProject.countLoadElement++;
+
+        if(readFileProject.countLoadElement == readFileProject.totalLoadElement)
         {
-            element.thumbnail = file.thumbnail.i;
+            drawElements(rowTrack);
         }
-        else
-        {
-            element.thumbnail = file.thumbnail.a;
-        }
-    }
+    };
+
+    imageThumbnail.src = (element.type == TYPE.VIDEO) ? thumbnail.i : thumbnail.a;
 };
