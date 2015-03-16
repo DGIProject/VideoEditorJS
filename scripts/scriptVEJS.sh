@@ -1,12 +1,26 @@
 #!/bin/bash
-
-	ncftpls -u a@a.net -p a -x "nlist" ftp://ftp.a.net/www/testVideo/data/CommandFile |  sed '/^$/d' | sed '1,1d'  > /home/clangue/www/testvideo/ftpFileList.txt
-	while read line; do 
-		echo $line # or whaterver you want to do with the $line variable
-		ncftpget -u a@a.net -p a ftp://ftp.a.net/www/testVideo/data/CommandFile/$line
-		while read name; do
-			#echo $name	
-			#echo "./ffmpeg $name"
-			./ffmpeg $name < /dev/null
-		done < /home/clangue/www/testvideo/$line
-	done < /home/clangue/www/testvideo/ftpFileList.txt
+#define all path ans vars that are usefull
+DATAPATH="/home/clangue/VEJSFiles"
+LOGPATH="/home/clangue/videoProcess/logs"
+TEMPDIR="/home/clangue/videoProcess/tmp"
+SAMPLEDIR="/home/clangue/videoProcess/sample"
+#going into the directory with projects data
+#rm $TEMPDIR/*
+cd $DATAPATH
+#List all ffm files to a txt file
+find . -name "*.ffm" > "$LOGPATH/renderList.txt"
+while read ffm; do
+    #echo $ffm
+    rm $TEMPDIR/*
+    DIR=$(dirname "${ffm}")
+    echo $DIR
+    cd "$DIR"
+    cp $SAMPLEDIR/* $TEMPDIR
+    cp * $TEMPDIR
+    cd $TEMPDIR
+    while read content; do
+        # echo $content
+        ffmpeg $content
+    done < "RENDER.ffm"
+    cd $DATAPATH
+done < "$LOGPATH/renderList.txt"

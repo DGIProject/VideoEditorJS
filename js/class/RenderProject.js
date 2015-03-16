@@ -66,14 +66,18 @@ RenderP = function () {
     }
 
     // Merge audio tracks into single one
-    var cmd ="" ;
-    for (i=0;i<this.commandTracksAudio.length;i++)
+    if (this.commandTracksAudio.length>0)
     {
-        var trackId = this.commandTracksAudio[i][0];
-        cmd += "-i track_"+trackId+".mp3 ";
+        var cmd ="" ;
+        for (i=0;i<this.commandTracksAudio.length;i++)
+        {
+            var trackId = this.commandTracksAudio[i][0];
+            cmd += "-i track_"+trackId+".mp3 ";
+        }
+        cmd += "amix=inputs="+this.commandTracksAudio.length+":duration=longest:dropout_transition=2 audio.mp3";
+        this.commandList.push(cmd);
     }
-    cmd += "amix=inputs="+this.commandTracksAudio.length+":duration=longest:dropout_transition=2 audio.mp3";
-    this.commandList.push(cmd);
+
 
     // merge audio and video
 
@@ -100,8 +104,8 @@ RenderP.prototype.addCommandV = function (e) {
                 codec = "mjpeg";
                 break
         }
-        this.commands[this.t].push("-ss " + (e.leftGap / oneSecond) + " -loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
-        this.commandList.push("-ss " + (e.leftGap / oneSecond) + " -loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+        this.commands[this.t].push(" -loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+        this.commandList.push(" -loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
     }
 
 };
