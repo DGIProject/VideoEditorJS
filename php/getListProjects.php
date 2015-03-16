@@ -1,7 +1,7 @@
 <?php
 include "config.php";
 
-$dirname = $backPath . $DIR_projects;
+$dirname = $backPath . $DIR_projectsData;
 
 $dir = opendir($dirname);
 
