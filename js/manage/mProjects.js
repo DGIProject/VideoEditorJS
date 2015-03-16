@@ -80,17 +80,19 @@ function loadProject(fileName) {
     {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
-            console.log(xmlhttp.responseText);
-
-            //var loader = new Loader(JSON.parse(xmlhttp.responseText));
-            //loader.load();
-
-            var readFileProject = new ReadFileProject(xmlhttp.responseText);
+            readFileProject = new ReadFileProject(xmlhttp.responseText);
             readFileProject.setProject();
             readFileProject.setListFiles();
-            readFileProject.setTracks();
 
-            loadM();
+            /*
+            readFileProject.listfilesend = function() {
+                readFileProject.setTracks();
+            };
+
+            readFileProject.classend = function() {
+                loadM();
+            };
+            */
         }
     };
 

@@ -8,6 +8,8 @@ ReadFileProject = function(fileContent) {
     this.infoProject = this.tabProject.project;
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
+
+    loadM();
 };
 
 ReadFileProject.prototype.setProject = function() {
@@ -17,6 +19,9 @@ ReadFileProject.prototype.setProject = function() {
 };
 
 ReadFileProject.prototype.setListFiles = function() {
+    this.countGetFiles = 0;
+    this.totalGetFiles = this.listFiles.length;
+
     for(var i = 0; i < this.listFiles.length; i++)
     {
         var file = this.listFiles[i];
@@ -50,72 +55,48 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
     {
         fileName = 'THUMBNAIL_I_' + id;
     }
-    else if(type == TYPE.IMAGE)
-    {
-        fileName = 'FILE_' + id;
-    }
-    else
+    else if(type == TYPE.AUDIO)
     {
         fileName = 'THUMBNAIL_A_' + id;
     }
-
-    console.log('projectName=' + this.infoProject.name + '&fileName=' + fileName);
-
-    var imageClose = new Image();
-
-    imageClose.onload = function() {
-        console.log(window.URL.createObjectURL(new Blob([imageClose])));
-
-        console.log(imageClose + 'ok');
-    };
-
-    imageClose.src = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName + '.data';
-
-    /*
-    var xmlhttp = xmlHTTP();
-
-    xmlhttp.onreadystatechange=function()
+    else
     {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        fileName = 'FILE_' + id;
+    }
+
+    var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName + '.data';
+
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", url, true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(oEvent) {
+        var blob = new Blob([oReq.response], {type: "image/png"});
+
+        console.log(blob, window.URL.createObjectURL(blob));
+
+        if(type == TYPE.VIDEO || type == TYPE.IMAGE || type == TYPE.TEXT)
         {
-            if(xmlhttp.responseText == 'ERROR')
-            {
-                document.getElementById('toolsFile' + id).innerHTML = 'Error thumbnail.';
-            }
-            else
-            {
-                var fileReader = new FileReader();
-                fileReader.readAsDataURL(new Blob([xmlhttp.responseText]));
+            currentProject.tabListFiles[row].setThumbnailImage(window.URL.createObjectURL(blob));
+        }
+        else
+        {
+            currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
+        }
 
-                console.log(fileReader);
+        readFileProject.countGetFiles++;
 
-                var url = window.URL.createObjectURL(new Blob([fileReader.result]));
-                var url2 = window.URL.createObjectURL(new Blob([xmlhttp.responseText], {type: 'image/png'}));
+        if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
+        {
+            //readFileProject.dispatchEvent(listfilesend);
 
-                console.log(url, url2);
+            //readFileProject.setTracks();
 
-                /*
-                var fileReader = new FileReader();
-                fileReader.read
-                var blob = new Blob([xmlhttp.responseText], {type: 'image/png'});
-                console.log(blob);
-
-                if(type == TYPE.VIDEO || type == TYPE.IMAGE)
-                {
-                    currentProject.tabListFiles[row].setThumbnailImage(window.URL.createObjectURL(blob));
-                }
-                else
-                {
-                    currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
-                }
-            }
+            console.log('done');
         }
     };
 
-    xmlhttp.open("POST", remoteAPIPath + "php/getThumbnail.php", true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send('projectName=' + this.infoProject.name + '&fileName=' + fileName);
-    */
+    oReq.send();
 };
 
 ReadFileProject.prototype.setTracks = function() {
@@ -131,6 +112,10 @@ ReadFileProject.prototype.setTracks = function() {
 
         drawElements(x);
     }
+
+    //this.dispatchEvent(classend);
+
+    loadM();
 };
 
 ReadFileProject.prototype.setElementsThumbnail = function(rowTrack) {
