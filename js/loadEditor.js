@@ -11,7 +11,6 @@ var tabFilesJS = [
     'class/Track.js',
     'class/Element.js',
     'class/RenderProject.js',
-    'class/videoRecorder.js',
     'lib/TerminalJs/TerminalJs.js',
     'manage/mProjects.js',
     'manage/mFiles.js',

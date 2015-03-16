@@ -334,19 +334,45 @@ function element(rowTrack, row) {
     //THUMBNAIL IMAGE
     var imageThumbnail = currentElement.thumbnail;
 
-    var newWidth = (imageThumbnail.width * 75) / imageThumbnail.height;
+    if(currentElement.type == TYPE.VIDEO)
+    {
+        var newWidth = (imageThumbnail.width * 75) / imageThumbnail.height;
 
-    var sWidth = (newWidth > (currentElement.width - 7)) ? (((currentElement.width - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
-    //(currentElement.width < 100) ? (imageThumbnail.width - (((80 - (currentElement.width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
-    var sHeight = imageThumbnail.height;
+        var sWidth = (newWidth > (currentElement.width - 7)) ? (((currentElement.width - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
+        //(currentElement.width < 100) ? (imageThumbnail.width - (((80 - (currentElement.width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
+        var sHeight = imageThumbnail.height;
 
-    var xThumbnail = (currentElement.marginLeft + 2) - pixelTimeBar.g;
-    var yThumbnail = 20;
+        var xThumbnail = (currentElement.marginLeft + 2) - pixelTimeBar.g;
+        var yThumbnail = 20;
 
-    var widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
-    var heightThumbnail = 75;
+        var widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
+        var heightThumbnail = 75;
 
-    console.log(sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + newWidth + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
+        //console.log(sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + newWidth + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
 
-    context.drawImage(imageThumbnail, 0, 0, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
+        if(sWidth > 0 && widthThumbnail > 0)
+        {
+            context.drawImage(imageThumbnail, 0, 0, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
+        }
+    }
+    else
+    {
+        var ratio = imageThumbnail.width / currentElement.maxWidth;
+
+        var sx = ratio * currentElement.leftGap;
+        var sy = 0;
+
+        var sWidth = imageThumbnail.width - (ratio * currentElement.leftGap) - (ratio * currentElement.rightGap);
+        var sHeight = imageThumbnail.height;
+
+        var xThumbnail = currentElement.marginLeft - pixelTimeBar.g;
+        var yThumbnail = 20;
+
+        var widthThumbnail = currentElement.width;
+        var heightThumbnail = /*(imageThumbnail.height / imageThumbnail.width) * widthThumbnail*/ 75;
+
+        //console.log(ratio + ' - ' + sx + ' - ' + sy + ' - ' + sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
+
+        context.drawImage(imageThumbnail, sx, sy, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
+    }
 }
