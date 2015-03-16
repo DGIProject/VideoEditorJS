@@ -208,20 +208,46 @@ document.getElementById('buttonSaveRecord').onclick = function()
 {
     if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0)
     {
-        addFile({
-            fileName : document.getElementById('fileName').value+".webm",
-            data : videoRecorderResult,
-            dataURL : document.getElementById('video').src
-        });
-
-
+       /*
         document.getElementById('videoRecorderErrorText').style.display = 'none';
-        $('#recordAudioOrVideoElement').modal('hide');
+        $('#recordAudioOrVideoElement').modal('hide');*/
+        var fileName = (document.getElementById('fileName').value+".webm").deleteAccent().replace(new RegExp(' ', 'g'), '_');
+        console.log(fileName);
 
+        var typeFile = getTypeFile(fileName);
+        console.log(typeFile);
+
+        var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
+
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET",document.getElementById('video').src , true);
+        oReq.responseType = "arraybuffer";
+
+        oReq.onload = function (oEvent) {
+            var arrayBuffer = oReq.response;
+            if (arrayBuffer) {
+                loadM();
+                fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
+            }
+        };
+
+        oReq.send(null);
     }
     else
     {
         document.getElementById('videoRecorderErrorText').style.display = '';
 
     }
+};
+
+document.getElementById('fileName').onkeyup = function()
+{
+    if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0) {
+        eId('buttonSaveRecord').removeAttribute("disabled");
+    }
+    else
+    {
+        eId('buttonSaveRecord').setAttribute("disabled","");
+    }
+
 };
