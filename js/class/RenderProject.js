@@ -31,15 +31,14 @@ RenderP = function () {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft != 0) {
                     (this.tracks[t].type == TYPE.AUDIO) ? this.commands.push("-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + (this.elementInTrack[e].marginLeft / oneSecond) + " -y " + this.commands[this.t].length + ".mp3") :
-                        this.commands[t].push("-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + (this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
-
+                        this.commands[t].push("-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + (this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
                 }
 
                 (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
                 (this.tracks[t].type == TYPE.AUDIO) ? this.addBlackA(e) : this.addBlackV(e);
 
             }
-            else if (e == (this.elementInTrack.length - 1)) {
+            else if ( (e == (this.elementInTrack.length - 1)) ) {
                 (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
             }
             else {
@@ -49,24 +48,26 @@ RenderP = function () {
 
         }
 
-        var lastCmd = ''
-        var complexfliter = '-filter_complex \'';
-        var ending = (this.tracks[t].type == TYPE.AUDIO)?"concat=n="+this.commands[t].length+":a=1:unsafe=1 [a]' -map '[a]' -y":"concat=n="+this.commands[t].length+":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]' -aspect 16:9 -s 1280x720 -c:v libx264 -pix_fmt yuv420p -y";
-        for (i=0;i<this.commands[t].length;i++)
-        {
-            lastCmd += (this.tracks[t].type == TYPE.AUDIO)?'-i '+i+'.mp3 ':'-i '+i+'.mp4 ';
-            complexfliter += (this.tracks[t].type == TYPE.AUDIO)?'['+i+':1]':'['+i+':0]['+i+':1]';
+        if (this.tracks[t].tabElements.length > 0) {
+            var lastCmd = ''
+            var complexfliter = '-filter_complex \'';
+            var ending = (this.tracks[t].type == TYPE.AUDIO) ? "concat=n=" + this.commands[t].length + ":v=0:a=1:unsafe=1 [a]' -map '[a]' -y" : "concat=n=" + this.commands[t].length + ":v=1:a=1:unsafe=1 [v] [a]' -map '[v]' -map '[a]' -aspect 16:9 -s 1280x720 -c:v mpeg4 -c:a libmp3lame -pix_fmt yuv420p -y";
+            for (i = 0, a=1; i < this.commands[t].length; i++, a++) {
+                lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? '-i ' + a + '.mp3 ' : '-i ' + a + '.mp4 ';
+                complexfliter += (this.tracks[t].type == TYPE.AUDIO) ? '[' + i + ':0]' : '[' + i + ':0][' + i + ':1]';
+            }
+            lastCmd += complexfliter
+            lastCmd += ending
+            lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
+            (this.tracks[t].type == TYPE.AUDIO) ? this.commandTracksAudio.push([t, lastCmd]) : this.commandTracksVideo.push([t, lastCmd]);
+            this.commands[t].push(lastCmd);
+            this.commandList.push(lastCmd);
         }
-        lastCmd += complexfliter
-        lastCmd += ending
-        lastCmd += (this.tracks[t].type == TYPE.AUDIO)?" track_"+t+".mp3":" track_"+t+".mp4";
-        (this.tracks[t].type == TYPE.AUDIO)?this.commandTracksAudio.push([t, lastCmd]):this.commandTracksVideo.push([t,lastCmd]);
-        this.commands[t].push(lastCmd);
-        this.commandList.push(lastCmd);
     }
 
+    var finalAudio = "audio.mp3";
     // Merge audio tracks into single one
-    if (this.commandTracksAudio.length>0)
+    if (this.commandTracksAudio.length>1)
     {
         var cmd ="" ;
         for (i=0;i<this.commandTracksAudio.length;i++)
@@ -76,12 +77,18 @@ RenderP = function () {
         }
         cmd += "amix=inputs="+this.commandTracksAudio.length+":duration=longest:dropout_transition=2 audio.mp3";
         this.commandList.push(cmd);
+        finalAudio = "audio.mp3";
+    }
+    else
+    {
+        finalAudio = "track_1.mp3";
     }
 
 
     // merge audio and video
 
     //Upload the command File
+    this.commandList.push("-i track_0.mp4 -i track_1.mp3 -map 0:v -map 1:a -s 1280x720 -c:v mpeg4 -c:a libmp3lame final.mp4")
     this.uploadCommands();
 };
 RenderP.prototype.addCommandV = function (e) {
@@ -104,9 +111,15 @@ RenderP.prototype.addCommandV = function (e) {
                 codec = "mjpeg";
                 break
         }
-        this.commands[this.t].push(" -loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
-        this.commandList.push(" -loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+        this.commands[this.t].push("-loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+        this.commandList.push("-loop 1 -f image2 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
     }
+    else
+    {
+        this.commands[this.t].push("-i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame -y " + this.commands[this.t].length + ".mp4");
+        this.commandList.push("-i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame -y " + this.commands[this.t].length + ".mp4");
+    }
+
 
 };
 
@@ -131,8 +144,8 @@ RenderP.prototype.addBlackV = function (e) {
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
-            this.commands[this.t].push("-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + ((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
-            this.commandList.push("-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + ((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -s 1280x720 -c:v libx264  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+            this.commands[this.t].push("-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + ((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+            this.commandList.push("-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + ((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
         }
     }
 };
@@ -168,7 +181,7 @@ RenderP.prototype.uploadCommands = function(){
     for (i=0;i<this.commandList.length;i++)
     {
         finalString += this.commandList[i];
-        if (i!= this.commandList.length-2)
+        if (i!= this.commandList.length-1)
         {
             finalString += "\n"
         }

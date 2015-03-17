@@ -4,6 +4,7 @@ DATAPATH="/home/clangue/VEJSFiles"
 LOGPATH="/home/clangue/videoProcess/logs"
 TEMPDIR="/home/clangue/videoProcess/tmp"
 SAMPLEDIR="/home/clangue/videoProcess/sample"
+THREADS_NUMBER=4
 #going into the directory with projects data
 #rm $TEMPDIR/*
 cd $DATAPATH
@@ -20,7 +21,7 @@ while read ffm; do
     cd $TEMPDIR
     while read content; do
         # echo $content
-        ffmpeg $content
+        ffmpeg -threads $THREADS_NUMBER  $content
     done < "RENDER.ffm"
     cd $DATAPATH
 done < "$LOGPATH/renderList.txt"

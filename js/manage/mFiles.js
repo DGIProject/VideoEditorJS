@@ -92,7 +92,7 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
             terminal.Workers[index].worker.terminate();
 
             if (typeFile == TYPE.VIDEO) {
-                terminal.processCmd("ffmpeg -i " + fileName + " -f image2 -vf scale=-1:50 -an -ss " + Math.floor(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].getDurationInSecond() / 2) + " thumbnail.jpg", function (e, index) {
+                terminal.processCmd("ffmpeg -i " + fileName + " -f image2 -vf scale=-1:50 -an -ss " + Math.floor(timeToSeconds(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].duration) / 2) + " thumbnail.jpg", function (e, index) {
 
                     var message = e.data;
 
