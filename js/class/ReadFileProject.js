@@ -9,7 +9,34 @@ ReadFileProject = function(fileContent) {
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
 
-    loadM();
+    this.progression = 0;
+    this.totalProgression = this.gTotalProgression();
+
+    this.progressInterval = setInterval(this.analyzeProgression, 500);
+};
+
+ReadFileProject.prototype.gTotalProgression = function() {
+    var totalProgression = this.listFiles.length;
+
+    for(var i = 0; i < this.listTracks.length; i++)
+    {
+        totalProgression += this.listTracks[i].tabElements.length;
+    }
+
+    return totalProgression;
+};
+
+ReadFileProject.prototype.analyzeProgression = function() {
+    eId('progressionBar').style.width = (this.progression / this.totalProgression) * 100;
+    eId('progressionStatus').innerHTML = 'Chargement du projet ... (' + readFileProject.progression + '/' + readFileProject.totalProgression + ')';
+
+    if(readFileProject.progression == readFileProject.totalProgression)
+    {
+        clearInterval(readFileProject.progressInterval);
+
+        drawElementsTracks();
+        loadM('progress');
+    }
 };
 
 ReadFileProject.prototype.setProject = function() {
@@ -84,6 +111,7 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
             currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
         }
 
+        readFileProject.progression++;
         readFileProject.countGetFiles++;
 
         if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
@@ -114,7 +142,7 @@ ReadFileProject.prototype.setTracks = function() {
 
         for(var y = 0; y < currentProject.tabListTracks[x].tabElements.length; y++)
         {
-            var element = currentProject.tabListTracks[x].tabElements[i];
+            var element = currentProject.tabListTracks[x].tabElements[y];
             var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
 
             this.setElementThumbnail(element, file.thumbnail, x);
@@ -122,25 +150,19 @@ ReadFileProject.prototype.setTracks = function() {
     }
 
     //this.dispatchEvent(classend);
-
-    loadM();
 };
 
 ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail, rowTrack) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        console.log(element.id);
+        console.log(element);
         console.log(imageThumbnail);
 
         element.thumbnail = imageThumbnail;
 
+        readFileProject.progression++;
         readFileProject.countLoadElement++;
-
-        if(readFileProject.countLoadElement == readFileProject.totalLoadElement)
-        {
-            drawElements(rowTrack);
-        }
     };
 
     imageThumbnail.src = (element.type == TYPE.VIDEO) ? thumbnail.i : thumbnail.a;

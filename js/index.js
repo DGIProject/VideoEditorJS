@@ -19,7 +19,20 @@ window.onbeforeunload = function (e) {
     }
 };
 
-function loadM() {
+function loadM(type) {
+    if(type == 'progress')
+    {
+        eId('progressionBarClass').classList.remove('progress-striped');
+        eId('progressionBarClass').classList.remove('active');
+    }
+    else
+    {
+        eId('progressionBarClass').classList.add('progress-striped');
+        eId('progressionBarClass').classList.add('active');
+    }
+
+    eId('progressionBarStatus').innerHTML = 'Chargement en cours ...';
+
     $('#loadModal').modal('toggle');
 }
 
