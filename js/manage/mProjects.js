@@ -72,7 +72,7 @@ function openProject() {
 }
 
 function loadProject(fileName) {
-    loadM('progress');
+    loadM();
 
     var xmlhttp = xmlHTTP();
 

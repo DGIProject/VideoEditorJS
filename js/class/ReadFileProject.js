@@ -27,7 +27,7 @@ ReadFileProject.prototype.gTotalProgression = function() {
 };
 
 ReadFileProject.prototype.analyzeProgression = function() {
-    eId('progressionBar').style.width = (this.progression / this.totalProgression) * 100;
+    eId('progressionBar').style.width = ((this.progression / this.totalProgression) * 100) + '%';
     eId('progressionStatus').innerHTML = 'Chargement du projet ... (' + readFileProject.progression + '/' + readFileProject.totalProgression + ')';
 
     if(readFileProject.progression == readFileProject.totalProgression)
@@ -35,7 +35,7 @@ ReadFileProject.prototype.analyzeProgression = function() {
         clearInterval(readFileProject.progressInterval);
 
         drawElementsTracks();
-        loadM('progress');
+        loadM();
     }
 };
 
@@ -100,7 +100,7 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
     oReq.onload = function(oEvent) {
         var blob = new Blob([oReq.response], {type: "image/png"});
 
-        console.log(blob, window.URL.createObjectURL(blob));
+        //console.log(blob, window.URL.createObjectURL(blob));
 
         if(type == TYPE.VIDEO || type == TYPE.IMAGE || type == TYPE.TEXT)
         {
@@ -156,8 +156,8 @@ ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail, row
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        console.log(element);
-        console.log(imageThumbnail);
+        //console.log(element);
+        //console.log(imageThumbnail);
 
         element.thumbnail = imageThumbnail;
 
