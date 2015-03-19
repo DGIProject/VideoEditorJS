@@ -300,38 +300,32 @@ function deselectFile(e) {
 }
 
 function fileProperties() {
-    console.log('fileProperties');
-
     var id = this.id.replace('file', '');
+    var file = currentProject.tabListFiles[id];
 
-    var fileInfo = currentProject.tabListFiles[id];
-    var type = currentProject.tabListFiles[id].type;
+    eId('nameFileP').innerHTML = file.fileName;
+    eId('typeFileP').innerHTML = typeFile(file.type);
+    eId('sizeFileP').innerHTML = sizeFile(file.size);
+    eId('formatFileP').innerHTML = file.format;
+    eId('durationFileP').innerHTML = file.duration;
 
-    eId('nameFileP').innerHTML = fileInfo.fileName;
-    eId('sizeFileP').innerHTML = sizeFile(fileInfo.size);
-    eId('formatFileP').innerHTML = fileInfo.format;
-    eId('durationFileP').innerHTML = fileInfo.duration;
+    var preview = '';
 
-    var preview;
-
-    if (type == TYPE.TEXT || type == TYPE.IMAGE || type == TYPE.VIDEO) {
-        preview = '<a href="#" class="thumbnail"><img class="previewFileContent" src="' + fileInfo.thumbnail.i + '"></a>';
+    if(file.isVideo) {
+        preview = '<a href="#" class="thumbnail"><img class="previewFileContent" src="' + file.thumbnail.i + '"></a>';
     }
-    else if (type == TYPE.AUDIO)
-    {
-        preview = '<a href="#" class="thumbnail"><img class="previewAudioFileContent" src="' + fileInfo.thumbnail.a + '"></a>';
-    }
-    else {
-        preview = 'Non disponible';
+
+    if(file.isAudio) {
+        preview += '<a href="#" class="thumbnail"><img class="previewAudioFileContent" src="' + file.thumbnail.a + '"></a>';
     }
 
     eId('previewFileP').innerHTML = preview;
 
-    if (type == TYPE.TEXT) {
+    if (file.type == TYPE.TEXT) {
         eId('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
         eId('fileEditButton').style.display = '';
     }
-    else if (type == TYPE.IMAGE) {
+    else if (file.type == TYPE.IMAGE) {
         eId('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
         eId('fileEditButton').style.display = 'none';
     }
@@ -343,6 +337,21 @@ function fileProperties() {
     eId('fileRemoveButton').setAttribute('onclick', 'removeFile(' + id + ');');
 
     $('#filePropertiesModal').modal('show');
+}
+
+function typeFile(type) {
+    switch(type) {
+        case TYPE.VIDEO:
+            return 'Vidéo';
+        case TYPE.IMAGE:
+            return 'Image';
+        case TYPE.TEXT:
+            return 'Texte';
+        case TYPE.AUDIO:
+            return 'Audio';
+        default:
+            return 'Inconnu';
+    }
 }
 
 function sizeFile(size) {
