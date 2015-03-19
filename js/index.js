@@ -5,18 +5,17 @@ window.onload = function (e) {
 window.onbeforeunload = function (e) {
     e = e || window.event;
 
-    saveProject();
-
-    if(currentProject.currentUploads > 0)
-    {
-        var msg = 'Envoi en cours des fichier, ne fermez pas encore la fenêtre ou tout sera perdu.';
-
-        // For IE and Firefox
-        if (e) {e.returnValue = msg;}
-
-        // For Chrome and Safari
-        return msg;
+    if(currentProject) {
+        saveProject();
     }
+
+    var msg = 'Voulez-vous quitter ? Des fichiers sont peut-être toujours en envoi vers le serveur.';
+
+    if (e) {
+        e.returnValue = msg;
+    }
+
+    return msg;
 };
 
 function loadM() {
