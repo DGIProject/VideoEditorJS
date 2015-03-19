@@ -1,10 +1,30 @@
-document.onclick = function() {
+window.onload = function (e) {
+    calculateTimeBar();
+};
+
+window.onbeforeunload = function (e) {
+    e = e || window.event;
+
+    if(currentProject) {
+        saveProject();
+    }
+
+    var msg = 'Voulez-vous quitter ? Des fichiers sont peut-être toujours en envoi vers le serveur.';
+
+    if (e) {
+        e.returnValue = msg;
+    }
+
+    return msg;
+};
+
+window.onclick = function() {
     if(currentProject) {
         hideContextMenu();
     }
 };
 
-document.onmouseup = function() {
+window.onmouseup = function() {
     if(currentProject) {
         mouseUp();
     }

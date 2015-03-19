@@ -34,13 +34,15 @@ ReadFileProject.prototype.analyzeProgression = function() {
     {
         clearInterval(readFileProject.progressInterval);
 
-        drawElementsTracks();
+        changeZoom(this.infoProject.zoom);
         loadM();
     }
 };
 
 ReadFileProject.prototype.setProject = function() {
-    currentProject = new Project(this.infoProject.name.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, this.infoProject.date);
+    currentProject = new Project(this.infoProject.name.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, this.infoProject.dateCreation);
+    currentProject.lastSave = getHour();
+
     currentProject.updateText();
     currentProject.switchAutoSave();
 };

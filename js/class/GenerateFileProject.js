@@ -10,12 +10,12 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListFiles
 
 GenerateFileProject.prototype.generateMain = function() {
     return {
-        project : {
-            name : this.nameProject,
-            date : this.dateCreation,
-            lastSave: this.lastSave
+        project: {
+            name: this.nameProject,
+            dateCreation: this.dateCreation,
+            zoom: oneSecond
         },
-        files : this.tabListFiles,
-        tracks : this.tabListTracks
+        files: this.tabListFiles,
+        tracks: this.tabListTracks
     };
 };

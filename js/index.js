@@ -1,23 +1,3 @@
-window.onload = function (e) {
-    calculateTimeBar();
-};
-
-window.onbeforeunload = function (e) {
-    e = e || window.event;
-
-    if(currentProject) {
-        saveProject();
-    }
-
-    var msg = 'Voulez-vous quitter ? Des fichiers sont peut-être toujours en envoi vers le serveur.';
-
-    if (e) {
-        e.returnValue = msg;
-    }
-
-    return msg;
-};
-
 function loadM() {
     eId('progressionBar').style.width = '100%';
     eId('progressionStatus').innerHTML = 'Chargement en cours ...';
