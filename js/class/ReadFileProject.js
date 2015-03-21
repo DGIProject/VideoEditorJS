@@ -5,6 +5,8 @@
 ReadFileProject = function(fileContent) {
     this.tabProject = JSON.parse(fileContent);
 
+    console.log(this.tabProject);
+
     this.infoProject = this.tabProject.project;
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
@@ -34,7 +36,7 @@ ReadFileProject.prototype.analyzeProgression = function() {
     {
         clearInterval(readFileProject.progressInterval);
 
-        changeZoom(this.infoProject.zoom);
+        changeZoom(readFileProject.infoProject.zoom, true);
         loadM();
     }
 };

@@ -127,10 +127,10 @@ function deleteTrack(id) {
 }
 
 //ZOOM
-function changeZoom(zoom) {
+function changeZoom(zoom, defaultZ) {
     document.getElementById('zoomRange').value = zoom;
 
-    lastZoom = oneSecond;
+    lastZoom = (defaultZ) ? zoom : oneSecond;
     oneSecond = zoom;
 
     calculateTimeBar();
