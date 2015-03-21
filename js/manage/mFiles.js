@@ -153,8 +153,8 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
 
                                                     wavesurfer.init({
                                                         container     : document.querySelector('#waveform'),
-                                                        waveColor     : 'violet',
-                                                        progressColor : 'violet'
+                                                        waveColor     : '#4d4d4d',
+                                                        progressColor : '#4d4d4d'
                                                     });
                                                     wavesurfer.load(audioUrl);
                                                     loadM();
@@ -214,8 +214,8 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
 
                                     wavesurfer.init({
                                         container     : document.querySelector('#waveform'),
-                                        waveColor     : 'violet',
-                                        progressColor : 'violet'
+                                        waveColor     : '#4d4d4d',
+                                        progressColor : '#4d4d4d'
                                     });
                                     wavesurfer.load(audioUrl);
                                     loadM();

@@ -31,7 +31,7 @@ RenderP = function () {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft != 0) {
                     var cmd;
-                    cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + this.commands[this.t].length + ".mp3" :"-loop 1 -f image2 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4";
+                    cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" :"-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts";
                     this.commandList.push(cmd);
                     this.commands[t].push(cmd);
 
@@ -52,16 +52,27 @@ RenderP = function () {
         }
 
         if (this.tracks[t].tabElements.length > 0) {
-            var lastCmd = '';
-            var complexfliter = '-filter_complex \'';
-            var ending = (this.tracks[t].type == TYPE.AUDIO) ? "concat=n=" + this.commands[t].length + ":v=0:a=1:unsafe=1 [a]\' -map \'[a]\' -y" : "concat=n=" + this.commands[t].length + ":v=1:a=1:unsafe=1 [v] [a]\' -map \'[v]\' -map \'[a]\' -aspect 16:9 -s 1280x720 -c:v mpeg4 -c:a libmp3lame -y";
-            for (i = 0, a=1; i < this.commands[t].length; i++, a++) {
-                lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? '-i ' + a + '.mp3 ' : '-i ' + a + '.mp4 ';
-                complexfliter += (this.tracks[t].type == TYPE.AUDIO) ? '[' + i + ':0]' : '[' + i + ':0][' + i + ':1]';
+            var lastCmd = "";
+            if (this.tracks[t].tabElements.length != 1)
+            {
+                lastCmd = '-i "concat:';
+                //var complexfliter = '-filter_complex \'';
+                //var ending = (this.tracks[t].type == TYPE.AUDIO) ? "concat=n=" + this.commands[t].length + ":v=0:a=1:unsafe=1 [a]\' -map \'[a]\' -y" : "concat=n=" + this.commands[t].length + ":v=1:a=1:unsafe=1 [v] [a]\' -map \'[v]\' -map \'[a]\' -aspect 16:9 -s 1280x720 -c:v mpeg4 -c:a libmp3lame -y";
+                var ending = " -c mpeg4 -y ";
+                for (i = 0; i < this.commands[t].length; i++) {
+                    lastCmd += ((this.tracks[t].type == TYPE.AUDIO) ? ""+i + ".mp3|" : ""+i + ".ts|");
+
+                    //complexfliter += (this.tracks[t].type == TYPE.AUDIO) ? '[' + i + ':0]' : '[' + i + ':0][' + i + ':1]';
+                }
+                //lastCmd += complexfliter;
+                lastCmd = lastCmd.slice(0,-1);
+                lastCmd += '"'+ending;
+                lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
             }
-            lastCmd += complexfliter;
-            lastCmd += ending;
-            lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
+            else
+            {
+                lastCmd = (this.tracks[t].type == TYPE.AUDIO) ?"-i 0.mp3 -c copy -y track_"+t+".mp3": "-i 0.ts -c mpeg4 -y track_"+t+".mp4";
+            }
             (this.tracks[t].type == TYPE.AUDIO) ? this.commandTracksAudio.push([t, lastCmd]) : this.commandTracksVideo.push([t, lastCmd]);
             this.commands[t].push(lastCmd);
             this.commandList.push(lastCmd);
@@ -91,10 +102,11 @@ RenderP = function () {
     // merge audio and video
 
     //Upload the command File
-    this.commandList.push("-i track_0.mp4 "+((this.commandTracksAudio.length>0)?"-i "+finalAudio:"")+" -map 0:v "+((this.commandTracksAudio.length>0)?"-map 1:a":"")+" -s 1280x720 -c:v mpeg4 -c:a libmp3lame final.mp4")
+    this.commandList.push("-i track_0.mp4 "+((this.commandTracksAudio.length>0)?"-i "+finalAudio:"")+" -s 1280x720 -c copy final.mp4")
     this.uploadCommands();
 };
 RenderP.prototype.addCommandV = function (e) {
+    var cmd ="";
     this.elementEnd = e.marginLeft + e.width
     var curentFileforElement = this.getFileInformationById(e.fileId)
 
@@ -114,13 +126,17 @@ RenderP.prototype.addCommandV = function (e) {
                 codec = "mjpeg";
                 break
         }
-        this.commands[this.t].push("-loop 1 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
-        this.commandList.push("-loop 1 -c:v " + codec + " -i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+        cmd = "-loop 1 -r 1 -c:v " + codec + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond))
+        + " -s 1280x720 -r 24 -y " + this.commands[this.t].length + ".ts"
+        this.commands[this.t].push(cmd);
+        this.commandList.push(cmd);
     }
     else
         {
-        this.commands[this.t].push("-i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame -y " + this.commands[this.t].length + ".mp4");
-        this.commandList.push("-i FILE_" + e.fileId + ".data -i sample.wav -map 0:v -map 1:a -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame -y " + this.commands[this.t].length + ".mp4");
+            cmd ="-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) +
+            " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+        this.commands[this.t].push(cmd);
+        this.commandList.push(cmd);
     }
 
 
@@ -130,15 +146,16 @@ RenderP.prototype.addCommandA = function (e) {
     this.elementEnd = e.marginLeft + e.width
 
     var curentFileforElement = this.getFileInformationById(e.fileId)
-
-    this.commands[this.t].push("-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3");
-    this.commandList.push("-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3");
+    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
+    this.commands[this.t].push(cmd);
+    this.commandList.push(cmd);
 
 };
 
 RenderP.prototype.addBlackV = function (e) {
     tempIndex = e;
     tempIndex++;
+    var cmd = "";
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
         if (this.nextElement.marginLeft == this.elementEnd) {
@@ -147,8 +164,11 @@ RenderP.prototype.addBlackV = function (e) {
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
-            this.commands[this.t].push("-loop 1 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
-            this.commandList.push("-loop 1 -c:v png -i black.png -i sample.wav -map 0:v -map 1:a -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -s 1280x720 -c:v mpeg4 -c:a libmp3lame  -pix_fmt yuv420p -y " + this.commands[this.t].length + ".mp4");
+            cmd = "-loop 1 -r 1 -c:v png -i black.png -t "
+            + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond)
+            + " -s 1280x720 -r 24 -y " + this.commands[this.t].length + ".ts";
+            this.commands[this.t].push(cmd);
+            this.commandList.push(cmd);
         }
     }
 };
