@@ -89,7 +89,10 @@ function elementProperties(rowTrack, rowElement) {
     eId('fileElementP').innerHTML = file.fileName;
     eId('typeElementP').innerHTML = (element.type == 1) ? 'VIDEO' : 'AUDIO';
     eId('parentElementP').innerHTML = (element.parent >= 0) ? 'Oui' : 'Non';
-    eId('colorElementP').innerHTML = element.color;
+
+    eId('colorElementP').value = element.color;
+    eId('colorElementP').setAttribute('onchange', 'changeColorElement(' + rowTrack + ', ' + rowElement + ');');
+
     eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type == 1) ? file.thumbnail.i : file.thumbnail.a) + '" class="previewFileContent"></a>';
 
     var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');
@@ -108,6 +111,12 @@ function elementProperties(rowTrack, rowElement) {
     eId('positionElementP').innerHTML = element.marginLeft + 'px';
 
     $('#elementPropertiesModal').modal('show');
+}
+
+//COLOR ELEMENT
+function changeColorElement(rowTrack, rowElement) {
+    console.log(eId('colorElementP').value);
+    currentProject.tabListTracks[rowTrack].tabElements[rowElement].color = eId('colorElementP').value;
 }
 
 //OPACITY
