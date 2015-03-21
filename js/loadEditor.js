@@ -44,6 +44,14 @@ var readFileProject = false;
 
 var lastRLog = '';
 
+var imageClose = new Image();
+
+imageClose.onload = function() {
+    console.log('loaded close');
+};
+
+imageClose.src = 'http://clangue.net/other/testVideo/img/close.png';
+
 window.onload = function() {
     $('#startLoadingEditor').modal('show');
 

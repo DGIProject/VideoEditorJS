@@ -2,14 +2,6 @@
  * Created by Dylan on 04/02/2015.
  */
 
-var imageClose = new Image();
-
-imageClose.onload = function() {
-    console.log('loaded close');
-};
-
-imageClose.src = 'http://clangue.net/other/testVideo/demos/canvastry/img/close.png';
-
 function mouseDown(e) {
     console.log('mousedown');
 
@@ -70,6 +62,8 @@ function mouseUp() {
 
             if(track.mode == MODE.REMOVE)
             {
+                console.log('delete : ' + track.tabElements[track.currentRow]);
+                
                 deleteElement(x, track.currentRow);
             }
 
@@ -84,8 +78,10 @@ function mouseMove(e) {
 
     var track = currentProject.tabListTracks[row];
 
-    var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX) + pixelTimeBar.g;
+    var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX) /*+ pixelTimeBar.g*/;
     var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
+
+    console.log('x : ' + x, pixelTimeBar.g);
 
     if(track.mousedown)
     {
@@ -95,6 +91,8 @@ function mouseMove(e) {
 
             if((x - track.gap) > 0)
             {
+                console.log('marginLeft : ' + x);
+
                 track.tabElements[track.currentRow].marginLeft = x;
             }
             else
@@ -102,7 +100,7 @@ function mouseMove(e) {
                 track.tabElements[track.currentRow].marginLeft = 0;
             }
 
-            haveParent(track, track.tabElements[track.currentRow]);
+            setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
         }
         else if(track.mode == MODE.RESIZE.LEFT)
         {
@@ -129,7 +127,7 @@ function mouseMove(e) {
 
             track.lastX = x;
 
-            haveParent(track, track.tabElements[track.currentRow]);
+            setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
         }
         else if(track.mode == MODE.RESIZE.RIGHT)
         {
@@ -154,12 +152,12 @@ function mouseMove(e) {
 
             track.lastX = x;
 
-            haveParent(track, track.tabElements[track.currentRow]);
+            setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
         }
     }
     else
     {
-        rowTabElement(x, row);
+        track.currentRow = rowElement(x, row);
 
         if(track.currentRow >= 0)
         {
@@ -184,7 +182,7 @@ function mouseMove(e) {
                 track.canvas.element.style.cursor = 'all-scroll';
             }
 
-            console.log(track.mode);
+            //console.log(track.mode);
         }
         else
         {
@@ -199,10 +197,10 @@ function mouseMove(e) {
     drawElementsTracks();
 }
 
-function haveParent(track, element) {
+function setPropertiesParent(trackParent, element) {
     if(element.parent >= 0)
     {
-        var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
+        var parentTrack = currentProject.tabListTracks[rowById(trackParent, currentProject.tabListTracks)];
         var parentElement = parentTrack.tabElements[rowById(element.parent, parentTrack.tabElements)];
 
         parentElement.width = element.width;
@@ -214,64 +212,24 @@ function haveParent(track, element) {
     }
 }
 
-function showContextMenu(e) {
-    var trackId = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
-    var rowTrack = rowById(trackId, currentProject.tabListTracks);
+function rowElement(x, row) {
+    var track = currentProject.tabListTracks[row];
+    var currentRow = -1;
 
-    var track = currentProject.tabListTracks[rowTrack];
-
-    if(track.currentRow >= 0)
+    for(var i = 0; i < track.tabElements.length; i++)
     {
-        var element = track.tabElements[track.currentRow];
-        var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)].fileName;
-
-        document.getElementById('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
-        document.getElementById('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
-
-        document.getElementById('buttonBreakLinkCM').setAttribute('onclick', 'breakLinkElements(' + element.id + ', ' + trackId + ');');
-        document.getElementById('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
-        document.getElementById('buttonDeleteCM').setAttribute('onclick', 'deleteElement(' + rowTrack + ',' + track.currentRow + ');');
-
-        //document.getElementById('buttonEffectsCM').disabled = true;
-        document.getElementById('buttonOpacityCM').disabled = true;
-
-        if(track.type == TYPE.AUDIO)
+        if(track.tabElements[i].marginLeft <= x && (track.tabElements[i].marginLeft + track.tabElements[i].width) >= x)
         {
-            document.getElementById('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ',\'' + file.fileName + '\');');
+            currentRow = i;
+            track.tabElements[i].selected = true;
         }
         else
         {
-            document.getElementById('buttonVolumeCM').disabled = true;
-        }
-
-        document.getElementById('contextMenu').style.display = 'initial';
-    }
-
-    return false;
-}
-
-function hideContextMenu() {
-    document.getElementById('contextMenu').style.display = 'none';
-}
-
-function rowTabElement(x, row) {
-    currentProject.tabListTracks[row].currentRow = -1;
-
-    for(var i = 0; i < currentProject.tabListTracks[row].tabElements.length; i++)
-    {
-        if(currentProject.tabListTracks[row].tabElements[i].marginLeft <= x && (currentProject.tabListTracks[row].tabElements[i].marginLeft + currentProject.tabListTracks[row].tabElements[i].width) >= x)
-        {
-            //console.log('row : ', i);
-
-            currentProject.tabListTracks[row].currentRow = i;
-
-            currentProject.tabListTracks[row].tabElements[i].selected = true;
-        }
-        else
-        {
-            currentProject.tabListTracks[row].tabElements[i].selected = false;
+            track.tabElements[i].selected = false;
         }
     }
+
+    return currentRow;
 }
 
 function drawElementsTracks() {
@@ -309,26 +267,29 @@ function element(rowTrack, row) {
     var currentElement = currentProject.tabListTracks[rowTrack].tabElements[row];
     var context = currentProject.tabListTracks[rowTrack].canvas.context;
 
+    var gapError = ((currentElement.marginLeft * 2) / 198);
+
+    console.log('element marginLeft : ' + currentElement.marginLeft, gapError);
+
     context.beginPath();
     context.lineWidth = 1;
     context.strokeStyle = (currentElement.selected) ? 'blue' : 'gray';
-    context.rect(currentElement.marginLeft - pixelTimeBar.g, 0, currentElement.width, 100);
+    context.rect(currentElement.marginLeft + gapError /*- pixelTimeBar.g*/, 0, currentElement.width, 100);
     context.stroke();
 
-    //context.fillStyle = (currentProject.tabListTracks[rowTrack].type == TYPE.VIDEO) ? '#A3BDDE' : '#74E4BC';
     context.fillStyle = currentElement.color;
-    context.fillRect(currentElement.marginLeft - pixelTimeBar.g, 0, currentElement.width, 100);
+    context.fillRect(currentElement.marginLeft + gapError /*- pixelTimeBar.g*/, 0, currentElement.width, 100);
 
     context.font = '15px Calibri';
     context.fillStyle = '#000000';
 
     //TEXT
-    context.fillText(compressName(currentProject.tabListFiles[rowById(currentElement.fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + 2) - pixelTimeBar.g, 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
+    context.fillText(compressName(currentProject.tabListFiles[rowById(currentElement.fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + gapError + 2) /*- pixelTimeBar.g*/, 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
 
     //CLOSE IMAGE
     if(currentElement.width >= 16)
     {
-        context.drawImage(imageClose, (currentElement.marginLeft + currentElement.width - 15) - pixelTimeBar.g, 0, 15, 15);
+        context.drawImage(imageClose, (currentElement.marginLeft + gapError + currentElement.width - 15) /*- pixelTimeBar.g*/, 0, 15, 15);
     }
 
     //THUMBNAIL IMAGE
@@ -342,7 +303,7 @@ function element(rowTrack, row) {
         //(currentElement.width < 100) ? (imageThumbnail.width - (((80 - (currentElement.width - 20)) / 80) * imageThumbnail.width)) : imageThumbnail.width;
         var sHeight = imageThumbnail.height;
 
-        var xThumbnail = (currentElement.marginLeft + 2) - pixelTimeBar.g;
+        var xThumbnail = (currentElement.marginLeft + gapError + 2) /*- pixelTimeBar.g*/;
         var yThumbnail = 20;
 
         var widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
@@ -365,7 +326,7 @@ function element(rowTrack, row) {
         var sWidth = imageThumbnail.width - (ratio * currentElement.leftGap) - (ratio * currentElement.rightGap);
         var sHeight = imageThumbnail.height;
 
-        var xThumbnail = currentElement.marginLeft - pixelTimeBar.g;
+        var xThumbnail = currentElement.marginLeft + gapError /*- pixelTimeBar.g*/;
         var yThumbnail = 20;
 
         var widthThumbnail = currentElement.width;
@@ -375,4 +336,14 @@ function element(rowTrack, row) {
 
         context.drawImage(imageThumbnail, sx, sy, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
     }
+
+    /*
+    for(var posX = 0; posX < 500; posX = posX + 20)
+    {
+        context.beginPath();
+        context.moveTo(posX, 0);
+        context.lineTo(posX, 75);
+        context.stroke();
+    }
+    */
 }

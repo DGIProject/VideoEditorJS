@@ -21,7 +21,6 @@ function addTrack() {
     videoView.classList.add('singleTrack');
 
     videoView.onmousedown = mouseDown;
-    //videoView.onmouseup = mouseUp;
     videoView.onmousemove = mouseMove;
 
     videoView.ondragover = allowDrop;
@@ -53,7 +52,6 @@ function addTrack() {
     audioView.classList.add('singleTrack');
 
     audioView.onmousedown = mouseDown;
-    //audioView.onmouseup = mouseUp;
     audioView.onmousemove = mouseMove;
 
     audioView.ondragover = allowDrop;
@@ -249,4 +247,55 @@ function dropFile(e) {
     e.preventDefault();
 
     addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0);
+}
+
+//RIGHT CLICK
+function showContextMenu(e) {
+    var trackId = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var rowTrack = rowById(trackId, currentProject.tabListTracks);
+
+    var track = currentProject.tabListTracks[rowTrack];
+
+    if(track.currentRow >= 0)
+    {
+        var element = track.tabElements[track.currentRow];
+        var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)].fileName;
+
+        eId('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
+        eId('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
+
+        if(element.parent >= 0)
+        {
+            eId('buttonBreakLinkCM').setAttribute('onclick', 'breakLinkElements(' + element.id + ', ' + trackId + ');');
+            eId('buttonBreakLinkClassCM').classList.remove('disabled');
+        }
+        else
+        {
+            eId('buttonBreakLinkCM').removeAttribute('onclick');
+            eId('buttonBreakLinkClassCM').classList.add('disabled');
+        }
+
+        eId('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
+        eId('buttonDeleteCM').setAttribute('onclick', 'deleteElement(' + rowTrack + ',' + track.currentRow + ');');
+
+        //eId('buttonEffectsCM').disabled = true;
+        eId('buttonOpacityCM').disabled = true;
+
+        if(track.type == TYPE.AUDIO)
+        {
+            eId('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ',\'' + file.fileName + '\');');
+        }
+        else
+        {
+            eId('buttonVolumeCM').disabled = true;
+        }
+
+        eId('contextMenu').style.display = 'initial';
+    }
+
+    return false;
+}
+
+function hideContextMenu() {
+    eId('contextMenu').style.display = 'none';
 }
