@@ -35,7 +35,9 @@ function mouseUp() {
 
                     element.width = currentElement.marginLeft - element.marginLeft;
 
-                    addElement(element.fileId, track.id, (currentElement.marginLeft + currentElement.width), (currentElement.marginLeft - element.marginLeft) / oneSecond);
+                    console.log((element.parent >= 0));
+
+                    addElement(element.fileId, track.id, (currentElement.marginLeft + currentElement.width), (currentElement.marginLeft - element.marginLeft) / oneSecond, (element.parent >= 0));
 
                     track.tabElements[track.tabElements.length - 1].width = widthNewElement;
                 }
@@ -62,7 +64,7 @@ function mouseUp() {
 
             if(track.mode == MODE.REMOVE)
             {
-                console.log('delete : ' + track.tabElements[track.currentRow]);
+                console.log('delete : ' + track.tabElements[track.currentRow].id);
                 
                 deleteElement(x, track.currentRow);
             }

@@ -5,15 +5,7 @@
 function newTextElement(){
     console.log('newTextElement');
 
-    var id = 0;
-
-    for(var i = 0; i < currentProject.tabListFiles.length; i++)
-    {
-        if(currentProject.tabListFiles[i].type == TYPE.TEXT && currentProject.tabListFiles[i].properties.id > id)
-        {
-            id = currentProject.tabListFiles[i].properties.id + 1;
-        }
-    }
+    var id = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
 
     currentManageTextElement.newTextElement(id);
 

@@ -190,20 +190,29 @@ function calculateElementsPixel() {
 
 //SCROLL
 function scrollPlusTracks() {
-    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    currentProject.tabListTracks[0].canvas.element.width += 10;
+    currentProject.tabListTracks[0].canvas.context.width += 10;
+
+    for(var i = 1; i < currentProject.tabListTracks.length; i++)
     {
-        currentProject.tabListTracks[i].canvas.element.width += 10;
-        currentProject.tabListTracks[i].canvas.context.width += 10;
+        currentProject.tabListTracks[i].canvas.element.width = currentProject.tabListTracks[0].canvas.element.width;
+        currentProject.tabListTracks[i].canvas.context.width = currentProject.tabListTracks[0].canvas.context.width;
     }
 }
 
 function scrollLessTracks() {
-    for(var i = 0; i < currentProject.tabListTracks.length; i++)
+    if(currentProject.tabListTracks[0].canvas.element.width > 730)
     {
-        if(currentProject.tabListTracks[i].canvas.element.width > 730)
+        currentProject.tabListTracks[0].canvas.element.width -= 10;
+        currentProject.tabListTracks[0].canvas.context.width -= 10;
+
+        for(var i = 0; i < currentProject.tabListTracks.length; i++)
         {
-            currentProject.tabListTracks[i].canvas.element.width -= 10;
-            currentProject.tabListTracks[i].canvas.context.width -= 10;
+            if(currentProject.tabListTracks[i].canvas.element.width > 730)
+            {
+                currentProject.tabListTracks[i].canvas.element.width = currentProject.tabListTracks[0].canvas.element.width;
+                currentProject.tabListTracks[i].canvas.context.width = currentProject.tabListTracks[0].canvas.context.width;
+            }
         }
     }
 }
@@ -246,7 +255,7 @@ function allowDrop(e) {
 function dropFile(e) {
     e.preventDefault();
 
-    addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0);
+    addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0, true);
 }
 
 //RIGHT CLICK
