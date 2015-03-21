@@ -1,2 +1,1 @@
 TODO : Correct bug when delete a track
-TODO : ADD the possibility to change the size of an element typed of IMAGE or TEXTElement

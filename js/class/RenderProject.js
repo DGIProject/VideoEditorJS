@@ -209,6 +209,7 @@ RenderP.prototype.uploadCommands = function(){
             finalString += "\n"
         }
     }
+    finalString += "\n";
 
     var txtFile = new Blob([finalString], {type:'text/plain', name:"command.ffm"});
     uploadFile(-1,"renderFile", txtFile, "RENDER");
