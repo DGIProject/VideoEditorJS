@@ -24,7 +24,10 @@ while read ffm; do
     while read content
          do
                 echo "ffmepg start"
-                echo | $FFMPEGPATH -threads $THREADS ${content}
+                echo $content
+                ARGS=($content)
+                sleep 3
+                echo | eval "$FFMPEGPATH -threads $THREADS $content"
                 echo "ffmpeg end"
         done < "RENDER.ffm"
     cd $DATAPATH

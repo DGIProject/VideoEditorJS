@@ -1,0 +1,2 @@
+TODO : Correct bug when delete a track
+TODO : Bug loadProject undefined "this.infoProject" line 37 ReadFileProject

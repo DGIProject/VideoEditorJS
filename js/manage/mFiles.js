@@ -50,6 +50,7 @@ function addFile(currentFile) {
 
 function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
 {
+    currentProject.switchAutoSave();
     var currentItem = new File(fileId, typeFile, fileSize, fileName, fileName.split('.').pop());
     console.log('currentItem ' + currentItem);
 
@@ -157,6 +158,7 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
                                                     });
                                                     wavesurfer.load(audioUrl);
                                                     loadM();
+                                                    currentProject.switchAutoSave();
                                                 });
                                             }
                                         }
@@ -164,6 +166,8 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
                                 }
                                 else{
                                     loadM();
+                                    currentProject.switchAutoSave();
+
                                 }
                             });
                         }
@@ -215,6 +219,7 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
                                     });
                                     wavesurfer.load(audioUrl);
                                     loadM();
+                                    currentProject.switchAutoSave();
                                 });
                             }
                         }
@@ -222,6 +227,7 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
                 }
                 else{
                     loadM();
+                    currentProject.switchAutoSave();
                 }
             }
         }
