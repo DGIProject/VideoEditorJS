@@ -2,6 +2,12 @@
  * Created by Dylan on 10/02/2015.
  */
 
+
+/* Fonction de création d'un élément ici d'un fichier, elle prend en compte l'id du fichier, l'id de la piste. Les paramètres suivants
+sont la position par rapport au début de la piste, le temps de départ au début de l'élément (il peut partir de 20 sec par exemple),
+l'autorisation de l'élément à avoir un "ami" sur une autre piste (exemple avec une vidéo qui a un élément vidéo et audio si elle a du son) :
+ces derniers paramètres sont utilisés lors d'une superposition d'un élément sur un autre. */
+
 function addElement(id, trackId, posX, timeBegin, parent) {
     var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
 
@@ -47,6 +53,7 @@ function addElement(id, trackId, posX, timeBegin, parent) {
     }
 }
 
+//Ajout de chaque élément dans la piste (ref. fonction addElement)
 function elementTrack(track, elementId, type, thumbnailData, color, time, fileId, trackId, marginLeft, properties, parent) {
     var imageThumbnail = new Image();
 
@@ -59,7 +66,7 @@ function elementTrack(track, elementId, type, thumbnailData, color, time, fileId
     imageThumbnail.src = thumbnailData;
 }
 
-//BREAK LINK
+//Cette fonction permet de séparer deux éléments sur deux pistes (vidéo et audio) qui possèdent un lien (utilisé pour une vidéo)
 function breakLinkElements(id, trackId) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
     var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
@@ -81,7 +88,7 @@ function breakLinkElements(id, trackId) {
     drawElementsTracks();
 }
 
-//ELEMENT PROPERTIES
+//Propriétés d'un élément (disponible après le clique droit)
 function elementProperties(rowTrack, rowElement) {
     console.log('elementProperties');
 
@@ -180,6 +187,7 @@ function setVolumeElement(id, trackId) {
     document.getElementById('volumeRangeValue').innerHTML = this.value;
 }
 
+//Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)
 function deleteElement(rowTrack, rowElement) {
     var track = currentProject.tabListTracks[rowTrack];
 

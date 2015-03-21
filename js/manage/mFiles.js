@@ -2,9 +2,12 @@
  * Created by Dylan on 10/02/2015.
  */
 
+/* Fonction pour ajouter un fichier externe (aussi utilisée lors du chargement d'un projet), elle se présente en plusieurs parties et utilise
+d'autres fonctions ainsi que pour les éléments vidéo/audio FFMPEG (donc le TerminalJS, ref. lib/TerminalJS/TerminalJS.js) */
 function addFile(currentFile) {
     console.log('currentFile : ' + currentFile);
 
+    //Remplacement des minuscules par des majuscules et des accents pour simplifier
     var fileName = currentFile.name.deleteAccent().replace(new RegExp(' ', 'g'), '_');
 
     var typeFile = getTypeFile(fileName);
@@ -14,6 +17,7 @@ function addFile(currentFile) {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
 
         if (typeFile == TYPE.IMAGE) {
+            //Définition de l'objet File pour une image
             var currentItem = new File(fileId, typeFile, currentFile.size, fileName, fileName.split('.').pop());
             currentItem.makeVideo();
             currentItem.setDuration('00:00:20');
@@ -21,10 +25,13 @@ function addFile(currentFile) {
 
             currentProject.tabListFiles.push(currentItem);
 
+            //Ajout graphique et upload du fichier
             addFileList(fileId, fileName, typeFile);
             uploadFile(fileId, fileName, currentFile, 'FILE');
         }
-        else {
+        else
+        {
+            //Cette étape est pour tous les fichiers externes compatibles sauf les images
             var reader = new FileReader();
 
             reader.onload = function (e) {
@@ -48,6 +55,7 @@ function addFile(currentFile) {
     }
 }
 
+//Utilisation de ffmpeg pour connaître la durée mais aussi le type Vidéo/Audio du fichier
 function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
 {
     currentProject.switchAutoSave();
@@ -234,6 +242,7 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
     });
 }
 
+//Détection des fichiers compatibles (ref. addFile)
 function getTypeFile(fileName) {
     console.log(fileName);
 
@@ -258,6 +267,7 @@ function getTypeFile(fileName) {
     }
 }
 
+//Ajout graphique du fichier
 function addFileList(fileId, fileName, typeFile) {
     if (currentProject.tabListFiles.length < 2) {
         eId('listFiles').innerHTML = '';
@@ -295,6 +305,7 @@ function addFileList(fileId, fileName, typeFile) {
     eId('listFiles').appendChild(fileE);
 }
 
+//Drag & drop du fichier sur les pistes avec mémorisation de l'id du fichier lors du déplacement
 function selectFile(e) {
     this.classList.add('active');
 
@@ -305,6 +316,8 @@ function deselectFile(e) {
     this.classList.remove('active');
 }
 
+
+//Informations sur le fichier avec possibilité de modification si c'est du texte
 function fileProperties() {
     var id = this.id.replace('file', '');
     var file = currentProject.tabListFiles[id];
@@ -331,10 +344,6 @@ function fileProperties() {
         eId('fileEditButton').setAttribute('onclick', 'editFileText(' + id + ');');
         eId('fileEditButton').style.display = '';
     }
-    else if (file.type == TYPE.IMAGE) {
-        eId('fileEditButton').setAttribute('onclick', 'editFileImage(' + id + ');');
-        eId('fileEditButton').style.display = 'none';
-    }
     else {
         eId('fileEditButton').removeAttribute('onclick');
         eId('fileEditButton').style.display = 'none';
@@ -360,6 +369,7 @@ function typeFile(type) {
     }
 }
 
+//Taille du fichier en Octets, Mo, ou Octets pour simplifier la lecture
 function sizeFile(size) {
     if(size > 1000)
     {
@@ -375,10 +385,8 @@ function sizeFile(size) {
     }
 }
 
-function editFileImage(id) {
-    console.log('editFileImage');
-}
 
+//Suppression du fichier
 function removeFile(id) {
     $('#filesPropertiesModal').modal('hide');
 
@@ -388,7 +396,7 @@ function removeFile(id) {
     eId('listFiles').removeChild(eId('file' + id));
 }
 
-//UPLOAD
+//Fonction pour envoyer le fichier, utilisation d'un objet FileUpload pour connaître l'avancement et permettre plusieurs envois en même temps
 function uploadFile(id, name, file, type) {
     rLog('uploadFile : ' + id + name + file + type);
     
@@ -405,6 +413,7 @@ function uploadFile(id, name, file, type) {
         eId('listUploads').innerHTML = '';
     }
 
+    //Ajout graphique
     var element = document.createElement('div');
     element.classList.add('list-group-item');
     element.innerHTML = '<h4 class="list-group-item-heading">' + fileUpload.name + ' - ' + fileUpload.type + '</h4>' +
@@ -424,6 +433,7 @@ function uploadFile(id, name, file, type) {
     var xhr = new XMLHttpRequest();
 
     if (xhr.upload) {
+        //Progression de l'envoi
         xhr.upload.onprogress = function (e) {
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
@@ -440,6 +450,7 @@ function uploadFile(id, name, file, type) {
         if (4 == this.readyState) {
             rLog('finish upload ' + this.responseText);
 
+            //Si le fichier est bien envoyé : changement de la valeur isUpload et notification à l'utilisateur sinon bouton permettant de réessayer l'envoi du fichier
             if (this.responseText != 'true') {
                 noty({
                     layout: 'topRight',
@@ -448,7 +459,7 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                if(id !=-1)
+                if(id != -1)
                 {
                     eId('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
 
@@ -509,6 +520,7 @@ function uploadFile(id, name, file, type) {
     xhr.send(formData);
 }
 
+//Detection que tous les fichiers (thumbnail vidéo, thumbnail audio, fichier) ont été envoyés pour changer la valeur isUploaded dans l'object du fichier
 function isUploadedFile(id) {
     var isUploaded = true;
 
@@ -523,6 +535,7 @@ function isUploadedFile(id) {
     return isUploaded;
 }
 
+//Affiche le gestionnaire d'envoi des fichiers
 function uploadManagerModal() {
     $('#uploadManagerModal').modal('show');
 }

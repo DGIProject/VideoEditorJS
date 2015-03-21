@@ -2,6 +2,7 @@
  * Created by Dylan on 10/02/2015.
  */
 
+//Liste des projets par requête Ajax dans un div (id) et en fonction du pseudo de l'utilisateur (username)
 function getListProjects(id, username){
     console.log(username);
 
@@ -38,6 +39,7 @@ function getListProjects(id, username){
     xmlhttp.send('username=' + username);
 }
 
+//Création d'un nouveau projet
 function newProject(buttonBack) {
     eId('nameProject').value = '';
     eId('buttonBackAddProject').style.display = (buttonBack) ? 'initial' : 'none';
@@ -47,6 +49,7 @@ function newProject(buttonBack) {
     $('#newProjectModal').modal('show');
 }
 
+//Sauvegarde du nouveau project
 function saveNewProject(nameProject) {
     if(nameProject != '')
     {
@@ -54,6 +57,7 @@ function saveNewProject(nameProject) {
 
         resetInterface();
 
+        //Objet du projet avec l'ensemble des paramètres
         currentProject = new Project(nameProject.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, getCurrentDate());
         currentProject.updateText();
         currentProject.switchAutoSave();
@@ -72,6 +76,7 @@ function openProject() {
     $('#selectProjectModal').modal('show');
 }
 
+//Chargement du projet
 function loadProject(fileName) {
     loadM();
 
@@ -81,19 +86,10 @@ function loadProject(fileName) {
     {
         if (xmlhttp.readyState==4 && xmlhttp.status==200)
         {
+            //Classe ReadFileProject qui permet d'ouvrir un projet en fonction du contenu du fichier
             readFileProject = new ReadFileProject(xmlhttp.responseText);
             readFileProject.setProject();
             readFileProject.setListFiles();
-
-            /*
-            readFileProject.listfilesend = function() {
-                readFileProject.setTracks();
-            };
-
-            readFileProject.classend = function() {
-                loadM();
-            };
-            */
         }
     };
 
@@ -102,6 +98,7 @@ function loadProject(fileName) {
     xmlhttp.send('fileName=' + fileName);
 }
 
+//Sauvegarde du projet : GenerateFileProject permet de créer le fichier JSON avec tout le contenu du projet puis envoi par requête Ajax.
 function saveProject() {
     console.log('saving project ...');
 
@@ -161,13 +158,16 @@ function resetInterface() {
     calculateTimeBar();
 }
 
+//Fonction d'auto-sauvegarde du projet (possibilité de désactivation)
 function autoSaveInterval() {
     saveProject();
 }
 
+//Lorsque le projet existe déjà, proposition de l'écraser ou alors d'en créer un avec un autre nom
 function overwriteProject() {
     $('#alreadyExistProjectModal').modal('hide');
 
+    //forceSave permet de préciser si on écrase le projet automatiquement à chaque enregistrement
     currentProject.forceSave = true;
 
     saveProject();
