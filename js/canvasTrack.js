@@ -9,8 +9,10 @@ function mouseDown(e) {
     var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
 
     currentProject.tabListTracks[row].mousedown = true;
-    //currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft) : 0;
+    currentProject.tabListTracks[row].gap = x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft;
     currentProject.tabListTracks[row].lastX = x;
+
+    console.log('gap : ' + currentProject.tabListTracks[row].gap);
 }
 
 function mouseUp() {
@@ -81,7 +83,7 @@ function mouseMove(e) {
     var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX) /*+ pixelTimeBar.g*/;
     var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
 
-    console.log('x : ' + x, pixelTimeBar.g);
+    //console.log('x : ' + x, pixelTimeBar.g);
 
     if(track.mousedown)
     {
@@ -91,9 +93,9 @@ function mouseMove(e) {
 
             if((x - track.gap) > 0)
             {
-                console.log('marginLeft : ' + x);
+                //console.log('marginLeft : ' + x);
 
-                track.tabElements[track.currentRow].marginLeft = x;
+                track.tabElements[track.currentRow].marginLeft = x - track.gap;
             }
             else
             {
@@ -269,7 +271,7 @@ function element(rowTrack, row) {
 
     var gapError = ((currentElement.marginLeft * 2) / 198);
 
-    console.log('element marginLeft : ' + currentElement.marginLeft, gapError);
+    //console.log('element marginLeft : ' + currentElement.marginLeft, gapError);
 
     context.beginPath();
     context.lineWidth = 1;
