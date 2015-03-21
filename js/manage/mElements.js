@@ -95,14 +95,35 @@ function elementProperties(rowTrack, rowElement) {
 
     eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type == 1) ? file.thumbnail.i : file.thumbnail.a) + '" class="previewFileContent"></a>';
 
+    var canvasCProperties = document.getElementById('canvasElementProperties');
     var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');
 
-    var pixelValue = element.maxWidth / 100;
+    contextCProperties.width = canvasCProperties.width;
+    contextCProperties.height = canvasCProperties.height;
 
-    console.log(pixelValue);
+    var pixelValue = element.maxWidth / contextCProperties.width;
+    var leftGap = (element.leftGap / pixelValue);
+    var rightGap = (contextCProperties.width - (element.rightGap / pixelValue));
+
+    console.log(leftGap, rightGap);
+
+    contextCProperties.fillStyle = '#FFFFFF';
+    contextCProperties.fillRect(0, 0, contextCProperties.width, contextCProperties.height);
 
     contextCProperties.fillStyle = element.color;
-    contextCProperties.fillRect((pixelValue * element.leftGap), 0, (100 - (pixelValue * element.rightGap)), 50);
+    contextCProperties.fillRect(leftGap, 0, rightGap - leftGap, contextCProperties.height);
+
+    contextCProperties.beginPath();
+
+    contextCProperties.fillStyle = '#4B4B4B';
+
+    contextCProperties.moveTo(leftGap, 0);
+    contextCProperties.lineTo(leftGap, contextCProperties.height);
+    contextCProperties.stroke();
+
+    contextCProperties.moveTo(rightGap, 0);
+    contextCProperties.lineTo(rightGap, contextCProperties.height);
+    contextCProperties.stroke();
 
     eId('totalDElementP').innerHTML = element.totalDuration + 's';
     eId('initialDElementP').innerHTML = element.currentDuration + 's';

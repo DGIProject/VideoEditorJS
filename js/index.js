@@ -66,6 +66,10 @@ function getHour() {
     return hour + ':' + minute + ':' + second;
 }
 
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
 function randomColor() {
     return '#' + (function co(lor){   return (lor +=
         [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)])
