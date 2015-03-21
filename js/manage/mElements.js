@@ -2,7 +2,7 @@
  * Created by Dylan on 10/02/2015.
  */
 
-function addElement(id, trackId, posX, timeBegin) {
+function addElement(id, trackId, posX, timeBegin, parent) {
     var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
 
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
@@ -32,14 +32,18 @@ function addElement(id, trackId, posX, timeBegin) {
 
     var color = randomColor();
 
-    if(file.isVideo && file.isAudio)
+    if(file.isVideo && file.isAudio && parent)
     {
-        elementTrack(track, id1, track.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id2);
-        elementTrack(parentTrack, id2, track.type, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id1);
+        console.log('with parent');
+
+        elementTrack(track, id1, file.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id2);
+        elementTrack(parentTrack, id2, file.type, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id1);
     }
     else
     {
-        elementTrack(track, id1, track.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), -1);
+        console.log('without parent');
+
+        elementTrack(track, id1, file.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), -1);
     }
 }
 
@@ -87,13 +91,13 @@ function elementProperties(rowTrack, rowElement) {
     console.log(element);
 
     eId('fileElementP').innerHTML = file.fileName;
-    eId('typeElementP').innerHTML = (element.type == 1) ? 'VIDEO' : 'AUDIO';
+    eId('typeElementP').innerHTML = typeFile(file.type);
     eId('parentElementP').innerHTML = (element.parent >= 0) ? 'Oui' : 'Non';
 
     eId('colorElementP').value = element.color;
     eId('colorElementP').setAttribute('onchange', 'changeColorElement(' + rowTrack + ', ' + rowElement + ');');
 
-    eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type == 1) ? file.thumbnail.i : file.thumbnail.a) + '" class="previewFileContent"></a>';
+    eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a) + '" class="previewFileContent"></a>';
 
     var canvasCProperties = document.getElementById('canvasElementProperties');
     var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');

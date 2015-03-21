@@ -1,6 +1,5 @@
 TODO : Correct bug when delete a track
-TODO : scroll all tracks
 TODO : text element
-TODO : between collision new element parent
+TODO : between collision
 TODO : redrop file
 TODO : local project

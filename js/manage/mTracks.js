@@ -255,7 +255,7 @@ function allowDrop(e) {
 function dropFile(e) {
     e.preventDefault();
 
-    addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0);
+    addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0, true);
 }
 
 //RIGHT CLICK
