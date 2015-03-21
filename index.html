@@ -200,6 +200,22 @@
             </div>
         </div>
     </div>
+    <div id="alreadyExistProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Project existant</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Ce projet existe déjà, êtes-vous sûr de vouloir l'écraser ? Toutes les données seront perdues.</p>
+                    <div class="btn-toolbar">
+                        <button type="button" onclick="overwriteProject();" class="btn btn-success">Oui</button>
+                        <button type="button" onclick="newProject(false);" class="btn btn-danger">Non</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="selectProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

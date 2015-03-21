@@ -6,6 +6,7 @@ Project = function(name, username, dateCreation) {
     this.username = username;
 
     this.autoSave = false;
+    this.forceSave = false;
 
     this.tabListFiles = [];
     this.tabListTracks = [];

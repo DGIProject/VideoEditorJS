@@ -43,6 +43,7 @@ function newProject(buttonBack) {
     eId('buttonBackAddProject').style.display = (buttonBack) ? 'initial' : 'none';
 
     $('#selectProjectModal').modal('hide');
+    $('#alreadyExistProjectModal').modal('hide');
     $('#newProjectModal').modal('show');
 }
 
@@ -117,24 +118,30 @@ function saveProject() {
         {
             console.log('answer : ' + xmlhttp.responseText);
 
+            loadM();
+
             if(xmlhttp.responseText == 'true')
             {
                 currentProject.lastSave = getHour();
+                currentProject.forceSave = true;
+
                 currentProject.updateText();
                 noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
+            }
+            else if(xmlhttp.responseText == 'alreadyExist')
+            {
+                $('#alreadyExistProjectModal').modal('show');
             }
             else
             {
                 noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
             }
-
-            loadM();
         }
     };
 
     xmlhttp.open("POST", remoteAPIPath + "php/addFileProject.php", true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile));
+    xmlhttp.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile) + '&forceSave=' + currentProject.forceSave);
 }
 
 function resetInterface() {
@@ -155,5 +162,13 @@ function resetInterface() {
 }
 
 function autoSaveInterval() {
+    saveProject();
+}
+
+function overwriteProject() {
+    $('#alreadyExistProjectModal').modal('hide');
+
+    currentProject.forceSave = true;
+
     saveProject();
 }
