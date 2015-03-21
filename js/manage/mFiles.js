@@ -346,6 +346,8 @@ function fileProperties() {
 }
 
 function typeFile(type) {
+    console.log('type : ' + type);
+
     switch(type) {
         case TYPE.VIDEO:
             return 'Vidéo';
