@@ -5,7 +5,7 @@ ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
     this.canvas.onmousemove = this.mouseMove;
     this.canvas.onmousedown = this.mouseDown;
     this.canvas.onmouseup = this.mouseUp;
-    this.canvas.onkeydown = this.keyPress;
+    window.onkeypress = this.keyPress;
 
     this.context = this.canvas.getContext('2d');
 
@@ -60,14 +60,14 @@ ManageTextElement.prototype.editTextElement = function(fileId, properties) {
     this.id = properties.id;
     this.fileId = fileId;
     this.nameText = properties.nameText;
-    this.text = properties.text;
+    this.text = properties.contentText;
     this.font = properties.font;
     this.sizeText = properties.sizeText;
     this.color = properties.color;
     this.textAlign = properties.textAlign;
 
     //TextElement
-    this.posElement = posElement;
+    this.posElement = properties.posText;
 
     this.widthLine = 0;
 
@@ -75,6 +75,9 @@ ManageTextElement.prototype.editTextElement = function(fileId, properties) {
     this.selectedElement = false;
 
     document.getElementById(this.elementsId.nameText).value = this.nameText;
+    document.getElementById(this.elementsId.colorText).value = this.color;
+
+    document.getElementById(this.elementsId.sizeText).value = this.sizeText;
     document.getElementById(this.elementsId.sizeTextInfo).innerHTML = this.sizeText;
 
     this.isEditing = true;
@@ -85,20 +88,11 @@ ManageTextElement.prototype.editTextElement = function(fileId, properties) {
 
 ManageTextElement.prototype.changeNameText = function(nameText) {
     this.nameText = nameText;
-
     this.enableButtonSaveTextElement();
 };
 
-ManageTextElement.prototype.changeFont = function(font, row) {
+ManageTextElement.prototype.changeFont = function(font) {
     this.font = font;
-
-    for(var i = 0; i < 4; i++)
-    {
-        document.getElementById('buttonFont' + i).classList.remove('active');
-    }
-
-    document.getElementById('buttonFont' + row).classList.add('active');
-
     this.writeTextToCanvas();
 };
 
@@ -111,21 +105,13 @@ ManageTextElement.prototype.changeSizeText = function(sizeText) {
 };
 
 ManageTextElement.prototype.changeColor = function(color) {
+    console.log('changeColor');
     this.color = color;
-
     this.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.changeTextAlign = function(textAlign, row) {
+ManageTextElement.prototype.changeTextAlign = function(textAlign) {
     this.textAlign = textAlign;
-
-    for(var i = 0; i < 3; i++)
-    {
-        document.getElementById('buttonTextAlign' + i).classList.remove('active');
-    }
-
-    document.getElementById('buttonTextAlign' + row).classList.add('active');
-
     this.writeTextToCanvas();
 };
 
@@ -220,82 +206,84 @@ ManageTextElement.prototype.getInformationsTextElement = function() {
 };
 
 ManageTextElement.prototype.mouseDown = function(e) {
-    if(this.isOnArea(e.clientX, e.clientY))
+    console.log(e.clientX, e.clientY);
+
+    if(currentManageTextElement.isOnArea(e.clientX, e.clientY))
     {
-        this.selectedElement = true;
+        currentManageTextElement.selectedElement = true;
 
         if(e.button == 0)
         {
-            this.leftClick = true;
+            currentManageTextElement.leftClick = true;
         }
     }
     else
     {
-        this.selectedElement = false;
+        currentManageTextElement.selectedElement = false;
     }
 
-    this.writeTextToCanvas();
+    currentManageTextElement.writeTextToCanvas();
 };
 
 ManageTextElement.prototype.mouseUp = function(e) {
     if(e.button == 0)
     {
-        this.leftClick = false;
+        currentManageTextElement.leftClick = false;
     }
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
-    if(this.leftClick)
+    if(currentManageTextElement.leftClick)
     {
         var xMouse = e.clientX + window.scrollX;
         var yMouse = e.clientY + window.scrollY;
 
         var x = 0, y = 0;
 
-        if(xMouse < this.lastXMouse)
+        if(xMouse < currentManageTextElement.lastXMouse)
         {
             x = -1.35;
         }
 
-        if(xMouse > this.lastXMouse)
+        if(xMouse > currentManageTextElement.lastXMouse)
         {
             x = 1.35;
         }
 
-        if(yMouse < this.lastYMouse)
+        if(yMouse < currentManageTextElement.lastYMouse)
         {
             y = -1.35;
         }
 
-        if(yMouse > this.lastYMouse)
+        if(yMouse > currentManageTextElement.lastYMouse)
         {
             y = 1.35;
         }
 
-        this.lastXMouse = xMouse;
-        this.lastYMouse = yMouse;
+        currentManageTextElement.lastXMouse = xMouse;
+        currentManageTextElement.lastYMouse = yMouse;
 
-        this.changePosElement(x, y);
+        currentManageTextElement.changePosElement(x, y);
     }
 };
 
 ManageTextElement.prototype.keyPress = function(e)
 {
-    if(this.selectedElement)
+    if(currentManageTextElement.selectedElement)
     {
         if(e.keyCode == 8)
         {
-            this.text = this.text.substr(0, (this.text.length - 1));
+            currentManageTextElement.text = currentManageTextElement.text.substr(0, (currentManageTextElement.text.length - 1));
         }
         else if(e.keyCode == 13)
         {
-            this.text += '|';
+            currentManageTextElement.text += '|';
         }
         else
         {
-            this.text += String.fromCharCode((e.charCode));
+            currentManageTextElement.text += String.fromCharCode((e.charCode));
         }
 
-        this.writeTextToCanvas();
+        currentManageTextElement.writeTextToCanvas();
     }
 };

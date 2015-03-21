@@ -62,7 +62,7 @@ function mouseUp() {
 
             if(track.mode == MODE.REMOVE)
             {
-                console.log('delete : ' + track.tabElements[track.currentRow]);
+                console.log('delete : ' + track.tabElements[track.currentRow].id);
                 
                 deleteElement(x, track.currentRow);
             }

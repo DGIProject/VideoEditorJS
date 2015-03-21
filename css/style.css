@@ -231,6 +231,23 @@
     border-radius: 4px;
 }
 
+#nameText {
+    width: 95px;
+}
+
+#sizeText {
+    width: 75px;
+}
+
+#colorText {
+    width: 50px;
+    margin-right: 20px;
+}
+
+#colorElementP {
+    width: 75px;
+}
+
 .textNote {
     font-style: italic;
     font-size: 10px;

@@ -68,7 +68,7 @@
                         </li>
                     </ul>
 
-                    <form class="navbar-form navbar-left" role="search">
+                    <form class="navbar-form navbar-left">
 
                         <button type="button" onclick="zoomMoins();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
                         <div class="form-group">
@@ -285,68 +285,57 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Ajouter un élément texte</h4>
+                    <h4 class="modal-title" id="myModalLabel">Elément Texte</h4>
                 </div>
                 <div class="modal-body">
                     <nav class="navbar navbar-default" role="navigation">
                         <div class="container-fluid">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="#">Text Element</a>
-                            </div>
                             <div class="collapse navbar-collapse">
-                                <ul class="nav navbar-nav">
-                                    <form class="navbar-form navbar-left" role="search">
-                                        <div class="form-group">
-                                            <input class="form-control" onkeyup="currentManageTextElement.changeNameText(this.value);" id="nameText" type="text" placeHolder="Name">
+                                <form class="navbar-form navbar-left">
+                                    <div class="form-group">
+                                        <input type="text" id="nameText" class="form-control" onkeyup="currentManageTextElement.changeNameText(this.value);" placeHolder="Name">
+                                    </div>
+                                </form>
+                                <form class="navbar-form navbar-left">
+                                    <div class="form-group">
+                                        <select id="fontText" onchange="currentManageTextElement.changeFont(this.value);" class="form-control">
+                                            <option>Calibri</option>
+                                            <option>Times New Roman</option>
+                                            <option>Arial</option>
+                                            <option>Verdana</option>
+                                        </select>
+                                    </div>
+                                </form>
+                                <form class="navbar-form navbar-left">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input id="sizeText" type="range" class="form-control" min="10" max="100" step="2" onchange="currentManageTextElement.changeSizeText(this.value);">
+                                            <span class="input-group-addon"><span id="sizeTextInfo"></span>px</span>
                                         </div>
-                                    </form>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Font <span class="caret"></span></a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li id="buttonFont0" class="active"><a href="#" onclick="currentManageTextElement.changeFont('Calibri', 0);">Calibri</a></li>
-                                            <li id="buttonFont1"><a href="#" onclick="currentManageTextElement.changeFont('Times New Roman', 1);">Times New Roman</a></li>
-                                            <li id="buttonFont2"><a href="#" onclick="currentManageTextElement.changeFont('Arial', 2);">Arial</a></li>
-                                            <li id="buttonFont3"><a href="#" onclick="currentManageTextElement.changeFont('Verdana', 3);">Verdana</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Size <span class="caret"></span></a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#"><span id="sizeTextInfo"></span>px</a></li>
-                                            <li><a href="#"><input class="form-control" min="10" max="100" step="2" onchange="currentManageTextElement.changeSizeText(this.value);" id="sizeText" type="range"></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#"><input class="form-control" onchange="currentManageTextElement.changeColor(this.value);" id="colorText" type="color"></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Align <span class="caret"></span></a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li id="buttonTextAlign0" class="active"><a href="#" onclick="currentManageTextElement.changeTextAlign('center', 0);">Center</a></li>
-                                            <li id="buttonTextAlign1"><a href="#" onclick="currentManageTextElement.changeTextAlign('left', 1);">Left</a></li>
-                                            <li id="buttonTextAlign2"><a href="#" onclick="currentManageTextElement.changeTextAlign('right', 2);">Right</a></li>
-                                        </ul>
-                                    </li>
+                                    </div>
+                                </form>
+                                <ul class="nav navbar-nav btn-group">
+                                    <input type="color" id="colorText" class="form-control navbar-btn" onchange="currentManageTextElement.changeColor(this.value);">
+                                </ul>
+                                <ul class="nav navbar-nav btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default navbar-btn">
+                                        <input type="radio" name="options" onchange="currentManageTextElement.changeTextAlign('left');" autocomplete="off"><span class="glyphicon glyphicon-align-left"></span>
+                                    </label>
+                                    <label class="btn btn-default navbar-btn active">
+                                        <input type="radio" name="options" onchange="currentManageTextElement.changeTextAlign('center');" autocomplete="off" checked><span class="glyphicon glyphicon-align-center"></span>
+                                    </label>
+                                    <label class="btn btn-default navbar-btn">
+                                        <input type="radio" name="options" onchange="currentManageTextElement.changeTextAlign('right');" autocomplete="off"><span class="glyphicon glyphicon-align-right"></span>
+                                    </label>
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
-                                    <button type="button" onclick="saveTextElement();" id="buttonSaveTextElement" class="btn btn-success navbar-btn" disabled="">Save</button>
+                                    <button type="button" onclick="saveTextElement();" id="buttonSaveTextElement" class="btn btn-primary navbar-btn" disabled=""><span class="glyphicon glyphicon-ok"></span></button>
+                                    <button type="button" class="btn btn-default navbar-btn" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
                                 </ul>
                             </div>
                         </div>
                     </nav>
                     <canvas id="textElement"></canvas>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -415,7 +404,7 @@
                             <tr><td class="titleTableProperties">Fichier</td><td id="fileElementP"></td></tr>
                             <tr><td class="titleTableProperties">Type</td><td id="typeElementP"></td></tr>
                             <tr><td class="titleTableProperties">Ami</td><td id="parentElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Couleur</td><td><input type="color" id="colorElementP"></td></tr>
+                            <tr><td class="titleTableProperties">Couleur</td><td><input type="color" id="colorElementP" class="form-control"></td></tr>
                             <tr><td class="titleTableProperties">Dimensions</td><td id="sizeElementP"><canvas id="canvasElementProperties" width="250" height="35"></canvas></td></tr>
                             <tr><td class="titleTableProperties">Aperçu</td><td id="previewElementP"></td></tr>
                             </tbody>

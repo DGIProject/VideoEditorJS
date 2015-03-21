@@ -1,2 +1,6 @@
 TODO : Correct bug when delete a track
-TODO : Bug loadProject undefined "this.infoProject" line 37 ReadFileProject
+scroll all tracks
+text element
+between collision new element parent
+redrop file
+local project
