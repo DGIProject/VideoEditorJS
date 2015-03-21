@@ -109,7 +109,7 @@ function mouseMove(e) {
             if((x - track.lastX) > 0)
             {
 
-                if (track.tabElements[track.currentRow].type == (TYPE.TEXT || TYPE.IMAGE))
+                if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
                 {
                     track.tabElements[track.currentRow].width--;
                     track.tabElements[track.currentRow].marginLeft++;
@@ -124,7 +124,7 @@ function mouseMove(e) {
             }
             else
             {
-                if (track.tabElements[track.currentRow].type == (TYPE.TEXT || TYPE.IMAGE))
+                if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
                 {
                     track.tabElements[track.currentRow].width++;
                     track.tabElements[track.currentRow].marginLeft--;
@@ -146,7 +146,7 @@ function mouseMove(e) {
         {
             if((x - track.lastX) > 0)
             {
-                if (track.tabElements[track.currentRow].type == (TYPE.TEXT || TYPE.IMAGE))
+                if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
                 {
                     track.tabElements[track.currentRow].width++;
                 }
@@ -160,7 +160,7 @@ function mouseMove(e) {
             }
             else
             {
-                if (track.tabElements[track.currentRow].type == (TYPE.TEXT || TYPE.IMAGE))
+                if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
                 {
                     track.tabElements[track.currentRow].width--;
                 }
