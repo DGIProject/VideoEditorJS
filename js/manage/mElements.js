@@ -60,6 +60,8 @@ function elementTrack(track, elementId, type, thumbnailData, color, time, fileId
     imageThumbnail.onload = function() {
         track.tabElements.push(new Element(elementId, type, imageThumbnail, color, time, fileId, trackId, marginLeft, properties, parent));
 
+        console.log('trackId : ' + trackId);
+
         drawElements(trackId);
     };
 

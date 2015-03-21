@@ -29,6 +29,7 @@ function saveTextElement() {
         var file = currentProject.tabListFiles[rowById(currentManageTextElement.file.id, currentProject.tabListFiles)];
 
         document.getElementById('textElement').toBlob(function(blob) {
+            file.size = blob.size;
             file.properties.updateValuesElement(textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement);
             file.setThumbnailImage(window.URL.createObjectURL(blob));
 
@@ -44,6 +45,7 @@ function saveTextElement() {
         currentItem.setDuration('00:00:20');
 
         document.getElementById('textElement').toBlob(function(blob) {
+            currentItem.size = blob.size;
             currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
             currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
 
