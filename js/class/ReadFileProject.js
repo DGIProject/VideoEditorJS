@@ -15,6 +15,8 @@ ReadFileProject = function(fileContent) {
     this.totalProgression = this.gTotalProgression();
 
     this.progressInterval = setInterval(this.analyzeProgression, 500);
+
+    rLog('ReadFileProject : start');
 };
 
 ReadFileProject.prototype.gTotalProgression = function() {
@@ -34,6 +36,8 @@ ReadFileProject.prototype.analyzeProgression = function() {
 
     if(readFileProject.progression == readFileProject.totalProgression)
     {
+        rLog('ReadFileProject : finish');
+
         clearInterval(readFileProject.progressInterval);
 
         changeZoom(readFileProject.infoProject.zoom, true);
@@ -42,6 +46,8 @@ ReadFileProject.prototype.analyzeProgression = function() {
 };
 
 ReadFileProject.prototype.setProject = function() {
+    rLog('-LOAD- project : set properties');
+
     currentProject = new Project(this.infoProject.name.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, this.infoProject.dateCreation);
     currentProject.lastSave = getHour();
     currentProject.forceSave = true;
@@ -56,6 +62,8 @@ ReadFileProject.prototype.setListFiles = function() {
 
     for(var i = 0; i < this.listFiles.length; i++)
     {
+        rLog('-LOAD- file : ' + i);
+
         var file = this.listFiles[i];
 
         var fileObject = new File(file.id, file.type, file.size, file.fileName, file.format);
@@ -121,7 +129,7 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 
         if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
         {
-            console.log('done');
+            rLog('-LOAD- files : finish');
 
             //readFileProject.dispatchEvent(listfilesend);
 
@@ -140,8 +148,7 @@ ReadFileProject.prototype.setTracks = function() {
 
     for(var x = 0; x < this.listTracks.length; x++)
     {
-        this.countLoadElement = 0;
-        this.totalLoadElement = this.listTracks[x].tabElements.length;
+        rLog('-LOAD- track : ' + x);
 
         currentProject.tabListTracks[x].tabElements = this.listTracks[x].tabElements;
 
@@ -150,25 +157,25 @@ ReadFileProject.prototype.setTracks = function() {
             var element = currentProject.tabListTracks[x].tabElements[y];
             var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
 
-            this.setElementThumbnail(element, file.thumbnail, x);
+            this.setElementThumbnail(element, file.thumbnail);
         }
     }
 
     //this.dispatchEvent(classend);
 };
 
-ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail, rowTrack) {
+ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
+        rLog('-LOAD- track : thumbnail');
         //console.log(element);
         //console.log(imageThumbnail);
 
         element.thumbnail = imageThumbnail;
 
         readFileProject.progression++;
-        readFileProject.countLoadElement++;
     };
 
-    imageThumbnail.src = (element.type == TYPE.VIDEO) ? thumbnail.i : thumbnail.a;
+    imageThumbnail.src = (element.type != TYPE.AUDIO) ? thumbnail.i : thumbnail.a;
 };

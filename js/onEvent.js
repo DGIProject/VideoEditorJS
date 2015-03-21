@@ -65,8 +65,6 @@ document.getElementById('listFiles').ondrop = function(e) {
 
     var files = e.dataTransfer.files;
 
-    console.log('file : ' + files[0]);
-
     if(files[0] != undefined)
     {
         addFile(files[0]);

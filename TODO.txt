@@ -1,6 +1,4 @@
 TODO : Correct bug when delete a track
-TODO : Correct bug when delete a track
 TODO : text element
 TODO : between collision
-TODO : redrop file
 TODO : local project
