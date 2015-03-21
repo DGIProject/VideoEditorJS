@@ -65,14 +65,10 @@ document.getElementById('listFiles').ondrop = function(e) {
 
     var files = e.dataTransfer.files;
 
-    addFile(files[0]);
+    console.log('file : ' + files[0]);
 
-    console.log(files[0]);
-
-    /*
-    var myFileReader = new FileReader();
-    var myFile = e.dataTransfer.files[0];
-
-    console.log(myFileReader.readAsDataURL(myFile));
-    */
+    if(files[0] != undefined)
+    {
+        addFile(files[0]);
+    }
 };
