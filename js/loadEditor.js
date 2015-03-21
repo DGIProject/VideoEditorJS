@@ -82,7 +82,15 @@ function getFileJS() {
         console.log('initialed classes');
 
         document.getElementById('loadingProgressProject').style.display = 'none';
-        document.getElementById('enterUsername').style.display = '';
+
+        if(availableBrowser())
+        {
+            document.getElementById('enterUsername').style.display = 'initial';
+        }
+        else
+        {
+            document.getElementById('notAvailableBrowser').style.display = 'initial';
+        }
     }
 }
 
