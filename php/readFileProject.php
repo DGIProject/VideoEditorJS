@@ -1,7 +1,7 @@
 <?php
 include "config.php";
 
-$path = '../' . $DIR_projectsData . $_POST['fileName'];
+$path = $backPath . $DIR_projectsData . $_POST['fileName'];
 
 if (!$fp = fopen($path, "r"))
 {

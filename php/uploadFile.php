@@ -5,7 +5,7 @@ if($_GET['projectName'] != NULL && $_GET['fileId'] != NULL)
 {
     $filename = ($_GET['typeFile'] == "RENDER")? $_GET['typeFile'] . '.ffm' : $_GET['typeFile'] . '_' . $_GET['fileId'] . '.data';
 
-    $path = '../' . $DIR_projectsData . $_GET['projectName'] . '/';
+    $path = $backPath . $DIR_projectsData . $_GET['projectName'] . '/';
 
     if(!is_dir($path))
     {

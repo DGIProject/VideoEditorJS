@@ -8,12 +8,12 @@
 
 include_once 'config.php';
 
-$path = $backPath . $DIR_projectsData . 'error.log';
+$path = $backPath . $DIR_data . 'error.log';
 
 if($fp = fopen($path, "a"))
 {
     fputs($fp, "\n");
-    fputs($fp, $_POST['text']);
+    fputs($fp, '-' . date('m/d/Y h:i:s a', time()) . '- ' . $_POST['text']);
     fclose($fp);
 
     echo 'true';
