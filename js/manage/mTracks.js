@@ -240,13 +240,20 @@ function calculateTimeBar() {
 
 //DROP ELEMENT
 function allowDrop(e) {
-    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
-    var fileId = parseInt(e.dataTransfer.getData('fileId'));
+    if(isFirefox)
+    {
+        var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+        var fileId = parseInt(e.dataTransfer.getData('fileId'));
 
-    var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
-    var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
+        var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
+        var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
-    if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+        if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+        {
+            e.preventDefault();
+        }
+    }
+    else
     {
         e.preventDefault();
     }
@@ -255,7 +262,19 @@ function allowDrop(e) {
 function dropFile(e) {
     e.preventDefault();
 
-    addElement(parseInt(e.dataTransfer.getData('fileId')), parseInt(this.id.replace('videoView', '').replace('audioView', '')), undefined, 0, true);
+    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var fileId = parseInt(e.dataTransfer.getData('fileId'));
+
+    console.log(e.dataTransfer);
+    console.log(fileId);
+
+    var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
+    var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
+
+    if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+    {
+        addElement(fileId, id, undefined, 0, true);
+    }
 }
 
 //RIGHT CLICK

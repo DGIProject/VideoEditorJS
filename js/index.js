@@ -66,8 +66,12 @@ function getHour() {
     return hour + ':' + minute + ':' + second;
 }
 
-function availableBrowser() {
+function isFirefox() {
     return navigator.userAgent.indexOf('Firefox') > 0;
+}
+
+function availableBrowser() {
+    return isFirefox || navigator.userAgent.indexOf('Chrome') > 0;
 }
 
 function rgbToHex(r, g, b) {

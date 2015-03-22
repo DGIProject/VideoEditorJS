@@ -98,10 +98,21 @@ function loadProject(fileName) {
     xhr.onload = function() {
         console.log('response : ' + xhr.responseText);
 
-        //Classe ReadFileProject qui permet d'ouvrir un projet en fonction du contenu du fichier
-        readFileProject = new ReadFileProject(xhr.responseText);
-        readFileProject.setProject();
-        readFileProject.setListFiles();
+        if(xhr.responseText != 'error')
+        {
+            //Classe ReadFileProject qui permet d'ouvrir un projet en fonction du contenu du fichier
+            readFileProject = new ReadFileProject(xhr.responseText);
+            readFileProject.setProject();
+            readFileProject.setListFiles();
+        }
+        else
+        {
+            loadM();
+
+            $('#startLoadingEditor').modal('show');
+
+            noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de charger ce project.', timeout: '5000'});
+        }
     };
 
     xhr.onerror = function() {
@@ -121,6 +132,8 @@ function saveProject() {
 
     var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
     var contentFile = fileProject.generateMain();
+
+    console.log(contentFile);
 
     var url = remoteAPIPath + 'php/addFileProject.php';
 

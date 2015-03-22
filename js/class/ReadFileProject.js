@@ -187,6 +187,10 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 };
 
 ReadFileProject.prototype.setTracks = function() {
+    console.log('setTracks');
+
+    console.log(this.listTracks.length);
+
     for(var i = 0; i < (this.listTracks.length / 2); i++)
     {
         addTrack();

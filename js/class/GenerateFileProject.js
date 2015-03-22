@@ -9,6 +9,11 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListFiles
 };
 
 GenerateFileProject.prototype.generateMain = function() {
+    for(var i = 0; i < this.tabListTracks.length; i++)
+    {
+        this.tabListTracks[i].canvas = null;
+    }
+
     return {
         project: {
             name: this.nameProject,
