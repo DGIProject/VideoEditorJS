@@ -24,9 +24,9 @@ window.onclick = function() {
     }
 };
 
-window.onmouseup = function() {
+window.onmouseup = function(e) {
     if(currentProject) {
-        mouseUp();
+        mouseUp(e);
     }
 };
 

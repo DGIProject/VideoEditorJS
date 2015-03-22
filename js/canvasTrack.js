@@ -13,63 +13,71 @@ function mouseDown(e) {
     currentProject.tabListTracks[row].lastX = x;
 }
 
-function mouseUp() {
+function mouseUp(e) {
     for(var x = 0; x < currentProject.tabListTracks.length; x++)
     {
         var track = currentProject.tabListTracks[x];
         var currentElement = track.tabElements[track.currentRow];
 
-        track.mousedown = false;
-
-        if(track.currentRow >= 0)
+        if(track.mousedown && e.target.nodeName == 'CANVAS')
         {
-            for(var i = 0; i < track.tabElements.length; i++)
+            track.mousedown = false;
+
+            if(track.currentRow >= 0)
             {
-                var element = track.tabElements[i];
-
-                if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
+                for(var i = 0; i < track.tabElements.length; i++)
                 {
-                    console.log('collision between');
+                    var element = track.tabElements[i];
 
-                    var widthNewElement = element.marginLeft - (currentElement.marginLeft - element.marginLeft);
+                    if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
+                    {
+                        console.log('collision between');
 
-                    element.width = currentElement.marginLeft - element.marginLeft;
+                        var newMarginLeft = currentElement.marginLeft + currentElement.width;
+                        var widthNewElement = element.width - (currentElement.width + (currentElement.marginLeft - element.marginLeft));
+                        var newBeginDuration = (element.beginDuration + ((currentElement.marginLeft - element.marginLeft) / oneSecond));
 
-                    console.log((element.parent >= 0));
+                        console.log(newMarginLeft, widthNewElement, newBeginDuration);
 
-                    addElement(element.fileId, track.id, (currentElement.marginLeft + currentElement.width), (currentElement.marginLeft - element.marginLeft) / oneSecond, (element.parent >= 0));
+                        element.width = currentElement.marginLeft - element.marginLeft;
 
-                    track.tabElements[track.tabElements.length - 1].width = widthNewElement;
+                        //console.log((element.parent >= 0));
+
+                        addElement(element.fileId, track.id, newMarginLeft, newBeginDuration, (element.parent >= 0));
+
+                        track.tabElements[track.tabElements.length - 1].width = widthNewElement;
+                        track.tabElements[track.tabElements.length - 1].leftGap = currentElement.width;
+                    }
+
+                    if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                    {
+                        console.log('collision before');
+
+                        track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
+
+                        track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
+                        track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
+                    }
+
+                    if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                    {
+                        console.log('collision after');
+
+                        track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
+
+                        track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
+                    }
                 }
 
-                if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                if(track.mode == MODE.REMOVE)
                 {
-                    console.log('collision before');
+                    console.log('delete : ' + track.tabElements[track.currentRow].id);
 
-                    track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
-
-                    track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
-                    track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
+                    deleteElement(x, track.currentRow);
                 }
 
-                if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
-                {
-                    console.log('collision after');
-
-                    track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
-
-                    track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
-                }
+                drawElements(x);
             }
-
-            if(track.mode == MODE.REMOVE)
-            {
-                console.log('delete : ' + track.tabElements[track.currentRow].id);
-                
-                deleteElement(x, track.currentRow);
-            }
-
-            drawElements(x);
         }
     }
 }
@@ -273,10 +281,8 @@ function drawElements(row) {
         {
             rowSelected = i;
         }
-        else
-        {
-            element(row, i);
-        }
+
+        element(row, i);
     }
 
     if(rowSelected != 'none')
