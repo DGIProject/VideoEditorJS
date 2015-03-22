@@ -3,40 +3,46 @@
  */
 
 //Liste des projets par requête Ajax dans un div (id) et en fonction du pseudo de l'utilisateur (username)
-function getListProjects(id, username){
-    console.log(username);
+function getListProjects(id, username) {
+    var url = remoteAPIPath + 'php/getListProjects.php';
 
-    var xmlhttp = xmlHTTP();
+    var xhr = createCORSRequest('POST', url);
 
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+
+    xhr.onload = function() {
+        console.log('response : ' + xhr.responseText);
+
+        var tabListProjects = JSON.parse(xhr.responseText);
+
+        console.log(tabListProjects.length);
+
+        if(tabListProjects.length > 0)
         {
-            console.log(xmlhttp.responseText + 'ok');
+            eId(id).innerHTML = '';
 
-            var tabListProjects = JSON.parse(xmlhttp.responseText);
-
-            console.log(tabListProjects.length);
-
-            if(tabListProjects.length > 0)
+            for(var i = 0; i < tabListProjects.length; i++)
             {
-                eId(id).innerHTML = '';
-
-                for(var i = 0; i < tabListProjects.length; i++)
-                {
-                    eId(id).innerHTML += '<a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
-                }
+                eId(id).innerHTML += '<a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" class="list-group-item" data-dismiss="modal">' + tabListProjects[i] + '</a>';
             }
-            else
-            {
-                eId(id).innerHTML = 'Aucun project.';
-            }
+        }
+        else
+        {
+            eId(id).innerHTML = 'Aucun project.';
         }
     };
 
-    xmlhttp.open("POST", remoteAPIPath + "php/getListProjects.php", true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send('username=' + username);
+    xhr.onerror = function() {
+        reportError('No contact with server');
+
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send('username=' + username);
 }
 
 //Création d'un nouveau projet
@@ -80,65 +86,85 @@ function openProject() {
 function loadProject(fileName) {
     loadM();
 
-    var xmlhttp = xmlHTTP();
+    var url = remoteAPIPath + 'php/readFileProject.php';
 
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
-        {
-            //Classe ReadFileProject qui permet d'ouvrir un projet en fonction du contenu du fichier
-            readFileProject = new ReadFileProject(xmlhttp.responseText);
-            readFileProject.setProject();
-            readFileProject.setListFiles();
-        }
+    var xhr = createCORSRequest('POST', url);
+
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+
+    xhr.onload = function() {
+        console.log('response : ' + xhr.responseText);
+
+        //Classe ReadFileProject qui permet d'ouvrir un projet en fonction du contenu du fichier
+        readFileProject = new ReadFileProject(xhr.responseText);
+        readFileProject.setProject();
+        readFileProject.setListFiles();
     };
 
-    xmlhttp.open("POST", remoteAPIPath + "php/readFileProject.php", true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send('fileName=' + fileName);
+    xhr.onerror = function() {
+        reportError('No contact with server');
+
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send('fileName=' + fileName);
 }
 
 //Sauvegarde du projet : GenerateFileProject permet de créer le fichier JSON avec tout le contenu du projet puis envoi par requête Ajax.
 function saveProject() {
-    console.log('saving project ...');
-
+    rLog('Saving project ...');
     loadM();
 
     var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
     var contentFile = fileProject.generateMain();
 
-    var xmlhttp = xmlHTTP();
+    var url = remoteAPIPath + 'php/addFileProject.php';
 
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    var xhr = createCORSRequest('POST', url);
+
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+
+    xhr.onload = function() {
+        console.log('response : ' + xhr.responseText);
+
+        loadM();
+
+        if(xhr.responseText == 'true')
         {
-            console.log('answer : ' + xmlhttp.responseText);
+            currentProject.lastSave = getHour();
+            currentProject.forceSave = true;
 
-            loadM();
+            currentProject.updateText();
 
-            if(xmlhttp.responseText == 'true')
-            {
-                currentProject.lastSave = getHour();
-                currentProject.forceSave = true;
+            noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
 
-                currentProject.updateText();
-                noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
-            }
-            else if(xmlhttp.responseText == 'alreadyExist')
-            {
-                $('#alreadyExistProjectModal').modal('show');
-            }
-            else
-            {
-                noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
-            }
+            rLog('Saved!');
+        }
+        else if(xhr.responseText == 'alreadyExist')
+        {
+            $('#alreadyExistProjectModal').modal('show');
+        }
+        else
+        {
+            noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
         }
     };
 
-    xmlhttp.open("POST", remoteAPIPath + "php/addFileProject.php", true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile) + '&forceSave=' + currentProject.forceSave);
+    xhr.onerror = function() {
+        reportError('No contact with server');
+
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile) + '&forceSave=' + currentProject.forceSave);
 }
 
 function resetInterface() {

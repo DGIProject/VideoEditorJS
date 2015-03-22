@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 'off');
+header("Access-Control-Allow-Origin: *");
 session_start();
 
 $backPath = '../';

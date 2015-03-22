@@ -430,7 +430,14 @@ function uploadFile(id, name, file, type) {
     var formData = new FormData();
     formData.append('fileData', file);
 
-    var xhr = new XMLHttpRequest();
+    var url = 'php/uploadFile.php?projectName=' + currentProject.name + '&fileId=' + id + '&typeFile=' + type;
+
+    var xhr = createCORSRequest('POST', url);
+
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
 
     if (xhr.upload) {
         //Progression de l'envoi
@@ -516,7 +523,6 @@ function uploadFile(id, name, file, type) {
         }
     };
 
-    xhr.open('POST', 'php/uploadFile.php?projectName=' + currentProject.name + '&fileId=' + id + '&typeFile=' + type, true);
     xhr.send(formData);
 }
 
