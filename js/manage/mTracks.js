@@ -242,6 +242,8 @@ function calculateTimeBar() {
 function allowDrop(e) {
     if(isFirefox)
     {
+        console.log('isFirefox');
+
         var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
         var fileId = parseInt(e.dataTransfer.getData('fileId'));
 
@@ -252,6 +254,10 @@ function allowDrop(e) {
         {
             e.preventDefault();
         }
+        else
+        {
+            console.log('no');
+        }
     }
     else
     {
@@ -260,6 +266,8 @@ function allowDrop(e) {
 }
 
 function dropFile(e) {
+    console.log('dropFile');
+
     e.preventDefault();
 
     var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
@@ -273,7 +281,13 @@ function dropFile(e) {
 
     if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
     {
+        console.log('yes');
+
         addElement(fileId, id, undefined, 0, true);
+    }
+    else
+    {
+        console.log('no');
     }
 }
 

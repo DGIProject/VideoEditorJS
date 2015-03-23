@@ -9,10 +9,18 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListFiles
 };
 
 GenerateFileProject.prototype.generateMain = function() {
-    for(var i = 0; i < this.tabListTracks.length; i++)
+    /*
+    var tracks = this.tabListTracks;
+
+    console.log(tracks, currentProject.tabListTracks);
+
+    for(var i = 0; i < tracks.length; i++)
     {
-        this.tabListTracks[i].canvas = null;
+        tracks[i].canvas = null;
     }
+
+    console.log(tracks, currentProject.tabListTracks);
+    */
 
     return {
         project: {
@@ -21,6 +29,6 @@ GenerateFileProject.prototype.generateMain = function() {
             zoom: oneSecond
         },
         files: this.tabListFiles,
-        tracks: this.tabListTracks
+        tracks: tracks
     };
 };
