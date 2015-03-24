@@ -75,10 +75,10 @@ function mouseUp(e) {
 
                     deleteElement(x, track.currentRow);
                 }
-
-                drawElements(x);
             }
         }
+
+        drawElements(x);
     }
 }
 
@@ -88,21 +88,15 @@ function mouseMove(e) {
 
     var track = currentProject.tabListTracks[row];
 
-    var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX) /*+ pixelTimeBar.g*/;
-    var y = (e.offsetY == undefined) ? e.layerY : e.offsetY;
-
-    //console.log('x : ' + x, pixelTimeBar.g);
+    var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX);
+    var y = e.clientY - $('#' + this.id).offset().top;
 
     if(track.mousedown)
     {
         if(track.mode == MODE.MOVE)
         {
-            //console.log(x, track.gap, (x - track.gap));
-
             if((x - track.gap) > 0)
             {
-                //console.log('marginLeft : ' + x);
-
                 track.tabElements[track.currentRow].marginLeft = x - track.gap;
             }
             else
@@ -211,8 +205,6 @@ function mouseMove(e) {
                 track.mode = MODE.MOVE;
                 track.canvas.element.style.cursor = 'all-scroll';
             }
-
-            //console.log(track.mode);
         }
         else
         {

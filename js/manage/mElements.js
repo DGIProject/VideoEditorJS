@@ -192,10 +192,17 @@ function setVolumeElement(id, trackId) {
 //Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)
 function deleteElement(rowTrack, rowElement) {
     var track = currentProject.tabListTracks[rowTrack];
+    var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
+
+    console.log(track.tabElements[rowElement].parent);
 
     if(track.tabElements[rowElement].parent >= 0)
     {
-        track.tabElements.remove(rowById(track.tabElements[rowElement].parent, track.tabElements));
+        console.log('deleteParent');
+
+        console.log(rowById(track.tabElements[rowElement].parent, parentTrack.tabElements), parentTrack.tabElements);
+
+        parentTrack.tabElements.remove(rowById(track.tabElements[rowElement].parent, parentTrack.tabElements));
     }
 
     track.tabElements.remove(rowElement);
