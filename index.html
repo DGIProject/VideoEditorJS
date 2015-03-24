@@ -477,7 +477,18 @@
                     <h4 class="modal-title">Supprimer une piste</h4>
                 </div>
                 <div class="modal-body">
-                    Cette opération supprimera tous les élements de la piste ainsi que la piste parente <span id="parentTrack"></span>.
+                    Voulez vous supprimer la piste parente <span id="parentTrack"> </span> ?
+
+                    <br/> <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-info active">
+                            <input type="radio" name="radioDelete" id="radioDeleteY" autocomplete="off" checked> Oui
+                        </label>
+                        <label class="btn btn-info">
+                            <input type="radio" name="radioDelete" id="radioDeleteN" autocomplete="off"> Non
+                        </label>
+                    </div>
+                    <br/>
+                    Cette opération supprimera tous les élements de la piste ainsi que la piste parente !
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="buttonDeleteTrack" class="btn btn-danger">Continuer</button>
