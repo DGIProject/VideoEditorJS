@@ -15,6 +15,8 @@ function newTextElement(){
 function editFileText(id){
     var row = rowById(id, currentProject.tabListFiles);
 
+    console.log('properties : ' + currentProject.tabListFiles[row].properties);
+
     currentManageTextElement.editTextElement(id, currentProject.tabListFiles[row].properties);
 
     $('#textElementModal').modal('show');

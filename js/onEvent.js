@@ -2,6 +2,11 @@ window.onload = function (e) {
     calculateTimeBar();
 };
 
+window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+    alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
+    + ' Column: ' + column + ' StackTrace: ' +  errorObj);
+}
+
 window.onbeforeunload = function (e) {
     e = e || window.event;
 
