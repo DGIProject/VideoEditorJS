@@ -106,6 +106,7 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 
     var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName + '.data';
 
+    /*
     var xhr = createCORSRequest('GET', url);
     if (!xhr) {
         noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
@@ -149,8 +150,8 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 
     xhr.responseType = 'arrayBuffer';
     xhr.send();
+    */
 
-    /*
     var oReq = new XMLHttpRequest();
     oReq.open("GET", url, true);
     oReq.responseType = "arraybuffer";
@@ -183,7 +184,6 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
     };
 
     oReq.send();
-    */
 };
 
 ReadFileProject.prototype.setTracks = function() {
