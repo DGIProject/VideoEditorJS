@@ -477,9 +477,10 @@
                     <h4 class="modal-title">Supprimer une piste</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="hasParentTrack">
-                        Voulez vous supprimer la piste parente <span id="parentTrack"> </span> ?
-                        <br/>
+                    <p>Cette opération supprimera tous les éléments de la piste, une confirmation est requise.</p>
+                    <div id="haveParentTrack">
+                        Voulez-vous supprimer la piste parente <span id="parentTrack"></span> ?
+                        <br/><br/>
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-info active">
                                 <input type="radio" name="radioDelete" id="radioDeleteY" autocomplete="off" checked> Oui
@@ -489,10 +490,6 @@
                             </label>
                         </div>
                         <br/>
-                    </div>
-                    <div id="noParrentTrack">
-                        <br/>
-                        Cette opération supprimera tous les élements de la piste, veuillez confirmer. <br/>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -3,9 +3,15 @@ window.onload = function (e) {
 };
 
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
-    alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
-    + ' Column: ' + column + ' StackTrace: ' +  errorObj);
-}
+    var errorText = 'ERROR : ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' +  errorObj;
+
+    console.log(errorText);
+
+    reportError(errorText);
+    rLog(errorText);
+
+    return false;
+};
 
 window.onbeforeunload = function (e) {
     e = e || window.event;

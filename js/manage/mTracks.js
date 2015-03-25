@@ -79,16 +79,13 @@ function deleteTrackModal(id) {
     if (currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)].parent != -1)
     {
         var parentTrack = currentProject.tabListTracks[rowById(currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)].parent, currentProject.tabListTracks)];
-        document.getElementById('parentTrack').innerHTML = ((parentTrack.type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + parentTrack.id;
 
-        document.getElementById('hasParentTrack').style.display = "";
-        document.getElementById('noParrentTrack').style.display = "none";
+        document.getElementById('parentTrack').innerHTML = ((parentTrack.type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + parentTrack.id;
+        document.getElementById('haveParentTrack').style.display = 'initial';
     }
     else
     {
-        document.getElementById('noParrentTrack').style.display = "";
-        document.getElementById('hasParentTrack').style.display = "none";
-
+        document.getElementById('haveParentTrack').style.display = 'none';
     }
 
     document.getElementById('buttonDeleteTrack').setAttribute('onclick', 'deleteTrack(' + id + ');');
@@ -97,11 +94,11 @@ function deleteTrackModal(id) {
 }
 
 function deleteTrack(id) {
+    rLog('-DELETE TRACK- id : ' + id);
+
     $('#deleteTrackModal').modal('hide');
 
     var rowTrack1 = rowById(id, currentProject.tabListTracks);
-
-    console.log("current  track", rowTrack1);
 
     var videoInfo = document.getElementById('videoInfo');
     var videoView = document.getElementById('videoView');
@@ -120,27 +117,19 @@ function deleteTrack(id) {
         audioView.removeChild(document.getElementById('audioView' + id));
     }
 
-    console.log("removing from Tab r1 ", rowTrack1, /*typeof rowTrack2,*/ currentProject.tabListTracks);
-    console.log("track start",currentProject.tabListTracks)
+    rLog('-DELETE TRACK- parent : ' + currentProject.tabListTracks[rowTrack1].parent);
 
-    if (currentProject.tabListTracks[rowTrack1].parent != -1)
+    if (currentProject.tabListTracks[rowTrack1].parent >= 0)
     {
         var row2 = rowById(currentProject.tabListTracks[rowTrack1].parent, currentProject.tabListTracks);
-        console.log("yeah we find the parents", row2);
+
         currentProject.tabListTracks[row2].parent = -1;
-    }
-    else{
-        console.log('no parents :( you are orphelin ... ');
+
+        if (eId('radioDeleteY').checked)
+            deleteTrack(currentProject.tabListTracks[row2].id);
     }
 
     currentProject.tabListTracks.remove(rowTrack1);
-    console.log("track end",currentProject.tabListTracks)
-
-    var radioBtnYes =  eId("radioDeleteY");
-    var deleteParent = (radioBtnYes.checked)? true : false;
-    if (deleteParent)
-        deleteTrack(currentProject.tabListTracks[row2].id);
-
 }
 
 //ZOOM
