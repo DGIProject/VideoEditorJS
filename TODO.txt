@@ -1,5 +1,3 @@
-TODO : [optional] correct -> currentProject.tabListTracks[row2] is undefined mTracks.js:141 but not critical !
 TODO : AUDIO & VIDEO recording
-TODO : text element
 TODO : between collision
 TODO : local project

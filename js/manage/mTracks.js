@@ -75,7 +75,6 @@ function addTrack() {
 }
 
 function deleteTrackModal(id) {
-
     if (currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)].parent != -1)
     {
         var parentTrack = currentProject.tabListTracks[rowById(currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)].parent, currentProject.tabListTracks)];
@@ -94,7 +93,7 @@ function deleteTrackModal(id) {
 }
 
 function deleteTrack(id) {
-    rLog('-DELETE TRACK- id : ' + id);
+    rLog('-TRACK- delete|id : ' + id);
 
     $('#deleteTrackModal').modal('hide');
 
@@ -117,7 +116,7 @@ function deleteTrack(id) {
         audioView.removeChild(document.getElementById('audioView' + id));
     }
 
-    rLog('-DELETE TRACK- parent : ' + currentProject.tabListTracks[rowTrack1].parent);
+    rLog('-TRACK- delete|parent : ' + currentProject.tabListTracks[rowTrack1].parent);
 
     if (currentProject.tabListTracks[rowTrack1].parent >= 0)
     {

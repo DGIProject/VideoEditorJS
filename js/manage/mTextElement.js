@@ -13,49 +13,50 @@ function newTextElement(){
 }
 
 function editFileText(id){
-    var row = rowById(id, currentProject.tabListFiles);
+    var propertiesTextElement = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].properties;
 
-    console.log('properties : ' + currentProject.tabListFiles[row].properties);
+    console.log(propertiesTextElement);
 
-    currentManageTextElement.editTextElement(id, currentProject.tabListFiles[row].properties);
+    currentManageTextElement.editTextElement(propertiesTextElement.id, id, propertiesTextElement.text, propertiesTextElement.properties);
 
     $('#textElementModal').modal('show');
 }
 
 function saveTextElement() {
-    var textElement = currentManageTextElement.getInformationsTextElement();
+    var textElement = currentManageTextElement.gInformationsTextElement();
 
     if(currentManageTextElement.isEditing)
     {
-        var row = rowById(currentManageTextElement.file.id, currentProject.tabListFiles);
-        var file = currentProject.tabListFiles[rowById(currentManageTextElement.file.id, currentProject.tabListFiles)];
+        var row = rowById(currentManageTextElement.fileId, currentProject.tabListFiles);
+        var file = currentProject.tabListFiles[rowById(currentManageTextElement.fileId, currentProject.tabListFiles)];
 
         document.getElementById('textElement').toBlob(function(blob) {
             file.size = blob.size;
-            file.properties.updateValuesElement(textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement);
+            file.properties.updateValues(textElement.text, textElement.properties);
             file.setThumbnailImage(window.URL.createObjectURL(blob));
 
-            uploadFile(currentManageTextElement.file.id, row, blob, 'FILE');
+            uploadFile(currentManageTextElement.fileId, file.fileName, blob, 'FILE');
         }, 'image/png');
     }
     else
     {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
+        var fileName = 'Text ' + fileId;
 
-        var currentItem = new File(fileId, TYPE.TEXT, 0, textElement.nameText, 'png');
+        var currentItem = new File(fileId, TYPE.TEXT, 0, ('Text ' + fileId), 'png');
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
         document.getElementById('textElement').toBlob(function(blob) {
             currentItem.size = blob.size;
-            currentItem.setProperties(new TextElement(textElement.id, textElement.nameText, textElement.text, textElement.font, textElement.sizeText, textElement.color, textElement.textAlign, textElement.posElement));
+            currentItem.setProperties(new TextElement(textElement.id, textElement.text, textElement.properties));
             currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
 
             console.log('currentItem ' + currentItem);
             currentProject.tabListFiles.push(currentItem);
 
-            addFileList(fileId, textElement.nameText, TYPE.TEXT);
-            uploadFile(fileId, (currentProject.tabListFiles.length - 1), blob, 'FILE');
+            addFileList(fileId, fileName, TYPE.TEXT);
+            uploadFile(fileId, fileName, blob, 'FILE');
         }, 'image/png');
     }
 

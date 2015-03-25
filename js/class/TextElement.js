@@ -1,22 +1,12 @@
-TextElement = function(id, nameText, contentText, fontText, sizeText, colorText, alignText, posText)
+TextElement = function(id, text, properties)
 {
     this.id = id;
-    this.nameText = nameText;
-    this.contentText = contentText;
-    this.fontText = fontText;
-    this.sizeText = sizeText;
-    this.colorText = colorText;
-    this.alignText = alignText;
-    this.posText = posText;
+    this.text = text;
+    this.properties = properties;
 };
 
-TextElement.prototype.updateValuesElement = function(nameText, contentText, fontText, sizeText, colorText, alignText, posText)
+TextElement.prototype.updateValues = function(text, properties)
 {
-    this.nameText = nameText;
-    this.contentText = contentText;
-    this.fontText = fontText;
-    this.sizeText = sizeText;
-    this.colorText = colorText;
-    this.alignText = alignText;
-    this.posText = posText;
+    this.text = text;
+    this.properties = properties;
 };

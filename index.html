@@ -249,7 +249,7 @@
             </div>
         </div>
     </div>
-    <div id="filePropertiesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="filePropertiesModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -280,7 +280,7 @@
             </div>
         </div>
     </div>
-    <div id="textElementModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="textElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -291,11 +291,6 @@
                     <nav class="navbar navbar-default" role="navigation">
                         <div class="container-fluid">
                             <div class="collapse navbar-collapse">
-                                <form class="navbar-form navbar-left">
-                                    <div class="form-group">
-                                        <input type="text" id="nameText" class="form-control" onkeyup="currentManageTextElement.changeNameText(this.value);" placeHolder="Name">
-                                    </div>
-                                </form>
                                 <form class="navbar-form navbar-left">
                                     <div class="form-group">
                                         <select id="fontText" onchange="currentManageTextElement.changeFont(this.value);" class="form-control">
@@ -387,7 +382,7 @@
             </div>
         </div>
     </div>
-    <div id="elementPropertiesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="elementPropertiesModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
