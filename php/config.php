@@ -21,13 +21,14 @@ if(isset($_POST['username']) && $_POST['username'] != 'undefined')
 
 $DIR_data = 'data' . $systemStep;
 $DIR_projectsData = $DIR_data . 'projectsData' . $systemStep . $_SESSION['user'] . $systemStep;
-
+$DIR_RenderStat = $DIR_data. 'renderStats'.$systemStep;
 $DIR_Sample = '../samples'; // if you want to change the samples place.
 
 // We create directory if they not exist.
 
 createDirectory($DIR_projectsData);
 createDirectory($DIR_data);
+createDirectory($DIR_RenderStat);
 
 $fileSufix = uniqid();
 

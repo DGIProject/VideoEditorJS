@@ -272,3 +272,7 @@ body
     -webkit-user-select: none;
     user-select: none;
 }
+.renderStats
+{
+    display: none;
+}

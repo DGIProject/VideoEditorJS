@@ -64,7 +64,20 @@
                             <a href="#" onclick="addTrack(TYPE.VIDEO, true, -1);"><span class="glyphicon glyphicon-plus"></span> Piste</a>
                         </li>
                         <li class="dropdown">
-                            <a href="#" onclick="makeRender();"><span class="glyphicon glyphicon-film"></span> Rendu</a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-film"></span> Rendu <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li></li>
+                                <li><a href="#" onclick="makeRender();" ><span class="glyphicon glyphicon-film"></span>Lancer un Rendu</a></li>
+                                <li class="divider renderStats"></li>
+                                <li role="presentation" class="dropdown-header renderStats">Avencement du rendu</li>
+                                <li class="renderStats"><a href="#" id="startedDate"></a></li>
+                                <li class="renderStats"><a href="#" id="SrvLoad"></a></li>
+                                <li class="renderStats">
+                                    <div class="progress" style="margin-left: 5px; margin-right: 5px">
+                                        <div class="progress-bar" id="renderProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
 
