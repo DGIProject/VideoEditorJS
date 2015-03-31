@@ -16,7 +16,11 @@ do
     #List all ffm files to a txt file
     find . -name "*.ffm" > "$LOGPATH/renderList.txt"
     while read ffm; do
-        #echo $ffm
+        SERVATT=$(find . -name "*.ffm" | wc -l)
+        VALUE="action=setStat&content={\"wait\":$SERVATT}"
+        echo "updating Stat"
+        wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
+
         rm $TEMPDIR/*
         DIR=$(dirname "${ffm}")
         ID=$(echo $DIR | sed -r 's/^.{2}//' | tr '[/]' '_')
@@ -48,10 +52,6 @@ do
         cd "$DIR"
         mv "RENDER.ffm" "RENDER.ok"
         cd $DATAPATH
-        SERVATT=$(find . -name "*.ffm" | wc -l)
-        VALUE="action=setStat&content={\"wait\":$SERVATT}"
-        echo "updating Stat"
-        wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
     done < "$LOGPATH/renderList.txt"
     sleep 10
 done

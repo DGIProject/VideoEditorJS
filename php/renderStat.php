@@ -46,7 +46,11 @@ switch ($a)
         }
         else
         {
-            $serviceStat = json_decode(file_get_contents($idRe));
+            $serviceStat = json_decode(file_get_contents($idRe), true);
+            $content = json_decode($content, true);
+            //print_r($serviceStat);
+            //print_r($content);
+            //print_r();
             echo json_encode(array_merge($content, $serviceStat));
         }
         break;
