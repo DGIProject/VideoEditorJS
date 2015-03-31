@@ -61,7 +61,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#" onclick="addTrack();"><span class="glyphicon glyphicon-plus"></span> Piste</a>
+                            <a href="#" onclick="addTrack(TYPE.VIDEO, true, -1);"><span class="glyphicon glyphicon-plus"></span> Piste</a>
                         </li>
                         <li class="dropdown">
                             <a href="#" onclick="makeRender();"><span class="glyphicon glyphicon-film"></span> Rendu</a>
@@ -154,7 +154,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Pseudo</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="usernameSession" class="form-control" placeholder="Pseudo">
+                                    <input type="text" id="usernameSession" name="usernameSession" class="form-control" placeholder="Pseudo">
                                     <span class="textNote">Le compte sera automatiquement crée s'il n'existe pas.</span>
                                 </div>
                             </div>

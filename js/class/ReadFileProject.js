@@ -200,6 +200,8 @@ ReadFileProject.prototype.setTracks = function() {
     {
         rLog('-LOAD- track : ' + x);
 
+        addTrack(this.listTracks[x].type, false, this.listTracks[x].parent);
+
         currentProject.tabListTracks[x].tabElements = this.listTracks[x].tabElements;
 
         for(var y = 0; y < currentProject.tabListTracks[x].tabElements.length; y++)

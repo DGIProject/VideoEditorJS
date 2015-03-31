@@ -9,18 +9,17 @@ GenerateFileProject = function(nameProject, dateCreation, lastSave, tabListFiles
 };
 
 GenerateFileProject.prototype.generateMain = function() {
-    /*
-    var tracks = this.tabListTracks;
+    var tracks = [];
 
-    console.log(tracks, currentProject.tabListTracks);
-
-    for(var i = 0; i < tracks.length; i++)
+    for(var i = 0; i < this.tabListTracks.length; i++)
     {
-        tracks[i].canvas = null;
+        var track = new Track(this.tabListTracks[i].id, this.tabListTracks[i].type, null, this.tabListTracks[i].parent);
+        track.tabElements = this.tabListTracks[i].tabElements;
+
+        tracks.push(track);
     }
 
     console.log(tracks, currentProject.tabListTracks);
-    */
 
     return {
         project: {
