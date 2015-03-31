@@ -8,6 +8,8 @@ var lastZoom = 5;
 var scrollTracks = 0;
 
 function addTrack(type, haveParent, parent) {
+    console.log(type, TYPE.VIDEO, TYPE.AUDIO);
+
     if(type == TYPE.VIDEO || type == TYPE.AUDIO)
     {
         var idTrack = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
@@ -303,7 +305,7 @@ function allowDrop(e) {
     {
         console.log('isFirefox');
 
-        var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+        var id = parseInt(this.id.replace('elementView', ''));
         var fileId = parseInt(e.dataTransfer.getData('fileId'));
 
         var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
@@ -329,7 +331,7 @@ function dropFile(e) {
 
     e.preventDefault();
 
-    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var id = parseInt(this.id.replace('elementView', ''));
     var fileId = parseInt(e.dataTransfer.getData('fileId'));
 
     console.log(e.dataTransfer);
@@ -352,7 +354,7 @@ function dropFile(e) {
 
 //RIGHT CLICK
 function showContextMenu(e) {
-    var trackId = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var trackId = parseInt(this.id.replace('elementView', ''));
     var rowTrack = rowById(trackId, currentProject.tabListTracks);
 
     var track = currentProject.tabListTracks[rowTrack];
