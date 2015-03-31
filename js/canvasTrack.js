@@ -3,10 +3,10 @@
  */
 
 function mouseDown(e) {
-    console.log('mousedown');
-
     var x = ((e.offsetX == undefined)?e.layerX:e.offsetX);
-    var row = rowById(parseInt(this.id.replace('videoView', '').replace('audioView', '')), currentProject.tabListTracks);
+    var row = rowById(parseInt(this.id.replace('elementView', '')), currentProject.tabListTracks);
+
+    rLog('-CANVASTRACK- mousedown [row: ' + row + ']');
 
     currentProject.tabListTracks[row].mousedown = true;
     currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft) : 0;
@@ -31,7 +31,7 @@ function mouseUp(e) {
 
                     if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
                     {
-                        console.log('collision between');
+                        rLog('-CANVASTRACK- collision between');
 
                         var newMarginLeft = currentElement.marginLeft + currentElement.width;
                         var widthNewElement = element.width - (currentElement.width + (currentElement.marginLeft - element.marginLeft));
@@ -41,8 +41,6 @@ function mouseUp(e) {
 
                         element.width = currentElement.marginLeft - element.marginLeft;
 
-                        //console.log((element.parent >= 0));
-
                         addElement(element.fileId, track.id, newMarginLeft, newBeginDuration, (element.parent >= 0));
 
                         track.tabElements[track.tabElements.length - 1].width = widthNewElement;
@@ -51,7 +49,7 @@ function mouseUp(e) {
 
                     if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
                     {
-                        console.log('collision before');
+                        rLog('-CANVASTRACK- collision before');
 
                         track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
 
@@ -61,7 +59,7 @@ function mouseUp(e) {
 
                     if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
                     {
-                        console.log('collision after');
+                        rLog('-CANVASTRACK- collision after');
 
                         track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
 
@@ -71,8 +69,7 @@ function mouseUp(e) {
 
                 if(track.mode == MODE.REMOVE)
                 {
-                    console.log('delete : ' + track.tabElements[track.currentRow].id);
-
+                    rLog('-CANVASTRACK- delete [id: ' + track.tabElements[track.currentRow].id + ']');
                     deleteElement(x, track.currentRow);
                 }
             }
@@ -83,7 +80,7 @@ function mouseUp(e) {
 }
 
 function mouseMove(e) {
-    var id = parseInt(this.id.replace('videoView', '').replace('audioView', ''));
+    var id = parseInt(this.id.replace('elementView', ''));
     var row = rowById(id, currentProject.tabListTracks);
 
     var track = currentProject.tabListTracks[row];
@@ -289,8 +286,6 @@ function element(rowTrack, row) {
 
     var gapError = ((currentElement.marginLeft * 2) / 198);
 
-    //console.log('element marginLeft : ' + currentElement.marginLeft, gapError);
-
     context.beginPath();
     context.lineWidth = 1;
     context.strokeStyle = (currentElement.selected) ? 'blue' : 'gray';
@@ -352,18 +347,6 @@ function element(rowTrack, row) {
         var widthThumbnail = currentElement.width;
         var heightThumbnail = /*(imageThumbnail.height / imageThumbnail.width) * widthThumbnail*/ 75;
 
-        //console.log(ratio + ' - ' + sx + ' - ' + sy + ' - ' + sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
-
         context.drawImage(imageThumbnail, sx, sy, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
     }
-
-    /*
-    for(var posX = 0; posX < 500; posX = posX + 20)
-    {
-        context.beginPath();
-        context.moveTo(posX, 0);
-        context.lineTo(posX, 75);
-        context.stroke();
-    }
-    */
 }
