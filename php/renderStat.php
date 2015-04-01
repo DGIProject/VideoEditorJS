@@ -42,7 +42,7 @@ switch ($a)
         $content = file_get_contents($id);
         if ($content === false)
         {
-            echo "{'code':-1}";
+            echo "{\"code\":-1}";
         }
         else
         {
