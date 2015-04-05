@@ -136,6 +136,13 @@ function deleteTrackModal(id) {
         var parentTrack = currentProject.tabListTracks[rowById(currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)].parent, currentProject.tabListTracks)];
 
         document.getElementById('parentTrack').innerHTML = ((parentTrack.type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + parentTrack.id;
+
+        document.getElementById('labelDeleteY').classList.add('active');
+        document.getElementById('radioDeleteY').checked = true;
+
+        document.getElementById('labelDeleteN').classList.remove('active');
+        document.getElementById('radioDeleteN').checked = false;
+
         document.getElementById('haveParentTrack').style.display = 'initial';
     }
     else
