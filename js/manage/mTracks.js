@@ -163,13 +163,13 @@ function deleteTrack(id) {
 
     if(currentProject.tabListTracks[rowTrack1].type == TYPE.VIDEO)
     {
-        videoInfo.removeChild(document.getElementById('videoInfo' + id));
-        videoView.removeChild(document.getElementById('videoView' + id));
+        videoInfo.removeChild(document.getElementById('elementInfo' + id));
+        videoView.removeChild(document.getElementById('elementView' + id));
     }
     else
     {
-        audioInfo.removeChild(document.getElementById('audioInfo' + id));
-        audioView.removeChild(document.getElementById('audioView' + id));
+        audioInfo.removeChild(document.getElementById('elementInfo' + id));
+        audioView.removeChild(document.getElementById('elementView' + id));
     }
 
     rLog('-TRACK- delete|parent : ' + currentProject.tabListTracks[rowTrack1].parent);
