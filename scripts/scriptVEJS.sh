@@ -2,6 +2,10 @@
 #define all path ans vars that are usefull
 DATAPATH="/home/clangue/VEJSFiles"
 LOGPATH="/home/clangue/videoProcess/logs"
+#!/bin/bash
+#define all path ans vars that are usefull
+DATAPATH="/home/clangue/VEJSFiles"
+LOGPATH="/home/clangue/videoProcess/logs"
 TEMPDIR="/home/clangue/videoProcess/tmp"
 SAMPLEDIR="/home/clangue/videoProcess/sample"
 FFMPEGPATH="ffmpeg"
@@ -16,24 +20,21 @@ do
     #List all ffm files to a txt file
     find . -name "*.ffm" > "$LOGPATH/renderList.txt"
     while read ffm; do
-        SERVATT=$(find . -name "*.ffm" | wc -l)
-        VALUE="action=setStat&content={\"wait\":$SERVATT}"
-        echo "updating Stat"
-        wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
-
+        #echo $ffm
         rm $TEMPDIR/*
         DIR=$(dirname "${ffm}")
         ID=$(echo $DIR | sed -r 's/^.{2}//' | tr '[/]' '_')
         echo "dir :$DIR"
         echo "id : $ID"
         cd "$DIR"
+		mkdir "RENDER_DATA"
         cp $SAMPLEDIR/* $TEMPDIR
         cp * $TEMPDIR
         cd $TEMPDIR
         echo $(pwd)
         DATE=$(date +"%T %d-%m-%Y")
         AV=1
-        LN=$(wc -l < "RENDER.ffm")
+        LN=$(($(wc -l < "RENDER.ffm")+1))
     #    echo "action=update&id=$ID&content={totcmd:$LN,actual:$AV,startTime:$DATE}"
     #    sleep 1
         while read content; do
@@ -48,10 +49,22 @@ do
             wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
             AV=$(($AV+1))
         done < "RENDER.ffm"
-        cd $DATAPATH
-        cd "$DIR"
-        mv "RENDER.ffm" "RENDER.ok"
-        cd $DATAPATH
-    done < "$LOGPATH/renderList.txt"
+	cd $DATAPATH
+	cd "$DIR"
+	mv "RENDER.ffm" "RENDER.ok"
+	cd "RENDER_DATA"
+	FILENAME=$(ls $TEMPDIR | grep "final*");
+	CURDATE=$(date +%s)
+	cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
+    cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
+	VALUE="action=update&id=$ID&content={\"totcmd\":$LN,\"actual\":$AV,\"startTime\":\"$DATE\", \"filename\":\"$CURDATE.${FILENAME##*.}\"}"
+    echo "updating Stat"
+    wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
+	cd $DATAPATH
+    SERVATT=$(find . -name "*.ffm" | wc -l)
+    VALUE="action=setStat&content={\"wait\":$SERVATT}"
+	echo "updating Stat"
+	wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
+	done < "$LOGPATH/renderList.txt"
     sleep 10
 done
