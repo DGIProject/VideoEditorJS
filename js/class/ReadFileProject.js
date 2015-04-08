@@ -191,11 +191,6 @@ ReadFileProject.prototype.setTracks = function() {
 
     console.log(this.listTracks.length);
 
-    for(var i = 0; i < (this.listTracks.length / 2); i++)
-    {
-        addTrack();
-    }
-
     for(var x = 0; x < this.listTracks.length; x++)
     {
         rLog('-LOAD- track : ' + x);

@@ -33,8 +33,8 @@ function mouseUp(e) {
                     {
                         rLog('-CANVASTRACK- collision between');
 
-                        var newMarginLeft = currentElement.marginLeft + currentElement.width;
-                        var widthNewElement = element.width - (currentElement.width + (currentElement.marginLeft - element.marginLeft));
+                        var newMarginLeft = currentElement.marginLeft + currentElement.width + 1;
+                        var widthNewElement = element.width - /*(currentElement.width + (currentElement.marginLeft - element.marginLeft))*/ ((currentElement.marginLeft + currentElement.width) - element.marginLeft);
                         var newBeginDuration = (element.beginDuration + ((currentElement.marginLeft - element.marginLeft) / oneSecond));
 
                         console.log(newMarginLeft, widthNewElement, newBeginDuration);
