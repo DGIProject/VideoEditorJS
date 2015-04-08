@@ -177,9 +177,7 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
         {
             rLog('-LOAD- files : finish');
 
-            //readFileProject.dispatchEvent(listfilesend);
-
-            readFileProject.setTracks();
+            readFileProject.setElementsTrack();
         }
     };
 
@@ -187,28 +185,42 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 };
 
 ReadFileProject.prototype.setTracks = function() {
-    console.log('setTracks');
+    rLog('-LOAD- tracks : ' + this.listTracks.length);
 
-    console.log(this.listTracks.length);
+    var id = -1;
+    var lastId = -1;
 
-    for(var x = 0; x < this.listTracks.length; x++)
+    for(var i = 0; i < this.listTracks.length; i++)
     {
-        rLog('-LOAD- track : ' + x);
+        id = addTrack(this.listTracks[i].type);
 
-        addTrack(this.listTracks[x].type, false, this.listTracks[x].parent);
+        if(lastId >= 0) {
+            setParentTracks(lastId, id);
 
-        currentProject.tabListTracks[x].tabElements = this.listTracks[x].tabElements;
-
-        for(var y = 0; y < currentProject.tabListTracks[x].tabElements.length; y++)
+            lastId = -1;
+        }
+        else
         {
-            var element = currentProject.tabListTracks[x].tabElements[y];
+            lastId = (this.listTracks[i].parent >= 0) ? id : -1;
+        }
+    }
+};
+
+ReadFileProject.prototype.setElementsTrack = function() {
+    rLog('-LOAD- elements track');
+
+    for(var i = 0; i < this.listTracks.length; i++)
+    {
+        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
+
+        for(var y = 0; y < currentProject.tabListTracks[i].tabElements.length; y++)
+        {
+            var element = currentProject.tabListTracks[i].tabElements[y];
             var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
 
             this.setElementThumbnail(element, file.thumbnail);
         }
     }
-
-    //this.dispatchEvent(classend);
 };
 
 ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {

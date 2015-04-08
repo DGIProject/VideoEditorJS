@@ -13,7 +13,8 @@ GenerateFileProject.prototype.generateMain = function() {
 
     for(var i = 0; i < this.tabListTracks.length; i++)
     {
-        var track = new Track(this.tabListTracks[i].id, this.tabListTracks[i].type, null, this.tabListTracks[i].parent);
+        var track = new Track(this.tabListTracks[i].id, this.tabListTracks[i].type, null);
+        track.setParent(this.tabListTracks[i].parent);
         track.tabElements = this.tabListTracks[i].tabElements;
 
         tracks.push(track);

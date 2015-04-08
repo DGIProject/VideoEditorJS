@@ -104,6 +104,7 @@ function loadProject(fileName) {
             readFileProject = new ReadFileProject(xhr.responseText);
             readFileProject.setProject();
             readFileProject.setListFiles();
+            readFileProject.setTracks();
         }
         else
         {

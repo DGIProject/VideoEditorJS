@@ -60,8 +60,14 @@
                                 <li><a href="#" onclick="uploadManagerModal();"><span class="glyphicon glyphicon-upload"></span> Gestionnaire d'envoi</a></li>
                             </ul>
                         </li>
-                        <li>
-                            <a href="#" onclick="addTrack(TYPE.VIDEO, true, -1);"><span class="glyphicon glyphicon-plus"></span> Piste</a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> Track <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" onclick="addTracks();"><span class="glyphicon glyphicon-oil"></span> Vidéo/Audio</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" onclick="addTrack(TYPE.VIDEO);"><span class="glyphicon glyphicon-film"></span> Vidéo</a></li>
+                                <li><a href="#" onclick="addTrack(TYPE.AUDIO);"><span class="glyphicon glyphicon-music"></span> Audio</a></li>
+                            </ul>
                         </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-film"></span> Rendu <span class="caret"></span></a>

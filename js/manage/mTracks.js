@@ -247,7 +247,20 @@ function allowDrop(e) {
         var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
         var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
-        if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+        if(file.isVideo && file.isAudio)
+        {
+            if(track.parent >= 0)
+            {
+                console.log('yes because have parent');
+
+                e.preventDefault();
+            }
+            else
+            {
+                console.log('no parent');
+            }
+        }
+        else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
         {
             e.preventDefault();
         }
@@ -276,7 +289,20 @@ function dropFile(e) {
     var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
     var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
-    if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+    if(file.isVideo && file.isAudio)
+    {
+        if(track.parent >= 0)
+        {
+            console.log('yes because have parent');
+
+            addElement(fileId, id, undefined, 0, true);
+        }
+        else
+        {
+            console.log('no parent');
+        }
+    }
+    else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
     {
         console.log('yes');
 
