@@ -2,10 +2,6 @@
 #define all path ans vars that are usefull
 DATAPATH="/home/clangue/VEJSFiles"
 LOGPATH="/home/clangue/videoProcess/logs"
-#!/bin/bash
-#define all path ans vars that are usefull
-DATAPATH="/home/clangue/VEJSFiles"
-LOGPATH="/home/clangue/videoProcess/logs"
 TEMPDIR="/home/clangue/videoProcess/tmp"
 SAMPLEDIR="/home/clangue/videoProcess/sample"
 FFMPEGPATH="ffmpeg"
