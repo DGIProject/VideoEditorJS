@@ -7,127 +7,54 @@ var pixelTimeBar = {g: 0, d: 710};
 var lastZoom = 5;
 var scrollTracks = 0;
 
-function addTrack(type, haveParent, parent) {
-    console.log(type, TYPE.VIDEO, TYPE.AUDIO);
+function addTracks() {
+    var id1 = addTrack(TYPE.VIDEO);
+    var id2 = addTrack(TYPE.AUDIO);
 
-    if(type == TYPE.VIDEO || type == TYPE.AUDIO)
-    {
-        var idTrack = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
+    setParentTracks(id1, id2);
+}
 
-        var elementInfo = document.createElement('div');
-        elementInfo.id = 'elementInfo' + idTrack;
-        elementInfo.classList.add('singleTrack');
-        elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + idTrack + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + idTrack + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+function addTrack(type) {
+    var trackId = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
 
-        var elementView = document.createElement('canvas');
-        elementView.id = 'elementView' + idTrack;
-        elementView.classList.add('singleTrack');
+    var elementInfo = document.createElement('div');
+    elementInfo.id = 'elementInfo' + trackId;
+    elementInfo.classList.add('singleTrack');
+    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
 
-        elementView.onmousedown = mouseDown;
-        elementView.onmousemove = mouseMove;
+    var elementView = document.createElement('canvas');
+    elementView.id = 'elementView' + trackId;
+    elementView.classList.add('singleTrack');
 
-        elementView.ondragover = allowDrop;
-        elementView.ondrop = dropFile;
+    elementView.onmousedown = mouseDown;
+    elementView.onmousemove = mouseMove;
 
-        elementView.oncontextmenu = showContextMenu;
+    elementView.ondragover = allowDrop;
+    elementView.ondrop = dropFile;
 
-        elementView.width = 730;
-        elementView.height = 120;
+    elementView.oncontextmenu = showContextMenu;
 
-        var contextElementView = elementView.getContext('2d');
-        contextElementView.width = 730;
-        contextElementView.height = 120;
+    elementView.width = 730;
+    elementView.height = 120;
 
-        document.getElementById((type == TYPE.VIDEO) ? 'videoInfo' : 'audioInfo').appendChild(elementInfo);
-        document.getElementById((type == TYPE.VIDEO) ? 'videoView' : 'audioView').appendChild(elementView);
+    var contextElementView = elementView.getContext('2d');
+    contextElementView.width = 730;
+    contextElementView.height = 120;
 
-        currentProject.tabListTracks.push(new Track(idTrack, type, {element: elementView, context: contextElementView}, ((parent >= 0) ? parent : -1)));
+    document.getElementById((type == TYPE.VIDEO) ? 'videoInfo' : 'audioInfo').appendChild(elementInfo);
+    document.getElementById((type == TYPE.VIDEO) ? 'videoView' : 'audioView').appendChild(elementView);
 
-        if(parent >= 0) {
-            currentProject.tabListTracks[rowById(parent, currentProject.tabListTracks)].parent = idTrack;
-        }
-
-        drawElements(currentProject.tabListTracks.length - 1);
-
-        if(haveParent) {
-            addTrack(((type == TYPE.VIDEO) ? TYPE.AUDIO : TYPE.VIDEO), false, idTrack);
-        }
-    }
-    else
-    {
-        console.log('no');
-    }
-
-    /*
-    var idTrack1 = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
-    var idTrack2 = idTrack1 + 1;
-
-    var videoInfo = document.createElement('div');
-    videoInfo.id = 'videoInfo' + idTrack1;
-    videoInfo.classList.add('singleTrack');
-    videoInfo.innerHTML = '<div class="valuesTrack"><span class="bold">VIDEO ' + idTrack1 + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + idTrack1 + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
-
-    var videoView = document.createElement('canvas');
-    videoView.id = 'videoView' + idTrack1;
-    videoView.classList.add('singleTrack');
-
-    videoView.onmousedown = mouseDown;
-    videoView.onmousemove = mouseMove;
-
-    videoView.ondragover = allowDrop;
-    videoView.ondrop = dropFile;
-
-    videoView.oncontextmenu = showContextMenu;
-
-    videoView.width = 730;
-    videoView.height = 120;
-
-    var contextVideoView = videoView.getContext('2d');
-    contextVideoView.width = 730;
-    contextVideoView.height = 120;
-
-    document.getElementById('videoInfo').appendChild(videoInfo);
-    document.getElementById('videoView').appendChild(videoView);
-
-    currentProject.tabListTracks.push(new Track(idTrack1, TYPE.VIDEO, {element: videoView, context: contextVideoView}, idTrack2));
+    currentProject.tabListTracks.push(new Track(trackId, type, {element: elementView, context: contextElementView}));
 
     drawElements(currentProject.tabListTracks.length - 1);
 
-    if(haveParent) {
+    return trackId;
+}
 
-    }
-
-    var audioInfo = document.createElement('div');
-    audioInfo.id = 'audioInfo' + idTrack2;
-    audioInfo.classList.add('singleTrack');
-    audioInfo.innerHTML = '<div class="valuesTrack"><span class="bold">AUDIO ' + idTrack2 + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + idTrack2 + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
-
-    var audioView = document.createElement('canvas');
-    audioView.id = 'audioView' + idTrack2;
-    audioView.classList.add('singleTrack');
-
-    audioView.onmousedown = mouseDown;
-    audioView.onmousemove = mouseMove;
-
-    audioView.ondragover = allowDrop;
-    audioView.ondrop = dropFile;
-
-    audioView.oncontextmenu = showContextMenu;
-
-    audioView.width = 730;
-    audioView.height = 120;
-
-    var contextAudioView = audioView.getContext('2d');
-    contextAudioView.width = 730;
-    contextAudioView.height = 120;
-
-    document.getElementById('audioInfo').appendChild(audioInfo);
-    document.getElementById('audioView').appendChild(audioView);
-
-    currentProject.tabListTracks.push(new Track(idTrack2, TYPE.AUDIO, {element: audioView, context: contextAudioView}, idTrack1));
-
-    drawElements(currentProject.tabListTracks.length - 1);
-    */
+function setParentTracks(id1, id2) {
+    currentProject.tabListTracks[rowById(id1, currentProject.tabListTracks)].setParent(id2);
+    currentProject.tabListTracks[rowById(id2, currentProject.tabListTracks)].setParent(id1);
 }
 
 function deleteTrackModal(id) {
@@ -162,36 +89,38 @@ function deleteTrack(id) {
 
     var rowTrack1 = rowById(id, currentProject.tabListTracks);
 
-    var videoInfo = document.getElementById('videoInfo');
-    var videoView = document.getElementById('videoView');
-
-    var audioInfo = document.getElementById('audioInfo');
-    var audioView = document.getElementById('audioView');
-
-    if(currentProject.tabListTracks[rowTrack1].type == TYPE.VIDEO)
-    {
-        videoInfo.removeChild(document.getElementById('elementInfo' + id));
-        videoView.removeChild(document.getElementById('elementView' + id));
-    }
-    else
-    {
-        audioInfo.removeChild(document.getElementById('elementInfo' + id));
-        audioView.removeChild(document.getElementById('elementView' + id));
-    }
+    deleteGraphicalTrack(rowTrack1, id);
 
     rLog('-TRACK- delete|parent : ' + currentProject.tabListTracks[rowTrack1].parent);
 
     if (currentProject.tabListTracks[rowTrack1].parent >= 0)
     {
-        var row2 = rowById(currentProject.tabListTracks[rowTrack1].parent, currentProject.tabListTracks);
+        var rowTrack2 = rowById(currentProject.tabListTracks[rowTrack1].parent, currentProject.tabListTracks);
 
-        currentProject.tabListTracks[row2].parent = -1;
+        currentProject.tabListTracks[rowTrack2].parent = -1;
 
-        if (eId('radioDeleteY').checked)
-            deleteTrack(currentProject.tabListTracks[row2].id);
+        if(eId('radioDeleteY').checked)
+        {
+            deleteGraphicalTrack(rowTrack2, currentProject.tabListTracks[rowTrack2].id);
+
+            currentProject.tabListTracks.splice(rowTrack2, 1);
+        }
     }
 
-    currentProject.tabListTracks.remove(rowTrack1);
+    currentProject.tabListTracks.splice(rowById(id, currentProject.tabListTracks), 1);
+}
+
+function deleteGraphicalTrack(row, id) {
+    if(currentProject.tabListTracks[row].type == TYPE.VIDEO)
+    {
+        document.getElementById('videoInfo').removeChild(document.getElementById('elementInfo' + id));
+        document.getElementById('videoView').removeChild(document.getElementById('elementView' + id));
+    }
+    else
+    {
+        document.getElementById('audioInfo').removeChild(document.getElementById('elementInfo' + id));
+        document.getElementById('audioView').removeChild(document.getElementById('elementView' + id));
+    }
 }
 
 //ZOOM
