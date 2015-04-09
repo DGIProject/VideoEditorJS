@@ -41,10 +41,17 @@ function mouseUp(e) {
 
                         element.width = currentElement.marginLeft - element.marginLeft;
 
-                        addElement(element.fileId, track.id, newMarginLeft, newBeginDuration, (element.parent >= 0));
+                        addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, (element.parent >= 0));
 
                         track.tabElements[track.tabElements.length - 1].width = widthNewElement;
                         track.tabElements[track.tabElements.length - 1].leftGap = currentElement.width;
+                    }
+
+                    if(element.marginLeft > currentElement.marginLeft && (element.marginLeft + element.width) < (currentElement.marginLeft + currentElement.width))
+                    {
+                        rLog('-CANVASTRACK- collision in');
+
+                        deleteElement(x, i);
                     }
 
                     if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
@@ -69,7 +76,7 @@ function mouseUp(e) {
 
                 if(track.mode == MODE.REMOVE)
                 {
-                    rLog('-CANVASTRACK- delete [id: ' + track.tabElements[track.currentRow].id + ']');
+                    rLog('-CANVASTRACK- remove mode');
                     deleteElement(x, track.currentRow);
                 }
             }

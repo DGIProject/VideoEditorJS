@@ -511,7 +511,7 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                if(isUploadedFile(id) && id != -1)
+                if(isUploadedFile(id) && id >= 0)
                 {
                     currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded = true;
 
@@ -526,16 +526,25 @@ function uploadFile(id, name, file, type) {
     xhr.send(formData);
 }
 
-//Detection que tous les fichiers (thumbnail vidéo, thumbnail audio, fichier) ont été envoyés pour changer la valeur isUploaded dans l'object du fichier
+//Détection que tous les fichiers (thumbnail vidéo, thumbnail audio, fichier) ont été envoyés pour changer la valeur isUploaded dans l'object du fichier
 function isUploadedFile(id) {
     var isUploaded = true;
 
     for(var i = 0; i < currentProject.tabFilesUpload.length; i++)
     {
         if(currentProject.tabFilesUpload[i].id == id && currentProject.tabFilesUpload[i].progress < 100)
-        {
-            isUploaded = false
-        }
+            isUploaded = false;
+    }
+
+    return isUploaded;
+}
+
+function isAllUploaded() {
+    var isUploaded = true;
+
+    for(var i = 0; i < currentProject.tabListFiles.length; i++) {
+        if(!currentProject.tabListFiles[i].isUploaded)
+            isUploaded = false;
     }
 
     return isUploaded;

@@ -8,7 +8,95 @@ sont la position par rapport au début de la piste, le temps de départ au débu
 l'autorisation de l'élément à avoir un "ami" sur une autre piste (exemple avec une vidéo qui a un élément vidéo et audio si elle a du son) :
 ces derniers paramètres sont utilisés lors d'une superposition d'un élément sur un autre. */
 
-function addElement(id, trackId, posX, timeBegin, parent) {
+function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, parent) {
+    rLog('-ELEMENT- add [fileId: ' + fileId + '][trackId: ' + trackId + ']');
+
+    var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
+
+    console.log(file);
+
+    var rowTrack1 = rowById(trackId, currentProject.tabListFiles);
+    var track1 = currentProject.tabListFiles[rowTrack1];
+
+    var marginLeft = 0;
+    var time = {total: timeToSeconds(file.duration), begin: timeBegin};
+
+    if(file.isVideo && file.isAudio && parent) {
+        if(track1.parent >= 0)
+        {
+            console.log('both and parent');
+
+            var rowTrack2 = rowById(track1.parent, currentProject.tabListTracks);
+
+            marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: rowTrack2});
+
+            var id1 = addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time);
+            var id2 = addElement(fileId, track1.parent, file.type, file.thumbnail, marginLeft, time);
+
+            setParentElements(id1, id2, rowTrack1, rowTrack2);
+        }
+        else
+        {
+            console.log('no parent track');
+        }
+    }
+    else
+    {
+        marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: -1});
+
+        addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time);
+    }
+}
+
+function addElement(fileId, trackId, type, thumbnail, marginLeft, time) {
+    var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
+
+    console.log(thumbnail);
+
+    var elementId = (track.tabElements.length > 0) ? track.tabElements[track.tabElements.length - 1].id + 1 : 0;
+
+    var color = randomColor();
+    var imageThumbnail = new Image();
+
+    imageThumbnail.onload = function() {
+        track.tabElements.push(new Element(elementId, type, imageThumbnail, color, {total: timeToSeconds(time.total), begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []})));
+
+        console.log('trackId : ' + trackId);
+
+        drawElements(trackId);
+    };
+
+    imageThumbnail.src = ((track.type == TYPE.VIDEO) ? thumbnail.i : thumbnail.a);
+
+    return elementId;
+}
+
+function setParentElements(id1, id2, rowTrack1, rowTrack2) {
+    currentProject.tabListTracks[rowTrack1].tabElements[rowById(id1, currentProject.tabListTracks[rowTrack1])].setParent(id2);
+    currentProject.tabListTracks[rowTrack2].tabElements[rowById(id2, currentProject.tabListTracks[rowTrack2])].setParent(id1);
+}
+
+function gMarginLeft(isVideoAudio, rows) {
+    var marginLeft = 0;
+
+    for(var i = 0; i < currentProject.tabListTracks[rows.row1].tabElements.length; i++) {
+        if(currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft > marginLeft) {
+            marginLeft = currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft;
+        }
+    }
+
+    if(isVideoAudio) {
+        for(var x = 0; i < currentProject.tabListTracks[rows.row2].tabElements.length; x++) {
+            if(currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft > marginLeft) {
+                marginLeft = currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft;
+            }
+        }
+    }
+
+    return marginLeft;
+}
+
+function addElements(id, trackId, posX, timeBegin, parent) {
     var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
 
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
@@ -21,7 +109,7 @@ function addElement(id, trackId, posX, timeBegin, parent) {
 
     var marginLeft = 0;
 
-    if(posX != undefined)
+    if(posX >= 0)
     {
         marginLeft = posX;
     }
@@ -191,6 +279,8 @@ function setVolumeElement(id, trackId) {
 
 //Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)
 function deleteElement(rowTrack, rowElement) {
+    rLog('-ELEMENT- delete [rowTrack: ' + rowTrack + '][rowElement: ' + rowElement + ']');
+
     var track = currentProject.tabListTracks[rowTrack];
     var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
 
