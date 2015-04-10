@@ -16,11 +16,13 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
     console.log(file);
 
     var rowTrack1 = rowById(trackId, currentProject.tabListTracks);
-    var track1 = currentProject.tabListFiles[rowTrack1];
+    var track1 = currentProject.tabListTracks[rowTrack1];
 
     console.log(track1);
 
     console.log('duration:' + file.duration);
+
+    var elementId = (track1.tabElements.length > 0) ? track1.tabElements[track1.tabElements.length - 1].id + 1 : 0;
 
     var marginLeft = 0;
     var time = {total: timeToSeconds(file.duration), begin: timeBegin};
@@ -36,10 +38,10 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
 
             marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: rowTrack2});
 
-            var id1 = addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
-            var id2 = addElement(fileId, track1.parent, file.type, file.thumbnail, marginLeft, time, values);
+            addElement(elementId, fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
+            addElement((elementId + 1), fileId, track1.parent, file.type, file.thumbnail, marginLeft, time, values);
 
-            setParentElements(id1, id2, rowTrack1, rowTrack2);
+            setParentElements(elementId, (elementId + 1), rowTrack1, rowTrack2);
         }
         else
         {
@@ -50,22 +52,20 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
     {
         marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: -1});
 
-        addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
+        addElement(elementId, fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
     }
 }
 
-function addElement(fileId, trackId, type, thumbnail, marginLeft, time, values) {
+function addElement(id, fileId, trackId, type, thumbnail, marginLeft, time, values) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
 
     console.log(thumbnail);
-
-    var elementId = (track.tabElements.length > 0) ? track.tabElements[track.tabElements.length - 1].id + 1 : 0;
 
     var color = randomColor();
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        var element = new Element(elementId, type, imageThumbnail, color, {total: time.total, begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}));
+        var element = new Element(id, type, imageThumbnail, color, {total: time.total, begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}));
 
         if(values.resize) {
             element.width = values.width;
@@ -80,11 +80,11 @@ function addElement(fileId, trackId, type, thumbnail, marginLeft, time, values) 
     };
 
     imageThumbnail.src = ((track.type == TYPE.VIDEO) ? thumbnail.i : thumbnail.a);
-
-    return elementId;
 }
 
 function setParentElements(id1, id2, rowTrack1, rowTrack2) {
+    console.log(id1, id2);
+
     currentProject.tabListTracks[rowTrack1].tabElements[rowById(id1, currentProject.tabListTracks[rowTrack1])].setParent(id2);
     currentProject.tabListTracks[rowTrack2].tabElements[rowById(id2, currentProject.tabListTracks[rowTrack2])].setParent(id1);
 }
@@ -106,7 +106,7 @@ function gMarginLeft(isVideoAudio, rows) {
         }
     }
 
-    return marginLeft;
+    return marginLeft + 1;
 }
 
 function addElements(id, trackId, posX, timeBegin, parent) {
