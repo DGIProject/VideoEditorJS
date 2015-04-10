@@ -14,6 +14,9 @@ function mouseDown(e) {
 }
 
 function mouseUp(e) {
+    analyzeCollision();
+
+    /*
     for(var x = 0; x < currentProject.tabListTracks.length; x++)
     {
         var track = currentProject.tabListTracks[x];
@@ -42,7 +45,7 @@ function mouseUp(e) {
                             rLog('-CANVASTRACK- collision between');
 
                             var newMarginLeft = currentElement.marginLeft + currentElement.width + 1;
-                            var widthNewElement = element.width - /*(currentElement.width + (currentElement.marginLeft - element.marginLeft))*/ ((currentElement.marginLeft + currentElement.width) - element.marginLeft);
+                            var widthNewElement = element.width - (currentElement.width + (currentElement.marginLeft - element.marginLeft)) ((currentElement.marginLeft + currentElement.width) - element.marginLeft);
                             var newBeginDuration = (element.beginDuration + ((currentElement.marginLeft - element.marginLeft) / oneSecond));
 
                             console.log(newMarginLeft, widthNewElement, newBeginDuration);
@@ -51,10 +54,8 @@ function mouseUp(e) {
 
                             addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, {resize: true, width: widthNewElement, leftGap: currentElement.width}, (element.parent >= 0));
 
-                            /*
-                             track.tabElements[track.tabElements.length - 1].width = widthNewElement;
+                            track.tabElements[track.tabElements.length - 1].width = widthNewElement;
                              track.tabElements[track.tabElements.length - 1].leftGap = currentElement.width;
-                             */
                         }
 
                         if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
@@ -88,6 +89,7 @@ function mouseUp(e) {
 
         drawElements(x);
     }
+    */
 }
 
 function mouseMove(e) {

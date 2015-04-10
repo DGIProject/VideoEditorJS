@@ -10,6 +10,8 @@ function analyzeCollision() {
         
         if(track.currentRow >= 0)
         {
+            console.log(track.currentRow);
+
             var selectedElement = track.tabElements[track.currentRow];
             selectedElement.selected = false;
 
@@ -18,9 +20,6 @@ function analyzeCollision() {
                 rLog('-CANVASTRACK- remove mode');
                 deleteElement(x, track.currentRow);
             }
-
-            track.mode = MODE.NONE;
-            track.currentRow = -1;
 
             for(var i = 0; i < track.tabElements.length; i++)
             {
@@ -74,6 +73,9 @@ function analyzeCollision() {
                     }
                 }
             }
+
+            track.mode = MODE.NONE;
+            track.currentRow = -1;
         }
 
         drawElements(x);

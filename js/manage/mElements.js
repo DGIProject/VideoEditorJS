@@ -18,6 +18,8 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
     var rowTrack1 = rowById(trackId, currentProject.tabListTracks);
     var track1 = currentProject.tabListFiles[rowTrack1];
 
+    console.log(track1);
+
     console.log('duration:' + file.duration);
 
     var marginLeft = 0;

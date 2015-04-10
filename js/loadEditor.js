@@ -16,6 +16,7 @@ var tabFilesJS = [
     'manage/mFiles.js',
     'manage/mTextElement.js',
     'manage/mTracks.js',
+    'manage/mTracksCanvas.js',
     'manage/mElements.js',
     'manage/mRecords.js',
     'manage/mRender.js',
