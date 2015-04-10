@@ -29,48 +29,52 @@ function mouseUp(e) {
                 {
                     var element = track.tabElements[i];
 
-                    if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
-                    {
-                        rLog('-CANVASTRACK- collision between');
-
-                        var newMarginLeft = currentElement.marginLeft + currentElement.width + 1;
-                        var widthNewElement = element.width - /*(currentElement.width + (currentElement.marginLeft - element.marginLeft))*/ ((currentElement.marginLeft + currentElement.width) - element.marginLeft);
-                        var newBeginDuration = (element.beginDuration + ((currentElement.marginLeft - element.marginLeft) / oneSecond));
-
-                        console.log(newMarginLeft, widthNewElement, newBeginDuration);
-
-                        element.width = currentElement.marginLeft - element.marginLeft;
-
-                        addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, (element.parent >= 0));
-
-                        track.tabElements[track.tabElements.length - 1].width = widthNewElement;
-                        track.tabElements[track.tabElements.length - 1].leftGap = currentElement.width;
-                    }
-
                     if(element.marginLeft > currentElement.marginLeft && (element.marginLeft + element.width) < (currentElement.marginLeft + currentElement.width))
                     {
                         rLog('-CANVASTRACK- collision in');
 
                         deleteElement(x, i);
                     }
-
-                    if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                    else
                     {
-                        rLog('-CANVASTRACK- collision before');
+                        if(element.marginLeft < currentElement.marginLeft && (element.marginLeft + element.width) > (currentElement.marginLeft + currentElement.width))
+                        {
+                            rLog('-CANVASTRACK- collision between');
 
-                        track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
+                            var newMarginLeft = currentElement.marginLeft + currentElement.width + 1;
+                            var widthNewElement = element.width - /*(currentElement.width + (currentElement.marginLeft - element.marginLeft))*/ ((currentElement.marginLeft + currentElement.width) - element.marginLeft);
+                            var newBeginDuration = (element.beginDuration + ((currentElement.marginLeft - element.marginLeft) / oneSecond));
 
-                        track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
-                        track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
-                    }
+                            console.log(newMarginLeft, widthNewElement, newBeginDuration);
 
-                    if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
-                    {
-                        rLog('-CANVASTRACK- collision after');
+                            element.width = currentElement.marginLeft - element.marginLeft;
 
-                        track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
+                            addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, {resize: true, width: widthNewElement, leftGap: currentElement.width}, (element.parent >= 0));
 
-                        track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
+                            /*
+                             track.tabElements[track.tabElements.length - 1].width = widthNewElement;
+                             track.tabElements[track.tabElements.length - 1].leftGap = currentElement.width;
+                             */
+                        }
+
+                        if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                        {
+                            rLog('-CANVASTRACK- collision before');
+
+                            track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
+
+                            track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
+                            track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
+                        }
+
+                        if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                        {
+                            rLog('-CANVASTRACK- collision after');
+
+                            track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
+
+                            track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
+                        }
                     }
                 }
 

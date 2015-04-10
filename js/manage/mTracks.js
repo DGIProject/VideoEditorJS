@@ -295,7 +295,7 @@ function dropFile(e) {
         {
             console.log('yes because have parent');
 
-            addElementTrack(fileId, id, -1, 0, true);
+            addElementTrack(fileId, id, -1, 0, -1, true);
         }
         else
         {
@@ -306,7 +306,7 @@ function dropFile(e) {
     {
         console.log('yes');
 
-        addElement(fileId, id, undefined, 0, true);
+        addElementTrack(fileId, id, -1, 0, -1, true);
     }
     else
     {

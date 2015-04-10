@@ -8,20 +8,24 @@ sont la position par rapport au début de la piste, le temps de départ au débu
 l'autorisation de l'élément à avoir un "ami" sur une autre piste (exemple avec une vidéo qui a un élément vidéo et audio si elle a du son) :
 ces derniers paramètres sont utilisés lors d'une superposition d'un élément sur un autre. */
 
-function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, parent) {
+function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent) {
     rLog('-ELEMENT- add [fileId: ' + fileId + '][trackId: ' + trackId + ']');
 
     var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
     console.log(file);
 
-    var rowTrack1 = rowById(trackId, currentProject.tabListFiles);
+    var rowTrack1 = rowById(trackId, currentProject.tabListTracks);
     var track1 = currentProject.tabListFiles[rowTrack1];
+
+    console.log('duration:' + file.duration);
 
     var marginLeft = 0;
     var time = {total: timeToSeconds(file.duration), begin: timeBegin};
 
     if(file.isVideo && file.isAudio && parent) {
+        console.log(track1.parent);
+
         if(track1.parent >= 0)
         {
             console.log('both and parent');
@@ -30,8 +34,8 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, parent) {
 
             marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: rowTrack2});
 
-            var id1 = addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time);
-            var id2 = addElement(fileId, track1.parent, file.type, file.thumbnail, marginLeft, time);
+            var id1 = addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
+            var id2 = addElement(fileId, track1.parent, file.type, file.thumbnail, marginLeft, time, values);
 
             setParentElements(id1, id2, rowTrack1, rowTrack2);
         }
@@ -44,11 +48,11 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, parent) {
     {
         marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: -1});
 
-        addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time);
+        addElement(fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
     }
 }
 
-function addElement(fileId, trackId, type, thumbnail, marginLeft, time) {
+function addElement(fileId, trackId, type, thumbnail, marginLeft, time, values) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
 
     console.log(thumbnail);
@@ -59,7 +63,14 @@ function addElement(fileId, trackId, type, thumbnail, marginLeft, time) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        track.tabElements.push(new Element(elementId, type, imageThumbnail, color, {total: timeToSeconds(time.total), begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []})));
+        var element = new Element(elementId, type, imageThumbnail, color, {total: time.total, begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}));
+
+        if(values.resize) {
+            element.width = values.width;
+            element.leftGap = values.leftGap;
+        }
+
+        track.tabElements.push(element);
 
         console.log('trackId : ' + trackId);
 
@@ -80,15 +91,15 @@ function gMarginLeft(isVideoAudio, rows) {
     var marginLeft = 0;
 
     for(var i = 0; i < currentProject.tabListTracks[rows.row1].tabElements.length; i++) {
-        if(currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft > marginLeft) {
-            marginLeft = currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft;
+        if((currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft + currentProject.tabListTracks[rows.row1].tabElements[i].width) > marginLeft) {
+            marginLeft = currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft + currentProject.tabListTracks[rows.row1].tabElements[i].width;
         }
     }
 
     if(isVideoAudio) {
         for(var x = 0; i < currentProject.tabListTracks[rows.row2].tabElements.length; x++) {
-            if(currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft > marginLeft) {
-                marginLeft = currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft;
+            if((currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft + currentProject.tabListTracks[rows.row2].tabElements[x].width) > marginLeft) {
+                marginLeft = currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft + currentProject.tabListTracks[rows.row2].tabElements[x].width;
             }
         }
     }
