@@ -351,13 +351,13 @@ function showContextMenu(e) {
 
         if(track.type == TYPE.AUDIO)
         {
-            eId('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ');');
-            eId('liVolumeCM').classList.add('disabled');
+            eId('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ', ' + element.properties.volume + ');');
+            eId('liVolumeCM').classList.remove('disabled');
         }
         else
         {
             eId('buttonVolumeCM').removeAttribute('onclick');
-            eId('liVolumeCM').classList.remove('disabled');
+            eId('liVolumeCM').classList.add('disabled');
         }
 
         eId('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');

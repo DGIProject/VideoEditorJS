@@ -266,7 +266,8 @@ function setOpacityElement(id, trackId) {
 }
 
 //VOLUME
-function volumeElementModal(id, trackId) {
+function volumeElementModal(id, trackId, value) {
+    document.getElementById('volumeRange').value = value;
     document.getElementById('volumeRange').onchange = setVolumeElement(id, trackId);
 
     $('#volumeElementModal').modal('show');
@@ -276,7 +277,7 @@ function setVolumeElement(id, trackId) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
     var element = track.tabElements[rowById(id, track.tabElements)];
 
-    element.volume = this.value;
+    element.properties.volume = parseInt(eId('volumeRange').value);
 }
 
 //Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)
