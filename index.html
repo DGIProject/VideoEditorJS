@@ -69,21 +69,8 @@
                                 <li><a href="#" onclick="addTrack(TYPE.AUDIO);"><span class="glyphicon glyphicon-music"></span> Audio</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-film"></span> Rendu <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li></li>
-                                <li><a href="#" onclick="makeRender();" ><span class="glyphicon glyphicon-film"></span>Lancer un Rendu</a></li>
-                                <li class="divider renderStats"></li>
-                                <li role="presentation" class="dropdown-header renderStats">Avencement du rendu</li>
-                                <li class="renderStats"><a href="#" id="startedDate"></a></li>
-                                <li class="renderStats"><a href="#" id="SrvLoad"></a></li>
-                                <li class="renderStats">
-                                    <div class="progress" style="margin-left: 5px; margin-right: 5px">
-                                        <div class="progress-bar" id="renderProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </li>
-                            </ul>
+                        <li>
+                            <a href="#" onclick="$('#renderModal').modal('show');" ><span class="glyphicon glyphicon-film"></span> Rendu </a>
                         </li>
                     </ul>
 
@@ -509,6 +496,45 @@
                 <div class="modal-footer">
                     <button type="button" id="buttonDeleteTrack" class="btn btn-danger">Continuer</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="renderModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Rendu</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="">
+                        <li role="presentation" class="dropdown-header">Format du rendu</li>
+                        <li value="mp4"><span class="glyphicon glyphicon-ok"></span> mp4 (mpeg4)</li>
+                        <li value="avi"><a href="#">avi</a></li>
+                        <li value="mp4"><a href="#">mp4 (x264)</a></li>
+                        <li value="ts"><a href="#">ts</a></li>
+                        <li value="webm"><a href="#">webm</a></li>
+                        <li value="ogg"><a href="#">ogg</a></li>
+
+                        <li class="divider renderStats"></li>
+                        <li role="presentation" class="dropdown-header renderStats">Avencement du rendu</li>
+                        <li class="renderStats"><a href="#" id="startedDate"></a></li>
+                        <li class="renderStats"><a href="#" id="SrvLoad"></a></li>
+                        <li class="renderStats">
+                            <div class="progress" style="margin-left: 5px; margin-right: 5px">
+                                <div class="progress-bar" id="renderProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </li>
+                        <li role="presentation" class="dropdown-header">Rendu terminés</li>
+                        <li>
+                            <ul class="nav nav-pills" id="renderList">
+                                <li><button class="btn btn-link btn-sm" type="button">test.mp4</button><button class="btn btn-sm" type="button"><span class="glyphicon glyphicon-remove"></span></button></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>

@@ -3,6 +3,10 @@
  */
 
 function makeRender(state) {
+    if (isAllUploaded())
+    {
+
+
     var myElements = document.querySelectorAll(".renderStats");
 
     for (var i = 0; i < myElements.length; i++) {
@@ -44,6 +48,7 @@ function makeRender(state) {
                     var xhr2 = createCORSRequest('GET', url);
                     xhr2.setRequestHeader("Content-type","application/x-www-form-urlencoded");
                     xhr2.send();
+                    listAvailableRenderFiles();
                 }
                 else
                 {
@@ -62,5 +67,43 @@ function makeRender(state) {
     }, 10000)
 
     new RenderP();
+    }
+    else
+    {
+        noty({layout: 'topRight', type: 'error', text: 'Le rendu ne peux pas être lancé, des fichiers sont en cours d\'envois', timeout: '4000'});
+    }
+}
+
+function listAvailableRenderFiles()
+{
+    var url = remoteAPIPath + 'php/videoFileManagement.php?action=list&projectName='+currentProject.name;
+
+    var xhr = createCORSRequest('GET', url);
+
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+
+    xhr.onload = function() {
+        console.log(xhr.responseText);
+        var jsonRep = JSON.parse(xhr.responseText);
+
+        var ul = document.getElementById('renderList');
+        ul.innerHTML = "";
+        var li, button;
+
+        for (i=0;i<jsonRep.length;i++)
+        {
+            var url2 = remoteAPIPath + 'php/videoFileManagement.php?action=read&id='+jsonRep[i]+'&projectName='+currentProject.name;
+            li=document.createElement("li");
+            li.innerHTML = '<a href="'+url2+'" target="_blank" style="display:inline;">'+jsonRep[i]+'</a><button class="btn btn-sm" type="button"><span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-sm" type="button"><span class="glyphicon glyphicon-play"></span></button>'
+            ul.appendChild(li);
+        }
+
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send();
 }
 

@@ -2,5 +2,4 @@ TODO : AUDIO & VIDEO recording
 TODO : between collision
 TODO : local project
 TODO : save & load project
-TODO : Add the format selection for render
-TODO : Add a link to download the rendered video
+TODO : Render play, delete
