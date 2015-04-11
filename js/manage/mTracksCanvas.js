@@ -18,7 +18,6 @@ function analyzeCollision() {
 
             //Détection de l'élément séléctionné s'il y en a un
             var selectedElement = track.tabElements[track.currentRow];
-            selectedElement.selected = false;
 
             //Suppression de l'élément si c'est le mode choisi par l'utilisateur
             if(track.mode == MODE.REMOVE)
@@ -82,7 +81,6 @@ function analyzeCollision() {
             }
 
             track.mode = MODE.NONE;
-            track.currentRow = -1;
         }
 
         drawElements(x);
@@ -283,7 +281,9 @@ function rowElement(x, row) {
                 rowParentTrack = rowById(track.parent, currentProject.tabListTracks);
                 rowParentElement = rowById(track.tabElements[i].parent, currentProject.tabListTracks[rowParentTrack].tabElements);
 
-                currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = true;
+                if(rowParentElement >= 0) {
+                    currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = true;
+                }
             }
         }
         else
@@ -295,7 +295,9 @@ function rowElement(x, row) {
                 rowParentTrack = rowById(track.parent, currentProject.tabListTracks);
                 rowParentElement = rowById(track.tabElements[i].parent, currentProject.tabListTracks[rowParentTrack].tabElements);
 
-                currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = false;
+                if(rowParentElement >= 0) {
+                    currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = false;
+                }
             }
         }
     }

@@ -176,8 +176,8 @@ function breakLinkElements(id, trackId) {
         console.log(parentElement, element, rowById(element.parent, parentTrack.tabElements));
 
         parentElement.parent = -1;
-        parentElement.color = randomColor();
 
+        element.color = randomColor();
         element.parent = -1;
     }
 
@@ -290,6 +290,8 @@ function deleteElement(rowTrack, rowElement) {
     var track = currentProject.tabListTracks[rowTrack];
     var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
 
+    track.currentRow = -1;
+
     console.log(track.tabElements[rowElement].parent);
 
     if(track.tabElements[rowElement].parent >= 0)
@@ -302,4 +304,6 @@ function deleteElement(rowTrack, rowElement) {
     }
 
     track.tabElements.remove(rowElement);
+
+    drawElementsTracks();
 }

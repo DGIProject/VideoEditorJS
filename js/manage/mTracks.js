@@ -92,6 +92,10 @@ function deleteTrack(id) {
 
     rLog('-TRACK- delete|parent : ' + currentProject.tabListTracks[rowTrack1].parent);
 
+    for(var i = 0; i < currentProject.tabListTracks[rowTrack1].tabElements.length; i++) {
+        breakLinkElements(currentProject.tabListTracks[rowTrack1].tabElements[i].id, id);
+    }
+
     if (currentProject.tabListTracks[rowTrack1].parent >= 0)
     {
         var rowTrack2 = rowById(currentProject.tabListTracks[rowTrack1].parent, currentProject.tabListTracks);

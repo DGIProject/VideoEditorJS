@@ -224,10 +224,14 @@ ReadFileProject.prototype.setElementsTrack = function() {
 };
 
 ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {
+    console.log('load thumbnail');
+    console.log(element);
+
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
         rLog('-LOAD- track : thumbnail');
+
         //console.log(element);
         //console.log(imageThumbnail);
 

@@ -20,5 +20,5 @@ function reportError(text) {
     };
 
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xhr.send('text=' + text);
+    xhr.send('text=' + ((isFirefox) ? '-Firefox-' : '-Chrome-') + text);
 }
