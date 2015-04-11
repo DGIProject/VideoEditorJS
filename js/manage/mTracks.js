@@ -327,7 +327,6 @@ function showContextMenu(e) {
     if(track.currentRow >= 0)
     {
         var element = track.tabElements[track.currentRow];
-        var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)].fileName;
 
         eId('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
         eId('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
@@ -335,28 +334,34 @@ function showContextMenu(e) {
         if(element.parent >= 0)
         {
             eId('buttonBreakLinkCM').setAttribute('onclick', 'breakLinkElements(' + element.id + ', ' + trackId + ');');
-            eId('buttonBreakLinkClassCM').classList.remove('disabled');
+            eId('liBreakLinkCM').classList.remove('disabled');
         }
         else
         {
             eId('buttonBreakLinkCM').removeAttribute('onclick');
-            eId('buttonBreakLinkClassCM').classList.add('disabled');
+            eId('liBreakLinkCM').classList.add('disabled');
+        }
+
+
+        eId('buttonEffectsCM').style.display = 'none';
+        eId('liEffectsCM').classList.add('disabled');
+
+        eId('buttonOpacityCM').style.display = 'none';
+        eId('liOpacityCM').classList.add('disabled');
+
+        if(track.type == TYPE.AUDIO)
+        {
+            eId('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ');');
+            eId('liVolumeCM').classList.add('disabled');
+        }
+        else
+        {
+            eId('buttonVolumeCM').removeAttribute('onclick');
+            eId('liVolumeCM').classList.remove('disabled');
         }
 
         eId('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
         eId('buttonDeleteCM').setAttribute('onclick', 'deleteElement(' + rowTrack + ',' + track.currentRow + ');');
-
-        //eId('buttonEffectsCM').disabled = true;
-        eId('buttonOpacityCM').disabled = true;
-
-        if(track.type == TYPE.AUDIO)
-        {
-            eId('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ',\'' + file.fileName + '\');');
-        }
-        else
-        {
-            eId('buttonVolumeCM').disabled = true;
-        }
 
         eId('contextMenu').style.display = 'initial';
     }

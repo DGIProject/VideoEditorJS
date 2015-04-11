@@ -266,12 +266,10 @@ function setOpacityElement(id, trackId) {
 }
 
 //VOLUME
-function volumeElementModal(id, trackId, name) {
-    document.getElementById('volumeElement').innerHTML = name;
-    document.getElementById('volumeRange').onchange = setOpacityElement(id, trackId);
-    document.getElementById('volumeRangeValue').innerHTML = '0';
+function volumeElementModal(id, trackId) {
+    document.getElementById('volumeRange').onchange = setVolumeElement(id, trackId);
 
-    $('#volumeElementValue').modal('show');
+    $('#volumeElementModal').modal('show');
 }
 
 function setVolumeElement(id, trackId) {
@@ -279,8 +277,6 @@ function setVolumeElement(id, trackId) {
     var element = track.tabElements[rowById(id, track.tabElements)];
 
     element.volume = this.value;
-
-    document.getElementById('volumeRangeValue').innerHTML = this.value;
 }
 
 //Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)
