@@ -2,71 +2,74 @@
  * Created by Dylan on 10/02/2015.
  */
 
-function makeRender(state) {
+function makeRender(format) {
     if (isAllUploaded())
     {
 
 
-    var myElements = document.querySelectorAll(".renderStats");
+        var myElements = document.querySelectorAll(".renderStats");
 
-    for (var i = 0; i < myElements.length; i++) {
-        myElements[i].className = myElements[i].className.replace("renderStats", "renderStatsV");
-    }
-
-    eId('startedDate').innerHTML = "Début du traitement";
-    eId('SrvLoad').innerHTML = "Charge du serveur";
-
-    var timer = window.setInterval(function(){
-
-        var url = remoteAPIPath + 'php/renderStat.php?action=read&id='+currentProject.username+"_"+currentProject.name;
-
-        var xhr = createCORSRequest('GET', url);
-
-        if (!xhr) {
-            noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
-            return;
+        for (var i = 0; i < myElements.length; i++) {
+            myElements[i].className = myElements[i].className.replace("renderStats", "renderStatsV");
         }
 
-        xhr.onload = function() {
-            console.log(xhr.responseText);
-            var jsonRep = JSON.parse(xhr.responseText);
-            if (!jsonRep.hasOwnProperty("code"))
-            {
-                //{totcmd:16,actual:16,startTime:18:41:54 31-03-2015}
-                var progress = Math.ceil(jsonRep.actual/jsonRep.totcmd*100);
-                if (progress==100)
-                {
-                    var myElements = document.querySelectorAll(".renderStatsV");
+        eId('startedDate').innerHTML = "Début du traitement";
+        eId('SrvLoad').innerHTML = "Charge du serveur";
 
-                    for (var i = 0; i < myElements.length; i++) {
-                        myElements[i].className = myElements[i].className.replace("renderStatsV", "renderStats");
-                    }
-                    noty({layout: 'topRight', type: 'info', text: 'Rendu Terminé  !', timeout: '5000'});
-                    clearInterval(timer);
+        var timer = window.setInterval(function(){
 
-                    url = remoteAPIPath + 'php/renderStat.php?action=delete&id='+currentProject.username+"_"+currentProject.name;
-                    var xhr2 = createCORSRequest('GET', url);
-                    xhr2.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                    xhr2.send();
-                    listAvailableRenderFiles();
-                }
-                else
-                {
-                    eId('startedDate').innerHTML = "Début du traitement : "+jsonRep.startTime;
-                    eId('SrvLoad').innerHTML = "Charge du serveur : "+jsonRep.wait;
-                    console.log(progress);
-                    eId('renderProgress').style.width = progress+"%";
-                }
+            var url = remoteAPIPath + 'php/renderStat.php?action=read&id='+currentProject.username+"_"+currentProject.name;
+
+            var xhr = createCORSRequest('GET', url);
+
+            if (!xhr) {
+                noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+                return;
             }
 
-        };
+            xhr.onload = function() {
+                console.log(xhr.responseText);
+                var jsonRep = JSON.parse(xhr.responseText);
+                if (!jsonRep.hasOwnProperty("code"))
+                {
+                    //{totcmd:16,actual:16,startTime:18:41:54 31-03-2015}
+                    var progress = Math.ceil(jsonRep.actual/jsonRep.totcmd*100);
+                    if (progress==100)
+                    {
+                        eId('startRender').removeAttribute('disable');
+                        var myElements = document.querySelectorAll(".renderStatsV");
 
-        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xhr.send();
+                        for (var i = 0; i < myElements.length; i++) {
+                            myElements[i].className = myElements[i].className.replace("renderStatsV", "renderStats");
+                        }
+                        noty({layout: 'topRight', type: 'info', text: 'Rendu Terminé  !', timeout: '5000'});
+                        clearInterval(timer);
 
-    }, 10000)
+                        url = remoteAPIPath + 'php/renderStat.php?action=delete&id='+currentProject.username+"_"+currentProject.name;
+                        var xhr2 = createCORSRequest('GET', url);
+                        xhr2.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                        xhr2.send();
+                        listAvailableRenderFiles();
+                    }
+                    else
+                    {
+                        eId('startedDate').innerHTML = "Début du traitement : "+jsonRep.startTime;
+                        eId('SrvLoad').innerHTML = "Charge du serveur : "+jsonRep.wait;
+                        console.log(progress);
+                        eId('renderProgress').style.width = progress+"%";
+                    }
+                }
 
-    new RenderP();
+            };
+
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.send();
+
+        }, 10000)
+
+        format = document.getElementById("renderFormat").options[document.getElementById("renderFormat").selectedIndex].value;
+        console.log("format", format);
+        new RenderP(format);
     }
     else
     {
@@ -97,7 +100,8 @@ function listAvailableRenderFiles()
         {
             var url2 = remoteAPIPath + 'php/videoFileManagement.php?action=read&id='+jsonRep[i]+'&projectName='+currentProject.name;
             li=document.createElement("li");
-            li.innerHTML = '<a href="'+url2+'" target="_blank" style="display:inline;">'+jsonRep[i]+'</a><button class="btn btn-sm" type="button"><span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-sm" type="button"><span class="glyphicon glyphicon-play"></span></button>'
+            li.setAttribute("class","list-group-item");
+            li.innerHTML = '<a href="'+url2+'" target="_blank">'+jsonRep[i]+'</a><button class="btn btn-sm pull-right" type="button"><span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-sm pull-right" type="button"><span class="glyphicon glyphicon-play"></span></button>'
             ul.appendChild(li);
         }
 

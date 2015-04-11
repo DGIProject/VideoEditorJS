@@ -502,31 +502,59 @@
                     <h4 class="modal-title">Rendu</h4>
                 </div>
                 <div class="modal-body">
-                    <ul class="">
-                        <li role="presentation" class="dropdown-header">Format du rendu</li>
-                        <li value="mp4"><span class="glyphicon glyphicon-ok"></span> mp4 (mpeg4)</li>
-                        <li value="avi"><a href="#">avi</a></li>
-                        <li value="mp4"><a href="#">mp4 (x264)</a></li>
-                        <li value="ts"><a href="#">ts</a></li>
-                        <li value="webm"><a href="#">webm</a></li>
-                        <li value="ogg"><a href="#">ogg</a></li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Options de rendus</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="renderFormat">Format du rendu</label>
+                                    <select name="renderFormat" id="renderFormat">
+                                        <option value="MPEG4">.mp4 ( mpeg4 )</option>
+                                        <option value="X264">.mp4 ( x264 )</option>
+                                        <option value="TS">.ts</option>
+                                        <option value="AVI">.avi</option>
+                                        <option value="OGG">.ogg</option>
+                                        <option value="WEBM">.webm</option>
+                                    </select>
+                                </div>
+                                <button type="submit" id="startRender" onclick="makeRender();this.setAttribute('disabled','');" class="btn btn-default">Lancer</button>
+                            </form>
+                        </div>
+                    </div>
 
-                        <li class="divider renderStats"></li>
-                        <li role="presentation" class="dropdown-header renderStats">Avencement du rendu</li>
-                        <li class="renderStats"><a href="#" id="startedDate"></a></li>
-                        <li class="renderStats"><a href="#" id="SrvLoad"></a></li>
-                        <li class="renderStats">
-                            <div class="progress" style="margin-left: 5px; margin-right: 5px">
-                                <div class="progress-bar" id="renderProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="panel panel-default renderStats">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Avancement du rendu</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="progress">
+                                        <div class="progress-bar" id="renderProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
                             </div>
-                        </li>
-                        <li role="presentation" class="dropdown-header">Rendu terminés</li>
-                        <li>
-                            <ul class="nav nav-pills" id="renderList">
-                                <li><button class="btn btn-link btn-sm" type="button">test.mp4</button><button class="btn btn-sm" type="button"><span class="glyphicon glyphicon-remove"></span></button></li>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <span id="startedDate"></span>
+                                </div>
+                                <div class="col-md-5">
+                                    <span id="SrvLoad"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Anciens rendus <button onclick="listAvailableRenderFiles();" class="pull-right btn btn-xs btn-info"><span class="glyphicon glyphicon-refresh"></span></button>
+                            </h3>
+                        </div>
+                            <ul class="list-group" id="renderList">
                             </ul>
-                        </li>
-                    </ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>

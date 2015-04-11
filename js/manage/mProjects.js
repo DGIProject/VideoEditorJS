@@ -129,6 +129,7 @@ function loadProject(fileName) {
 //Sauvegarde du projet : GenerateFileProject permet de créer le fichier JSON avec tout le contenu du projet puis envoi par requête Ajax.
 function saveProject() {
     rLog('Saving project ...');
+    listAvailableRenderFiles();
     loadM();
 
     var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);

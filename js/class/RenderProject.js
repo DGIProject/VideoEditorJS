@@ -1,7 +1,7 @@
 /**
  * Created by Guillaume on 14/03/2015.
  */
-RenderP = function () {
+RenderP = function (format) {
     this.tracks = currentProject.tabListTracks;
     this.nextElement = null;
     this.elementEnd = null;
@@ -9,6 +9,18 @@ RenderP = function () {
     this.commandTracksAudio = [];
     this.commandTracksVideo = [];
     this.commandList = [];
+
+    this.FORMAT = {
+        MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
+        AVI : {ext : 'avi', codec : null},
+        OGG : {ext : 'ogg', codec : null},
+        WEBM : {ext : 'webm', codec : null},
+        TS : {ext : 'ts' , codec : null},
+        X264 : {ext : 'mp4', codec : 'x264'}
+    };
+
+    this.userFormat = format || this.FORMAT.MPEG4;
+    console.log(this.userFormat);
 
     this.t = 0;
     for (t = 0; t < this.tracks.length; t++) {
@@ -91,9 +103,9 @@ RenderP = function () {
 
 
     // merge audio and video
-
+    console.log("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
     //Upload the command File
-    this.commandList.push("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c copy final.mp4")
+    this.commandList.push("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
     this.uploadCommands();
 };
 RenderP.prototype.addCommandV = function (e) {
