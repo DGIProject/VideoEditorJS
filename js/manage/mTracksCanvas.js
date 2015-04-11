@@ -250,6 +250,8 @@ function mouseMoveTracks(e) {
 function setPropertiesParent(trackParent, element) {
     if(element.parent >= 0)
     {
+        var rowParentTrack = rowById(trackParent, currentProject.tabListTracks);
+
         var parentTrack = currentProject.tabListTracks[rowById(trackParent, currentProject.tabListTracks)];
         var parentElement = parentTrack.tabElements[rowById(element.parent, parentTrack.tabElements)];
 
@@ -259,18 +261,21 @@ function setPropertiesParent(trackParent, element) {
 
         parentElement.leftGap = element.leftGap;
         parentElement.rightGap = element.rightGap;
+
+        drawElements(rowParentTrack);
     }
 }
 
 //en fonction de la position de la souris, détection de l'élément survolé et renvoi de son rang dans le tableau aussi non renvoi de -1
 function rowElement(x, row) {
+    deselectAllElements();
+
     var track = currentProject.tabListTracks[row];
     var currentRow = -1;
 
     var rowParentTrack, rowParentElement;
 
-    for(var i = 0; i < track.tabElements.length; i++)
-    {
+    for(var i = 0; i < track.tabElements.length; i++) {
         if(track.tabElements[i].marginLeft <= x && (track.tabElements[i].marginLeft + track.tabElements[i].width) >= x)
         {
             currentRow = i;
@@ -282,27 +287,23 @@ function rowElement(x, row) {
                 rowParentElement = rowById(track.tabElements[i].parent, currentProject.tabListTracks[rowParentTrack].tabElements);
 
                 if(rowParentElement >= 0) {
+                    currentProject.tabListTracks[rowParentTrack].currentRow = rowParentElement;
                     currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = true;
-                }
-            }
-        }
-        else
-        {
-            track.tabElements[i].selected = false;
-
-            if(track.tabElements[i].parent >= 0)
-            {
-                rowParentTrack = rowById(track.parent, currentProject.tabListTracks);
-                rowParentElement = rowById(track.tabElements[i].parent, currentProject.tabListTracks[rowParentTrack].tabElements);
-
-                if(rowParentElement >= 0) {
-                    currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = false;
                 }
             }
         }
     }
 
     return currentRow;
+}
+
+function deselectAllElements() {
+    for(var i = 0; i < currentProject.tabListTracks.length; i++) {
+        for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++) {
+            currentProject.tabListTracks[i].currentRow = -1;
+            currentProject.tabListTracks[i].tabElements[x].selected = false;
+        }
+    }
 }
 
 //Dessiner les élements sur chaque piste
