@@ -50,7 +50,7 @@ imageClose.onload = function() {
     console.log('loaded close');
 };
 
-imageClose.src = 'http://clangue.net/other/testVideo/img/close.png';
+imageClose.src = 'http://clangue.net/other/testVideo/img/remove.png';
 
 window.onload = function() {
     $('#startLoadingEditor').modal('show');

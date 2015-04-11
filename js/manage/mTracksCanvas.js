@@ -86,9 +86,7 @@ function analyzeCollision() {
 
 //Le bouton gauche de la souris est enfoncé, on précise sur quelle piste , lorsqu'un élément est séléctionné, l'écart entre le dépuis de l'élément et la souris
 function mouseDownTracks(e) {
-    console.log(e.button);
-
-    if(e.button == 1) {
+    if(e.button == 0) {
         var x = ((e.offsetX == undefined)?e.layerX:e.offsetX);
         var row = rowById(parseInt(this.id.replace('elementView', '')), currentProject.tabListTracks);
 
@@ -119,6 +117,8 @@ function mouseMoveTracks(e) {
         //si la souris est enfoncée, alors on effecture le mode choisi aussi non on chercher en fonction de la position de la souris le mode
         if(track.mousedown)
         {
+            console.log('souris enfoncée');
+
             if(track.mode == MODE.MOVE)
             {
                 if((x - track.gap) > 0)
@@ -136,7 +136,7 @@ function mouseMoveTracks(e) {
             {
                 if((x - track.lastX) > 0)
                 {
-                    if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth) {
+                    if(track.tabElements[track.currentRow].width >= track.tabElements[track.currentRow].minWidth) {
                         if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
                         {
                             track.tabElements[track.currentRow].width--;
@@ -186,7 +186,7 @@ function mouseMoveTracks(e) {
                 }
                 else
                 {
-                    if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth) {
+                    if(track.tabElements[track.currentRow].width >= track.tabElements[track.currentRow].minWidth) {
                         if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
                         {
                             track.tabElements[track.currentRow].width--;
