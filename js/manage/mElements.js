@@ -24,6 +24,8 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
 
     var elementId = (track1.tabElements.length > 0) ? track1.tabElements[track1.tabElements.length - 1].id + 1 : 0;
 
+    var color = randomColor();
+
     var marginLeft = 0;
     var time = {total: timeToSeconds(file.duration), begin: timeBegin};
 
@@ -38,8 +40,8 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
 
             marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: rowTrack2});
 
-            addElement(elementId, fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
-            addElement((elementId + 1), fileId, track1.parent, file.type, file.thumbnail, marginLeft, time, values);
+            addElement(elementId, fileId, trackId, file.type, file.thumbnail, color, marginLeft, time, values);
+            addElement((elementId + 1), fileId, track1.parent, file.type, file.thumbnail, color, marginLeft, time, values);
 
             setParentElements(elementId, (elementId + 1), rowTrack1, rowTrack2);
         }
@@ -52,16 +54,15 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
     {
         marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: -1});
 
-        addElement(elementId, fileId, trackId, file.type, file.thumbnail, marginLeft, time, values);
+        addElement(elementId, fileId, trackId, file.type, file.thumbnail, color, marginLeft, time, values);
     }
 }
 
-function addElement(id, fileId, trackId, type, thumbnail, marginLeft, time, values) {
+function addElement(id, fileId, trackId, type, thumbnail, color, marginLeft, time, values) {
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
 
     console.log(thumbnail);
 
-    var color = randomColor();
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
@@ -83,10 +84,10 @@ function addElement(id, fileId, trackId, type, thumbnail, marginLeft, time, valu
 }
 
 function setParentElements(id1, id2, rowTrack1, rowTrack2) {
-    console.log(id1, id2);
+    console.log(id1, id2, rowTrack1, rowTrack2);
 
-    currentProject.tabListTracks[rowTrack1].tabElements[rowById(id1, currentProject.tabListTracks[rowTrack1])].setParent(id2);
-    currentProject.tabListTracks[rowTrack2].tabElements[rowById(id2, currentProject.tabListTracks[rowTrack2])].setParent(id1);
+    currentProject.tabListTracks[rowTrack1].tabElements[rowById(id1, currentProject.tabListTracks[rowTrack1].tabElements)].setParent(id2);
+    currentProject.tabListTracks[rowTrack2].tabElements[rowById(id2, currentProject.tabListTracks[rowTrack2].tabElements)].setParent(id1);
 }
 
 function gMarginLeft(isVideoAudio, rows) {

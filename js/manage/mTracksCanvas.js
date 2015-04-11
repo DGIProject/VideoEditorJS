@@ -117,8 +117,6 @@ function mouseMoveTracks(e) {
         //si la souris est enfoncée, alors on effecture le mode choisi aussi non on chercher en fonction de la position de la souris le mode
         if(track.mousedown)
         {
-            console.log('souris enfoncée');
-
             if(track.mode == MODE.MOVE)
             {
                 if((x - track.gap) > 0)
