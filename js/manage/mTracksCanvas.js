@@ -53,6 +53,7 @@ function analyzeCollision() {
                         element.width = selectedElement.marginLeft - element.marginLeft;
 
                         addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, {resize: true, width: widthNewElement, leftGap: selectedElement.width}, (element.parent >= 0));
+                        setPropertiesParent(track.parent, track.tabElements[i]);
                     }
 
                     if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
@@ -63,6 +64,8 @@ function analyzeCollision() {
 
                         track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
                         track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
+
+                        setPropertiesParent(track.parent, track.tabElements[i]);
                     }
 
                     if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
@@ -72,6 +75,8 @@ function analyzeCollision() {
                         track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
 
                         track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
+
+                        setPropertiesParent(track.parent, track.tabElements[i]);
                     }
                 }
             }
@@ -264,16 +269,34 @@ function rowElement(x, row) {
     var track = currentProject.tabListTracks[row];
     var currentRow = -1;
 
+    var rowParentTrack, rowParentElement;
+
     for(var i = 0; i < track.tabElements.length; i++)
     {
         if(track.tabElements[i].marginLeft <= x && (track.tabElements[i].marginLeft + track.tabElements[i].width) >= x)
         {
             currentRow = i;
             track.tabElements[i].selected = true;
+
+            if(track.tabElements[i].parent >= 0)
+            {
+                rowParentTrack = rowById(track.parent, currentProject.tabListTracks);
+                rowParentElement = rowById(track.tabElements[i].parent, currentProject.tabListTracks[rowParentTrack].tabElements);
+
+                currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = true;
+            }
         }
         else
         {
             track.tabElements[i].selected = false;
+
+            if(track.tabElements[i].parent >= 0)
+            {
+                rowParentTrack = rowById(track.parent, currentProject.tabListTracks);
+                rowParentElement = rowById(track.tabElements[i].parent, currentProject.tabListTracks[rowParentTrack].tabElements);
+
+                currentProject.tabListTracks[rowParentTrack].tabElements[rowParentElement].selected = false;
+            }
         }
     }
 
