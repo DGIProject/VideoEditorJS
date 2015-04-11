@@ -27,8 +27,7 @@ function addTrack(type) {
     elementView.id = 'elementView' + trackId;
     elementView.classList.add('singleTrack');
 
-    elementView.onmousedown = mouseDown;
-    //elementView.onmousemove = mouseMove;
+    elementView.onmousedown = mouseDownTracks;
 
     elementView.ondragover = allowDrop;
     elementView.ondrop = dropFile;

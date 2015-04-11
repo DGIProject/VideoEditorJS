@@ -16,7 +16,7 @@ Element = function(id, type, thumbnail, color, duration, fileId, trackId, margin
     this.currentDuration = this.totalDuration - this.beginDuration;
 
     this.width = this.calculateWidth();
-    this.minWidth = 20;
+    this.minWidth = 5;
     this.maxWidth = this.width;
 
     this.marginLeft = marginLeft;
