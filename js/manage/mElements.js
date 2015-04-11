@@ -40,10 +40,8 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
 
             marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: rowTrack2});
 
-            addElement(elementId, fileId, trackId, file.type, file.thumbnail, color, marginLeft, time, values);
-            addElement((elementId + 1), fileId, track1.parent, file.type, file.thumbnail, color, marginLeft, time, values);
-
-            setParentElements(elementId, (elementId + 1), rowTrack1, rowTrack2);
+            addElement(elementId, fileId, trackId, file.type, file.thumbnail, color, marginLeft, time, values, (elementId + 1));
+            addElement((elementId + 1), fileId, track1.parent, file.type, file.thumbnail, color, marginLeft, time, values, elementId);
         }
         else
         {
@@ -54,19 +52,20 @@ function addElementTrack(fileId, trackId, nMarginLeft, timeBegin, values, parent
     {
         marginLeft = (nMarginLeft >= 0) ? nMarginLeft : gMarginLeft((file.isVideo && file.isAudio), {row1: rowTrack1, row2: -1});
 
-        addElement(elementId, fileId, trackId, file.type, file.thumbnail, color, marginLeft, time, values);
+        addElement(elementId, fileId, trackId, file.type, file.thumbnail, color, marginLeft, time, values, -1);
     }
 }
 
-function addElement(id, fileId, trackId, type, thumbnail, color, marginLeft, time, values) {
-    var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
+function addElement(id, fileId, trackId, type, thumbnail, color, marginLeft, time, values, parent) {
+    var rowTrack = rowById(trackId, currentProject.tabListTracks);
+    var track = currentProject.tabListTracks[rowTrack];
 
     console.log(thumbnail);
 
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        var element = new Element(id, type, imageThumbnail, color, {total: time.total, begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}));
+        var element = new Element(id, type, imageThumbnail, color, {total: time.total, begin: time.begin}, fileId, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), parent);
 
         if(values.resize) {
             element.width = values.width;
@@ -81,13 +80,6 @@ function addElement(id, fileId, trackId, type, thumbnail, color, marginLeft, tim
     };
 
     imageThumbnail.src = ((track.type == TYPE.VIDEO) ? thumbnail.i : thumbnail.a);
-}
-
-function setParentElements(id1, id2, rowTrack1, rowTrack2) {
-    console.log(id1, id2, rowTrack1, rowTrack2);
-
-    currentProject.tabListTracks[rowTrack1].tabElements[rowById(id1, currentProject.tabListTracks[rowTrack1].tabElements)].setParent(id2);
-    currentProject.tabListTracks[rowTrack2].tabElements[rowById(id2, currentProject.tabListTracks[rowTrack2].tabElements)].setParent(id1);
 }
 
 function gMarginLeft(isVideoAudio, rows) {

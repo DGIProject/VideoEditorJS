@@ -1,4 +1,4 @@
-Element = function(id, type, thumbnail, color, duration, fileId, trackId, marginLeft, properties) {
+Element = function(id, type, thumbnail, color, duration, fileId, trackId, marginLeft, properties, parent) {
     this.id = id;
 
     this.fileId = fileId;
@@ -24,15 +24,11 @@ Element = function(id, type, thumbnail, color, duration, fileId, trackId, margin
     this.leftGap = 0;
     this.rightGap = 0;
 
-    this.parent = -1;
+    this.parent = parent;
 
     this.selected = true;
 };
 
 Element.prototype.calculateWidth = function() {
     return this.currentDuration * oneSecond;
-};
-
-Element.prototype.setParent = function(parent) {
-    this.parent = parent;
 };
