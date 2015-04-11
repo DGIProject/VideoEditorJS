@@ -37,7 +37,13 @@ window.onclick = function() {
 
 window.onmouseup = function(e) {
     if(currentProject) {
-        mouseUp(e);
+        analyzeCollision();
+    }
+};
+
+window.onmousemove = function(e) {
+    if(currentProject) {
+        mouseMoveTracks(e);
     }
 };
 

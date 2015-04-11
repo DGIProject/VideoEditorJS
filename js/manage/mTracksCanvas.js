@@ -81,3 +81,152 @@ function analyzeCollision() {
         drawElements(x);
     }
 }
+
+function mouseDownTracks(e) {
+
+}
+
+function mouseMoveTracks(e) {
+    if(e.target.nodeName == 'CANVAS') {
+        var id = parseInt(e.target.id.replace('elementView', ''));
+        //console.log(id);
+
+        if(id == undefined)
+            return;
+
+        var row = rowById(id, currentProject.tabListTracks);
+
+        var track = currentProject.tabListTracks[row];
+
+        var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX);
+        var y = e.clientY - $('#' + e.target.id).offset().top;
+
+        if(track.mousedown)
+        {
+            if(track.mode == MODE.MOVE)
+            {
+                if((x - track.gap) > 0)
+                {
+                    track.tabElements[track.currentRow].marginLeft = x - track.gap;
+                }
+                else
+                {
+                    track.tabElements[track.currentRow].marginLeft = 0;
+                }
+
+                setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
+            }
+            else if(track.mode == MODE.RESIZE.LEFT)
+            {
+                if((x - track.lastX) > 0)
+                {
+                    if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth) {
+                        if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
+                        {
+                            track.tabElements[track.currentRow].width--;
+                            track.tabElements[track.currentRow].marginLeft++;
+                        }
+                        else
+                        {
+                            track.tabElements[track.currentRow].width--;
+                            track.tabElements[track.currentRow].marginLeft++;
+
+                            track.tabElements[track.currentRow].leftGap++;
+                        }
+                    }
+                }
+                else
+                {
+                    if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
+                    {
+                        track.tabElements[track.currentRow].width++;
+                        track.tabElements[track.currentRow].marginLeft--;
+                    }
+                    else if(track.tabElements[track.currentRow].leftGap > 0)
+                    {
+                        track.tabElements[track.currentRow].width++;
+                        track.tabElements[track.currentRow].marginLeft--;
+
+                        track.tabElements[track.currentRow].leftGap--;
+                    }
+                }
+
+                track.lastX = x;
+
+                setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
+            }
+            else if(track.mode == MODE.RESIZE.RIGHT)
+            {
+                if((x - track.lastX) > 0)
+                {
+                    if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
+                    {
+                        track.tabElements[track.currentRow].width++;
+                    }
+                    else if(track.tabElements[track.currentRow].rightGap > 0 )
+                    {
+                        track.tabElements[track.currentRow].width++;
+
+                        track.tabElements[track.currentRow].rightGap--;
+                    }
+
+                }
+                else
+                {
+                    if (track.tabElements[track.currentRow].type == TYPE.TEXT || track.tabElements[track.currentRow].type == TYPE.IMAGE)
+                    {
+                        track.tabElements[track.currentRow].width--;
+                    }
+                    else if(track.tabElements[track.currentRow].width > track.tabElements[track.currentRow].minWidth)
+                    {
+                        track.tabElements[track.currentRow].width--;
+
+                        track.tabElements[track.currentRow].rightGap++;
+                    }
+                }
+
+                track.lastX = x;
+
+                setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
+            }
+        }
+        else
+        {
+            track.currentRow = rowElement(x, row);
+
+            if(track.currentRow >= 0)
+            {
+                if(x >= (track.tabElements[track.currentRow].marginLeft - 2) && x <= (track.tabElements[track.currentRow].marginLeft + 2))
+                {
+                    track.mode = MODE.RESIZE.LEFT;
+                    track.canvas.element.style.cursor = 'w-resize';
+                }
+                else if(x >= (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width - 2) && x <= (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width + 2))
+                {
+                    track.mode = MODE.RESIZE.RIGHT;
+                    track.canvas.element.style.cursor = 'w-resize';
+                }
+                else if(track.tabElements[track.currentRow].width >= 16 && x >= ((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - 15) && x <= (((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - 2)) && y <= 10)
+                {
+                    track.mode = MODE.REMOVE;
+                    track.canvas.element.style.cursor = 'pointer';
+                }
+                else
+                {
+                    track.mode = MODE.MOVE;
+                    track.canvas.element.style.cursor = 'all-scroll';
+                }
+            }
+            else
+            {
+                if(!track.mousedown)
+                {
+                    track.mode = MODE.NONE;
+                    track.canvas.element.style.cursor = 'default';
+                }
+            }
+        }
+    }
+
+    drawElementsTracks();
+}
