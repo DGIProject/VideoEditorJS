@@ -5,15 +5,15 @@
 function newRecord(type) {
     if(type == TYPE.VIDEO)
     {
-        eId('audioRecord').style.display = 'none';
-        eId('videoRecord').style.display = 'initial';
+        eId('audio').style.display = 'none';
+        eId('video').style.display = 'initial';
 
         para = {video:true, audio:true};
     }
     else
     {
-        eId('videoRecord').style.display = 'none';
-        eId('audioRecord').style.display = 'initial';
+        eId('video').style.display = 'none';
+        eId('audio').style.display = 'initial';
 
         para = {video:false,audio:true};
     }
@@ -68,6 +68,7 @@ function captureUserMedia(callback) {
         video.play();
         callback(stream);
     }, function (error) {
+        $("#waitRecordRTCModal").modal('hide');
         console.error(error);
     });
 }
@@ -75,10 +76,10 @@ startRecordingbtn.onclick = function () {
     startRecordingbtn.disabled = true;
     stopRecordingbtn.disabled = false;
     playPause.disabled = true;
-
+    $("#waitRecordRTCModal").modal('show');
     console.log(para);
     captureUserMedia(function (stream) {
-
+        $("#waitRecordRTCModal").modal('hide');
         if (isFirefox)
         {
             window.audioVideoRecorder = window.RecordRTC(stream, {
@@ -211,7 +212,10 @@ document.getElementById('buttonSaveRecord').onclick = function()
        /*
         document.getElementById('videoRecorderErrorText').style.display = 'none';
         $('#recordAudioOrVideoElement').modal('hide');*/
-        var fileName = (document.getElementById('fileName').value+".webm").deleteAccent().replace(new RegExp(' ', 'g'), '_');
+
+
+
+        var fileName = (document.getElementById('fileName').value+"."+videoRecorderResult.type.split('/')[1]).deleteAccent().replace(new RegExp(' ', 'g'), '_');
         console.log(fileName);
 
         var typeFile = getTypeFile(fileName);

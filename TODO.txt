@@ -1,4 +1,4 @@
-TODO : AUDIO & VIDEO recording
+TODO : Fix bugs VIDEO and AUDIO recording FFMPEG
 TODO : between collision
 TODO : local project
 TODO : save & load project
