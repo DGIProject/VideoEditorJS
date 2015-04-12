@@ -101,7 +101,7 @@ function listAvailableRenderFiles()
             var url2 = remoteAPIPath + 'php/videoFileManagement.php?action=read&id='+jsonRep[i]+'&projectName='+currentProject.name;
             li=document.createElement("li");
             li.setAttribute("class","list-group-item");
-            li.innerHTML = '<a href="'+url2+'" target="_blank">'+jsonRep[i]+'</a><button class="btn btn-xs btn-danger pull-right" type="button"><span class="glyphicon glyphicon-remove"></span></button><button class="btn btn-xs btn-default pull-right" type="button"><span class="glyphicon glyphicon-play"></span></button>'
+            li.innerHTML = '<a href="'+url2+'" target="_blank">'+jsonRep[i]+'</a><button class="btn btn-xs btn-danger pull-right" onclick="deleteRender(\''+jsonRep[i]+'\')" type="button"><span class="glyphicon glyphicon-remove"></span></button><button onclick="viewVideoFile(\''+jsonRep[i]+'\')" class="btn btn-xs btn-default pull-right" type="button"><span class="glyphicon glyphicon-play"></span></button>'
             ul.appendChild(li);
         }
 
@@ -111,3 +111,28 @@ function listAvailableRenderFiles()
     xhr.send();
 }
 
+function deleteRender(id)
+{
+    var url = remoteAPIPath + 'php/videoFileManagement.php?action=delete&id='+id+'&projectName='+currentProject.name;
+
+    var xhr = createCORSRequest('GET', url);
+
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+
+    xhr.onload = function() {
+        console.log(xhr.responseText);
+        listAvailableRenderFiles();
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send();
+}
+function viewVideoFile(id)
+{
+    document.getElementById('videoRender').src = remoteAPIPath + 'php/videoFileManagement.php?action=read&id='+id.split(".")[0]+'_WEB.mp4'+'&projectName='+currentProject.name;
+    $("#viewRenderModal").modal('show');
+
+}

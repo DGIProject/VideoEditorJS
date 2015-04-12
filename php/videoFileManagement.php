@@ -23,8 +23,12 @@ function listFiles($project)
     {
         if($file != '.' && $file != '..' && !is_dir($path . $file))
         {
-            $tabListVideoFile[$i] = $file;
-            $i++;
+            if(is_numeric(explode(".",$file)[0]))
+            {
+                $tabListVideoFile[$i] = $file;
+                $i++  ;
+            }
+
         }
     }
 
@@ -59,6 +63,7 @@ function deleteFile($project, $id)
     global $DIR_projectsData;
     $path = '../' . $DIR_projectsData .$project . '/RENDER_DATA/';
     unlink($path.basename($id));
+    unlink($path.basename(explode(".",$id)[0]."_WEB.".explode(".",$id)[1]));
 }
 
 switch ($_GET['action'])
@@ -71,7 +76,6 @@ switch ($_GET['action'])
         break;
     case "delete":
         deleteFile($_GET['projectName'],$_GET['id']);
-        listFiles($_GET['projectName']);
         break;
     default:
         echo "Missing args";

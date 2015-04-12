@@ -106,6 +106,11 @@ RenderP = function (format) {
     console.log("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
     //Upload the command File
     this.commandList.push("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
+    if (this.FORMAT[this.userFormat].codec != this.FORMAT.X264.codec)
+    {
+        this.commandList.push("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" final_WEB."+this.FORMAT.X264.ext);
+    }
+
     this.uploadCommands();
 };
 RenderP.prototype.addCommandV = function (e) {

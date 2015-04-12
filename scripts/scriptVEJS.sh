@@ -49,9 +49,12 @@ do
 	cd "$DIR"
 	mv "RENDER.ffm" "RENDER.ok"
 	cd "RENDER_DATA"
-	FILENAME=$(ls $TEMPDIR | grep "final*");
+	FILENAME=$(ls $TEMPDIR | grep "final.*");
 	CURDATE=$(date +%s)
 	cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
+    cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
+    FILENAME=$(ls $TEMPDIR | grep "final_WEB.*");
+    cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
     cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
 	VALUE="action=update&id=$ID&content={\"totcmd\":$LN,\"actual\":$AV,\"startTime\":\"$DATE\", \"filename\":\"$CURDATE.${FILENAME##*.}\"}"
     echo "updating Stat"
