@@ -6,16 +6,22 @@ function newRecord(type) {
     if(type == TYPE.VIDEO)
     {
         eId('audio').style.display = 'none';
-        eId('video').style.display = 'initial';
+        eId('video').style.display = '';
 
         para = {video:true, audio:true};
+        console.log('vid !!')
+        playElement = document.getElementById('video');
     }
     else
     {
         eId('video').style.display = 'none';
-        eId('audio').style.display = 'initial';
+        eId('audio').style.display = '';
+
+        console.log('audio !!')
+
 
         para = {video:false,audio:true};
+        playElement = document.getElementById('audio');
     }
     
     eId('buttonSaveRecord').disabled = true;
@@ -41,31 +47,28 @@ playPause.disabled = true;
 var startRecordingbtn = document.getElementById('recordVideoButton');
 var stopRecordingbtn = document.getElementById('stopRecordVideoButton');
 
-playPause.onclick = function()
-{
+playPause.onclick = function(){
 
-    if(document.getElementById('video').paused) {
-        document.getElementById('video').play();
+    if(playElement.paused) {
+        playElement.play();
         document.getElementById('spanPlayPause').className = "glyphicon glyphicon-play";
     }
     else
     {
-        document.getElementById('video').pause();
+        playElement.pause();
         document.getElementById('spanPlayPause').className = "glyphicon glyphicon-pause";
     }
 
 
-}
-
-
+};
 function captureUserMedia(callback) {
     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
     playPause.removeAttribute("disabled");
     navigator.getUserMedia(para, function (stream) {
-        video.src = URL.createObjectURL(stream);
+        playElement.src = URL.createObjectURL(stream);
         localStream = stream;
-        video.muted = true;
-        video.play();
+        playElement.muted = true;
+        playElement.play();
         callback(stream);
     }, function (error) {
         $("#waitRecordRTCModal").modal('hide');
@@ -76,6 +79,8 @@ startRecordingbtn.onclick = function () {
     startRecordingbtn.disabled = true;
     stopRecordingbtn.disabled = false;
     playPause.disabled = true;
+    playElement.muted = true;
+
     $("#waitRecordRTCModal").modal('show');
     console.log(para);
     captureUserMedia(function (stream) {
@@ -114,15 +119,15 @@ startRecordingbtn.onclick = function () {
 stopRecordingbtn.onclick = function () {
 
     document.getElementById('buttonSaveRecord').style.display = '';
-
     stopRecordingbtn.disabled = true;
     startRecordingbtn.removeAttribute("disabled");
     playPause.removeAttribute("disabled");
     //recorder.getBlob(); // to get get a blob of what has been recorded ...
     window.audioVideoRecorder.stopRecording(function (url) {
         console.log(url);
-        document.getElementById('video').src = url;
-        // video.muted = false;
+        playElement.muted = false;
+        playElement.src = url;
+
         videoRecorderResult = window.audioVideoRecorder.getBlob();
 
         if (isChrome) {
@@ -205,8 +210,7 @@ stopRecordingbtn.onclick = function () {
     });
 
 };
-document.getElementById('buttonSaveRecord').onclick = function()
-{
+document.getElementById('buttonSaveRecord').onclick = function(){
     if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0)
     {
        /*
@@ -224,14 +228,65 @@ document.getElementById('buttonSaveRecord').onclick = function()
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
 
         var oReq = new XMLHttpRequest();
-        oReq.open("GET",document.getElementById('video').src , true);
+        oReq.open("GET",playElement.src , true);
         oReq.responseType = "arraybuffer";
 
         oReq.onload = function (oEvent) {
             var arrayBuffer = oReq.response;
             if (arrayBuffer) {
-                loadM();
-                fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
+                //loadM();
+
+                if (videoRecorderResult.type.split('/')[0] == "video")
+                {
+                    console.log("This is a videoFile -> convert to avi/mp4");
+                    var ElementData = new Uint8Array(arrayBuffer);
+                    terminal.Files.push({name: fileName, data: ElementData});
+
+                    var newFileName = (document.getElementById('fileName').value+".avi");
+                    loadM();
+                    terminal.processCmd("ffmpeg -i "+fileName+" "+newFileName, function (e, index){
+                        var message = e.data;
+
+                        if (message.type == "stdout") {
+                            console.log(message.text);
+                        }
+                        else if (message.type == "stop") {
+                            console.log("Executed in " + message.time + "ms");
+                            if (message.hasOwnProperty("data")) {
+                                window.URL = window.URL || window.webkitURL;
+                                var buffers = message.data;
+                                buffers.forEach(function (file) {
+                                    var blob = new Blob([file.data]);
+                                    var audioUrl = URL.createObjectURL(blob);
+                                    console.log("mp4 video -> ",audioUrl);
+
+                                    var reader = new FileReader();
+                                    reader.addEventListener("loadend", function() {
+                                        loadM();
+                                        $('#recordAudioOrVideoElement').modal('hide');
+                                        fileProcessing(fileId,typeFile,blob.size.size,newFileName, reader.result);
+                                    });
+                                    reader.readAsArrayBuffer(blob);
+
+                                });
+                            }
+
+                            terminal.Workers[index].worker.terminate();
+                        }
+                    });
+
+
+
+                    //fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
+
+                }
+
+                /*
+                 * Currently not working for audio. libopus that is used in firefox,
+                 * is not included in our version of ffmepg.
+                 * TODO : We have to recomile FFMPEG.js and make these lib available.
+                 */
+                //fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
             }
         };
 
@@ -243,9 +298,7 @@ document.getElementById('buttonSaveRecord').onclick = function()
 
     }
 };
-
-document.getElementById('fileName').onkeyup = function()
-{
+document.getElementById('fileName').onkeyup = function(){
     if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0) {
         eId('buttonSaveRecord').removeAttribute("disabled");
     }

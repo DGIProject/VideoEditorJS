@@ -1,4 +1,4 @@
-TODO : Fix bugs VIDEO and AUDIO recording FFMPEG
-TODO : between collision
+TODO : Fix bugs AUDIO recording FFMPEG
 TODO : local project
 TODO : save & load project
+TODO : Rebuild FFMEPG with new libs ( libopus libogg )
