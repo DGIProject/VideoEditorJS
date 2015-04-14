@@ -1,4 +1,3 @@
-TODO : Fix bugs AUDIO recording FFMPEG
 TODO : local project
 TODO : save & load project
-TODO : Rebuild FFMEPG with new libs ( libopus libogg )
+TODO : fix bug when adding audioVideo file and there is no place on track !

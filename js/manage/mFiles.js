@@ -184,7 +184,7 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
             }
             else
             {
-                if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
+                if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio && fileName.split(".").pop().toLowerCase() !=  "ogg")
                 {
                     terminal.processCmd("ffmpeg -i " + fileName + " audioDat.wav", function (e, index) {
 
@@ -233,6 +233,33 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
                         }
                     });
                 }
+                else if (fileName.split(".").pop().toLowerCase() ==  "ogg")
+                {
+                    var wavesurfer = Object.create(WaveSurfer);
+                    var blob = new Blob([arrayBuffer]);
+                    var url = URL.createObjectURL(blob);
+
+                    wavesurfer.on('ready', function () {
+                        //wavesurfer.play();
+                        var canvas = findFirstDescendant("waveform", "canvas");
+                        canvas.toBlob(function(blob) {
+                            url = URL.createObjectURL(blob);
+                            console.log("wavefor URL", url);
+                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileName, blob, 'THUMBNAIL_A');
+                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
+                        }, "image/png");
+
+                        wavesurfer.destroy();
+
+                    });
+
+                    wavesurfer.init({
+                        container     : document.querySelector('#waveform'),
+                        waveColor     : '#4d4d4d',
+                        progressColor : '#4d4d4d'
+                    });
+                    wavesurfer.load(url);
+                }
                 else{
                     loadM();
                     currentProject.switchAutoSave();
@@ -249,7 +276,7 @@ function getTypeFile(fileName) {
     var extension = fileName.split('.').reverse()[0];
     console.log(extension);
 
-    var tabExtensionAudio = ['mp3', 'wav', 'wmv'];
+    var tabExtensionAudio = ['mp3', 'wav', 'wmv', 'ogg'];
     var tabExtensionVideo = ['avi', 'mp4', 'wma', 'flv', 'webm'];
     var tabExtensionImage = ['png', 'jpg', 'jpeg', 'gif'];
 

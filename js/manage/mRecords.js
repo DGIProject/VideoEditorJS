@@ -280,13 +280,10 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     //fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
 
                 }
-
-                /*
-                 * Currently not working for audio. libopus that is used in firefox,
-                 * is not included in our version of ffmepg.
-                 * TODO : We have to recomile FFMPEG.js and make these lib available.
-                 */
-                //fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
+                else
+                {
+                    fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
+                }
             }
         };
 
