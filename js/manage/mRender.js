@@ -69,7 +69,7 @@ function makeRender(format) {
 
         format = document.getElementById("renderFormat").options[document.getElementById("renderFormat").selectedIndex].value;
         console.log("format", format);
-        new RenderP(format);
+       renderVar = new RenderP(format);
     }
     else
     {

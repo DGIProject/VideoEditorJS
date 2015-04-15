@@ -45,7 +45,7 @@ RenderP = function (format) {
                     var cmd;
                     cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts";
                     this.commandList.push(cmd);
-                    this.commands[t].push(cmd);
+                    this.commands[this.t].push(cmd);
 
                 }
 
