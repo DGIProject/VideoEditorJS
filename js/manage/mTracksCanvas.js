@@ -11,19 +11,21 @@ function analyzeCollision() {
     {
         var track = currentProject.tabListTracks[x];
         track.mousedown = false;
+
+        var currentRow = track.currentRow;
         
-        if(track.currentRow >= 0)
+        if(currentRow >= 0)
         {
-            console.log(track.currentRow);
+            console.log(currentRow);
 
             //Détection de l'élément séléctionné s'il y en a un
-            var selectedElement = track.tabElements[track.currentRow];
+            var selectedElement = track.tabElements[currentRow];
 
             //Suppression de l'élément si c'est le mode choisi par l'utilisateur
             if(track.mode == MODE.REMOVE)
             {
                 rLog('-CANVASTRACK- remove mode');
-                deleteElement(x, track.currentRow);
+                deleteElement(x, currentRow);
             }
 
             //Vérification pour chaque élément s'il y a une collision
@@ -55,25 +57,25 @@ function analyzeCollision() {
                         setPropertiesParent(track.parent, track.tabElements[i]);
                     }
 
-                    if((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                    if((track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
                     {
                         rLog('-CANVASTRACK- collision before');
 
-                        track.tabElements[i].leftGap += (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - track.tabElements[i].marginLeft;
+                        track.tabElements[i].leftGap += (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width) - track.tabElements[i].marginLeft;
 
-                        track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width);
-                        track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width));
+                        track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width);
+                        track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width));
 
                         setPropertiesParent(track.parent, track.tabElements[i]);
                     }
 
-                    if(track.tabElements[track.currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[track.currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                    if(track.tabElements[currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
                     {
                         rLog('-CANVASTRACK- collision after');
 
-                        track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[track.currentRow].marginLeft;
+                        track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[currentRow].marginLeft;
 
-                        track.tabElements[i].width = track.tabElements[track.currentRow].marginLeft - track.tabElements[i].marginLeft;
+                        track.tabElements[i].width = track.tabElements[currentRow].marginLeft - track.tabElements[i].marginLeft;
 
                         setPropertiesParent(track.parent, track.tabElements[i]);
                     }
