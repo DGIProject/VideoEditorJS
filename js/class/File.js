@@ -17,7 +17,11 @@ File = function(id, type, size, fileName, format) {
 
     this.thumbnail = {i: null, a: null};
 
-    this.isUploaded = false;
+    this.isUploaded = {
+        i: -1,
+        a: -1,
+        file: 0
+    };
 };
 
 File.prototype.makeVideo = function() {
@@ -28,27 +32,24 @@ File.prototype.makeAudio = function() {
     this.isAudio = true;
 };
 
-File.prototype.setDuration = function(duration)
-{
+File.prototype.setDuration = function(duration) {
     this.duration = duration;
 };
 
-File.prototype.isEditing = function()
-{
+File.prototype.isEditing = function() {
     return this.type == TYPE.TEXT;
 };
 
-File.prototype.setProperties = function(properties)
-{
+File.prototype.setProperties = function(properties) {
     this.properties = properties;
 };
 
-File.prototype.setThumbnailImage = function(blobImageUrl)
-{
+File.prototype.setThumbnailImage = function(blobImageUrl) {
     this.thumbnail.i = blobImageUrl;
+    this.isUploaded.i = 0;
 };
 
-File.prototype.setThumbnailAudio = function(blobImageUrl)
-{
+File.prototype.setThumbnailAudio = function(blobImageUrl) {
     this.thumbnail.a = blobImageUrl;
+    this.isUploaded.a = 0;
 };

@@ -321,6 +321,12 @@ function addFileList(fileId, fileName, typeFile) {
             iconName = 'glyphicon-file';
     }
 
+    var toolsFile = 'Ready!';
+
+    if(!isAllUploaded(fileId)) {
+        toolsFile = '<button type="button" onclick="errorUploadFileModal(' + fileId + ');" class="btn btn-primary">Erreur envoi</button>';
+    }
+
     var fileE = document.createElement('a');
     fileE.id = 'file' + fileId;
     fileE.draggable = true;
@@ -329,7 +335,7 @@ function addFileList(fileId, fileName, typeFile) {
     fileE.ondragstart = selectFile;
     fileE.ondragend = deselectFile;
     fileE.classList.add('list-group-item');
-    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">Ready!</div>';
+    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">' + toolsFile + '</div>';
 
     eId('listFiles').appendChild(fileE);
 }
@@ -514,37 +520,44 @@ function uploadFile(id, name, file, type) {
             else {
                 rLog('file : ' + file.name + id + name + type);
 
-                var text = '';
+                if(id >= 0) {
+                    var text = '';
 
-                if(type == 'THUMBNAIL_I')
-                {
-                    text = 'La miniature vidéo du fichier ' + name + ' a bien été envoyée.';
-                }
-                else if(type == 'THUMBNAIL_A')
-                {
-                    text = 'La miniature audio du fichier ' + name + ' a bien été envoyée.';
-                }
-                else if (type == 'RENDER')
-                {
-                    text = 'Le fichier de rendu à bien été envoyée. Il devrait être traité d\'ici peu de temps';
+                    if(type == 'THUMBNAIL_I')
+                    {
+                        currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded.i = 1;
+                        text = 'La miniature vidéo du fichier ' + name + ' a bien été envoyée.';
+                    }
+                    else if(type == 'THUMBNAIL_A')
+                    {
+                        currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded.a = 1;
+                        text = 'La miniature audio du fichier ' + name + ' a bien été envoyée.';
+                    }
+                    else if (type == 'RENDER')
+                    {
+                        text = 'Le fichier de rendu à bien été envoyée. Il devrait être traité d\'ici peu de temps';
+                    }
+                    else
+                    {
+                        currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded.file = 1;
+                        text = 'Le fichier ' + name + ' a bien été envoyé.';
+                    }
+
+                    noty({
+                        layout: 'topRight',
+                        type: 'success',
+                        text: text,
+                        timeout: '5000'
+                    });
+
+                    if(isUploadedFile(id))
+                    {
+                        eId('toolsFile' + id).innerHTML = 'Ready!';
+                    }
                 }
                 else
                 {
-                    text = 'Le fichier ' + name + ' a bien été envoyé.';
-                }
-
-                noty({
-                    layout: 'topRight',
-                    type: 'success',
-                    text: text,
-                    timeout: '5000'
-                });
-
-                if(isUploadedFile(id) && id >= 0)
-                {
-                    currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].isUploaded = true;
-
-                    eId('toolsFile' + id).innerHTML = 'Ready!';
+                    console.log('negative id');
                 }
             }
 
@@ -555,24 +568,18 @@ function uploadFile(id, name, file, type) {
     xhr.send(formData);
 }
 
-//Détection que tous les fichiers (thumbnail vidéo, thumbnail audio, fichier) ont été envoyés pour changer la valeur isUploaded dans l'object du fichier
+//Vérification que tous les fichiers (thumbnail vidéo, thumbnail audio, fichier) ont été envoyés
 function isUploadedFile(id) {
-    var isUploaded = true;
+    var file = rowById(id, currentProject.tabListFiles);
 
-    for(var i = 0; i < currentProject.tabFilesUpload.length; i++)
-    {
-        if(currentProject.tabFilesUpload[i].fileId == id && currentProject.tabFilesUpload[i].progress < 100)
-            isUploaded = false;
-    }
-
-    return isUploaded;
+    return (file.isUploaded.i == 0 || file.isUploaded.a == 0 || file.isUploaded.file == 0);
 }
 
 function isAllUploaded() {
     var isUploaded = true;
 
     for(var i = 0; i < currentProject.tabListFiles.length; i++) {
-        if(!currentProject.tabListFiles[i].isUploaded)
+        if(currentProject.tabListFiles[i].isUploaded.i == 0 || currentProject.tabListFiles[i].isUploaded.a == 0 || currentProject.tabListFiles[i].isUploaded.file == 0)
             isUploaded = false;
     }
 
