@@ -11,14 +11,15 @@ ReadFileProject = function(fileContent) {
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
 
-    this.progression = 0;
-    this.totalProgression = this.gTotalProgression();
+    //this.progression = 0;
+    //this.totalProgression = this.gTotalProgression();
 
-    this.progressInterval = setInterval(this.analyzeProgression, 500);
+    //this.progressInterval = setInterval(this.analyzeProgression, 500);
 
     rLog('ReadFileProject : start');
 };
 
+/*
 ReadFileProject.prototype.gTotalProgression = function() {
     var totalProgression = this.listFiles.length;
 
@@ -44,6 +45,11 @@ ReadFileProject.prototype.analyzeProgression = function() {
         loadM();
     }
 };
+*/
+
+ReadFileProject.prototype.loadProject = function() {
+    this.setProject();
+};
 
 ReadFileProject.prototype.setProject = function() {
     rLog('-LOAD- project : set properties');
@@ -54,38 +60,58 @@ ReadFileProject.prototype.setProject = function() {
 
     currentProject.updateText();
     currentProject.switchAutoSave();
+
+    this.setFiles(true);
 };
 
-ReadFileProject.prototype.setListFiles = function() {
-    this.countGetFiles = 0;
-    this.totalGetFiles = this.listFiles.length;
-
-    for(var i = 0; i < this.listFiles.length; i++)
+ReadFileProject.prototype.setFiles = function(start) {
+    if(start)
     {
-        rLog('-LOAD- file : ' + i);
+        this.countFiles = 0;
 
-        var file = this.listFiles[i];
-
-        var fileObject = new File(file.id, file.type, file.size, file.fileName, file.format);
-
-        if(file.isVideo)
-        {
-            fileObject.makeVideo();
-            this.getThumbnail(file.id, currentProject.tabListFiles.length, file.type);
+        if(this.listFiles.length > 0) {
+            this.getFile(0);
         }
-
-        if(file.isAudio)
-        {
-            fileObject.makeAudio();
-            this.getThumbnail(file.id, currentProject.tabListFiles.length, TYPE.AUDIO);
-        }
-
-        fileObject.setDuration(file.duration);
-
-        currentProject.tabListFiles.push(fileObject);
-
-        addFileList(file.id, file.fileName, file.type);
     }
+    else
+    {
+        if(this.countFiles < this.listFiles.length)
+        {
+            this.getFile(this.countFiles);
+        }
+        else
+        {
+            console.log('finish load files');
+        }
+    }
+};
+
+ReadFileProject.prototype.getFile = function(id) {
+    rLog('-LOAD- file : ' + id);
+
+    var file = this.listFiles[id];
+
+    $('progressionStatus').innerHTML = 'Fichier : ' + file.fileName;
+
+    var fileObject = new File(file.id, file.type, file.size, file.fileName, file.format);
+
+    if(file.isVideo)
+    {
+        fileObject.makeVideo();
+        this.getThumbnail(file.id, currentProject.tabListFiles.length, file.type);
+    }
+
+    if(file.isAudio)
+    {
+        fileObject.makeAudio();
+        this.getThumbnail(file.id, currentProject.tabListFiles.length, TYPE.AUDIO);
+    }
+
+    fileObject.setDuration(file.duration);
+
+    currentProject.tabListFiles.push(fileObject);
+
+    addFileList(file.id, file.fileName, file.type);
 };
 
 ReadFileProject.prototype.getThumbnail = function(id, row, type) {
@@ -170,6 +196,7 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
             currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
         }
 
+        /*
         readFileProject.progression++;
         readFileProject.countGetFiles++;
 
@@ -179,6 +206,10 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
 
             readFileProject.setElementsTrack();
         }
+        */
+
+        readFileProject.countFiles++;
+        readFileProject.setFiles(false);
     };
 
     oReq.send();

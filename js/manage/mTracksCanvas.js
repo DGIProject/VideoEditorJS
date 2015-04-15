@@ -107,9 +107,8 @@ function mouseDownTracks(e) {
 function mouseMoveTracks(e) {
     if(e.target.nodeName == 'CANVAS') {
         var id = parseInt(e.target.id.replace('elementView', ''));
-        //console.log(id);
 
-        if(id == undefined)
+        if(isNaN(id))
             return;
 
         var row = rowById(id, currentProject.tabListTracks);

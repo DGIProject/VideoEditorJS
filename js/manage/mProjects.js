@@ -100,11 +100,9 @@ function loadProject(fileName) {
 
         if(xhr.responseText != 'error')
         {
-            //Classe ReadFileProject qui permet d'ouvrir un projet en fonction du contenu du fichier
+            //Classe ReadFileProject qui permet d'ouvrir un projet
             readFileProject = new ReadFileProject(xhr.responseText);
-            readFileProject.setProject();
-            readFileProject.setTracks();
-            readFileProject.setListFiles();
+            readFileProject.loadProject();
         }
         else
         {
