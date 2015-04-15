@@ -72,6 +72,10 @@ ReadFileProject.prototype.setFiles = function(start) {
         if(this.listFiles.length > 0) {
             this.getFile(0);
         }
+        else
+        {
+            this.setTracks();
+        }
     }
     else
     {
@@ -82,6 +86,8 @@ ReadFileProject.prototype.setFiles = function(start) {
         else
         {
             console.log('finish load files');
+
+            this.setTracks();
         }
     }
 };

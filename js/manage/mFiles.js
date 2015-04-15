@@ -561,7 +561,7 @@ function isUploadedFile(id) {
 
     for(var i = 0; i < currentProject.tabFilesUpload.length; i++)
     {
-        if(currentProject.tabFilesUpload[i].id == id && currentProject.tabFilesUpload[i].progress < 100)
+        if(currentProject.tabFilesUpload[i].fileId == id && currentProject.tabFilesUpload[i].progress < 100)
             isUploaded = false;
     }
 
