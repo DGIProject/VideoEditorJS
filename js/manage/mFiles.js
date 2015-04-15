@@ -36,7 +36,7 @@ function addFile(currentFile) {
 
             reader.onload = function (e) {
                 loadM();
-                fileProcessing(fileId,typeFile,currentFile.size,fileName, e.target.result);
+                fileProcessing(fileId, typeFile, currentFile.size, fileName, e.target.result);
             };
 
             reader.readAsArrayBuffer(currentFile);
@@ -90,7 +90,9 @@ function fileProcessing(fileId, typeFile, fileSize, fileName, arrayBuffer)
 
                 if (message.text.search("Video") != -1) {
                     console.log("video");
-                    currentProject.tabListFiles[currentProject.tabListFiles.length - 1].makeVideo();
+                    if(typeFile != TYPE.AUDIO) {
+                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].makeVideo();
+                    }
                 }
 
             }
@@ -276,9 +278,9 @@ function getTypeFile(fileName) {
     var extension = fileName.split('.').reverse()[0];
     console.log(extension);
 
-    var tabExtensionAudio = ['mp3', 'wav', 'wmv', 'ogg'];
-    var tabExtensionVideo = ['avi', 'mp4', 'wma', 'flv', 'webm'];
-    var tabExtensionImage = ['png', 'jpg', 'jpeg', 'gif'];
+    var tabExtensionAudio = ['mp3', 'wav', 'wma', 'oga'];
+    var tabExtensionVideo = ['avi', 'mp4', 'wmv', 'flv', 'webm', 'ogv', 'ogg', 'mov' ];
+    var tabExtensionImage = ['png', 'jpg', 'jpeg', 'gif', 'bmp'];
 
     if (tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1) {
         return TYPE.AUDIO;
