@@ -36,6 +36,8 @@ ReadFileProject.prototype.setFiles = function(start) {
         this.countFiles = 0;
 
         if(this.listFiles.length > 0) {
+            eId('listFiles').innerHTML = '';
+
             this.getFile(0);
         }
         else
