@@ -11,41 +11,8 @@ ReadFileProject = function(fileContent) {
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
 
-    //this.progression = 0;
-    //this.totalProgression = this.gTotalProgression();
-
-    //this.progressInterval = setInterval(this.analyzeProgression, 500);
-
     rLog('ReadFileProject : start');
 };
-
-/*
-ReadFileProject.prototype.gTotalProgression = function() {
-    var totalProgression = this.listFiles.length;
-
-    for(var i = 0; i < this.listTracks.length; i++)
-    {
-        totalProgression += this.listTracks[i].tabElements.length;
-    }
-
-    return totalProgression;
-};
-
-ReadFileProject.prototype.analyzeProgression = function() {
-    eId('progressionBar').style.width = ((this.progression / this.totalProgression) * 100) + '%';
-    eId('progressionStatus').innerHTML = 'Chargement du projet ... (' + readFileProject.progression + '/' + readFileProject.totalProgression + ')';
-
-    if(readFileProject.progression == readFileProject.totalProgression)
-    {
-        rLog('ReadFileProject : finish');
-
-        clearInterval(readFileProject.progressInterval);
-
-        changeZoom(readFileProject.infoProject.zoom, true);
-        loadM();
-    }
-};
-*/
 
 ReadFileProject.prototype.loadProject = function() {
     this.setProject();
@@ -59,7 +26,6 @@ ReadFileProject.prototype.setProject = function() {
     currentProject.forceSave = true;
 
     currentProject.updateText();
-    //currentProject.switchAutoSave();
 
     this.setFiles(true);
 };
@@ -322,6 +288,6 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
 };
 
 ReadFileProject.prototype.finishLoadProject = function() {
-    //currentProject.switchAutoSave();
+    currentProject.switchAutoSave();
     loadM();
 };
