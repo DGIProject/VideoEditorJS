@@ -114,6 +114,7 @@ ReadFileProject.prototype.getFile = function(id) {
     }
 
     fileObject.setDuration(file.duration);
+    fileObject.isUploaded = file.isUploaded;
 
     currentProject.tabListFiles.push(fileObject);
 
@@ -121,21 +122,7 @@ ReadFileProject.prototype.getFile = function(id) {
 };
 
 ReadFileProject.prototype.getThumbnail = function(id, row, type) {
-    var fileName;
-
-    if(type == TYPE.VIDEO)
-    {
-        fileName = 'THUMBNAIL_I_' + id;
-    }
-    else if(type == TYPE.AUDIO)
-    {
-        fileName = 'THUMBNAIL_A_' + id;
-    }
-    else
-    {
-        fileName = 'FILE_' + id;
-    }
-
+    var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + id;
     var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName + '.data';
 
     /*
@@ -240,27 +227,54 @@ ReadFileProject.prototype.setTracks = function() {
         {
             lastId = (this.listTracks[i].parent >= 0) ? id : -1;
         }
+
+        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
     }
+
+    this.setElementsTrack(true);
 };
 
-ReadFileProject.prototype.setElementsTrack = function() {
-    rLog('-LOAD- elements track');
+ReadFileProject.prototype.setElementsTrack = function(start) {
+    if(start) {
+        rLog('-LOAD- elements track');
 
-    for(var i = 0; i < this.listTracks.length; i++)
-    {
-        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
+        this.countTrack = 0;
+        this.countElementsTrack = 0;
 
-        for(var y = 0; y < currentProject.tabListTracks[i].tabElements.length; y++)
+        if(this.listTracks.length > 0) {
+            this.setElementThumbnail(this.countTrack, this.countElementsTrack);
+        }
+        else
         {
-            var element = currentProject.tabListTracks[i].tabElements[y];
-            var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+            console.log('finish element track 0');
+        }
+    }
+    else
+    {
+        if(this.countElementsTrack >= this.listTracks[this.countTrack].length) {
+            this.countTrack++;
 
-            this.setElementThumbnail(element, file.thumbnail);
+            if(this.countTrack >= this.listTracks.length) {
+                console.log('finishElement');
+            }
+            else
+            {
+                this.setElementThumbnail(this.countTrack, this.countElementsTrack);
+            }
+        }
+        else
+        {
+            this.setElementThumbnail(this.countTrack, this.countElementsTrack);
         }
     }
 };
 
-ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {
+ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
+    var element = currentProject.tabListTracks[rowTrack].tabElements[rowElement];
+    var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+
+    this.setElementThumbnail(element, file.thumbnail);
+
     console.log('load thumbnail');
     console.log(element);
 
@@ -274,7 +288,8 @@ ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {
 
         element.thumbnail = imageThumbnail;
 
-        readFileProject.progression++;
+        readFileProject.countElementsTrack++;
+        readFileProject.setElementsTrack(false);
     };
 
     imageThumbnail.src = (element.type != TYPE.AUDIO) ? thumbnail.i : thumbnail.a;
