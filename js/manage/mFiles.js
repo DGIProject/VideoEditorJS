@@ -611,7 +611,7 @@ function uploadFile(id, name, file, type) {
 function isUploadedFile(id) {
     var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
 
-    return (file.isUploaded.i == 0 || file.isUploaded.a == 0 || file.isUploaded.file == 0);
+    return !(file.isUploaded.i == 0 || file.isUploaded.a == 0 || file.isUploaded.file == 0);
 }
 
 function isAllUploaded() {

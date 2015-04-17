@@ -59,7 +59,7 @@ ReadFileProject.prototype.setProject = function() {
     currentProject.forceSave = true;
 
     currentProject.updateText();
-    currentProject.switchAutoSave();
+    //currentProject.switchAutoSave();
 
     this.setFiles(true);
 };
@@ -104,24 +104,24 @@ ReadFileProject.prototype.getFile = function(id) {
     if(file.isVideo)
     {
         fileObject.makeVideo();
-        this.getThumbnail(file.id, currentProject.tabListFiles.length, file.type);
+        this.getThumbnail(file.id, currentProject.tabListFiles.length, file.type, file.isUploaded.i);
     }
 
     if(file.isAudio)
     {
         fileObject.makeAudio();
-        this.getThumbnail(file.id, currentProject.tabListFiles.length, TYPE.AUDIO);
+        this.getThumbnail(file.id, currentProject.tabListFiles.length, TYPE.AUDIO, file.isUploaded.a);
     }
 
     fileObject.setDuration(file.duration);
-    fileObject.isUploaded = file.isUploaded;
+    fileObject.isUploaded.file = file.isUploaded.file;
 
     currentProject.tabListFiles.push(fileObject);
 
-    addFileList(file.id, file.fileName, file.type);
+    setTimeout(function() { addFileList(file.id, file.fileName, file.type); }, 500);
 };
 
-ReadFileProject.prototype.getThumbnail = function(id, row, type) {
+ReadFileProject.prototype.getThumbnail = function(id, row, type, uploadStatus) {
     var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + id;
     var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName + '.data';
 
@@ -183,10 +183,12 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
         if(type == TYPE.VIDEO || type == TYPE.IMAGE || type == TYPE.TEXT)
         {
             currentProject.tabListFiles[row].setThumbnailImage(window.URL.createObjectURL(blob));
+            currentProject.tabListFiles[row].isUploaded.i = uploadStatus;
         }
         else
         {
             currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
+            currentProject.tabListFiles[row].isUploaded.a = uploadStatus;
         }
 
         /*
@@ -238,42 +240,66 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
     if(start) {
         rLog('-LOAD- elements track');
 
-        this.countTrack = 0;
+        this.countTracks = 0;
         this.countElementsTrack = 0;
 
         if(this.listTracks.length > 0) {
-            this.setElementThumbnail(this.countTrack, this.countElementsTrack);
+            console.log(this.listTracks[this.countTracks].tabElements.length);
+            if(this.listTracks[this.countTracks].tabElements.length > 0) {
+                this.setElementThumbnail(this.countTracks, this.countElementsTrack);
+            }
+            else
+            {
+                console.log('finish element track 0');
+
+                this.finishLoadProject();
+            }
         }
         else
         {
             console.log('finish element track 0');
+
+            this.finishLoadProject();
         }
     }
     else
     {
-        if(this.countElementsTrack >= this.listTracks[this.countTrack].length) {
-            this.countTrack++;
+        console.log('if: ' + this.countElementsTrack + ' - ' + this.listTracks[this.countTracks].tabElements.length);
+        if(this.countElementsTrack >= this.listTracks[this.countTracks].tabElements.length) {
+            this.countTracks++;
+            this.countElementsTrack = 0;
 
-            if(this.countTrack >= this.listTracks.length) {
+            console.log('ift: ' + this.countTracks + ' - ' + this.listTracks.length);
+            if(this.countTracks >= this.listTracks.length) {
                 console.log('finishElement');
+
+                this.finishLoadProject();
             }
             else
             {
-                this.setElementThumbnail(this.countTrack, this.countElementsTrack);
+                if(this.listTracks[this.countTracks].tabElements.length > 0) {
+                    this.setElementThumbnail(this.countTracks, this.countElementsTrack);
+                }
+                else
+                {
+                    console.log('finish element track');
+
+                    this.finishLoadProject();
+                }
             }
         }
         else
         {
-            this.setElementThumbnail(this.countTrack, this.countElementsTrack);
+            this.setElementThumbnail(this.countTracks, this.countElementsTrack);
         }
     }
 };
 
 ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
+    console.log(rowTrack, rowElement);
+
     var element = currentProject.tabListTracks[rowTrack].tabElements[rowElement];
     var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
-
-    this.setElementThumbnail(element, file.thumbnail);
 
     console.log('load thumbnail');
     console.log(element);
@@ -292,5 +318,10 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
         readFileProject.setElementsTrack(false);
     };
 
-    imageThumbnail.src = (element.type != TYPE.AUDIO) ? thumbnail.i : thumbnail.a;
+    imageThumbnail.src = (element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a;
+};
+
+ReadFileProject.prototype.finishLoadProject = function() {
+    //currentProject.switchAutoSave();
+    loadM();
 };
