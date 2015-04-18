@@ -20,8 +20,6 @@ GenerateFileProject.prototype.generateMain = function() {
         tracks.push(track);
     }
 
-    console.log(tracks, currentProject.tabListTracks);
-
     return {
         project: {
             name: this.nameProject,

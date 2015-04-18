@@ -45,7 +45,7 @@ function analyzeCollision() {
                     {
                         rLog('-CANVASTRACK- collision between');
 
-                        var newMarginLeft = selectedElement.marginLeft + selectedElement.width + 1;
+                        var newMarginLeft = selectedElement.marginLeft + selectedElement.width;
                         var widthNewElement = element.width - /*(selectedElement.width + (selectedElement.marginLeft - element.marginLeft))*/ ((selectedElement.marginLeft + selectedElement.width) - element.marginLeft);
                         var newBeginDuration = (element.beginDuration + ((selectedElement.marginLeft - element.marginLeft) / oneSecond));
 
@@ -123,7 +123,7 @@ function mouseMoveTracks(e) {
         {
             if(track.mode == MODE.MOVE)
             {
-                if((x - track.gap) > 0)
+                if((x - track.gap) >= 0)
                 {
                     track.tabElements[track.currentRow].marginLeft = x - track.gap;
                 }

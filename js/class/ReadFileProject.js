@@ -11,41 +11,8 @@ ReadFileProject = function(fileContent) {
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
 
-    //this.progression = 0;
-    //this.totalProgression = this.gTotalProgression();
-
-    //this.progressInterval = setInterval(this.analyzeProgression, 500);
-
     rLog('ReadFileProject : start');
 };
-
-/*
-ReadFileProject.prototype.gTotalProgression = function() {
-    var totalProgression = this.listFiles.length;
-
-    for(var i = 0; i < this.listTracks.length; i++)
-    {
-        totalProgression += this.listTracks[i].tabElements.length;
-    }
-
-    return totalProgression;
-};
-
-ReadFileProject.prototype.analyzeProgression = function() {
-    eId('progressionBar').style.width = ((this.progression / this.totalProgression) * 100) + '%';
-    eId('progressionStatus').innerHTML = 'Chargement du projet ... (' + readFileProject.progression + '/' + readFileProject.totalProgression + ')';
-
-    if(readFileProject.progression == readFileProject.totalProgression)
-    {
-        rLog('ReadFileProject : finish');
-
-        clearInterval(readFileProject.progressInterval);
-
-        changeZoom(readFileProject.infoProject.zoom, true);
-        loadM();
-    }
-};
-*/
 
 ReadFileProject.prototype.loadProject = function() {
     this.setProject();
@@ -59,7 +26,6 @@ ReadFileProject.prototype.setProject = function() {
     currentProject.forceSave = true;
 
     currentProject.updateText();
-    currentProject.switchAutoSave();
 
     this.setFiles(true);
 };
@@ -70,7 +36,13 @@ ReadFileProject.prototype.setFiles = function(start) {
         this.countFiles = 0;
 
         if(this.listFiles.length > 0) {
+            eId('listFiles').innerHTML = '';
+
             this.getFile(0);
+        }
+        else
+        {
+            this.setTracks();
         }
     }
     else
@@ -82,6 +54,8 @@ ReadFileProject.prototype.setFiles = function(start) {
         else
         {
             console.log('finish load files');
+
+            this.setTracks();
         }
     }
 };
@@ -98,38 +72,25 @@ ReadFileProject.prototype.getFile = function(id) {
     if(file.isVideo)
     {
         fileObject.makeVideo();
-        this.getThumbnail(file.id, currentProject.tabListFiles.length, file.type);
+        this.getThumbnail(file.id, currentProject.tabListFiles.length, file.type, file.isUploaded.i);
     }
 
     if(file.isAudio)
     {
         fileObject.makeAudio();
-        this.getThumbnail(file.id, currentProject.tabListFiles.length, TYPE.AUDIO);
+        this.getThumbnail(file.id, currentProject.tabListFiles.length, TYPE.AUDIO, file.isUploaded.a);
     }
 
     fileObject.setDuration(file.duration);
+    fileObject.isUploaded.file = file.isUploaded.file;
 
     currentProject.tabListFiles.push(fileObject);
 
-    addFileList(file.id, file.fileName, file.type);
+    setTimeout(function() { addFileList(file.id, file.fileName, file.type); }, 500);
 };
 
-ReadFileProject.prototype.getThumbnail = function(id, row, type) {
-    var fileName;
-
-    if(type == TYPE.VIDEO)
-    {
-        fileName = 'THUMBNAIL_I_' + id;
-    }
-    else if(type == TYPE.AUDIO)
-    {
-        fileName = 'THUMBNAIL_A_' + id;
-    }
-    else
-    {
-        fileName = 'FILE_' + id;
-    }
-
+ReadFileProject.prototype.getThumbnail = function(id, row, type, uploadStatus) {
+    var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + id;
     var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName + '.data';
 
     /*
@@ -190,10 +151,12 @@ ReadFileProject.prototype.getThumbnail = function(id, row, type) {
         if(type == TYPE.VIDEO || type == TYPE.IMAGE || type == TYPE.TEXT)
         {
             currentProject.tabListFiles[row].setThumbnailImage(window.URL.createObjectURL(blob));
+            currentProject.tabListFiles[row].isUploaded.i = uploadStatus;
         }
         else
         {
             currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
+            currentProject.tabListFiles[row].isUploaded.a = uploadStatus;
         }
 
         /*
@@ -234,27 +197,78 @@ ReadFileProject.prototype.setTracks = function() {
         {
             lastId = (this.listTracks[i].parent >= 0) ? id : -1;
         }
+
+        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
     }
+
+    this.setElementsTrack(true);
 };
 
-ReadFileProject.prototype.setElementsTrack = function() {
-    rLog('-LOAD- elements track');
+ReadFileProject.prototype.setElementsTrack = function(start) {
+    if(start) {
+        rLog('-LOAD- elements track');
 
-    for(var i = 0; i < this.listTracks.length; i++)
-    {
-        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
+        this.countTracks = 0;
+        this.countElementsTrack = 0;
 
-        for(var y = 0; y < currentProject.tabListTracks[i].tabElements.length; y++)
+        if(this.listTracks.length > 0) {
+            console.log(this.listTracks[this.countTracks].tabElements.length);
+            if(this.listTracks[this.countTracks].tabElements.length > 0) {
+                this.setElementThumbnail(this.countTracks, this.countElementsTrack);
+            }
+            else
+            {
+                console.log('finish element track 0');
+
+                this.finishLoadProject();
+            }
+        }
+        else
         {
-            var element = currentProject.tabListTracks[i].tabElements[y];
-            var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+            console.log('finish element track 0');
 
-            this.setElementThumbnail(element, file.thumbnail);
+            this.finishLoadProject();
+        }
+    }
+    else
+    {
+        console.log('if: ' + this.countElementsTrack + ' - ' + this.listTracks[this.countTracks].tabElements.length);
+        if(this.countElementsTrack >= this.listTracks[this.countTracks].tabElements.length) {
+            this.countTracks++;
+            this.countElementsTrack = 0;
+
+            console.log('ift: ' + this.countTracks + ' - ' + this.listTracks.length);
+            if(this.countTracks >= this.listTracks.length) {
+                console.log('finishElement');
+
+                this.finishLoadProject();
+            }
+            else
+            {
+                if(this.listTracks[this.countTracks].tabElements.length > 0) {
+                    this.setElementThumbnail(this.countTracks, this.countElementsTrack);
+                }
+                else
+                {
+                    console.log('finish element track');
+
+                    this.finishLoadProject();
+                }
+            }
+        }
+        else
+        {
+            this.setElementThumbnail(this.countTracks, this.countElementsTrack);
         }
     }
 };
 
-ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {
+ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
+    console.log(rowTrack, rowElement);
+
+    var element = currentProject.tabListTracks[rowTrack].tabElements[rowElement];
+    var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
+
     console.log('load thumbnail');
     console.log(element);
 
@@ -268,8 +282,14 @@ ReadFileProject.prototype.setElementThumbnail = function(element, thumbnail) {
 
         element.thumbnail = imageThumbnail;
 
-        readFileProject.progression++;
+        readFileProject.countElementsTrack++;
+        readFileProject.setElementsTrack(false);
     };
 
-    imageThumbnail.src = (element.type != TYPE.AUDIO) ? thumbnail.i : thumbnail.a;
+    imageThumbnail.src = (element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a;
+};
+
+ReadFileProject.prototype.finishLoadProject = function() {
+    currentProject.switchAutoSave();
+    loadM();
 };

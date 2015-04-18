@@ -116,6 +116,7 @@
                 </div>
                 <div style="display: none;">
                     <input type="file" id="fileLoader" onchange="addFile(this.files[0]);"/>
+                    <input type="file" id="fileUploadLoader" onchange="updateDataFile(this.files[0]);"/>
                 </div>
             </div>
         </div>
@@ -236,6 +237,19 @@
                     <hr>
                     <button type="button" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> Projet</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Retour</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="uploadFileModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Envoyer le fichier</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Votre fichier s'est mal envoyé ou vous avez fermé la fenêtre trop tôt. Il est nécessaire d'avoir le fichier pour le rendu final.</p>
+                    <button type="button" onclick="$('#fileUploadLoader').click();" class="btn btn-primary btn-lg">Séléctionner un fichier</button>
                 </div>
             </div>
         </div>
