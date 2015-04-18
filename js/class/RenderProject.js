@@ -16,7 +16,7 @@ RenderP = function (format) {
         OGG : {ext : 'ogg', codec : null},
         WEBM : {ext : 'webm', codec : null},
         TS : {ext : 'ts' , codec : null},
-        X264 : {ext : 'mp4', codec : 'x264'}
+        X264 : {ext : 'mp4', codec : 'libx264'}
     };
 
     this.userFormat = format || this.FORMAT.MPEG4;
@@ -41,7 +41,7 @@ RenderP = function (format) {
 
             if (e == 0) {
                 console.log("0 -> deb");
-                if (this.elementInTrack[e].marginLeft != 0) {
+                if (this.elementInTrack[e].marginLeft >= oneSecond) {
                     var cmd;
                     cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts";
                     this.commandList.push(cmd);
@@ -54,12 +54,15 @@ RenderP = function (format) {
 
             }
             else if (e == (this.elementInTrack.length - 1)) {
+                console.log("length -1");
                 (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
             }
             else {
+                console.log("not -1");
                 (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
                 (this.tracks[t].type == TYPE.AUDIO) ? this.addBlackA(e) : this.addBlackV(e);
             }
+            console.log('End !!')
 
         }
 
@@ -67,7 +70,7 @@ RenderP = function (format) {
             var lastCmd = "";
             if (this.tracks[t].tabElements.length != 1) {
                 lastCmd = '-i "concat:';
-                var ending = " -c mpeg4 -y ";
+                var ending = ((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
                 for (i = 0; i < this.commands[t].length; i++) {
                     lastCmd += ((this.tracks[t].type == TYPE.AUDIO) ? "" + i + ".mp3|" : "" + i + ".ts|");
                 }
@@ -165,7 +168,7 @@ RenderP.prototype.addBlackV = function (e) {
     var cmd = "";
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
-        if (this.nextElement.marginLeft == this.elementEnd) {
+        if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond/2) {
             //fileContent += "\n element+1 sticked !";
             console.log("sticked");
         }
@@ -185,14 +188,15 @@ RenderP.prototype.addBlackA = function (e) {
     tempIndex++;
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
-        if (this.nextElement.marginLeft == this.elementEnd) {
+        if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond/2) {
             //fileContent += "\n element+1 sticked !";
             console.log("sticked");
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
-            this.commands[this.t].push("-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -y " + this.commands[this.t].length + ".mp3");
-            this.commandList.push("-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -y " + this.commands[this.t].length + ".mp3");
+            var cmd  = "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -y " + this.commands[this.t].length + ".mp3";
+            this.commands[this.t].push(cmd);
+            this.commandList.push(cmd);
         }
     }
 };
