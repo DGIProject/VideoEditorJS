@@ -84,6 +84,10 @@ ReadFileProject.prototype.getFile = function(id) {
     fileObject.setDuration(file.duration);
     fileObject.isUploaded.file = file.isUploaded.file;
 
+    if(file.properties != undefined) {
+        fileObject.properties = file.properties;
+    }
+
     currentProject.tabListFiles.push(fileObject);
 
     setTimeout(function() { addFileList(file.id, file.fileName, file.type); }, 500);
@@ -290,8 +294,10 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
 };
 
 ReadFileProject.prototype.finishLoadProject = function() {
-    currentProject.switchAutoSave();
-    currentProject.isReady = true;
+    if(!currentProject.isReady) {
+        currentProject.switchAutoSave();
+        currentProject.isReady = true;
 
-    loadM();
+        loadM();
+    }
 };

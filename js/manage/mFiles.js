@@ -58,9 +58,18 @@ function addFile(currentFile) {
 }
 
 function updateDataFileModal(id) {
-    document.getElementById('fileUploadLoader').setAttribute('onchange', 'updateDataFile(' + id + ', this.files[0])');
+    var fileType = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)].type;
 
-    $('#uploadFileModal').modal('show');
+    if(fileType == TYPE.TEXT) {
+        editFileText(id);
+        saveTextElement();
+    }
+    else
+    {
+        document.getElementById('fileUploadLoader').setAttribute('onchange', 'updateDataFile(' + id + ', this.files[0])');
+
+        $('#uploadFileModal').modal('show');
+    }
 }
 
 function updateDataFile(id, file) {
@@ -362,7 +371,7 @@ function addFileList(fileId, fileName, typeFile) {
     var toolsFile = 'Ready!';
 
     if(!isUploadedFile(fileId)) {
-        toolsFile = '<a href="#" onclick="updateDataFileModal(' + fileId + ');">Erreur d\'envoi</a>';
+        toolsFile = '<a href="#" onclick="updateDataFileModal(' + fileId + ');"><span class="text-danger">Erreur d\'envoi</span></a>';
     }
 
     var fileE = document.createElement('a');
@@ -545,11 +554,11 @@ function uploadFile(id, name, file, type) {
 
                     var buttonRetryUpload = document.createElement('button');
                     buttonRetryUpload.setAttribute('type', 'button');
-                    buttonRetryUpload.setAttribute('onclick', 'uploadFile(' + id + ', \'' + name + '\', ' + file + ', \'' + type + '\');');
+                    buttonRetryUpload.setAttribute('onclick', 'updateDataFile(' + id + ');');
                     buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
                     buttonRetryUpload.innerHTML = 'Réessayer';
 
-                    eId('toolsFile' + id).appendChild(buttonRetryUpload);
+                    eId('toolsFile' + id).innerHTML = '<a href="#" onclick="updateDataFileModal(' + id + ');"><span class="text-danger">Erreur d\'envoi</span></a>';
                 }
 
             }
