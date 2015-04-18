@@ -191,15 +191,14 @@ function fileProcessing(fileId, arrayBuffer)
                                                         //wavesurfer.play();
                                                         URL.revokeObjectURL(audioUrl);
                                                         var canvas = findFirstDescendant("waveform", "canvas");
-                                                        canvas.toBlob(function(blob) {
-                                                            url = URL.createObjectURL(blob);
-                                                            console.log("wavefor URL", url);
-                                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
-                                                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
-                                                        }, "image/png");
+                                                        var blob = dataUrlToBlob(canvas.toDataURL('image/png'));
+
+                                                        url = URL.createObjectURL(blob);
+                                                        console.log("wavefor URL", url);
+                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
+                                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                                                         wavesurfer.destroy();
-
                                                     });
 
                                                     wavesurfer.init({
@@ -252,15 +251,14 @@ function fileProcessing(fileId, arrayBuffer)
                                         //wavesurfer.play();
                                         URL.revokeObjectURL(audioUrl);
                                         var canvas = findFirstDescendant("waveform", "canvas");
-                                        canvas.toBlob(function(blob) {
-                                            url = URL.createObjectURL(blob);
-                                            console.log("wavefor URL", url);
-                                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
-                                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
-                                        }, "image/png");
+                                        var blob = dataUrlToBlob(canvas.toDataURL('image/png'));
+
+                                        url = URL.createObjectURL(blob);
+                                        console.log("wavefor URL", url);
+                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
+                                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                                         wavesurfer.destroy();
-
                                     });
 
                                     wavesurfer.init({
@@ -285,15 +283,14 @@ function fileProcessing(fileId, arrayBuffer)
                     wavesurfer.on('ready', function () {
                         //wavesurfer.play();
                         var canvas = findFirstDescendant("waveform", "canvas");
-                        canvas.toBlob(function(blob) {
-                            url = URL.createObjectURL(blob);
-                            console.log("wavefor URL", url);
-                            uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
-                            currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
-                        }, "image/png");
+                        var blob = dataUrlToBlob(canvas.toDataURL('image/png'));
+
+                        url = URL.createObjectURL(blob);
+                        console.log("wavefor URL", url);
+                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
+                        currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                         wavesurfer.destroy();
-
                     });
 
                     wavesurfer.init({

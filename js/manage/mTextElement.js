@@ -47,6 +47,7 @@ function saveTextElement() {
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
+        /*
         document.getElementById('textElement').toBlob(function(blob) {
             currentItem.size = blob.size;
             currentItem.setProperties(new TextElement(textElement.id, textElement.text, textElement.properties));
@@ -58,6 +59,21 @@ function saveTextElement() {
             addFileList(fileId, fileName, TYPE.TEXT);
             uploadFile(fileId, fileName, blob, 'FILE');
         }, 'image/png');
+        */
+
+        var blob = dataUrlToBlob(document.getElementById('textElement').toDataURL('image/png'));
+
+        currentItem.size = blob.size;
+        currentItem.setProperties(new TextElement(textElement.id, textElement.text, textElement.properties));
+        currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
+
+        console.log('currentItem ' + currentItem);
+        currentProject.tabListFiles.push(currentItem);
+
+        addFileList(fileId, fileName, TYPE.TEXT);
+
+        uploadFile(fileId, fileName, blob, 'FILE');
+        uploadFile(fileId, fileName, blob, 'THUMBNAIL_I');
     }
 
     var n = noty({layout: 'topRight', type: 'success', text: 'Le texte a bien été sauvegardé.', timeout: '5000'});
