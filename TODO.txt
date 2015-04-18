@@ -1,6 +1,4 @@
 TODO : local project
 TODO : save & load project
 TODO : fix bug when adding audioVideo file and there is no place on track !
-TODO : Delete renders file new project
-TODO : Render number file
 TODO : Render breack link
