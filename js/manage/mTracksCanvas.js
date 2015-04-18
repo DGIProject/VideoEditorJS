@@ -409,4 +409,19 @@ function element(rowTrack, row) {
 
         context.drawImage(imageThumbnail, sx, sy, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
     }
+
+    if(currentElement.selected) {
+        drawTime(context, (currentElement.marginLeft + gapError));
+    }
+}
+
+function drawTime(context, marginLeft) {
+    context.beginPath();
+    context.lineWidth = 1;
+    context.strokeStyle = 'blue';
+    context.moveTo(marginLeft, 100);
+    context.lineTo(marginLeft, 120);
+    context.stroke();
+
+    context.fillText(pixelToTime(marginLeft), (marginLeft + 2), 115)
 }

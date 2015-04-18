@@ -43,6 +43,36 @@ function timeToSeconds(time) {
     return (parseInt(timeSplit[0]) * 3600) + (parseInt(timeSplit[1] * 60)) + parseInt(timeSplit[2].split('.')[0]);
 }
 
+function pixelToTime(pixels) {
+    var countSeconds = Math.floor(pixels / oneSecond);
+    var hours = 0, minutes = 0, seconds = 0;
+
+    for(var i = 0; i < countSeconds; i++) {
+        if(seconds > 58) {
+            seconds = 0;
+
+            if(minutes == 60) {
+                minutes = 0;
+                hours++
+            }
+            else
+            {
+                minutes++;
+            }
+        }
+        else
+        {
+            seconds++;
+        }
+    }
+
+    return addZero(hours) + ':' + addZero(minutes) + ':' + addZero(seconds);
+}
+
+function addZero(value) {
+    return ((value < 10) ? '0' : '') + value;
+}
+
 function getCurrentDate() {
     var date = new Date();
 
