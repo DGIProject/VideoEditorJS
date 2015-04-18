@@ -71,8 +71,38 @@ function listProject()
     echo json_encode($tabListProjects);
 }
 
+function clearRenders($path)
+{
+    $dir = opendir($path);
+    $i = 0;
+
+    while($file = readdir($dir))
+    {
+        if($file != '.' && $file != '..' && !is_dir($path . $file))
+        {
+            if(is_numeric(explode(".",$file)[0]))
+            {
+                unlink($path.$file);
+                $i++  ;
+            }
+
+        }
+    }
+    echo json_encode(array("code"=> 0));
+
+    closedir($dir);
+}
+
+if (!isset($_POST['nameProject']) && $_GET['action'] != 'list')
+{
+    echo json_encode(array('code'=> -1, "info" => "There are missing args"));
+    exit(0);
+}
+
 $projectName = $_POST['nameProject'];
 $fileContent = $_POST['contentFile'];
+
+
 
 switch ($_GET['action'])
 {
@@ -84,8 +114,9 @@ switch ($_GET['action'])
         listProject();
         break;
     case "create":
-    case "delete":
-      //  deleteProject();
+        $path = '../' . $DIR_projectsData . $projectName . '/RENDER_DATA/';
+        clearRenders($path);
+        break;
     case "save":
         $pathToFile = $backPath . $DIR_projectsData . $projectName . '.vejs';
         if(is_file($pathToFile))
@@ -105,6 +136,9 @@ switch ($_GET['action'])
             saveProject($pathToFile, $fileContent);
             echo json_encode(array("code"=> 0));
         }
+        break;
+    case "delete":
+        //  deleteProject();
         break;
     default:
         echo json_encode(array('code'=> -1, "info" => "There are missing args"));
