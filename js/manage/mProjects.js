@@ -4,7 +4,7 @@
 
 //Liste des projets par requête Ajax dans un div (id) et en fonction du pseudo de l'utilisateur (username)
 function getListProjects(id, username) {
-    var url = remoteAPIPath + 'php/getListProjects.php';
+    var url = remoteAPIPath + 'php/projectManagement.php?action=list';
 
     var xhr = createCORSRequest('POST', url);
 
@@ -87,7 +87,7 @@ function openProject() {
 function loadProject(fileName) {
     loadM();
 
-    var url = remoteAPIPath + 'php/readFileProject.php';
+    var url = remoteAPIPath + 'php/projectManagement.php?action=read';
 
     var xhr = createCORSRequest('POST', url);
 
@@ -98,8 +98,8 @@ function loadProject(fileName) {
 
     xhr.onload = function() {
         console.log('response : ' + xhr.responseText);
-
-        if(xhr.responseText != 'error')
+        jsonRep = JSON.parse(xhr.responseText);
+        if (jsonRep.code != -1)
         {
             //Classe ReadFileProject qui permet d'ouvrir un projet
             readFileProject = new ReadFileProject(xhr.responseText);
@@ -108,9 +108,7 @@ function loadProject(fileName) {
         else
         {
             loadM();
-
             $('#startLoadingEditor').modal('show');
-
             noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de charger ce project.', timeout: '5000'});
         }
     };
@@ -122,7 +120,7 @@ function loadProject(fileName) {
     };
 
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xhr.send('fileName=' + fileName);
+    xhr.send('nameProject=' + fileName);
 }
 
 //Sauvegarde du projet : GenerateFileProject permet de créer le fichier JSON avec tout le contenu du projet puis envoi par requête Ajax.
@@ -136,7 +134,7 @@ function saveProject() {
 
     console.log(contentFile);
 
-    var url = remoteAPIPath + 'php/addFileProject.php';
+    var url = remoteAPIPath + 'php/projectManagement.php?action=save';
 
     var xhr = createCORSRequest('POST', url);
 
@@ -147,10 +145,11 @@ function saveProject() {
 
     xhr.onload = function() {
         console.log('response : ' + xhr.responseText);
+        jsonRep = JSON.parse(xhr.responseText);
 
         loadM();
 
-        if(xhr.responseText == 'true')
+        if(jsonRep.code == 0)
         {
             currentProject.lastSave = getHour();
             currentProject.forceSave = true;
@@ -161,7 +160,7 @@ function saveProject() {
 
             rLog('Saved!');
         }
-        else if(xhr.responseText == 'alreadyExist')
+        else if(jsonRep.code == 1) // already exist
         {
             $('#alreadyExistProjectModal').modal('show');
         }
@@ -206,9 +205,40 @@ function autoSaveInterval() {
 //Lorsque le projet existe déjà, proposition de l'écraser ou alors d'en créer un avec un autre nom
 function overwriteProject() {
     $('#alreadyExistProjectModal').modal('hide');
+    loadM();
 
-    //forceSave permet de préciser si on écrase le projet automatiquement à chaque enregistrement
-    currentProject.forceSave = true;
+    var url = remoteAPIPath + 'php/projectManagement.php?action=create';
+    var xhr = createCORSRequest('POST', url);
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+    xhr.onload = function() {
+        console.log('response : ' + xhr.responseText);
+        jsonRep = JSON.parse(xhr.responseText);
+        loadM();
 
-    saveProject();
+        if(jsonRep.code == 0)
+        {
+            //forceSave permet de préciser si on écrase le projet automatiquement à chaque enregistrement
+            currentProject.forceSave = true;
+            saveProject();
+        }
+        else
+        {
+            noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
+        }
+    };
+
+    xhr.onerror = function() {
+        reportError('No contact with server');
+
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send('nameProject=' + currentProject.name);
+
+
+
 }
