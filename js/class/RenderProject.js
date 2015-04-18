@@ -70,7 +70,8 @@ RenderP = function (format) {
 
         if (this.tracks[t].tabElements.length > 0) {
             var lastCmd = "";
-            if (this.tracks[t].tabElements.length != 1) {
+            console.log(this.commands[t], this.commands);
+            if (this.commands[t].length > 1) {
                 lastCmd = '-i "concat:';
                 var ending = ((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
                 for (i = 0; i < this.commands[t].length; i++) {
