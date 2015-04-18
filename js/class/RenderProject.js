@@ -116,7 +116,7 @@ RenderP = function (format) {
         this.commandList.push("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" final_WEB."+this.FORMAT.X264.ext);
     }
 
-    
+
     changeZoom(this.previousZoom, false);
     this.uploadCommands();
 };
