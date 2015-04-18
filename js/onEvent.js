@@ -16,7 +16,7 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
 window.onbeforeunload = function (e) {
     e = e || window.event;
 
-    if(currentProject) {
+    if(currentProject.isReady) {
         saveProject();
     }
 
@@ -30,19 +30,19 @@ window.onbeforeunload = function (e) {
 };
 
 window.onclick = function() {
-    if(currentProject) {
+    if(currentProject.isReady) {
         hideContextMenu();
     }
 };
 
 window.onmouseup = function(e) {
-    if(currentProject) {
+    if(currentProject.isReady) {
         analyzeCollision();
     }
 };
 
 window.onmousemove = function(e) {
-    if(currentProject) {
+    if(currentProject.isReady) {
         mouseMoveTracks(e);
     }
 };

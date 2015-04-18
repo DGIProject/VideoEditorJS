@@ -27,57 +27,59 @@ function analyzeCollision() {
                 rLog('-CANVASTRACK- remove mode');
                 deleteElement(x, currentRow);
             }
-
-            //Vérification pour chaque élément s'il y a une collision
-            for(var i = 0; i < track.tabElements.length; i++)
+            else
             {
-                var element = track.tabElements[i];
-
-                if(element.marginLeft > selectedElement.marginLeft && (element.marginLeft + element.width) < (selectedElement.marginLeft + selectedElement.width))
+                //Vérification pour chaque élément s'il y a une collision
+                for(var i = 0; i < track.tabElements.length; i++)
                 {
-                    rLog('-CANVASTRACK- collision in');
+                    var element = track.tabElements[i];
 
-                    deleteElement(x, i);
-                }
-                else
-                {
-                    if(element.marginLeft < selectedElement.marginLeft && (element.marginLeft + element.width) > (selectedElement.marginLeft + selectedElement.width))
+                    if(element.marginLeft > selectedElement.marginLeft && (element.marginLeft + element.width) < (selectedElement.marginLeft + selectedElement.width))
                     {
-                        rLog('-CANVASTRACK- collision between');
+                        rLog('-CANVASTRACK- collision in');
 
-                        var newMarginLeft = selectedElement.marginLeft + selectedElement.width;
-                        var widthNewElement = element.width - /*(selectedElement.width + (selectedElement.marginLeft - element.marginLeft))*/ ((selectedElement.marginLeft + selectedElement.width) - element.marginLeft);
-                        var newBeginDuration = (element.beginDuration + ((selectedElement.marginLeft - element.marginLeft) / oneSecond));
-
-                        console.log(newMarginLeft, widthNewElement, newBeginDuration);
-
-                        element.width = selectedElement.marginLeft - element.marginLeft;
-
-                        addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, {resize: true, width: widthNewElement, leftGap: selectedElement.width}, (element.parent >= 0));
-                        setPropertiesParent(track.parent, track.tabElements[i]);
+                        deleteElement(x, i);
                     }
-
-                    if((track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width) > track.tabElements[i].marginLeft && (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                    else
                     {
-                        rLog('-CANVASTRACK- collision before');
+                        if(element.marginLeft < selectedElement.marginLeft && (element.marginLeft + element.width) > (selectedElement.marginLeft + selectedElement.width))
+                        {
+                            rLog('-CANVASTRACK- collision between');
 
-                        track.tabElements[i].leftGap += (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width) - track.tabElements[i].marginLeft;
+                            var newMarginLeft = selectedElement.marginLeft + selectedElement.width;
+                            var widthNewElement = element.width - /*(selectedElement.width + (selectedElement.marginLeft - element.marginLeft))*/ ((selectedElement.marginLeft + selectedElement.width) - element.marginLeft);
+                            var newBeginDuration = (element.beginDuration + ((selectedElement.marginLeft - element.marginLeft) / oneSecond));
 
-                        track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width);
-                        track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (track.tabElements[currentRow].marginLeft + track.tabElements[currentRow].width));
+                            console.log(newMarginLeft, widthNewElement, newBeginDuration);
 
-                        setPropertiesParent(track.parent, track.tabElements[i]);
-                    }
+                            element.width = selectedElement.marginLeft - element.marginLeft;
 
-                    if(track.tabElements[currentRow].marginLeft > track.tabElements[i].marginLeft && track.tabElements[currentRow].marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
-                    {
-                        rLog('-CANVASTRACK- collision after');
+                            addElementTrack(element.fileId, track.id, newMarginLeft, newBeginDuration, {resize: true, width: widthNewElement, leftGap: selectedElement.width}, (element.parent >= 0));
+                            setPropertiesParent(track.parent, track.tabElements[i]);
+                        }
 
-                        track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - track.tabElements[currentRow].marginLeft;
+                        if((selectedElement.marginLeft + selectedElement.width) > track.tabElements[i].marginLeft && (selectedElement.marginLeft + selectedElement.width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                        {
+                            rLog('-CANVASTRACK- collision before');
 
-                        track.tabElements[i].width = track.tabElements[currentRow].marginLeft - track.tabElements[i].marginLeft;
+                            track.tabElements[i].leftGap += (selectedElement.marginLeft + selectedElement.width) - track.tabElements[i].marginLeft;
 
-                        setPropertiesParent(track.parent, track.tabElements[i]);
+                            track.tabElements[i].width = (track.tabElements[i].marginLeft + track.tabElements[i].width) - (selectedElement.marginLeft + selectedElement.width);
+                            track.tabElements[i].marginLeft = (track.tabElements[i].marginLeft + track.tabElements[i].width) - ((track.tabElements[i].marginLeft + track.tabElements[i].width) - (selectedElement.marginLeft + selectedElement.width));
+
+                            setPropertiesParent(track.parent, track.tabElements[i]);
+                        }
+
+                        if(selectedElement.marginLeft > track.tabElements[i].marginLeft && selectedElement.marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
+                        {
+                            rLog('-CANVASTRACK- collision after');
+
+                            track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - selectedElement.marginLeft;
+
+                            track.tabElements[i].width = selectedElement.marginLeft - track.tabElements[i].marginLeft;
+
+                            setPropertiesParent(track.parent, track.tabElements[i]);
+                        }
                     }
                 }
             }

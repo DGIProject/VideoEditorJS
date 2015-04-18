@@ -8,6 +8,8 @@ Project = function(name, username, dateCreation) {
     this.autoSave = false;
     this.forceSave = false;
 
+    this.isReady = false;
+
     this.tabListFiles = [];
     this.tabListTracks = [];
 

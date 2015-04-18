@@ -67,6 +67,7 @@ function saveNewProject(nameProject) {
         currentProject = new Project(nameProject.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, getCurrentDate());
         currentProject.updateText();
         currentProject.switchAutoSave();
+        currentProject.isReady = true;
 
         saveProject();
     }

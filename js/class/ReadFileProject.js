@@ -291,5 +291,7 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
 
 ReadFileProject.prototype.finishLoadProject = function() {
     currentProject.switchAutoSave();
+    currentProject.isReady = true;
+
     loadM();
 };
