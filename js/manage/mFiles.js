@@ -57,8 +57,8 @@ function addFile(currentFile) {
     }
 }
 
-function uploadFileModal(id) {
-    document.getElementById('fileUploadLoader').setAttribute('onclick', 'updateDataFile(' + id + ', this.files[0])');
+function updateDataFileModal(id) {
+    document.getElementById('fileUploadLoader').setAttribute('onchange', 'updateDataFile(' + id + ', this.files[0])');
 
     $('#uploadFileModal').modal('show');
 }
@@ -70,6 +70,8 @@ function updateDataFile(id, file) {
     var typeFile = getTypeFile(fileName);
 
     if(fileName == fileClass.fileName && typeFile == fileClass.type) {
+        $('#uploadFileModal').modal('hide');
+
         uploadFile(id, fileName, file, 'FILE');
 
         if(typeFile == TYPE.IMAGE) {
@@ -94,7 +96,7 @@ function updateDataFile(id, file) {
         noty({
             layout: 'topRight',
             type: 'error',
-            text: 'Erreur, ce fichier ne correspond pas au propriété de l\'ancien fichier.',
+            text: 'Erreur, ce fichier ne correspond pas aux propriétéx de l\'ancien fichier.',
             timeout: '5000'
         });
     }
@@ -362,19 +364,18 @@ function addFileList(fileId, fileName, typeFile) {
 
     var toolsFile = 'Ready!';
 
-    if(!isAllUploaded(fileId)) {
-        toolsFile = '<button type="button" onclick="errorUploadFileModal(' + fileId + ');" class="btn btn-primary">Erreur envoi</button>';
+    if(!isUploadedFile(fileId)) {
+        toolsFile = '<a href="#" onclick="updateDataFileModal(' + fileId + ');">Erreur d\'envoi</a>';
     }
 
     var fileE = document.createElement('a');
     fileE.id = 'file' + fileId;
     fileE.draggable = true;
-    fileE.style.cursor = 'pointer';
-    fileE.onclick = fileProperties;
+    fileE.style.cursor = 'grab';
     fileE.ondragstart = selectFile;
     fileE.ondragend = deselectFile;
     fileE.classList.add('list-group-item');
-    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> ' + compressName(fileName) + '</h5><div id="toolsFile' + fileId + '">' + toolsFile + '</div>';
+    fileE.innerHTML = '<h5 id="nameFile' + fileId + '" class="list-group-item-heading"><span class="glyphicon ' + iconName + '"></span> <a href="#" onclick="fileProperties(' + fileId + ');">' + compressName(fileName) + '</a></h5><div id="toolsFile' + fileId + '">' + toolsFile + '</div>';
 
     eId('listFiles').appendChild(fileE);
 }
@@ -392,8 +393,7 @@ function deselectFile(e) {
 
 
 //Informations sur le fichier avec possibilité de modification si c'est du texte
-function fileProperties() {
-    var id = this.id.replace('file', '');
+function fileProperties(id) {
     var file = currentProject.tabListFiles[id];
 
     eId('nameFileP').innerHTML = file.fileName;

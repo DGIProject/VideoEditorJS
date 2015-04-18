@@ -17,11 +17,6 @@
 
 include "config.php";
 
-function createProject()
-{
-
-}
-
 function readProject($path)
 {
     if (file_exists($path))
