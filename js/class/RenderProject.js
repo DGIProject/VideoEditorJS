@@ -9,6 +9,8 @@ RenderP = function (format) {
     this.commandTracksAudio = [];
     this.commandTracksVideo = [];
     this.commandList = [];
+    this.previousZoom = parseInt(document.getElementById('zoomRange').value);
+    changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
 
     this.FORMAT = {
         MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
@@ -114,6 +116,8 @@ RenderP = function (format) {
         this.commandList.push("-i track_0.mp4 " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" final_WEB."+this.FORMAT.X264.ext);
     }
 
+    
+    changeZoom(this.previousZoom, false);
     this.uploadCommands();
 };
 RenderP.prototype.addCommandV = function (e) {
