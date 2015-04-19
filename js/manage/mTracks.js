@@ -248,11 +248,7 @@ function mouseMoveTime(e){
     var rect = canvas.getBoundingClientRect();
     ctx = canvas.getContext('2d');
     var x = e.clientX - rect.left, y = e.clientY - rect.top;
-    ctx.beginPath();
-    ctx.moveTo(x,canvas.height/2);
-    ctx.lineTo(x,canvas.height);
-    ctx.closePath();
-    ctx.stroke();
+
 
     var text = pixelToTime(x+pixelTimeBar.g);
     ctx.font = "10pt Verdana";
@@ -262,7 +258,31 @@ function mouseMoveTime(e){
 
     if (x>0 && x<canvas.width)
     {
+        ctx.beginPath();
+        ctx.moveTo(x,canvas.height/2);
+        ctx.lineTo(x,canvas.height);
+        ctx.closePath();
+        ctx.stroke();
         var posX = (x<textPxLength.width/2)? textPxLength.width/2 : ( x>(canvas.width-(textPxLength.width)/2))? canvas.width-(textPxLength.width)/2 : x ;
+    }
+    else
+    {
+        if (x<0)
+        {
+            ctx.beginPath();
+            ctx.moveTo(0,canvas.height/2);
+            ctx.lineTo(0,canvas.height);
+            ctx.closePath();
+            ctx.stroke();
+        }
+        else if (x>canvas.width)
+        {
+            ctx.beginPath();
+            ctx.moveTo(canvas.width,canvas.height/2);
+            ctx.lineTo(canvas.width,canvas.height);
+            ctx.closePath();
+            ctx.stroke();
+        }
     }
 
     ctx.fillStyle = '#ffffff';
