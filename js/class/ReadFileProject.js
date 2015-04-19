@@ -84,9 +84,7 @@ ReadFileProject.prototype.getFile = function(id) {
     fileObject.setDuration(file.duration);
     fileObject.isUploaded.file = file.isUploaded.file;
 
-    if(file.properties != undefined) {
-        fileObject.properties = file.properties;
-    }
+    fileObject.properties = file.properties;
 
     currentProject.tabListFiles.push(fileObject);
 
@@ -298,6 +296,7 @@ ReadFileProject.prototype.finishLoadProject = function() {
         currentProject.switchAutoSave();
         currentProject.isReady = true;
 
+        changeZoom(this.infoProject.zoom, true);
         hLoadM();
     }
 };

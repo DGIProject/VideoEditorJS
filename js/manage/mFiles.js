@@ -15,7 +15,7 @@ function addFile(currentFile) {
 
     if (typeFile != 'ERROR') {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
-        var currentItem = new File(fileId, typeFile, currentFile.size, fileName, fileName.split('.').pop());
+        var currentItem = new File(fileId, uId(), typeFile, currentFile.size, fileName, fileName.split('.').pop());
 
         currentProject.tabListFiles.push(currentItem);
 
@@ -37,7 +37,7 @@ function addFile(currentFile) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                loadM();
+                sLoadM();
                 fileProcessing(fileId, e.target.result);
             };
 
@@ -93,7 +93,7 @@ function updateDataFile(id, file) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                loadM();
+                sLoadM();
                 fileProcessing(id, e.target.result);
             };
 
@@ -216,7 +216,7 @@ function fileProcessing(fileId, arrayBuffer)
                                                         progressColor : '#4d4d4d'
                                                     });
                                                     wavesurfer.load(audioUrl);
-                                                    loadM();
+                                                    hLoadM();
                                                     currentProject.switchAutoSave();
                                                 });
                                             }
@@ -224,7 +224,7 @@ function fileProcessing(fileId, arrayBuffer)
                                     });
                                 }
                                 else{
-                                    loadM();
+                                    hLoadM();
                                     currentProject.switchAutoSave();
 
                                 }
@@ -276,7 +276,7 @@ function fileProcessing(fileId, arrayBuffer)
                                         progressColor : '#4d4d4d'
                                     });
                                     wavesurfer.load(audioUrl);
-                                    loadM();
+                                    hLoadM();
                                     currentProject.switchAutoSave();
                                 });
                             }
@@ -310,7 +310,7 @@ function fileProcessing(fileId, arrayBuffer)
                     wavesurfer.load(url);
                 }
                 else{
-                    loadM();
+                    hLoadM();
                     currentProject.switchAutoSave();
                 }
             }

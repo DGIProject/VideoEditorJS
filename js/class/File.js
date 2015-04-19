@@ -5,8 +5,10 @@ var TYPE = {
     TEXT : 3
 };
 
-File = function(id, type, size, fileName, format) {
+File = function(id, uid, type, size, fileName, format) {
     this.id = id;
+    this.uid = uid;
+
     this.type = type;
     this.size = size;
     this.fileName = fileName;
@@ -16,6 +18,8 @@ File = function(id, type, size, fileName, format) {
     this.isAudio = false;
 
     this.thumbnail = {i: null, a: null};
+
+    this.properties = null;
 
     this.isUploaded = {
         i: -1,
