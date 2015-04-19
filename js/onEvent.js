@@ -1,5 +1,6 @@
 window.onload = function (e) {
     calculateTimeBar();
+
 };
 
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
@@ -55,6 +56,7 @@ window.onmouseup = function(e) {
 window.onmousemove = function(e) {
     if(currentProject.isReady) {
         mouseMoveTracks(e);
+        mouseMoveTime(e);
     }
 };
 

@@ -38,6 +38,8 @@ var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
 var readFileProject = false;
 
+
+
 //events
 //var listfilesend = new Event('listfilesend');
 //var classend = new Event('classend');
@@ -54,6 +56,12 @@ imageClose.src = 'http://clangue.net/other/testVideo/img/remove.png';
 
 window.onload = function() {
     $('#startLoadingEditor').modal('show');
+
+    var timeCanvas = document.getElementById('timeBarCanvas');
+    timeCanvas.style.width='100%';
+    timeCanvas.style.height='100%';
+    timeCanvas.width = timeCanvas.offsetWidth;
+    timeCanvas.height = timeCanvas.offsetHeight;
 
     getFileJS();
 };

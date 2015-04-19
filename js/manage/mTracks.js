@@ -140,7 +140,7 @@ function changeZoom(zoom, defaultZ) {
 }
 
 function zoomPlus() {
-    if (parseInt(document.getElementById('zoomRange').value) < 10) {
+    if (parseInt(document.getElementById('zoomRange').value) < parseInt(document.getElementById('zoomRange').max)) {
 
         lastZoom = oneSecond;
         oneSecond = parseInt(document.getElementById('zoomRange').value) + 1;
@@ -155,7 +155,7 @@ function zoomPlus() {
 }
 
 function zoomMoins() {
-    if (parseInt(document.getElementById('zoomRange').value) > 1) {
+    if (parseInt(document.getElementById('zoomRange').value) > parseInt(document.getElementById('zoomRange').min)) {
 
         lastZoom = oneSecond;
         oneSecond = parseInt(document.getElementById('zoomRange').value) - 1;
@@ -220,22 +220,69 @@ function scrollLessTracks() {
 
 //TIME BAR
 function calculateTimeBar() {
-    var timeGauche = Math.floor(pixelTimeBar.g / oneSecond);
-    var timeDroit = Math.floor(pixelTimeBar.d / oneSecond);
-    //console.log(timeDroit, timeGauche);
-    // calcule du temp a droite !
-    var heure = Math.floor(timeDroit / 3600)
+
+    canvas = document.getElementById('timeBarCanvas');
+    ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+    var text = pixelToTime(pixelTimeBar.g);
+    ctx.font = "10pt Verdana";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    var textPxLength = ctx.measureText(text);
+    ctx.fillStyle = "#000000";
+    ctx.fillText(text,0,3);
+
+    text = pixelToTime(pixelTimeBar.d);
+    ctx.font = "10pt Verdana";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    textPxLength = ctx.measureText(text);
+    ctx.fillStyle = "#000000";
+    ctx.fillText(text,(canvas.width-textPxLength.width),3);
+
+    /*console.log(timeDroit, timeGauche);
+    calcule du temp a droite !
+
+    var heure = Math.floor(timeDroit / 3600);
     timeDroit = timeDroit - (3600 * heure);
-    var minutes = Math.floor(timeDroit / 60)
+    var minutes = Math.floor(timeDroit / 60);
     timeDroit = timeDroit - (60 * minutes);
-    var seconde = timeDroit
-    document.getElementById('endTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
-    var heure = Math.floor(timeGauche / 3600)
+    var seconde = timeDroit;
+    var text = heure + 'h' + minutes + "m" + seconde + "s";
+    document.getElementById('endTime').innerHTML = text ;
+
+
+    var heure = Math.floor(timeGauche / 3600);
     timeGauche = timeGauche - (3600 * heure);
-    var minutes = Math.floor(timeGauche / 60)
+    var minutes = Math.floor(timeGauche / 60);
     timeGauche = timeGauche - (60 * minutes);
-    var seconde = timeGauche
-    document.getElementById('startTime').innerHTML = heure + 'h' + minutes + "m" + seconde + "s";
+    var seconde = timeGauche;
+    text = heure + 'h' + minutes + "m" + seconde + "s"
+    document.getElementById('startTime').innerHTML = text;*/
+}
+function mouseMoveTime(e){
+    calculateTimeBar();
+    var canvas = document.getElementById('timeBarCanvas');
+    var rect = canvas.getBoundingClientRect();
+    ctx = canvas.getContext('2d');
+    var x = e.clientX - rect.left, y = e.clientY - rect.top;
+
+    ctx.beginPath();
+    ctx.moveTo(x,canvas.height/2);
+    ctx.lineTo(x,canvas.height);
+    ctx.closePath();
+    ctx.stroke();
+
+    var text = pixelToTime(x);
+    ctx.font = "10pt Verdana";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    var textPxLength = ctx.measureText(text);
+    //console.log(textPxLength);
+    ctx.fillStyle = "#000000";
+    ctx.fillText(text,x,3);
 }
 
 //DROP ELEMENT
