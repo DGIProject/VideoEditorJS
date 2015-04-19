@@ -1,9 +1,9 @@
 <?php
 include_once 'config.php';
 
-if($_GET['projectName'] != NULL && $_GET['fileId'] != NULL)
+if($_GET['projectName'] != NULL && $_GET['fileUId'] != NULL)
 {
-    $filename = ($_GET['typeFile'] == "RENDER")? $_GET['typeFile'] . '.ffm' : $_GET['typeFile'] . '_' . $_GET['fileId'] . '.data';
+    $filename = ($_GET['typeFile'] == "RENDER")? $_GET['typeFile'] . '.ffm' : $_GET['typeFile'] . '_' . $_GET['fileUId'] . '.data';
 
     $path = $backPath . $DIR_projectsData . $_GET['projectName'] . '/';
 

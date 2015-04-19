@@ -15,13 +15,15 @@ function addFile(currentFile) {
 
     if (typeFile != 'ERROR') {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
-        var currentItem = new File(fileId, uId(), typeFile, currentFile.size, fileName, fileName.split('.').pop());
+        var fileUId = uId();
+
+        var currentItem = new File(fileId, fileUId, typeFile, currentFile.size, fileName, fileName.split('.').pop());
 
         currentProject.tabListFiles.push(currentItem);
 
         //Ajout graphique et upload du fichier
         addFileList(fileId, fileName, typeFile);
-        uploadFile(fileId, fileName, currentFile, 'FILE');
+        uploadFile(fileId, fileUId, fileName, currentFile, 'FILE');
 
         if (typeFile == TYPE.IMAGE) {
             //Définition des propriété d'une image
@@ -29,7 +31,7 @@ function addFile(currentFile) {
             currentItem.setDuration('00:00:20');
             currentItem.setThumbnailImage(window.URL.createObjectURL(new Blob([currentFile])));
 
-            uploadFile(fileId, fileName, currentFile, 'THUMBNAIL_I');
+            uploadFile(fileId, fileUId, fileName, currentFile, 'THUMBNAIL_I');
         }
         else
         {
@@ -81,12 +83,12 @@ function updateDataFile(id, file) {
     if(fileName == fileClass.fileName && typeFile == fileClass.type) {
         $('#uploadFileModal').modal('hide');
 
-        uploadFile(id, fileName, file, 'FILE');
+        uploadFile(id, fileClass.uId, fileName, file, 'FILE');
 
         if(typeFile == TYPE.IMAGE) {
             fileClass.setThumbnailImage(window.URL.createObjectURL(new Blob([file])));
 
-            uploadFile(id, fileName, file, 'THUMBNAIL_I');
+            uploadFile(id, fileClass.uId, fileName, file, 'THUMBNAIL_I');
         }
         else
         {
@@ -174,7 +176,7 @@ function fileProcessing(fileId, arrayBuffer)
 
                                 currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailImage(window.URL.createObjectURL(blob));
 
-                                uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_I');
+                                uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles[currentProject.tabListFiles.length - 1].uId, fileClass.fileName, blob, 'THUMBNAIL_I');
                                 if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio)
                                 {
                                     terminal.processCmd("ffmpeg -i " + fileClass.fileName + " audioDat.wav", function (e, index) {
@@ -204,7 +206,7 @@ function fileProcessing(fileId, arrayBuffer)
 
                                                         url = URL.createObjectURL(blob);
                                                         console.log("wavefor URL", url);
-                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
+                                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles[currentProject.tabListFiles.length - 1].uId, fileClass.fileName, blob, 'THUMBNAIL_A');
                                                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                                                         wavesurfer.destroy();
@@ -264,7 +266,7 @@ function fileProcessing(fileId, arrayBuffer)
 
                                         url = URL.createObjectURL(blob);
                                         console.log("wavefor URL", url);
-                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
+                                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles[currentProject.tabListFiles.length - 1].uId, fileClass.fileName, blob, 'THUMBNAIL_A');
                                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                                         wavesurfer.destroy();
@@ -296,7 +298,7 @@ function fileProcessing(fileId, arrayBuffer)
 
                         url = URL.createObjectURL(blob);
                         console.log("wavefor URL", url);
-                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, fileClass.fileName, blob, 'THUMBNAIL_A');
+                        uploadFile(currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id, currentProject.tabListFiles[currentProject.tabListFiles.length - 1].uId, fileClass.fileName, blob, 'THUMBNAIL_A');
                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                         wavesurfer.destroy();
@@ -477,10 +479,10 @@ function removeFile(id) {
 }
 
 //Fonction pour envoyer le fichier, utilisation d'un objet FileUpload pour connaître l'avancement et permettre plusieurs envois en même temps
-function uploadFile(id, name, file, type) {
-    rLog('uploadFile : ' + id + name + file + type);
-    
-    (id!=-1)?eId('toolsFile' + id).innerHTML = 'Sending ...':null;
+function uploadFile(id, uId, name, file, type) {
+    rLog('uploadFile : ' + id + uId + name + file + type);
+
+    eId('toolsFile' + id).innerHTML = 'Sending ...';
     eId('countUploads').innerHTML = parseInt(eId('countUploads').innerHTML) + 1;
 
     var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1].id + 1) : 0;
@@ -510,7 +512,7 @@ function uploadFile(id, name, file, type) {
     var formData = new FormData();
     formData.append('fileData', file);
 
-    var url = 'php/uploadFile.php?projectName=' + currentProject.name + '&fileId=' + id + '&typeFile=' + type;
+    var url = 'php/uploadFile.php?projectName=' + currentProject.name + '&fileUId=' + uId + '&typeFile=' + type;
 
     var xhr = createCORSRequest('POST', url);
 

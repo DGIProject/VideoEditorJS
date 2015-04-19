@@ -25,7 +25,7 @@ GenerateFileProject.prototype.generateMain = function() {
 
         console.log(oldFile);
 
-        var file = new File(oldFile.id, oldFile.uid, oldFile.type, oldFile.size, oldFile.fileName, oldFile.format);
+        var file = new File(oldFile.id, oldFile.uId, oldFile.type, oldFile.size, oldFile.fileName, oldFile.format);
 
         file.setDuration(oldFile.duration);
 

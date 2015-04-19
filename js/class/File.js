@@ -5,9 +5,9 @@ var TYPE = {
     TEXT : 3
 };
 
-File = function(id, uid, type, size, fileName, format) {
+File = function(id, uId, type, size, fileName, format) {
     this.id = id;
-    this.uid = uid;
+    this.uId = uId;
 
     this.type = type;
     this.size = size;
