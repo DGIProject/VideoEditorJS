@@ -10,6 +10,8 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
     reportError(errorText);
     rLog(errorText);
 
+    hLoadM();
+
     return false;
 };
 

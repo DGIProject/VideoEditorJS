@@ -85,7 +85,7 @@ function openProject() {
 
 //Chargement du projet
 function loadProject(fileName) {
-    loadM();
+    sLoadM();
 
     var url = remoteAPIPath + 'php/projectManagement.php?action=read';
 
@@ -98,7 +98,8 @@ function loadProject(fileName) {
 
     xhr.onload = function() {
         console.log('response : ' + xhr.responseText);
-        jsonRep = JSON.parse(xhr.responseText);
+        var jsonRep = JSON.parse(xhr.responseText);
+
         if (jsonRep.code != -1)
         {
             //Classe ReadFileProject qui permet d'ouvrir un projet
@@ -107,8 +108,10 @@ function loadProject(fileName) {
         }
         else
         {
-            loadM();
+            hLoadM();
+
             $('#startLoadingEditor').modal('show');
+
             noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de charger ce project.', timeout: '5000'});
         }
     };
@@ -126,8 +129,9 @@ function loadProject(fileName) {
 //Sauvegarde du projet : GenerateFileProject permet de créer le fichier JSON avec tout le contenu du projet puis envoi par requête Ajax.
 function saveProject() {
     rLog('Saving project ...');
+
     listAvailableRenderFiles();
-    loadM();
+    sLoadM();
 
     var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
     var contentFile = fileProject.generateMain();
@@ -147,7 +151,7 @@ function saveProject() {
         console.log('response : ' + xhr.responseText);
         jsonRep = JSON.parse(xhr.responseText);
 
-        loadM();
+        hLoadM();
 
         if(jsonRep.code == 0)
         {
@@ -205,18 +209,22 @@ function autoSaveInterval() {
 //Lorsque le projet existe déjà, proposition de l'écraser ou alors d'en créer un avec un autre nom
 function overwriteProject() {
     $('#alreadyExistProjectModal').modal('hide');
-    loadM();
+
+    sLoadM();
 
     var url = remoteAPIPath + 'php/projectManagement.php?action=create';
     var xhr = createCORSRequest('POST', url);
+
     if (!xhr) {
         noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
         return;
     }
+
     xhr.onload = function() {
         console.log('response : ' + xhr.responseText);
-        jsonRep = JSON.parse(xhr.responseText);
-        loadM();
+        var jsonRep = JSON.parse(xhr.responseText);
+
+        hLoadM();
 
         if(jsonRep.code == 0)
         {
@@ -238,7 +246,4 @@ function overwriteProject() {
 
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xhr.send('nameProject=' + currentProject.name);
-
-
-
 }

@@ -1,8 +1,12 @@
-function loadM() {
+function sLoadM() {
     eId('progressionBar').style.width = '100%';
     eId('progressionStatus').innerHTML = 'Chargement en cours ...';
 
-    $('#loadModal').modal('toggle');
+    $('#loadModal').modal('show');
+}
+
+function hLoadM() {
+    $('#loadModal').modal('hide');
 }
 
 function eId(id) {

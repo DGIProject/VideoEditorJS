@@ -546,18 +546,9 @@ function uploadFile(id, name, file, type) {
                     timeout: '5000'
                 });
 
-                if(id != -1)
+                if(id >= 0)
                 {
                     eId('contentFileUpload' + idFileUpload).innerHTML = '<span class="text-danger">Impossible d\'envoyer le fichier.</span>';
-
-                    eId('toolsFile' + id).innerHTML = '';
-
-                    var buttonRetryUpload = document.createElement('button');
-                    buttonRetryUpload.setAttribute('type', 'button');
-                    buttonRetryUpload.setAttribute('onclick', 'updateDataFile(' + id + ');');
-                    buttonRetryUpload.setAttribute('class', 'btn btn-danger btn-block');
-                    buttonRetryUpload.innerHTML = 'Réessayer';
-
                     eId('toolsFile' + id).innerHTML = '<a href="#" onclick="updateDataFileModal(' + id + ');"><span class="text-danger">Erreur d\'envoi</span></a>';
                 }
 

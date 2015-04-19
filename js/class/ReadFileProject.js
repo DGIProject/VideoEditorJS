@@ -298,6 +298,6 @@ ReadFileProject.prototype.finishLoadProject = function() {
         currentProject.switchAutoSave();
         currentProject.isReady = true;
 
-        loadM();
+        hLoadM();
     }
 };
