@@ -241,26 +241,6 @@ function calculateTimeBar() {
     textPxLength = ctx.measureText(text);
     ctx.fillStyle = "#000000";
     ctx.fillText(text,(canvas.width-textPxLength.width),3);
-
-    /*console.log(timeDroit, timeGauche);
-    calcule du temp a droite !
-
-    var heure = Math.floor(timeDroit / 3600);
-    timeDroit = timeDroit - (3600 * heure);
-    var minutes = Math.floor(timeDroit / 60);
-    timeDroit = timeDroit - (60 * minutes);
-    var seconde = timeDroit;
-    var text = heure + 'h' + minutes + "m" + seconde + "s";
-    document.getElementById('endTime').innerHTML = text ;
-
-
-    var heure = Math.floor(timeGauche / 3600);
-    timeGauche = timeGauche - (3600 * heure);
-    var minutes = Math.floor(timeGauche / 60);
-    timeGauche = timeGauche - (60 * minutes);
-    var seconde = timeGauche;
-    text = heure + 'h' + minutes + "m" + seconde + "s"
-    document.getElementById('startTime').innerHTML = text;*/
 }
 function mouseMoveTime(e){
     calculateTimeBar();
@@ -268,21 +248,28 @@ function mouseMoveTime(e){
     var rect = canvas.getBoundingClientRect();
     ctx = canvas.getContext('2d');
     var x = e.clientX - rect.left, y = e.clientY - rect.top;
-
     ctx.beginPath();
     ctx.moveTo(x,canvas.height/2);
     ctx.lineTo(x,canvas.height);
     ctx.closePath();
     ctx.stroke();
 
-    var text = pixelToTime(x);
+    var text = pixelToTime(x+pixelTimeBar.g);
     ctx.font = "10pt Verdana";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     var textPxLength = ctx.measureText(text);
+
+    if (x>0 && x<canvas.width)
+    {
+        var posX = (x<textPxLength.width/2)? textPxLength.width/2 : ( x>(canvas.width-(textPxLength.width)/2))? canvas.width-(textPxLength.width)/2 : x ;
+    }
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(posX-(textPxLength.width/2),2,textPxLength.width+2, 12);
     //console.log(textPxLength);
     ctx.fillStyle = "#000000";
-    ctx.fillText(text,x,3);
+    ctx.fillText(text,posX,3);
 }
 
 //DROP ELEMENT
