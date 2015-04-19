@@ -21,7 +21,7 @@ ReadFileProject.prototype.loadProject = function() {
 ReadFileProject.prototype.setProject = function() {
     rLog('-LOAD- project : set properties');
 
-    currentProject = new Project(this.infoProject.name.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, this.infoProject.dateCreation);
+    currentProject = new Project(this.infoProject.name.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), this.infoProject.uId, usernameSession, this.infoProject.dateCreation);
     currentProject.lastSave = getHour();
     currentProject.forceSave = true;
 

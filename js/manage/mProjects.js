@@ -64,7 +64,7 @@ function saveNewProject(nameProject) {
         resetInterface();
 
         //Objet du projet avec l'ensemble des paramètres
-        currentProject = new Project(nameProject.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), usernameSession, getCurrentDate());
+        currentProject = new Project(nameProject.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), uId(), usernameSession, getCurrentDate());
         currentProject.updateText();
         currentProject.switchAutoSave();
         currentProject.isReady = true;
@@ -133,7 +133,7 @@ function saveProject() {
     listAvailableRenderFiles();
     sLoadM();
 
-    var fileProject = new GenerateFileProject(currentProject.name, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
+    var fileProject = new GenerateFileProject(currentProject.name, currentProject.uId, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
     var contentFile = fileProject.generateMain();
 
     console.log(contentFile);

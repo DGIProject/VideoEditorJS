@@ -1,5 +1,7 @@
-Project = function(name, username, dateCreation) {
+Project = function(name, uId, username, dateCreation) {
     this.name = name;
+    this.uId = uId;
+
     this.dateCreation = dateCreation;
     this.lastSave = 'Aucune';
 
