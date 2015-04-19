@@ -200,7 +200,7 @@ function elementProperties(rowTrack, rowElement) {
     eId('colorElementP').value = element.color;
     eId('colorElementP').setAttribute('onchange', 'changeColorElement(' + rowTrack + ', ' + rowElement + ');');
 
-    eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a) + '" class="previewFileContent"></a>';
+    eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a) + '" class="'+((element.type != TYPE.AUDIO) ? "previewFileContent" : "previewAudioFileContent" )+'"></a>';
 
     var canvasCProperties = document.getElementById('canvasElementProperties');
     var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');
