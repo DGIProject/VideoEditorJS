@@ -85,6 +85,8 @@ function addElement(id, fileId, trackId, type, thumbnail, color, marginLeft, tim
 function gMarginLeft(isVideoAudio, rows) {
     var marginLeft = 0;
 
+    console.log('info: ' + isVideoAudio + ' - ' + rows.row1 + ' - ' + rows.row2);
+
     for(var i = 0; i < currentProject.tabListTracks[rows.row1].tabElements.length; i++) {
         if((currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft + currentProject.tabListTracks[rows.row1].tabElements[i].width) > marginLeft) {
             marginLeft = currentProject.tabListTracks[rows.row1].tabElements[i].marginLeft + currentProject.tabListTracks[rows.row1].tabElements[i].width;
@@ -281,6 +283,12 @@ function setVolumeElement(id, trackId) {
 }
 
 //Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)
+function deleteElementModal(rowTrack, rowElement) {
+    eId('buttonDeleteElement').setAttribute('onclick', 'deleteElement(' + rowTrack + ', ' + rowElement + ');');
+
+    $('#deleteElementModal').modal('show');
+}
+
 function deleteElement(rowTrack, rowElement) {
     rLog('-ELEMENT- delete [rowTrack: ' + rowTrack + '][rowElement: ' + rowElement + ']');
 

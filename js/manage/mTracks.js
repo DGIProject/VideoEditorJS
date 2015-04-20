@@ -296,7 +296,7 @@ function mouseMoveTime(e){
 function allowDrop(e) {
     if(isFirefox)
     {
-        console.log('isFirefox');
+        //console.log('isFirefox');
 
         var id = parseInt(this.id.replace('elementView', ''));
         var fileId = parseInt(e.dataTransfer.getData('fileId'));
@@ -308,13 +308,13 @@ function allowDrop(e) {
         {
             if(track.parent >= 0)
             {
-                console.log('yes because have parent');
+                //console.log('yes because have parent');
 
                 e.preventDefault();
             }
             else
             {
-                console.log('no parent');
+                //console.log('no parent');
             }
         }
         else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
@@ -323,7 +323,7 @@ function allowDrop(e) {
         }
         else
         {
-            console.log('no');
+            //console.log('no');
         }
     }
     else
@@ -350,24 +350,24 @@ function dropFile(e) {
     {
         if(track.parent >= 0)
         {
-            console.log('yes because have parent');
+            //console.log('yes because have parent');
 
             addElementTrack(fileId, id, -1, 0, -1, true);
         }
         else
         {
-            console.log('no parent');
+            //console.log('no parent');
         }
     }
     else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
     {
-        console.log('yes');
+        //console.log('yes');
 
         addElementTrack(fileId, id, -1, 0, -1, true);
     }
     else
     {
-        console.log('no');
+        //console.log('no');
     }
 }
 
