@@ -482,7 +482,10 @@ function removeFile(id) {
 function uploadFile(id, uId, name, file, type) {
     rLog('uploadFile : ' + id + uId + name + file + type);
 
-    eId('toolsFile' + id).innerHTML = 'Sending ...';
+    if(id >= 0) {
+        eId('toolsFile' + id).innerHTML = 'Sending ...';
+    }
+
     eId('countUploads').innerHTML = parseInt(eId('countUploads').innerHTML) + 1;
 
     var idFileUpload = (currentProject.tabFilesUpload.length > 0) ? (currentProject.tabFilesUpload[currentProject.tabFilesUpload.length - 1].id + 1) : 0;
