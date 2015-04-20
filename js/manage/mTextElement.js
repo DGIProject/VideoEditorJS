@@ -46,11 +46,10 @@ function saveTextElement() {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
         var fileName = 'Text ' + fileId;
 
-        var currentItem = new File(fileId, TYPE.TEXT, 0, ('Text ' + fileId), 'png');
+        var currentItem = new File(fileId, uId(), TYPE.TEXT, blob.size, ('Text ' + fileId), 'png');
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
-        currentItem.size = blob.size;
         currentItem.setProperties(new TextElement(textElement.id, textElement.text, textElement.properties));
         currentItem.setThumbnailImage(window.URL.createObjectURL(blob));
 
