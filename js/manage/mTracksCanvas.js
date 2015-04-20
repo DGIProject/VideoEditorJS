@@ -25,7 +25,7 @@ function analyzeCollision() {
             if(track.mode == MODE.REMOVE)
             {
                 rLog('-CANVASTRACK- remove mode');
-                deleteElement(x, currentRow);
+                deleteElementModal(x, currentRow);
             }
             else
             {
@@ -345,11 +345,14 @@ function element(rowTrack, row) {
     var context = currentProject.tabListTracks[rowTrack].canvas.context;
 
     var gapError = ((currentElement.marginLeft * 2) / 198);
+    var gapErrorWidth = ((currentElement.width * 2) / 198);
+
+    console.log('gapErrorWidth: ' + gapErrorWidth);
 
     context.beginPath();
     context.lineWidth = 1;
     context.strokeStyle = (currentElement.selected) ? 'blue' : 'gray';
-    context.rect(currentElement.marginLeft + gapError, 0, currentElement.width, 100);
+    context.rect(currentElement.marginLeft + gapError, 0, currentElement.width + gapErrorWidth, 100);
     context.stroke();
 
     context.fillStyle = currentElement.color;

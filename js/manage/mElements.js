@@ -94,7 +94,7 @@ function gMarginLeft(isVideoAudio, rows) {
     }
 
     if(isVideoAudio) {
-        for(var x = 0; i < currentProject.tabListTracks[rows.row2].tabElements.length; x++) {
+        for(var x = 0; x < currentProject.tabListTracks[rows.row2].tabElements.length; x++) {
             if((currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft + currentProject.tabListTracks[rows.row2].tabElements[x].width) > marginLeft) {
                 marginLeft = currentProject.tabListTracks[rows.row2].tabElements[x].marginLeft + currentProject.tabListTracks[rows.row2].tabElements[x].width;
             }
@@ -291,6 +291,8 @@ function deleteElementModal(rowTrack, rowElement) {
 
 function deleteElement(rowTrack, rowElement) {
     rLog('-ELEMENT- delete [rowTrack: ' + rowTrack + '][rowElement: ' + rowElement + ']');
+
+    $('#deleteElementModal').modal('hide');
 
     var track = currentProject.tabListTracks[rowTrack];
     var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
