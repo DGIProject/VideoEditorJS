@@ -11,7 +11,7 @@ RenderP = function (format) {
     this.commandList = [];
     this.previousZoom = parseInt(document.getElementById('zoomRange').value);
     changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
-
+    console.log(currentProject.tabListTracks);
     this.FORMAT = {
         MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
         AVI : {ext : 'avi', codec : null},
@@ -24,31 +24,25 @@ RenderP = function (format) {
     this.userFormat = format || this.FORMAT.MPEG4;
     console.log(this.userFormat);
 
-    var tabAudioTrack = [];
     var tabVideoTrack = [];
-    for (i=0;i<this.tracks.length;i++)
+    for (i=0;i<currentProject.tabListTracks.length;i++)
     {
-        if (this.tracks[i].type == TYPE.VIDEO)
+        if (currentProject.tabListTracks[i].type == TYPE.VIDEO)
         {
-            tabVideoTrack.push(this.tracks[i]);
-        }
-        else
-        {
-            tabAudioTrack.push(this.tracks[i]);
+            tabVideoTrack.push(currentProject.tabListTracks[i]);
+            console.log("vid",i);
         }
     }
-    var tabTracks = [{'type':TYPE.VIDEO, 'data':tabVideoTrack}, {'type':TYPE.AUDIO, 'data' : tabAudioTrack}];
-    console.log("AudioTracks",tabAudioTrack.length, tabVideoTrack);
     console.log("Video",tabVideoTrack.length, tabVideoTrack);
 
-    for (i=0;i<tabTracks.length;i++)
+   /* for (i=0;i<tabTracks.length;i++)
     {
         trackData = this.sortAllTracks(tabTracks[i].data);
         console.log("sorted : ", trackData);
 
-    }
+    }*/
 
-    this.makeSingleVideoTrack(tabVideoTrack);
+   this.makeSingleVideoTrack(tabVideoTrack);
 
 };
 
@@ -57,11 +51,14 @@ RenderP.prototype.makeSingleVideoTrack = function (tabTrack) {
     var trackZero = tabTrack[0];
     tabtracks = tabTrack;
 
-    tabTrack.shift();
+    //tabTrack.shift();
     console.log(tabTrack);
     blackTab = [];
     for (t=0;t<tabtracks.length;t++) {
 
+        tabtracks[t].tabElements.sort(function (a, b) {
+            return a.marginLeft - b.marginLeft
+        });
 
         for (e = 0; e < tabtracks[t].tabElements.length; e++) {
             if (e == 0) {
@@ -71,14 +68,13 @@ RenderP.prototype.makeSingleVideoTrack = function (tabTrack) {
                     console.log("black from 0 to" + tabtracks[t].tabElements[e].marginLeft);
                     blackTab.push({'from': 0, 'to': tabtracks[t].tabElements[e].marginLeft});
                 }
-
-            }
-            else if (e == (tabtracks[t].tabElements[e].length - 1)) {
-                console.log("blackEnd");
                 value = this.checkBlack(tabtracks[t], e);
                 console.log(value);
                 if (value.code)
                     blackTab.push({'from': value.from, 'to': value.to});
+            }
+            else if (e == (tabtracks[t].tabElements.length - 1)) {
+                console.log("blackEnd");
             }
             else {
                 console.log("BlackOthers");
@@ -89,6 +85,7 @@ RenderP.prototype.makeSingleVideoTrack = function (tabTrack) {
             }
         }
     }
+    console.log(blackTab)
 
 };
 RenderP.prototype.checkBlack = function (tabtrack, elementIndex)
