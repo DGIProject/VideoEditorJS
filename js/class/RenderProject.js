@@ -3,8 +3,8 @@
  */
 RenderP = function (format) {
     this.tracks = currentProject.tabListTracks;
-    this.nextElement = null;
-    this.elementEnd = null;
+
+    console.log(this.tracks, "TabTracks");
     this.commands = [];
     this.commandTracksAudio = [];
     this.commandTracksVideo = [];
@@ -25,45 +25,45 @@ RenderP = function (format) {
     console.log(this.userFormat);
 
     var tabVideoTrack = [];
-    for (i = 0; i < currentProject.tabListTracks.length; i++) {
-        if (currentProject.tabListTracks[i].type == TYPE.VIDEO) {
-            tabVideoTrack.push(currentProject.tabListTracks[i]);
+    for (i = 0; i < this.tracks.length; i++) {
+        if (this.tracks[i].type == TYPE.VIDEO) {
+            tabVideoTrack.push(this.tracks[i]);
             console.log("vid", i);
         }
     }
     console.log("Video", tabVideoTrack.length, tabVideoTrack);
 
-    minMargin = 0;
     maxpx = 0;
 
     for (i=0;i<tabVideoTrack.length;i++)
     {
-        for (e=0;e<tabVideoTrack.tabElements.length;e++)
+        for (e=0;e<tabVideoTrack[i].tabElements.length;e++)
         {
-            element = tabVideoTrack.tabElements[e];
-            if ((element.marginLeft+element.width)>maxpx)
+            this.element = tabVideoTrack[i].tabElements[e];
+            if ((element.marginLeft+this.element.width)>maxpx)
             {
-                maxpx= (element.marginLeft+element.width);
+                maxpx= (this.element.marginLeft+this.element.width);
             }
         }
     }
-    minMargin = maxpx;
     console.log(maxpx);
 
-
-    for (i=0;i<tabVideoTrack.length;i++)
+    for (p=0;p<maxpx;p++)
     {
-        for (e=0;e<tabVideoTrack.tabElements.length;e++)
+        for (t=0;t<tabVideoTrack.length;t++)
         {
-            element = tabVideoTrack.tabElements[e];
-            if (element.marginLeft<minMargin)
+            for (e=0;e<tabVideoTrack[t].tabElements.length;e++)
             {
-                maxpx= element.marginLeft;
+                this.element = tabVideoTrack[t].tabElements[e];
+
+                if (this.element.marginLeft==p)
+                {
+                    console.log("Ok found a border");
+                }
             }
         }
     }
 
-    console.log(minMargin);
     /* for (i=0;i<tabTracks.length;i++)
      {
      trackData = this.sortAllTracks(tabTracks[i].data);
