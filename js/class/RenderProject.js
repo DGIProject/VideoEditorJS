@@ -24,35 +24,17 @@ RenderP = function (format) {
     this.userFormat = format || this.FORMAT.MPEG4;
     console.log(this.userFormat);
 
-    var tabAudioTrack = [];
-    var tabVideoTrack = [];
-
-    for (i=0;i<this.tracks.length;i++)
-    {
-        if (this.tracks[i].type == TYPE.VIDEO)
-        {
-            tabVideoTrack.push(this.tracks[i]);
-        }
-        else
-        {
-            tabAudioTrack.push(this.tracks[i]);
-        }
-    }
-
-    console.log(tabAudioTrack, tabVideoTrack, "Tab audioVideo");
-    /* Processing audio Tracks */
     this.t = 0;
-    for (t = 0; t < tabAudioTrack.length; t++) {
-
+    for (t = 0; t < this.tracks.length; t++) {
         this.t = t;
-
-        tabAudioTrack[t].tabElements.sort(function (a, b) {
+        this.tracks[t].tabElements.sort(function (a, b) {
+            console.log("tris");
             return a.marginLeft - b.marginLeft
         }); //sort pour avoir les element dans le bon ordre des marges
 
         this.commands.push([]);
 
-        this.elementInTrack = tabAudioTrack[t].tabElements;
+        this.elementInTrack = this.tracks[t].tabElements;
 
         console.log("track ", t, "elementT", this.elementInTrack);
 
@@ -62,64 +44,53 @@ RenderP = function (format) {
             if (e == 0) {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft >= oneSecond) {
-                    cmd = "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" ;
-                    // "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts"
+                    var cmd;
+                    cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts";
                     this.commandList.push(cmd);
                     this.commands[this.t].push(cmd);
 
                 }
 
-                this.addCommandA(this.elementInTrack[e]);
-                //this.addCommandV(this.elementInTrack[e]);
-                ((this.elementInTrack.length - 1) != e) ?  this.addBlackA(e) : null;
-                //this.addBlackV(e)) : null;
+                (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
+                ((this.elementInTrack.length - 1) != e) ? ((this.tracks[t].type == TYPE.AUDIO) ? this.addBlackA(e) : this.addBlackV(e)) : null;
 
             }
             else if (e == (this.elementInTrack.length - 1)) {
                 console.log("length -1");
-                this.addCommandA(this.elementInTrack[e]);
-                //: this.addCommandV(this.elementInTrack[e]);
+                (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
             }
             else {
                 console.log("not -1");
-                this.addCommandA(this.elementInTrack[e]) ;
-                //this.addCommandV(this.elementInTrack[e]);
-                this.addBlackA(e) ;
-                //: this.addBlackV(e);
+                (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
+                (this.tracks[t].type == TYPE.AUDIO) ? this.addBlackA(e) : this.addBlackV(e);
             }
             console.log('End !!')
 
         }
 
-        if (tabAudioTrack[t].tabElements.length > 0) {
+        if (this.tracks[t].tabElements.length > 0) {
             var lastCmd = "";
             console.log(this.commands[t], this.commands);
             if (this.commands[t].length > 1) {
                 lastCmd = '-i "concat:';
-                var ending = /*((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+*/" -y ";
+                var ending = ((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
                 for (i = 0; i < this.commands[t].length; i++) {
-                    lastCmd +=  "" + i + ".mp3|" ;
-                    //: "" + i + ".ts|");
+                    lastCmd += ((this.tracks[t].type == TYPE.AUDIO) ? "" + i + ".mp3|" : "" + i + ".ts|");
                 }
                 //lastCmd += complexfliter;
                 lastCmd = lastCmd.slice(0, -1);
                 lastCmd += '"' + ending;
-                lastCmd +=  " track_" + t + ".mp3";
-                //: " track_" + t + ".mp4";
+                lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
             }
             else {
-                lastCmd =  "-i 0.mp3 -c copy -y track_" + t + ".mp3";
-                //: "-i 0.ts -c mpeg4 -y track_" + t + ".mp4";
+                lastCmd = (this.tracks[t].type == TYPE.AUDIO) ? "-i 0.mp3 -c copy -y track_" + t + ".mp3" : "-i 0.ts -c mpeg4 -y track_" + t + ".mp4";
             }
-            this.commandTracksAudio.push([t, lastCmd]);
-            //: this.commandTracksVideo.push([t, lastCmd]);
+            (this.tracks[t].type == TYPE.AUDIO) ? this.commandTracksAudio.push([t, lastCmd]) : this.commandTracksVideo.push([t, lastCmd]);
             this.commands[t].push(lastCmd);
             this.commandList.push(lastCmd);
         }
     }
 
-
-    //--------------------
     var finalAudio = "audio.mp3";
     // Merge audio tracks into single one
     if (this.commandTracksAudio.length > 1) {
@@ -185,14 +156,15 @@ RenderP.prototype.addCommandV = function (e) {
 
 
 };
-
 RenderP.prototype.addCommandA = function (e) {
-    this.elementEnd = e.marginLeft + e.width;
+    this.elementEnd = e.marginLeft + e.width
+
+    var curentFileforElement = this.getFileInformationById(e.fileId)
     var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
     this.commands[this.t].push(cmd);
     this.commandList.push(cmd);
-};
 
+};
 RenderP.prototype.addBlackV = function (e) {
     tempIndex = e;
     tempIndex++;
@@ -213,7 +185,6 @@ RenderP.prototype.addBlackV = function (e) {
         }
     }
 };
-
 RenderP.prototype.addBlackA = function (e) {
     tempIndex = e;
     tempIndex++;
@@ -231,7 +202,6 @@ RenderP.prototype.addBlackA = function (e) {
         }
     }
 };
-
 RenderP.prototype.getFileInformationById = function (id) {
     for (i = 0; i < currentProject.tabListFiles.length; i++) {
         if (currentProject.tabListFiles[i].id == id) {
