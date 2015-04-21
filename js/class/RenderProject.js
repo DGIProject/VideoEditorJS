@@ -3,180 +3,153 @@
  */
 RenderP = function (format) {
     this.tracks = currentProject.tabListTracks;
-
-    console.log(this.tracks, "TabTracks");
+    this.nextElement = null;
+    this.elementEnd = null;
     this.commands = [];
     this.commandTracksAudio = [];
     this.commandTracksVideo = [];
     this.commandList = [];
     this.previousZoom = parseInt(document.getElementById('zoomRange').value);
-    changeZoom((parseInt(document.getElementById('zoomRange').max) / 2), false);
-    console.log(currentProject.tabListTracks);
+    changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
+
     this.FORMAT = {
-        MPEG4: {ext: 'mp4', codec: 'mpeg4'},
-        AVI: {ext: 'avi', codec: null},
-        OGG: {ext: 'ogg', codec: null},
-        WEBM: {ext: 'webm', codec: null},
-        TS: {ext: 'ts', codec: null},
-        X264: {ext: 'mp4', codec: 'libx264'}
+        MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
+        AVI : {ext : 'avi', codec : null},
+        OGG : {ext : 'ogg', codec : null},
+        WEBM : {ext : 'webm', codec : null},
+        TS : {ext : 'ts' , codec : null},
+        X264 : {ext : 'mp4', codec : 'libx264'}
     };
 
     this.userFormat = format || this.FORMAT.MPEG4;
     console.log(this.userFormat);
 
+    var tabAudioTrack = [];
     var tabVideoTrack = [];
-    for (i = 0; i < this.tracks.length; i++) {
-        if (this.tracks[i].type == TYPE.VIDEO) {
+
+    for (i=0;i<this.tracks.length;i++)
+    {
+        if (this.tracks[i].type == TYPE.VIDEO)
+        {
             tabVideoTrack.push(this.tracks[i]);
-            console.log("vid", i);
         }
-    }
-    console.log("Video", tabVideoTrack.length, tabVideoTrack);
-
-    maxpx = 0;
-
-    for (i=0;i<tabVideoTrack.length;i++)
-    {
-        for (e=0;e<tabVideoTrack[i].tabElements.length;e++)
+        else
         {
-            this.element = tabVideoTrack[i].tabElements[e];
-            if ((element.marginLeft+this.element.width)>maxpx)
-            {
-                maxpx= (this.element.marginLeft+this.element.width);
-            }
-        }
-    }
-    console.log(maxpx);
-
-    for (p=0;p<maxpx;p++)
-    {
-        for (t=0;t<tabVideoTrack.length;t++)
-        {
-            for (e=0;e<tabVideoTrack[t].tabElements.length;e++)
-            {
-                this.element = tabVideoTrack[t].tabElements[e];
-
-                if (this.element.marginLeft==p)
-                {
-                    console.log("Ok found a border");
-                }
-            }
+            tabAudioTrack.push(this.tracks[i]);
         }
     }
 
-    /* for (i=0;i<tabTracks.length;i++)
-     {
-     trackData = this.sortAllTracks(tabTracks[i].data);
-     console.log("sorted : ", trackData);
+    console.log(tabAudioTrack, tabVideoTrack, "Tab audioVideo");
+    /* Processing audio Tracks */
+    this.t = 0;
+    for (t = 0; t < tabAudioTrack.length; t++) {
 
-     }*/
+        this.t = t;
 
-    //this.makeSingleVideoTrack(tabVideoTrack);
+        tabAudioTrack[t].tabElements.sort(function (a, b) {
+            return a.marginLeft - b.marginLeft
+        }); //sort pour avoir les element dans le bon ordre des marges
 
-};
+        this.commands.push([]);
 
-RenderP.prototype.makeSingleVideoTrack = function (tabTrack) {
-    var tabElement = [];
-    var trackZero = tabTrack[0];
-    tabtracks = tabTrack;
+        this.elementInTrack = tabAudioTrack[t].tabElements;
 
-    //tabTrack.shift();
-    console.log(tabTrack);
-    blackTab = [];
-    t = 0;
-    tabtracks[t].tabElements.sort(function (a, b) {
-        return a.marginLeft - b.marginLeft
-    });
+        console.log("track ", t, "elementT", this.elementInTrack);
 
-    for (e = 0; e < tabtracks[t].tabElements.length; e++) {
-        if (e == 0) {
-            console.log("0 -> deb");
-            if (tabtracks[t].tabElements[e].marginLeft >= oneSecond) {
-                console.log("blackFirstTime");
-                console.log("black from 0 to" + tabtracks[t].tabElements[e].marginLeft);
-                blackTab.push({'from': 0, 'to': tabtracks[t].tabElements[e].marginLeft});
-            }
-            value = this.checkBlack(tabtracks[t], e);
-            console.log(value);
-            if (value.code)
-                blackTab.push({'from': value.from, 'to': value.to});
-        }
-        else if (e == (tabtracks[t].tabElements.length - 1)) {
-            console.log("blackEnd");
-        }
-        else {
-            console.log("BlackOthers");
-            value = this.checkBlack(tabtracks[t], e);
-            console.log(value);
-            if (value.code)
-                blackTab.push({'from': value.from, 'to': value.to});
-        }
-    }
-    console.log(blackTab);
+        for (var e = 0; e < this.elementInTrack.length; e++) {
+            console.log("element n°", e);
 
-    tabtracks.shift();
-    for (t=0;t<tabtracks.length;t++)
-    {
-        for (e = 0; e < tabtracks[t].tabElements.length; e++) {
-            elementMargin = tabtracks[t].tabElements[e].marginLeft;
-            elementWidth = tabtracks[t].tabElements[e].width + tabtracks[t].tabElements[e].marginLeft;
             if (e == 0) {
                 console.log("0 -> deb");
-                if (tabtracks[t].tabElements[e].marginLeft >= oneSecond) {
-                    console.log("blackFirstTime");
-                    console.log("black from 0 to" + tabtracks[t].tabElements[e].marginLeft);
-                    // blackTab.push({'from': 0, 'to': tabtracks[t].tabElements[e].marginLeft});
-
+                if (this.elementInTrack[e].marginLeft >= oneSecond) {
+                    cmd = "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" ;
+                    // "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts"
+                    this.commandList.push(cmd);
+                    this.commands[this.t].push(cmd);
 
                 }
-                value = this.checkBlack(tabtracks[t], e);
-                console.log(value);
-                /* if (value.code)
-                    blackTab.push({'from': value.from, 'to': value.to});*/
+
+                this.addCommandA(this.elementInTrack[e]);
+                //this.addCommandV(this.elementInTrack[e]);
+                ((this.elementInTrack.length - 1) != e) ?  this.addBlackA(e) : null;
+                //this.addBlackV(e)) : null;
 
             }
-            else if (e == (tabtracks[t].tabElements.length - 1)) {
-                console.log("blackEnd");
+            else if (e == (this.elementInTrack.length - 1)) {
+                console.log("length -1");
+                this.addCommandA(this.elementInTrack[e]);
+                //: this.addCommandV(this.elementInTrack[e]);
             }
             else {
-                console.log("BlackOthers");
-                value = this.checkBlack(tabtracks[t], e);
-                console.log(value);
-                /*if (value.code)
-                    blackTab.push({'from': value.from, 'to': value.to});*/
-
+                console.log("not -1");
+                this.addCommandA(this.elementInTrack[e]) ;
+                //this.addCommandV(this.elementInTrack[e]);
+                this.addBlackA(e) ;
+                //: this.addBlackV(e);
             }
+            console.log('End !!')
+
+        }
+
+        if (tabAudioTrack[t].tabElements.length > 0) {
+            var lastCmd = "";
+            console.log(this.commands[t], this.commands);
+            if (this.commands[t].length > 1) {
+                lastCmd = '-i "concat:';
+                var ending = /*((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+*/" -y ";
+                for (i = 0; i < this.commands[t].length; i++) {
+                    lastCmd +=  "" + i + ".mp3|" ;
+                    //: "" + i + ".ts|");
+                }
+                //lastCmd += complexfliter;
+                lastCmd = lastCmd.slice(0, -1);
+                lastCmd += '"' + ending;
+                lastCmd +=  " track_" + t + ".mp3";
+                //: " track_" + t + ".mp4";
+            }
+            else {
+                lastCmd =  "-i 0.mp3 -c copy -y track_" + t + ".mp3";
+                //: "-i 0.ts -c mpeg4 -y track_" + t + ".mp4";
+            }
+            this.commandTracksAudio.push([t, lastCmd]);
+            //: this.commandTracksVideo.push([t, lastCmd]);
+            this.commands[t].push(lastCmd);
+            this.commandList.push(lastCmd);
         }
     }
 
 
-};
-RenderP.prototype.checkBlack = function (tabtrack, elementIndex) {
-    tempIndex = elementIndex;
-    tempIndex++;
-    console.log(tempIndex);
-    currentElement = tabtrack.tabElements[elementIndex];
-
-    if (!(tempIndex >= tabtrack.tabElements.length)) {
-        var nextElement = tabtrack.tabElements[tempIndex];
-        if (nextElement.marginLeft == (currentElement.marginLeft + currentElement.width) || (nextElement.marginLeft - (currentElement.marginLeft + currentElement.width)) < oneSecond / 2) {
-            return {code: false}
+    //--------------------
+    var finalAudio = "audio.mp3";
+    // Merge audio tracks into single one
+    if (this.commandTracksAudio.length > 1) {
+        var cmd = "";
+        for (i = 0; i < this.commandTracksAudio.length; i++) {
+            var trackId = this.commandTracksAudio[i][0];
+            cmd += "-i track_" + trackId + ".mp3 ";
         }
-        else {
-            return {code: true, from: (currentElement.marginLeft + currentElement.width), to: nextElement.marginLeft};
-        }
+        cmd += "amix=inputs=" + this.commandTracksAudio.length + ":duration=longest:dropout_transition=2 audio.mp3";
+        this.commandList.push(cmd);
+        finalAudio = "audio.mp3";
     }
-};
-
-RenderP.prototype.sortAllTracks = function (tabTrack) {
-    for (i = 0; i < tabTrack.length; i++) {
-        tabTrack[i].tabElements.sort(function (a, b) {
-            return a.marginLeft - b.marginLeft
-        });
+    else {
+        finalAudio = "track_1.mp3";
     }
-    return tabTrack;
-};
 
+
+    // merge audio and video
+    if (this.commandTracksAudio>0 || this.commandTracksVideo>0)
+    {
+        console.log("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") +" " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
+        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
+
+        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" final_WEB."+this.FORMAT.X264.ext);
+
+        changeZoom(this.previousZoom, false);
+        this.uploadCommands();
+    }
+
+};
 RenderP.prototype.addCommandV = function (e) {
     var cmd = "";
     this.elementEnd = e.marginLeft + e.width
@@ -226,7 +199,7 @@ RenderP.prototype.addBlackV = function (e) {
     var cmd = "";
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
-        if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond / 2) {
+        if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond/2) {
             //fileContent += "\n element+1 sticked !";
             console.log("sticked");
         }
@@ -246,13 +219,13 @@ RenderP.prototype.addBlackA = function (e) {
     tempIndex++;
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
-        if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond / 2) {
+        if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond/2) {
             //fileContent += "\n element+1 sticked !";
             console.log("sticked");
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
-            var cmd = "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -y " + this.commands[this.t].length + ".mp3";
+            var cmd  = "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond) + " -y " + this.commands[this.t].length + ".mp3";
             this.commands[this.t].push(cmd);
             this.commandList.push(cmd);
         }
