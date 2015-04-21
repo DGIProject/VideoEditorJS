@@ -242,7 +242,8 @@ function calculateTimeBar() {
     ctx.fillStyle = "#000000";
     ctx.fillText(text,(canvas.width-textPxLength.width),3);
 }
-function mouseMoveTime(e){
+
+function mouseMoveTime(e) {
     calculateTimeBar();
     var canvas = document.getElementById('timeBarCanvas');
     var rect = canvas.getBoundingClientRect();

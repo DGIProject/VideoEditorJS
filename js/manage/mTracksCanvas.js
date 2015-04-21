@@ -120,7 +120,7 @@ function mouseMoveTracks(e) {
         var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX);
         var y = e.clientY - $('#' + e.target.id).offset().top;
 
-        //si la souris est enfoncée, alors on effecture le mode choisi aussi non on chercher en fonction de la position de la souris le mode
+        //si la souris est enfoncée, alors on effecture le mode choisi aussi non on cherche en fonction de la position de la souris le mode
         if(track.mousedown)
         {
             if(track.mode == MODE.MOVE)
@@ -305,8 +305,14 @@ function rowElement(x, row) {
 function deselectAllElements() {
     for(var i = 0; i < currentProject.tabListTracks.length; i++) {
         for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++) {
-            currentProject.tabListTracks[i].currentRow = -1;
-            currentProject.tabListTracks[i].tabElements[x].selected = false;
+            if(currentProject.tabListTracks[i].currentRow == x && currentProject.tabListTracks[i].mousedown) {
+                console.log('is selected');
+            }
+            else
+            {
+                currentProject.tabListTracks[i].currentRow = -1;
+                currentProject.tabListTracks[i].tabElements[x].selected = false;
+            }
         }
     }
 }
