@@ -127,8 +127,6 @@ function mouseMoveTracks(e) {
             {
                 if((x - track.gap) >= 0)
                 {
-                    console.log(track.currentRow);
-
                     track.tabElements[track.currentRow].marginLeft = x - track.gap;
                 }
                 else
@@ -137,6 +135,7 @@ function mouseMoveTracks(e) {
                 }
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
+                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g);
             }
             else if(track.mode == MODE.RESIZE.LEFT)
             {
@@ -174,6 +173,7 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
+                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g);
             }
             else if(track.mode == MODE.RESIZE.RIGHT)
             {
@@ -208,10 +208,13 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
+                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - pixelTimeBar.g);
             }
         }
         else
         {
+            mouseMoveTime(x - pixelTimeBar.g);
+
             track.currentRow = rowElement(x, row);
 
             if(track.currentRow >= 0)
@@ -358,7 +361,7 @@ function element(rowTrack, row) {
     var marginLeftWithGap = currentElement.marginLeft + gapErrorMarginLeft;
     var widthWithGap = currentElement.width + gapErrorWidth;
 
-    console.log('gapErrorWidth: ' + gapErrorWidth);
+    //console.log('gapErrorWidth: ' + gapErrorWidth);
 
     context.beginPath();
     context.lineWidth = 1;
@@ -425,7 +428,7 @@ function element(rowTrack, row) {
     }
 
     if(currentElement.selected) {
-        drawTime(context, marginLeftWithGap);
+        //drawTime(context, marginLeftWithGap);
     }
 }
 
