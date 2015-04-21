@@ -263,6 +263,7 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
                 console.log("on depasse, ca ne va plus !!! On COUPE !");
                 newTrackElement.width = element.marginLeft - newTrackElement.marginLeft;
 
+                console.log("We have an element from ", newTrackElement.marginLeft, "to", newTrackElement.marginLeft+newTrackElement.width);
             }
         }
     }
