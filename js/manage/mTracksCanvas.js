@@ -127,6 +127,8 @@ function mouseMoveTracks(e) {
             {
                 if((x - track.gap) >= 0)
                 {
+                    console.log(track.currentRow);
+
                     track.tabElements[track.currentRow].marginLeft = x - track.gap;
                 }
                 else
@@ -344,30 +346,33 @@ function element(rowTrack, row) {
     var currentElement = currentProject.tabListTracks[rowTrack].tabElements[row];
     var context = currentProject.tabListTracks[rowTrack].canvas.context;
 
-    var gapError = ((currentElement.marginLeft * 2) / 198);
+    var gapErrorMarginLeft = ((currentElement.marginLeft * 2) / 198);
     var gapErrorWidth = ((currentElement.width * 2) / 198);
+
+    var marginLeftWithGap = currentElement.marginLeft + gapErrorMarginLeft;
+    var widthWithGap = currentElement.width + gapErrorWidth;
 
     console.log('gapErrorWidth: ' + gapErrorWidth);
 
     context.beginPath();
     context.lineWidth = 1;
     context.strokeStyle = (currentElement.selected) ? 'blue' : 'gray';
-    context.rect(currentElement.marginLeft + gapError, 0, currentElement.width + gapErrorWidth, 100);
+    context.rect(marginLeftWithGap, 0, widthWithGap, 100);
     context.stroke();
 
     context.fillStyle = currentElement.color;
-    context.fillRect(currentElement.marginLeft + gapError, 0, currentElement.width, 100);
+    context.fillRect(marginLeftWithGap, 0, widthWithGap, 100);
 
     context.font = '15px Calibri';
     context.fillStyle = '#000000';
 
     //TEXT
-    context.fillText(compressName(currentProject.tabListFiles[rowById(currentElement.fileId, currentProject.tabListFiles)].fileName), (currentElement.marginLeft + gapError + 2), 12, ((currentElement.width - 20) <= 0) ? 1 : (currentElement.width - 20));
+    context.fillText(compressName(currentProject.tabListFiles[rowById(currentElement.fileId, currentProject.tabListFiles)].fileName), (marginLeftWithGap + 2), 12, ((widthWithGap - 20) <= 0) ? 1 : (widthWithGap - 20));
 
     //CLOSE IMAGE
-    if(currentElement.width >= 16)
+    if(widthWithGap >= 16)
     {
-        context.drawImage(imageClose, (currentElement.marginLeft + gapError + currentElement.width - 15), 0, 15, 15);
+        context.drawImage(imageClose, (marginLeftWithGap + widthWithGap - 15), 0, 15, 15);
     }
 
     //THUMBNAIL IMAGE
@@ -378,13 +383,13 @@ function element(rowTrack, row) {
     {
         var newWidth = (imageThumbnail.width * 75) / imageThumbnail.height;
 
-        sWidth = (newWidth > (currentElement.width - 7)) ? (((currentElement.width - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
+        sWidth = (newWidth > (widthWithGap - 7)) ? (((widthWithGap - 7) / newWidth) * imageThumbnail.width) : imageThumbnail.width;
         sHeight = imageThumbnail.height;
 
-        xThumbnail = (currentElement.marginLeft + gapError + 2);
+        xThumbnail = marginLeftWithGap + 2;
         yThumbnail = 20;
 
-        widthThumbnail = (newWidth > (currentElement.width - 7)) ? (currentElement.width - 7) : newWidth;
+        widthThumbnail = (newWidth > (widthWithGap - 7)) ? (widthWithGap - 7) : newWidth;
         heightThumbnail = 75;
 
         //console.log(sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + newWidth + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
@@ -404,17 +409,17 @@ function element(rowTrack, row) {
         sWidth = imageThumbnail.width - (ratio * currentElement.leftGap) - (ratio * currentElement.rightGap);
         sHeight = imageThumbnail.height;
 
-        xThumbnail = currentElement.marginLeft + gapError;
+        xThumbnail = marginLeftWithGap;
         yThumbnail = 20;
 
-        widthThumbnail = currentElement.width;
+        widthThumbnail = widthWithGap;
         heightThumbnail = 75;
 
         context.drawImage(imageThumbnail, sx, sy, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
     }
 
     if(currentElement.selected) {
-        drawTime(context, (currentElement.marginLeft + gapError));
+        drawTime(context, marginLeftWithGap);
     }
 }
 
