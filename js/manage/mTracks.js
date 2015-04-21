@@ -242,15 +242,14 @@ function calculateTimeBar() {
     ctx.fillStyle = "#000000";
     ctx.fillText(text,(canvas.width-textPxLength.width),3);
 }
-function mouseMoveTime(e){
+
+function mouseMoveTime(x) {
     calculateTimeBar();
+
     var canvas = document.getElementById('timeBarCanvas');
-    var rect = canvas.getBoundingClientRect();
-    ctx = canvas.getContext('2d');
-    var x = e.clientX - rect.left, y = e.clientY - rect.top;
+    var ctx = canvas.getContext('2d');
 
-
-    var text = pixelToTime(x+pixelTimeBar.g);
+    var text = pixelToTime(x);
     ctx.font = "10pt Verdana";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";

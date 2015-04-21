@@ -38,15 +38,17 @@ function saveTextElement() {
 
         file.setThumbnailImage(window.URL.createObjectURL(blob));
 
-        uploadFile(currentManageTextElement.fileId, file.fileName, blob, 'FILE');
-        uploadFile(currentManageTextElement.fileId, file.fileName, blob, 'THUMBNAIL_I');
+        uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'FILE');
+        uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'THUMBNAIL_I');
     }
     else
     {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
+        var fileUId = uId();
+
         var fileName = 'Text ' + fileId;
 
-        var currentItem = new File(fileId, uId(), TYPE.TEXT, blob.size, ('Text ' + fileId), 'png');
+        var currentItem = new File(fileId, fileUId, TYPE.TEXT, blob.size, ('Text ' + fileId), 'png');
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
@@ -58,8 +60,8 @@ function saveTextElement() {
 
         addFileList(fileId, fileName, TYPE.TEXT);
 
-        uploadFile(fileId, fileName, blob, 'FILE');
-        uploadFile(fileId, fileName, blob, 'THUMBNAIL_I');
+        uploadFile(fileId, fileUId, fileName, blob, 'FILE');
+        uploadFile(fileId, fileUId, fileName, blob, 'THUMBNAIL_I');
     }
 
     var n = noty({layout: 'topRight', type: 'success', text: 'Le texte a bien été sauvegardé.', timeout: '5000'});

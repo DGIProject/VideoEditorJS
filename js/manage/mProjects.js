@@ -31,7 +31,7 @@ function getListProjects(id, username) {
         }
         else
         {
-            eId(id).innerHTML = 'Aucun project.';
+            eId(id).innerHTML = 'Aucun projet.';
         }
     };
 

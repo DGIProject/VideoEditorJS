@@ -56,7 +56,6 @@ window.onmouseup = function(e) {
 window.onmousemove = function(e) {
     if(currentProject.isReady) {
         mouseMoveTracks(e);
-        mouseMoveTime(e);
     }
 };
 
