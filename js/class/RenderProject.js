@@ -24,6 +24,16 @@ RenderP = function (format) {
     this.userFormat = format || this.FORMAT.MPEG4;
     console.log(this.userFormat);
 
+    this.tabVideoTrack = [];
+    for (i = 0; i < this.tracks.length; i++) {
+        if (this.tracks[i].type == TYPE.VIDEO) {
+            this.tabVideoTrack.push(this.tracks[i]);
+            console.log("vid", i);
+        }
+    }
+    console.log("VideoTab", this.tabVideoTrack);
+
+
     this.t = 0;
     for (t = 0; t < this.tracks.length; t++) {
         this.t = t;
@@ -46,6 +56,10 @@ RenderP = function (format) {
                 if (this.elementInTrack[e].marginLeft >= oneSecond) {
                     var cmd;
                     cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts";
+                    if (this.tracks[t].type == TYPE.VIDEO)
+                    {
+                        this.findOnTrackB(rowById(this.tracks[t].id, this.tabVideoTrack)+1, 0,this.elementInTrack[e].marginLeft, this.elementInTrack[e] );
+                    }
                     this.commandList.push(cmd);
                     this.commands[this.t].push(cmd);
 
@@ -223,4 +237,33 @@ RenderP.prototype.uploadCommands = function () {
 
     var txtFile = new Blob([finalString], {type: 'text/plain', name: "command.ffm"});
     uploadFile(-1, "renderFile", txtFile, "RENDER");
+};
+RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
+    console.log("trying ........");
+
+    if (tId>=this.tabVideoTrack.length){ console.log("does not exist"); return false;}
+
+    this.tabVideoTrack[tId].tabElements.sort(function (a, b) {
+        return a.marginLeft - b.marginLeft
+    });
+    console.log("current Tracks",this.tabVideoTrack[tId]);
+
+    for (e=0;e<this.tabVideoTrack[tId].tabElements.length;e++)
+    {
+        var newTrackElement = this.tabVideoTrack[tId].tabElements[e];
+        console.log(newTrackElement, "--------------------------------");
+
+        console.log(from,newTrackElement.marginLeft, to,newTrackElement.marginLeft+newTrackElement.width);
+
+        if (from<newTrackElement.marginLeft && to<newTrackElement.marginLeft+newTrackElement.width)
+        {
+            console.log("in black !!!!");
+            if ((newTrackElement.marginLeft+newTrackElement.width)>element.marginLeft)
+            {
+                console.log("on depasse, ca ne va plus !!! On COUPE !");
+                newTrackElement.width = element.marginLeft - newTrackElement.marginLeft;
+
+            }
+        }
+    }
 };
