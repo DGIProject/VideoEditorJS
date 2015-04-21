@@ -33,6 +33,37 @@ RenderP = function (format) {
     }
     console.log("Video", tabVideoTrack.length, tabVideoTrack);
 
+    minMargin = 0;
+    maxpx = 0;
+
+    for (i=0;i<tabVideoTrack.length;i++)
+    {
+        for (e=0;e<tabVideoTrack.tabElements.length;e++)
+        {
+            element = tabVideoTrack.tabElements[e];
+            if ((element.marginLeft+element.width)>maxpx)
+            {
+                maxpx= (element.marginLeft+element.width);
+            }
+        }
+    }
+    minMargin = maxpx;
+    console.log(maxpx);
+
+
+    for (i=0;i<tabVideoTrack.length;i++)
+    {
+        for (e=0;e<tabVideoTrack.tabElements.length;e++)
+        {
+            element = tabVideoTrack.tabElements[e];
+            if (element.marginLeft<minMargin)
+            {
+                maxpx= element.marginLeft;
+            }
+        }
+    }
+
+    console.log(minMargin);
     /* for (i=0;i<tabTracks.length;i++)
      {
      trackData = this.sortAllTracks(tabTracks[i].data);
@@ -40,7 +71,7 @@ RenderP = function (format) {
 
      }*/
 
-    this.makeSingleVideoTrack(tabVideoTrack);
+    //this.makeSingleVideoTrack(tabVideoTrack);
 
 };
 
@@ -81,7 +112,43 @@ RenderP.prototype.makeSingleVideoTrack = function (tabTrack) {
                 blackTab.push({'from': value.from, 'to': value.to});
         }
     }
-    console.log(blackTab)
+    console.log(blackTab);
+
+    tabtracks.shift();
+    for (t=0;t<tabtracks.length;t++)
+    {
+        for (e = 0; e < tabtracks[t].tabElements.length; e++) {
+            elementMargin = tabtracks[t].tabElements[e].marginLeft;
+            elementWidth = tabtracks[t].tabElements[e].width + tabtracks[t].tabElements[e].marginLeft;
+            if (e == 0) {
+                console.log("0 -> deb");
+                if (tabtracks[t].tabElements[e].marginLeft >= oneSecond) {
+                    console.log("blackFirstTime");
+                    console.log("black from 0 to" + tabtracks[t].tabElements[e].marginLeft);
+                    // blackTab.push({'from': 0, 'to': tabtracks[t].tabElements[e].marginLeft});
+
+
+                }
+                value = this.checkBlack(tabtracks[t], e);
+                console.log(value);
+                /* if (value.code)
+                    blackTab.push({'from': value.from, 'to': value.to});*/
+
+            }
+            else if (e == (tabtracks[t].tabElements.length - 1)) {
+                console.log("blackEnd");
+            }
+            else {
+                console.log("BlackOthers");
+                value = this.checkBlack(tabtracks[t], e);
+                console.log(value);
+                /*if (value.code)
+                    blackTab.push({'from': value.from, 'to': value.to});*/
+
+            }
+        }
+    }
+
 
 };
 RenderP.prototype.checkBlack = function (tabtrack, elementIndex) {
