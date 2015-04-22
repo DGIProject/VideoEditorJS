@@ -204,6 +204,18 @@ function elementProperties(rowTrack, rowElement) {
 
     eId('previewElementP').innerHTML = '<a href="#" class="thumbnail"><img src="' + ((element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a) + '" class="'+((element.type != TYPE.AUDIO) ? "previewFileContent" : "previewAudioFileContent" )+'"></a>';
 
+    drawElementProperties(element);
+
+    eId('totalDElementP').innerHTML = element.totalDuration + 's';
+    eId('initialDElementP').innerHTML = element.currentDuration + 's';
+    eId('resizeLElementP').innerHTML = element.leftGap + 'px';
+    eId('resizeRElementP').innerHTML = element.rightGap + 'px';
+    eId('positionElementP').innerHTML = element.marginLeft + 'px';
+
+    $('#elementPropertiesModal').modal('show');
+}
+
+function drawElementProperties(element) {
     var canvasCProperties = document.getElementById('canvasElementProperties');
     var contextCProperties = document.getElementById('canvasElementProperties').getContext('2d');
 
@@ -233,20 +245,16 @@ function elementProperties(rowTrack, rowElement) {
     contextCProperties.moveTo(rightGap, 0);
     contextCProperties.lineTo(rightGap, contextCProperties.height);
     contextCProperties.stroke();
-
-    eId('totalDElementP').innerHTML = element.totalDuration + 's';
-    eId('initialDElementP').innerHTML = element.currentDuration + 's';
-    eId('resizeLElementP').innerHTML = element.leftGap + 'px';
-    eId('resizeRElementP').innerHTML = element.rightGap + 'px';
-    eId('positionElementP').innerHTML = element.marginLeft + 'px';
-
-    $('#elementPropertiesModal').modal('show');
 }
 
 //COLOR ELEMENT
 function changeColorElement(rowTrack, rowElement) {
-    console.log(eId('colorElementP').value);
-    currentProject.tabListTracks[rowTrack].tabElements[rowElement].color = eId('colorElementP').value;
+    rLog('-ELEMENT- change color [rowTrack: ' + rowTrack + '][rowElement: ' + rowElement + '][color: ' + eId('colorElementP').value + ']');
+
+    var element = currentProject.tabListTracks[rowTrack].tabElements[rowElement];
+    element.color = eId('colorElementP').value;
+
+    drawElementProperties(element);
 }
 
 //OPACITY
