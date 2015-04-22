@@ -12,14 +12,16 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
     rLog(errorText);
 
     hLoadM();
-
+    
+    /*
     noty({
         layout: 'topRight',
         type: 'error',
         text: 'Erreur interne dans le script, "' + errorObj + '". Un message d\'erreur a été envoyé à nos serveurs.',
         timeout: '5000'
     });
-
+    */
+    
     return false;
 };
 
