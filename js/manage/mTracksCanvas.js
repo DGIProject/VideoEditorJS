@@ -308,7 +308,7 @@ function rowElement(x, row) {
 function deselectAllElements() {
     for(var i = 0; i < currentProject.tabListTracks.length; i++) {
         for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++) {
-            if(currentProject.tabListTracks[i].currentRow == x && currentProject.tabListTracks[i].mousedown) {
+            if(currentProject.tabListTracks[i].mousedown) {
                 console.log('is selected');
             }
             else

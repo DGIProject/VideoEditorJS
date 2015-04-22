@@ -288,7 +288,7 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
         readFileProject.setElementsTrack(false);
     };
 
-    imageThumbnail.src = (element.type != TYPE.AUDIO) ? file.thumbnail.i : file.thumbnail.a;
+    imageThumbnail.src = (currentProject.tabListTracks[rowTrack].type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a;
 };
 
 ReadFileProject.prototype.finishLoadProject = function() {
