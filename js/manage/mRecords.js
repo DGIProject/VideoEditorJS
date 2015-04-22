@@ -262,9 +262,12 @@ document.getElementById('buttonSaveRecord').onclick = function(){
 
                                     var reader = new FileReader();
                                     reader.addEventListener("loadend", function() {
-                                        loadM();
                                         $('#recordAudioOrVideoElement').modal('hide');
-                                        fileProcessing(fileId,typeFile,blob.size.size,newFileName, reader.result);
+
+                                        currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, fileName, fileName.split('.').pop()));
+
+                                        sLoadM();
+                                        fileProcessing(fileId, reader.result);
                                     });
                                     reader.readAsArrayBuffer(blob);
 
@@ -274,15 +277,13 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                             terminal.Workers[index].worker.terminate();
                         }
                     });
-
-
-
-                    //fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
-
                 }
                 else
                 {
-                    fileProcessing(fileId,typeFile,videoRecorderResult.size,fileName, arrayBuffer);
+                    currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, videoRecorderResult.size, fileName, fileName.split('.').pop()));
+
+                    sLoadM();
+                    fileProcessing(fileId, arrayBuffer);
                 }
             }
         };
