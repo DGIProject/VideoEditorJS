@@ -414,7 +414,7 @@ function showContextMenu(e) {
         }
 
         eId('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
-        eId('buttonDeleteCM').setAttribute('onclick', 'deleteElement(' + rowTrack + ',' + track.currentRow + ');');
+        eId('buttonDeleteCM').setAttribute('onclick', 'deleteElementModal(' + rowTrack + ',' + track.currentRow + ');');
 
         eId('contextMenu').style.display = 'initial';
     }
