@@ -62,8 +62,6 @@ RenderP = function (format) {
                 }
 
                 this.getBlack(this.tabVideoTrack[t],e);
-
-
             }
             else if (e == (this.elementInTrack.length - 1)) {
                 console.log("length -1");
@@ -137,18 +135,13 @@ RenderP.prototype.getBlack = function(track, elementIndex){
     if (parseInt(elementIndex+1)<tabElement.length)
     {
         var NextElement = tabElement[elementIndex+1];
-        if (NextElement.marginLeft == (Element.width+Element.marginLeft) || (NextElement.marginLeft - (Element.width+Element.marginLeft))<oneSecond)
-        {
-            console.log("Sticked");
-        }
-        else
-        {
+
             var from = Element.width+Element.marginLeft;
             var to = NextElement.marginLeft;
             console.log(from, to, "Value to send ----------");
             this.findOnTrackB(rowById(track.id, this.tabVideoTrack)+1, from,to, NextElement );
 
-        }
+        
     }
     else
     {
@@ -269,12 +262,10 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
     this.tabVideoTrack[tId].tabElements.sort(function (a, b) {
         return a.marginLeft - b.marginLeft
     });
-    //console.log("current Tracks",this.tabVideoTrack[tId]);
 
     for (e=0;e<this.tabVideoTrack[tId].tabElements.length;e++)
     {
         var newTrackElement = this.tabVideoTrack[tId].tabElements[e];
-        //console.log(newTrackElement, "--------------------------------");
 
         console.log("element ",e,from,newTrackElement.marginLeft, to,newTrackElement.marginLeft+newTrackElement.width);
 
