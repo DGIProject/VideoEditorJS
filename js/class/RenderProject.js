@@ -33,7 +33,6 @@ RenderP = function (format) {
     }
     console.log("VideoTab", this.tabVideoTrack);
 
-
     this.t = 0;
     console.log(this.t);
     for (t = 0; t<this.tracks.length; t++) {
@@ -42,9 +41,9 @@ RenderP = function (format) {
         this.tracks[t].tabElements.sort(function (a, b) {
             console.log("tris");
             return a.marginLeft - b.marginLeft
-        }); //sort pour avoir les element dans le bon ordre des marges
+        });
+        //sort pour avoir les element dans le bon ordre des marges
 
-       // this.commands.push([]);
 
         this.elementInTrack = this.tracks[t].tabElements;
 
@@ -139,9 +138,15 @@ RenderP.prototype.getBlack = function(track, elementIndex){
             var from = Element.width+Element.marginLeft;
             var to = NextElement.marginLeft;
             console.log(from, to, "Value to send ----------");
-            this.findOnTrackB(rowById(track.id, this.tabVideoTrack)+1, from,to, NextElement );
-
-        
+            var trackId = rowById(track.id, this.tabVideoTrack)+1;
+            if (trackId<this.tabVideoTrack.length)
+            {
+                console.log("tabSize", this.tabVideoTrack[trackId].tabElements.length);
+                for (i=0;i<this.tabVideoTrack[trackId].tabElements.length;i++)
+                {
+                    this.findOnTrackB(rowById(track.id, this.tabVideoTrack)+1, from,to, NextElement );
+                }
+            }
     }
     else
     {
