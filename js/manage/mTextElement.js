@@ -38,6 +38,14 @@ function saveTextElement() {
 
         file.setThumbnailImage(window.URL.createObjectURL(blob));
 
+        for(var i = 0; i < currentProject.tabListTracks.length; i++) {
+            for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++) {
+                if(currentProject.tabListTracks[i].tabElements[x].fileId == file.id) {
+                    updateThumbnail(currentProject.tabListTracks[i], x, file.thumbnail.i);
+                }
+            }
+        }
+
         uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'FILE');
         uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'THUMBNAIL_I');
     }

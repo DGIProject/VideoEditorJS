@@ -104,6 +104,20 @@ function gMarginLeft(isVideoAudio, rows) {
     return marginLeft + 1;
 }
 
+function updateThumbnail(track, elementRow, thumbnail) {
+    var imageThumbnail = new Image();
+
+    imageThumbnail.onload = function() {
+        rLog('-ELEMENT- update video thumbnail [fileId: ' + track.fileId + '][elementId: ' + track.tabElements[elementRow].id + ']');
+
+        track.tabElements[elementRow].thumbnail = imageThumbnail;
+
+        drawElements(track.id);
+    };
+
+    imageThumbnail.src = thumbnail;
+}
+
 function addElements(id, trackId, posX, timeBegin, parent) {
     var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
 

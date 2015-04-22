@@ -3,7 +3,6 @@ TODO : RENDER : unique audio file or unique video file
 TODO : video/audio recorder
 TODO : currentRow error
 TODO : textElement input
-TODO : update thumbnail element
 TODO : load project count tracks
 TODO : deleteElement y pos
 TODO : textElement update load project
