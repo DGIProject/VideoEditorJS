@@ -150,7 +150,7 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, uploadStatus) 
 
         //console.log(blob, window.URL.createObjectURL(blob));
 
-        if(type == TYPE.VIDEO || type == TYPE.IMAGE || type == TYPE.TEXT)
+        if(type != TYPE.AUDIO)
         {
             currentProject.tabListFiles[row].setThumbnailImage(window.URL.createObjectURL(blob));
             currentProject.tabListFiles[row].isUploaded.i = uploadStatus;
@@ -277,7 +277,7 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        rLog('-LOAD- track : thumbnail');
+        rLog('-LOAD- track : thumbnail [rowTrack: ' + rowTrack + '][elementId: ' + element.id + '][type: ' + element.type + ']');
 
         //console.log(element);
         //console.log(imageThumbnail);
