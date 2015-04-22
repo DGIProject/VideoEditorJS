@@ -10,7 +10,7 @@ RenderP = function (format) {
     this.commandTracksVideo = [];
     this.commandList = [];
     this.previousZoom = parseInt(document.getElementById('zoomRange').value);
-    changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
+    //changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
 
     this.FORMAT = {
         MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
@@ -35,8 +35,10 @@ RenderP = function (format) {
 
 
     this.t = 0;
-    for (t = 0; t < this.tracks.length; t++) {
+    console.log(this.t);
+    for (t = 0; t<this.tracks.length; t++) {
         this.t = t;
+        console.log(this.t);
         this.tracks[t].tabElements.sort(function (a, b) {
             console.log("tris");
             return a.marginLeft - b.marginLeft
@@ -258,13 +260,58 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
         if (from<newTrackElement.marginLeft && to<newTrackElement.marginLeft+newTrackElement.width)
         {
             console.log("in black !!!!");
-            if ((newTrackElement.marginLeft+newTrackElement.width)>element.marginLeft)
-            {
-                console.log("on depasse, ca ne va plus !!! On COUPE !");
-                newTrackElement.width = element.marginLeft - newTrackElement.marginLeft;
 
-                console.log("We have an element from ", newTrackElement.marginLeft, "to", newTrackElement.marginLeft+newTrackElement.width);
+            if(newTrackElement.marginLeft > element.marginLeft && (newTrackElement.marginLeft + newTrackElement.width) < (element.marginLeft + element.width))
+            {
+                console.log('-RENDER- collision in');
+
+                deleteElement(tId, e);
             }
+            else
+            {
+                if(newTrackElement.marginLeft < element.marginLeft && (newTrackElement.marginLeft + newTrackElement.width) > (element.marginLeft + element.width))
+                {
+                    console.log('-RENDER- collision between');
+
+                    var newMarginLeft = element.marginLeft + element.width;
+                    var widthNewElement = newTrackElement.width - /*(selectedElement.width + (selectedElement.marginLeft - element.marginLeft))*/ ((element.marginLeft + element.width) - element.marginLeft);
+                    var newBeginDuration = (newTrackElement.beginDuration + ((element.marginLeft - newTrackElement.marginLeft) / oneSecond));
+
+                    console.log(newMarginLeft, widthNewElement, newBeginDuration);
+
+                    newTrackElement.width = element.marginLeft - newTrackElement.marginLeft;
+
+                    addElementTrack(newTrackElement.fileId, this.tabVideoTrack[tId], newMarginLeft, newBeginDuration, {resize: true, width: widthNewElement, leftGap: element.width}, (newTrackElement.parent >= 0));
+                    setPropertiesParent(this.tabVideoTrack[tId].parent, this.tabVideoTrack[tId].tabElements);
+                }
+
+                if((element.marginLeft + element.width) > newTrackElement.marginLeft && (element.marginLeft + element.width) < (newTrackElement.marginLeft + newTrackElement.width))
+                {
+                    console.log('-RENDER- collision before');
+
+                    newTrackElement.leftGap += (element.marginLeft + element.width) - newTrackElement.marginLeft;
+
+                    newTrackElement.width = (newTrackElement.marginLeft + newTrackElement.width) - (element.marginLeft + element.width);
+                    newTrackElement.marginLeft = (newTrackElement.marginLeft + newTrackElement.width) - ((newTrackElement.marginLeft + newTrackElement.width) - (element.marginLeft + element.width));
+
+                    setPropertiesParent(this.tabVideoTrack[tId].parent,  this.tabVideoTrack[tId].tabElements);
+                }
+
+                if(element.marginLeft > newTrackElement.marginLeft && element.marginLeft < (newTrackElement.marginLeft + newTrackElement.width))
+                {
+                    console.log('-RENDER- collision after');
+
+                    newTrackElement.rightGap += (newTrackElement.marginLeft + newTrackElement.width) - element.marginLeft;
+
+                    newTrackElement.width = element.marginLeft - newTrackElement.marginLeft;
+
+                    setPropertiesParent(this.tabVideoTrack[tId].parent,  this.tabVideoTrack[tId].tabElements);
+                }
+            }
+
+
         }
+
+
     }
 };
