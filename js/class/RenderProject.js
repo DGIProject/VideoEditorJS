@@ -22,7 +22,7 @@ RenderP = function (format) {
     };
 
     this.userFormat = format || this.FORMAT.MPEG4;
-    console.log(this.userFormat);
+    //console.log(this.userFormat);
 
     this.tabVideoTrack = [];
     for (i = 0; i < this.tracks.length; i++) {
@@ -44,7 +44,7 @@ RenderP = function (format) {
             return a.marginLeft - b.marginLeft
         }); //sort pour avoir les element dans le bon ordre des marges
 
-        this.commands.push([]);
+       // this.commands.push([]);
 
         this.elementInTrack = this.tracks[t].tabElements;
 
@@ -52,41 +52,33 @@ RenderP = function (format) {
 
         for (var e = 0; e < this.elementInTrack.length; e++) {
             console.log("element n°", e);
-
             if (e == 0) {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft >= oneSecond) {
-                    var cmd;
-                    cmd = (this.tracks[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-loop 1 -r 1 -c:v png -i black.png -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + (this.commands[this.t].length) + ".ts";
                     if (this.tracks[t].type == TYPE.VIDEO)
                     {
                         this.findOnTrackB(rowById(this.tracks[t].id, this.tabVideoTrack)+1, 0,this.elementInTrack[e].marginLeft, this.elementInTrack[e] );
                     }
-                    this.commandList.push(cmd);
-                    this.commands[this.t].push(cmd);
-
                 }
 
-                (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
-                ((this.elementInTrack.length - 1) != e) ? ((this.tracks[t].type == TYPE.AUDIO) ? this.addBlackA(e) : this.addBlackV(e)) : null;
+                this.getBlack(this.tabVideoTrack[t],e);
+
 
             }
             else if (e == (this.elementInTrack.length - 1)) {
                 console.log("length -1");
-                (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
             }
             else {
                 console.log("not -1");
-                (this.tracks[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
-                (this.tracks[t].type == TYPE.AUDIO) ? this.addBlackA(e) : this.addBlackV(e);
+                this.getBlack(this.tabVideoTrack[t], e);
             }
             console.log('End !!')
 
         }
 
-        if (this.tracks[t].tabElements.length > 0) {
+       /* if (this.tracks[t].tabElements.length > 0) {
             var lastCmd = "";
-            console.log(this.commands[t], this.commands);
+            //console.log(this.commands[t], this.commands);
             if (this.commands[t].length > 1) {
                 lastCmd = '-i "concat:';
                 var ending = ((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
@@ -104,10 +96,10 @@ RenderP = function (format) {
             (this.tracks[t].type == TYPE.AUDIO) ? this.commandTracksAudio.push([t, lastCmd]) : this.commandTracksVideo.push([t, lastCmd]);
             this.commands[t].push(lastCmd);
             this.commandList.push(lastCmd);
-        }
+        }*/
     }
 
-    var finalAudio = "audio.mp3";
+   /* var finalAudio = "audio.mp3";
     // Merge audio tracks into single one
     if (this.commandTracksAudio.length > 1) {
         var cmd = "";
@@ -121,11 +113,11 @@ RenderP = function (format) {
     }
     else {
         finalAudio = "track_1.mp3";
-    }
+    }*/
 
 
     // merge audio and video
-    if (this.commandTracksAudio>0 || this.commandTracksVideo>0)
+   /* if (this.commandTracksAudio>0 || this.commandTracksVideo>0)
     {
         console.log("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") +" " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
         this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
@@ -134,9 +126,36 @@ RenderP = function (format) {
 
         changeZoom(this.previousZoom, false);
         this.uploadCommands();
-    }
+    }*/
 
 };
+
+RenderP.prototype.getBlack = function(track, elementIndex){
+    var tabElement = track.tabElements;
+    var Element = tabElement[elementIndex];
+    console.log('tabElement', tabElement, parseInt(elementIndex+1), elementIndex);
+    if (parseInt(elementIndex+1)<tabElement.length)
+    {
+        var NextElement = tabElement[elementIndex+1];
+        if (NextElement.marginLeft == (Element.width+Element.marginLeft) || (NextElement.marginLeft - (Element.width+Element.marginLeft))<oneSecond)
+        {
+            console.log("Sticked");
+        }
+        else
+        {
+            var from = Element.width+Element.marginLeft;
+            var to = NextElement.marginLeft;
+            console.log(from, to, "Value to send ----------");
+            this.findOnTrackB(rowById(track.id, this.tabVideoTrack)+1, from,to, NextElement );
+
+        }
+    }
+    else
+    {
+        console.log("Out!");
+    }
+
+}
 RenderP.prototype.addCommandV = function (e) {
     var cmd = "";
     this.elementEnd = e.marginLeft + e.width
@@ -188,7 +207,6 @@ RenderP.prototype.addBlackV = function (e) {
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
         if (this.nextElement.marginLeft == this.elementEnd || this.nextElement.marginLeft - this.elementEnd < oneSecond/2) {
-            //fileContent += "\n element+1 sticked !";
             console.log("sticked");
         }
         else {
@@ -196,6 +214,9 @@ RenderP.prototype.addBlackV = function (e) {
             cmd = "-loop 1 -r 1 -c:v png -i black.png -t "
             + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond)
             + " -s 1280x720 -r 24 -y " + this.commands[this.t].length + ".ts";
+
+            //this.findOnTrackB(rowById(this.tracks[t].id, this.tabVideoTrack)+1, this.elementEnd ,this.nextElement.marginLeft, this.elementInTrack[e] );
+
             this.commands[this.t].push(cmd);
             this.commandList.push(cmd);
         }
@@ -248,20 +269,20 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
     this.tabVideoTrack[tId].tabElements.sort(function (a, b) {
         return a.marginLeft - b.marginLeft
     });
-    console.log("current Tracks",this.tabVideoTrack[tId]);
+    //console.log("current Tracks",this.tabVideoTrack[tId]);
 
     for (e=0;e<this.tabVideoTrack[tId].tabElements.length;e++)
     {
         var newTrackElement = this.tabVideoTrack[tId].tabElements[e];
-        console.log(newTrackElement, "--------------------------------");
+        //console.log(newTrackElement, "--------------------------------");
 
-        console.log(from,newTrackElement.marginLeft, to,newTrackElement.marginLeft+newTrackElement.width);
+        console.log("element ",e,from,newTrackElement.marginLeft, to,newTrackElement.marginLeft+newTrackElement.width);
 
-        if (from<newTrackElement.marginLeft && to<newTrackElement.marginLeft+newTrackElement.width)
+        if (from<=newTrackElement.marginLeft && to<=newTrackElement.marginLeft+newTrackElement.width)
         {
             console.log("in black !!!!");
 
-            if(newTrackElement.marginLeft > element.marginLeft && (newTrackElement.marginLeft + newTrackElement.width) < (element.marginLeft + element.width))
+            if(newTrackElement.marginLeft >= element.marginLeft && (newTrackElement.marginLeft + newTrackElement.width) <= (element.marginLeft + element.width))
             {
                 console.log('-RENDER- collision in');
 
@@ -269,7 +290,7 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
             }
             else
             {
-                if(newTrackElement.marginLeft < element.marginLeft && (newTrackElement.marginLeft + newTrackElement.width) > (element.marginLeft + element.width))
+                if(newTrackElement.marginLeft <= element.marginLeft && (newTrackElement.marginLeft + newTrackElement.width) >= (element.marginLeft + element.width))
                 {
                     console.log('-RENDER- collision between');
 
@@ -285,7 +306,7 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
                     setPropertiesParent(this.tabVideoTrack[tId].parent, this.tabVideoTrack[tId].tabElements);
                 }
 
-                if((element.marginLeft + element.width) > newTrackElement.marginLeft && (element.marginLeft + element.width) < (newTrackElement.marginLeft + newTrackElement.width))
+                if((element.marginLeft + element.width) >= newTrackElement.marginLeft && (element.marginLeft + element.width) <= (newTrackElement.marginLeft + newTrackElement.width))
                 {
                     console.log('-RENDER- collision before');
 
@@ -297,7 +318,7 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
                     setPropertiesParent(this.tabVideoTrack[tId].parent,  this.tabVideoTrack[tId].tabElements);
                 }
 
-                if(element.marginLeft > newTrackElement.marginLeft && element.marginLeft < (newTrackElement.marginLeft + newTrackElement.width))
+                if(element.marginLeft >= newTrackElement.marginLeft && element.marginLeft <= (newTrackElement.marginLeft + newTrackElement.width))
                 {
                     console.log('-RENDER- collision after');
 
@@ -310,6 +331,10 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
             }
 
 
+        }
+        else
+        {
+            console.log("NotinBalck");
         }
 
 
