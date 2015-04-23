@@ -27,7 +27,7 @@ RenderP = function (format) {
     this.tabVideoTrack = [];
     for (i = 0; i < this.tracks.length; i++) {
         if (this.tracks[i].type == TYPE.VIDEO) {
-            this.tabVideoTrack.push(this.tracks[i]);
+            this.tabVideoTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
             console.log("vid", i);
         }
     }
@@ -43,6 +43,12 @@ RenderP = function (format) {
     }
     while (index!=1);
 
+    console.log("Video track", this.tabVideoTrack);
+
+    this.tabVideoTrack[0].tabElements.sort(function (a, b) {
+        console.log("tris");
+        return a.marginLeft - b.marginLeft
+    });
 
     /* if (this.tracks[t].tabElements.length > 0) {
      var lastCmd = "";
@@ -308,7 +314,6 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
 };
 RenderP.prototype.makeSingleVideoTrack = function(){
 
-   // for (t = 0; t<this.tabVideoTrack.length; t++) {
         this.tabVideoTrack[0].tabElements.sort(function (a, b) {
             console.log("tris");
             return a.marginLeft - b.marginLeft
@@ -344,10 +349,7 @@ RenderP.prototype.makeSingleVideoTrack = function(){
         }
 
         this.mergeTrack(1);
-
-  //  }
 };
-
 RenderP.prototype.mergeTrack = function (trackId) {
     console.log("---------------------------------------------------------------------");
     if (trackId<this.tabVideoTrack.length)
