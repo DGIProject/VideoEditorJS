@@ -42,7 +42,11 @@ To use it you need to have a recent web-browser. In particaly we recomand Firefo
 
 ScreenShots :
 =============
+- Main Interface :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr01.PNG)
+- Renders page :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr02.PNG)
+- Imported file properties :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr03.PNG)
+- HTML5 Audio/Video recording :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr04.PNG)
