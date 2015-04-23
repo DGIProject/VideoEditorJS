@@ -1,6 +1,7 @@
 .idea/*
 .idea
 *.db
+data/*
 webcam/
 ajaxupload/
 status/*

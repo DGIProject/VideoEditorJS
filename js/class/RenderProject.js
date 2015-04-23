@@ -2,7 +2,7 @@
  * Created by Guillaume on 14/03/2015.
  */
 RenderP = function (format) {
-    this.tracks = currentProject.tabListTracks;
+    this.tracks = JSON.parse(JSON.stringify(currentProject.tabListTracks));
     this.nextElement = null;
     this.elementEnd = null;
     this.commands = [];
@@ -23,18 +23,22 @@ RenderP = function (format) {
 
     this.userFormat = format || this.FORMAT.MPEG4;
     //console.log(this.userFormat);
-
+    this.otherTrack = []
     this.tabVideoTrack = [];
     for (i = 0; i < this.tracks.length; i++) {
         if (this.tracks[i].type == TYPE.VIDEO) {
             this.tabVideoTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
             console.log("vid", i);
         }
+        else
+        {
+            this.otherTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
+        }
     }
-    console.log("VideoTab", this.tabVideoTrack);
+    console.log("tabs", this.tabVideoTrack, this.otherTrack);
 
     var index = this.tabVideoTrack.length;
-    console.log('index', index )
+    console.log('index', index );
     do
     {
         this.makeSingleVideoTrack();
@@ -49,6 +53,8 @@ RenderP = function (format) {
         console.log("tris");
         return a.marginLeft - b.marginLeft
     });
+
+    this.otherTrack.push(this.tabVideoTrack[0]);
 
     /* if (this.tracks[t].tabElements.length > 0) {
      var lastCmd = "";
