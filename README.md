@@ -1,14 +1,14 @@
 VideoEditorJS
 =============
 
-VideoEditorJs is a small and easy to use Video Editor, online, made with Javascript and HTML, plus a server with a small script ans ffmpeg.
+VideoEditorJs is a small and easy to use Video Editor, online, made with Javascript and HTML, plus a server with a small script and ffmpeg.
 
 How To install ? 
 ================
 
 There is two ways to do that :
 - The first one is to clone the depo with `git clone` on a webserver.
-- Download the zip file.
+- The second one is to download the zip file.
 
 ###Installation
 
@@ -40,3 +40,9 @@ You also have to download ( for windows essentialy ) a staic version of FFmpeg b
 To use it you need to have a recent web-browser. In particaly we recomand Firefox and Google Chrome.
 
 
+ScreenShots :
+=============
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr01.PNG)
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr02.PNG)
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr03.PNG)
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr04.PNG)
