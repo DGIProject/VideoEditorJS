@@ -56,7 +56,7 @@ function saveTextElement() {
 
         var fileName = 'Text ' + fileId;
 
-        var currentItem = new File(fileId, fileUId, TYPE.TEXT, blob.size, ('Text ' + fileId), 'png');
+        var currentItem = new File(fileId, fileUId, TYPE.TEXT, blob.size, ('Text ' + fileId), 'PNG');
         currentItem.makeVideo();
         currentItem.setDuration('00:00:20');
 
