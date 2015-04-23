@@ -66,7 +66,7 @@ function listProject()
     echo json_encode($tabListProjects);
 }
 
-function clearRenders($path)
+function clear($path)
 {
     $dir = opendir($path);
     $i = 0;
@@ -75,15 +75,11 @@ function clearRenders($path)
     {
         if($file != '.' && $file != '..' && !is_dir($path . $file))
         {
-            if(is_numeric(explode(".",$file)[0]))
-            {
                 unlink($path.$file);
                 $i++  ;
-            }
-
         }
     }
-    echo json_encode(array("code"=> 0));
+
 
     closedir($dir);
 }
@@ -110,7 +106,10 @@ switch ($_GET['action'])
         break;
     case "create":
         $path = '../' . $DIR_projectsData . $projectName . '/RENDER_DATA/';
-        clearRenders($path);
+        clear($path);
+        $path = '../' . $DIR_projectsData . $projectName . '/';
+        clear($path);
+        echo json_encode(array("code"=> 0));
         break;
     case "save":
         $pathToFile = $backPath . $DIR_projectsData . $projectName . '.vejs';
