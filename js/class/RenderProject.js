@@ -235,9 +235,9 @@ RenderP.prototype.addBlackV = function (e) {
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
-            cmd = "-loop 1 -r 1 -c:v png -i black.png -t "
+            cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t "
             + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond)
-            + " -s 1280x720 -r 24 -y " + this.commands[this.t].length + ".ts";
+            + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
 
             this.commands[this.t].push(cmd);
             this.commandList.push(cmd);

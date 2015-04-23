@@ -3,7 +3,6 @@
 DATAPATH="/home/clangue/VEJSFiles"
 LOGPATH="/home/clangue/videoProcess/logs"
 TEMPDIR="/home/clangue/videoProcess/tmp"
-SAMPLEDIR="/home/clangue/videoProcess/sample"
 FFMPEGPATH="ffmpeg"
 THREADS=4
 
@@ -24,7 +23,6 @@ do
         echo "id : $ID"
         cd "$DIR"
 		mkdir "RENDER_DATA"
-        cp $SAMPLEDIR/* $TEMPDIR
         cp * $TEMPDIR
         cd $TEMPDIR
         echo $(pwd)
