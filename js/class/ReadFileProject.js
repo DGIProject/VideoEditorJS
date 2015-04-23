@@ -19,7 +19,7 @@ ReadFileProject.prototype.loadProject = function() {
 };
 
 ReadFileProject.prototype.setProject = function() {
-    rLog('-LOAD- project : set properties');
+    rLog('-LOAD PROJECT- project : set properties');
 
     currentProject = new Project(this.infoProject.name.deleteAccent().replace(new RegExp(' ', 'g'), '_').toUpperCase(), this.infoProject.uId, usernameSession, this.infoProject.dateCreation);
     currentProject.lastSave = getHour();
@@ -33,6 +33,8 @@ ReadFileProject.prototype.setProject = function() {
 ReadFileProject.prototype.setFiles = function(start) {
     if(start)
     {
+        rLog('-LOAD PROJECT- file : start [countFiles: ' + this.listFiles.length + ']');
+
         this.countFiles = 0;
 
         if(this.listFiles.length > 0) {
@@ -42,6 +44,8 @@ ReadFileProject.prototype.setFiles = function(start) {
         }
         else
         {
+            rLog('-LOAD PROJECT- file : end');
+
             this.setTracks();
         }
     }
@@ -53,7 +57,7 @@ ReadFileProject.prototype.setFiles = function(start) {
         }
         else
         {
-            console.log('finish load files');
+            rLog('-LOAD PROJECT- file end');
 
             this.setTracks();
         }
@@ -61,7 +65,7 @@ ReadFileProject.prototype.setFiles = function(start) {
 };
 
 ReadFileProject.prototype.getFile = function(id) {
-    rLog('-LOAD- file : ' + id);
+    rLog('-LOAD PROJECT- file [id: ' + id + ']');
 
     var file = this.listFiles[id];
 
@@ -123,7 +127,7 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, upload
 
         if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
         {
-            rLog('-LOAD- files : finish');
+            rLog('-LOAD PROJECT- files : finish');
 
             //readFileProject.dispatchEvent(listfilesend);
 
@@ -161,18 +165,6 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, upload
             currentProject.tabListFiles[row].isUploaded.a = uploadStatus;
         }
 
-        /*
-        readFileProject.progression++;
-        readFileProject.countGetFiles++;
-
-        if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
-        {
-            rLog('-LOAD- files : finish');
-
-            readFileProject.setElementsTrack();
-        }
-        */
-
         readFileProject.countFiles++;
         readFileProject.setFiles(false);
     };
@@ -181,7 +173,7 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, upload
 };
 
 ReadFileProject.prototype.setTracks = function() {
-    rLog('-LOAD- tracks : ' + this.listTracks.length);
+    rLog('-LOAD PROJECT- track : start [countTracks: ' + this.listTracks.length + ']');
 
     var id = -1;
     var lastId = -1;
@@ -203,45 +195,44 @@ ReadFileProject.prototype.setTracks = function() {
         currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
     }
 
+    rLog('-LOAD PROJECT- track : end');
+
     this.setElementsTrack(true);
 };
 
 ReadFileProject.prototype.setElementsTrack = function(start) {
     if(start) {
-        rLog('-LOAD- elements track');
+        rLog('-LOAD PROJECT- elements track : start');
 
         this.countTracks = 0;
         this.countElementsTrack = 0;
 
         if(this.listTracks.length > 0) {
-            console.log(this.listTracks[this.countTracks].tabElements.length);
             if(this.listTracks[this.countTracks].tabElements.length > 0) {
                 this.setElementThumbnail(this.countTracks, this.countElementsTrack);
             }
             else
             {
-                console.log('finish element track 0');
+                rLog('-LOAD PROJECT- elements track : end');
 
                 this.finishLoadProject();
             }
         }
         else
         {
-            console.log('finish element track 0');
+            rLog('-LOAD PROJECT- elements track : end');
 
             this.finishLoadProject();
         }
     }
     else
     {
-        console.log('if: ' + this.countElementsTrack + ' - ' + this.listTracks[this.countTracks].tabElements.length);
         if(this.countElementsTrack >= this.listTracks[this.countTracks].tabElements.length) {
             this.countTracks++;
             this.countElementsTrack = 0;
 
-            console.log('ift: ' + this.countTracks + ' - ' + this.listTracks.length);
             if(this.countTracks >= this.listTracks.length) {
-                console.log('finishElement');
+                rLog('-LOAD PROJECT- elements track : end');
 
                 this.finishLoadProject();
             }
@@ -252,7 +243,7 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
                 }
                 else
                 {
-                    console.log('finish element track');
+                    rLog('-LOAD PROJECT- elements track : end');
 
                     this.finishLoadProject();
                 }
@@ -277,7 +268,7 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
-        rLog('-LOAD- track : thumbnail [rowTrack: ' + rowTrack + '][elementId: ' + element.id + '][type: ' + element.type + ']');
+        rLog('-LOAD PROJECT- elements track : thumbnail [rowTrack: ' + rowTrack + '][elementId: ' + element.id + '][type: ' + element.type + ']');
 
         //console.log(element);
         //console.log(imageThumbnail);
@@ -293,6 +284,8 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
 
 ReadFileProject.prototype.finishLoadProject = function() {
     if(!currentProject.isReady) {
+        rLog('ReadFileProject : end');
+
         currentProject.switchAutoSave();
         currentProject.isReady = true;
 
