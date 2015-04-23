@@ -186,28 +186,14 @@ RenderP.prototype.addCommandV = function (e) {
     var curentFileforElement = this.getFileInformationById(e.fileId)
 
     if (curentFileforElement.type == TYPE.IMAGE || curentFileforElement.type == TYPE.TEXT) {
-        var codec = "";
-        switch (curentFileforElement.format) {
-            case "png":
-                codec = "png";
-                break;
-            case "bmp":
-                codec = "bmp";
-                break;
-            case "jpeg":
-                codec = "mjpeg";
-                break;
-            case "jpg":
-                codec = "mjpeg";
-                break;
-        }
-        cmd = "-loop 1 -r 1 -c:v " + codec + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond))
+
+        cmd = "-loop 1 -r 1 -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "."+currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format+" -t " + (Math.ceil((e.width - e.rightGap) / oneSecond))
         + " -s 1280x720 -r 24 -y " + this.commands[this.t].length + ".ts"
         this.commands[this.t].push(cmd);
         this.commandList.push(cmd);
     }
     else {
-        cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) +
+        cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "."+currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format+" -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) +
         " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
         this.commands[this.t].push(cmd);
         this.commandList.push(cmd);
@@ -219,7 +205,7 @@ RenderP.prototype.addCommandA = function (e) {
     this.elementEnd = e.marginLeft + e.width
 
     var curentFileforElement = this.getFileInformationById(e.fileId)
-    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
+    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
     this.commands[this.t].push(cmd);
     this.commandList.push(cmd);
 
