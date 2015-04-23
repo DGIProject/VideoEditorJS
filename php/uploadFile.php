@@ -3,7 +3,7 @@ include_once 'config.php';
 
 if($_GET['projectName'] != NULL && $_GET['fileUId'] != NULL)
 {
-    $filename = ($_GET['typeFile'] == "RENDER")? $_GET['typeFile'] . '.ffm' : $_GET['typeFile'] . '_' . $_GET['fileUId'] . '.data';
+    $filename = ($_GET['typeFile'] == "RENDER")? $_GET['typeFile'] . '.ffm' : $_GET['typeFile'] . '_' . $_GET['fileUId'] . '.' . $_GET['formatFile'];
 
     $path = $backPath . $DIR_projectsData . $_GET['projectName'] . '/';
 

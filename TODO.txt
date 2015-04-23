@@ -2,5 +2,4 @@ TODO : video/audio recorder
 TODO : currentRow error
 TODO : textElement input
 TODO : load project count tracks
-TODO : deleteElement y pos
 TODO : textElement update load project

@@ -67,8 +67,8 @@ ManageTextElement.prototype.editTextElement = function(id, fileId, text, propert
     document.getElementById(this.elementsId.sizeTextInfo).innerHTML = this.properties.size;
 
     this.isEditing = true;
-    
-    //this.writeTextToCanvas();
+
+    this.writeTextToCanvas();
 };
 
 ManageTextElement.prototype.changeFont = function(font) {
