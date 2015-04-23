@@ -109,7 +109,6 @@ RenderP = function (format) {
                 for (i = 0; i < this.commands[t].length; i++) {
                     lastCmd += ((this.otherTrack[t].type == TYPE.AUDIO) ? "" + i + ".mp3|" : "" + i + ".ts|");
                 }
-                //lastCmd += complexfliter;
                 lastCmd = lastCmd.slice(0, -1);
                 lastCmd += '"' + ending;
                 lastCmd += (this.otherTrack[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
@@ -123,6 +122,8 @@ RenderP = function (format) {
         }
     }
 
+
+    console.log("----------------------------RENDER FINAL COMMAND-------------------------");
     var finalAudio = "audio.mp3";
     // Merge audio tracks into single one
     if (this.commandTracksAudio.length > 1) {
@@ -136,16 +137,15 @@ RenderP = function (format) {
         finalAudio = "audio.mp3";
     }
     else {
-        finalAudio = "track_1.mp3";
+        finalAudio = "track_"+this.commandTracksAudio[i][0]+".mp3";
     }
 
     // merge audio and video
-    if (this.commandTracksAudio>0 || this.commandTracksVideo>0)
+    if (this.commandTracksAudio.length>0 || this.commandTracksVideo.length>0)
     {
-        console.log("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") +" " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
-        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
-
-        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_0.mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" final_WEB."+this.FORMAT.X264.ext);
+        console.log("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") +" " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
+        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ?  "track_"+this.commandTracksVideo[0][0]+".mp4 "  : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" final."+this.FORMAT[this.userFormat].ext);
+        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" final_WEB."+this.FORMAT.X264.ext);
 
         changeZoom(this.previousZoom, false);
         this.uploadCommands();
@@ -201,13 +201,13 @@ RenderP.prototype.addCommandV = function (e) {
                 codec = "mjpeg";
                 break;
         }
-        cmd = "-loop 1 -r 1 -c:v " + codec + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond))
+        cmd = "-loop 1 -r 1 -c:v " + codec + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond))
         + " -s 1280x720 -r 24 -y " + this.commands[this.t].length + ".ts"
         this.commands[this.t].push(cmd);
         this.commandList.push(cmd);
     }
     else {
-        cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) +
+        cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) +
         " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
         this.commands[this.t].push(cmd);
         this.commandList.push(cmd);
@@ -219,7 +219,7 @@ RenderP.prototype.addCommandA = function (e) {
     this.elementEnd = e.marginLeft + e.width
 
     var curentFileforElement = this.getFileInformationById(e.fileId)
-    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + e.fileId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
+    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + ".data -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
     this.commands[this.t].push(cmd);
     this.commandList.push(cmd);
 
@@ -281,7 +281,8 @@ RenderP.prototype.uploadCommands = function () {
     finalString += "\n";
 
     var txtFile = new Blob([finalString], {type: 'text/plain', name: "command.ffm"});
-    uploadFile(-1, "renderFile", txtFile, "RENDER");
+    //uploadFile(-1, "renderFile", txtFile, "RENDER");
+    uploadFile(-1, uId() ,"renderFile", txtFile, "RENDER")
 };
 RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
     console.log("trying ........");
