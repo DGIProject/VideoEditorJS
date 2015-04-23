@@ -33,68 +33,38 @@ RenderP = function (format) {
     }
     console.log("VideoTab", this.tabVideoTrack);
 
-    this.t = 0;
-    console.log(this.t);
-    for (t = 0; t<this.tracks.length; t++) {
-        this.t = t;
-        console.log(this.t);
-        this.tracks[t].tabElements.sort(function (a, b) {
-            console.log("tris");
-            return a.marginLeft - b.marginLeft
-        });
-        //sort pour avoir les element dans le bon ordre des marges
-
-
-        this.elementInTrack = this.tracks[t].tabElements;
-
-        console.log("track ", t, "elementT", this.elementInTrack);
-
-        for (var e = 0; e < this.elementInTrack.length; e++) {
-            console.log("element n°", e);
-            if (e == 0) {
-                console.log("0 -> deb");
-                if (this.elementInTrack[e].marginLeft >= oneSecond) {
-                    if (this.tracks[t].type == TYPE.VIDEO)
-                    {
-                        this.findOnTrackB(rowById(this.tracks[t].id, this.tabVideoTrack)+1, 0,this.elementInTrack[e].marginLeft, this.elementInTrack[e] );
-                    }
-                }
-
-                this.getBlack(this.tabVideoTrack[t],e);
-            }
-            else if (e == (this.elementInTrack.length - 1)) {
-                console.log("length -1");
-            }
-            else {
-                console.log("not -1");
-                this.getBlack(this.tabVideoTrack[t], e);
-            }
-            console.log('End !!')
-
-        }
-
-       /* if (this.tracks[t].tabElements.length > 0) {
-            var lastCmd = "";
-            //console.log(this.commands[t], this.commands);
-            if (this.commands[t].length > 1) {
-                lastCmd = '-i "concat:';
-                var ending = ((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
-                for (i = 0; i < this.commands[t].length; i++) {
-                    lastCmd += ((this.tracks[t].type == TYPE.AUDIO) ? "" + i + ".mp3|" : "" + i + ".ts|");
-                }
-                //lastCmd += complexfliter;
-                lastCmd = lastCmd.slice(0, -1);
-                lastCmd += '"' + ending;
-                lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
-            }
-            else {
-                lastCmd = (this.tracks[t].type == TYPE.AUDIO) ? "-i 0.mp3 -c copy -y track_" + t + ".mp3" : "-i 0.ts -c mpeg4 -y track_" + t + ".mp4";
-            }
-            (this.tracks[t].type == TYPE.AUDIO) ? this.commandTracksAudio.push([t, lastCmd]) : this.commandTracksVideo.push([t, lastCmd]);
-            this.commands[t].push(lastCmd);
-            this.commandList.push(lastCmd);
-        }*/
+    var index = this.tabVideoTrack.length;
+    console.log('index', index )
+    do
+    {
+        this.makeSingleVideoTrack();
+        index--;
+        console.log('indexN', index )
     }
+    while (index!=1);
+
+
+    /* if (this.tracks[t].tabElements.length > 0) {
+     var lastCmd = "";
+     //console.log(this.commands[t], this.commands);
+     if (this.commands[t].length > 1) {
+     lastCmd = '-i "concat:';
+     var ending = ((this.tracks[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
+     for (i = 0; i < this.commands[t].length; i++) {
+     lastCmd += ((this.tracks[t].type == TYPE.AUDIO) ? "" + i + ".mp3|" : "" + i + ".ts|");
+     }
+     //lastCmd += complexfliter;
+     lastCmd = lastCmd.slice(0, -1);
+     lastCmd += '"' + ending;
+     lastCmd += (this.tracks[t].type == TYPE.AUDIO) ? " track_" + t + ".mp3" : " track_" + t + ".mp4";
+     }
+     else {
+     lastCmd = (this.tracks[t].type == TYPE.AUDIO) ? "-i 0.mp3 -c copy -y track_" + t + ".mp3" : "-i 0.ts -c mpeg4 -y track_" + t + ".mp4";
+     }
+     (this.tracks[t].type == TYPE.AUDIO) ? this.commandTracksAudio.push([t, lastCmd]) : this.commandTracksVideo.push([t, lastCmd]);
+     this.commands[t].push(lastCmd);
+     this.commandList.push(lastCmd);
+     }*/
 
    /* var finalAudio = "audio.mp3";
     // Merge audio tracks into single one
@@ -153,7 +123,7 @@ RenderP.prototype.getBlack = function(track, elementIndex){
         console.log("Out!");
     }
 
-}
+};
 RenderP.prototype.addCommandV = function (e) {
     var cmd = "";
     this.elementEnd = e.marginLeft + e.width
@@ -335,4 +305,59 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
 
 
     }
+};
+RenderP.prototype.makeSingleVideoTrack = function(){
+
+   // for (t = 0; t<this.tabVideoTrack.length; t++) {
+        this.tabVideoTrack[0].tabElements.sort(function (a, b) {
+            console.log("tris");
+            return a.marginLeft - b.marginLeft
+        });
+        //sort pour avoir les element dans le bon ordre des marges
+
+
+        this.elementInTrack = this.tabVideoTrack[0].tabElements;
+
+        console.log("track ", 0, "elementT", this.elementInTrack);
+
+        for (var e = 0; e < this.elementInTrack.length; e++) {
+            console.log("element n°", e);
+            if (e == 0) {
+                console.log("0 -> deb");
+                if (this.elementInTrack[e].marginLeft >= oneSecond) {
+                    if (this.tracks[0].type == TYPE.VIDEO)
+                    {
+                        this.findOnTrackB(1, 0,this.elementInTrack[e].marginLeft, this.elementInTrack[e] );
+                    }
+                }
+
+                this.getBlack(this.tabVideoTrack[0],e);
+            }
+            else if (e == (this.elementInTrack.length - 1)) {
+                console.log("length -1");
+            }
+            else {
+                console.log("not -1");
+                this.getBlack(this.tabVideoTrack[0], e);
+            }
+            console.log('End !!')
+        }
+
+        this.mergeTrack(1);
+
+  //  }
+};
+
+RenderP.prototype.mergeTrack = function (trackId) {
+    console.log("---------------------------------------------------------------------");
+    if (trackId<this.tabVideoTrack.length)
+    {
+        console.log("Merging tracks");
+        for (i=0;i<this.tabVideoTrack[trackId].tabElements.length;i++)
+        {
+            this.tabVideoTrack[0].tabElements.push(this.tabVideoTrack[trackId].tabElements[i]);
+        }
+        this.tabVideoTrack.remove(trackId);
+    }
+    console.log("---------------------------------------------------------------------");
 };
