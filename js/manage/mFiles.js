@@ -116,6 +116,7 @@ function updateDataFile(id, file) {
 //Utilisation de ffmpeg pour connaître la durée mais aussi le type Vidéo/Audio du fichier
 function fileProcessing(fileId, arrayBuffer)
 {
+    var excludedFromProcessing = ["ogg", "wav", "oga", "mp3"];
     currentProject.switchAutoSave();
 
     var fileClass = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
@@ -237,7 +238,7 @@ function fileProcessing(fileId, arrayBuffer)
             }
             else
             {
-                if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio && fileClass.fileName.split(".").pop().toLowerCase() !=  "ogg")
+                if (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].isAudio && excludedFromProcessing.lastIndexOf(fileClass.fileName.split(".").pop().toLowerCase()) == -1)
                 {
                     terminal.processCmd("ffmpeg -i " + fileClass.fileName + " audioDat.wav", function (e, index) {
 
@@ -285,7 +286,7 @@ function fileProcessing(fileId, arrayBuffer)
                         }
                     });
                 }
-                else if (fileClass.fileName.split(".").pop().toLowerCase() ==  "ogg")
+                else if (excludedFromProcessing.lastIndexOf(fileClass.fileName.split(".").pop().toLowerCase()) != -1)
                 {
                     var wavesurfer = Object.create(WaveSurfer);
                     var blob = new Blob([arrayBuffer]);
@@ -302,6 +303,7 @@ function fileProcessing(fileId, arrayBuffer)
                         currentProject.tabListFiles[currentProject.tabListFiles.length - 1].setThumbnailAudio(url);
 
                         wavesurfer.destroy();
+                        hLoadM();
                     });
 
                     wavesurfer.init({
