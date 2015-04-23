@@ -17,7 +17,7 @@ function addFile(currentFile) {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
         var fileUId = uId();
 
-        var currentItem = new File(fileId, fileUId, typeFile, currentFile.size, fileName, fileName.split('.').pop());
+        var currentItem = new File(fileId, fileUId, typeFile, currentFile.size, fileName, fileName.split('.').pop().toUpperCase());
 
         currentProject.tabListFiles.push(currentItem);
 

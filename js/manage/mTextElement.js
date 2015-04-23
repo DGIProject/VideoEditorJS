@@ -46,8 +46,8 @@ function saveTextElement() {
             }
         }
 
-        uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'FILE', 'png');
-        uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'THUMBNAIL_I', 'png');
+        uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'FILE', 'PNG');
+        uploadFile(currentManageTextElement.fileId, file.uId, file.fileName, blob, 'THUMBNAIL_I', 'PNG');
     }
     else
     {
@@ -68,8 +68,8 @@ function saveTextElement() {
 
         addFileList(fileId, fileName, TYPE.TEXT);
 
-        uploadFile(fileId, fileUId, fileName, blob, 'FILE', 'png');
-        uploadFile(fileId, fileUId, fileName, blob, 'THUMBNAIL_I', 'png');
+        uploadFile(fileId, fileUId, fileName, blob, 'FILE', 'PNG');
+        uploadFile(fileId, fileUId, fileName, blob, 'THUMBNAIL_I', 'PNG');
     }
 
     var n = noty({layout: 'topRight', type: 'success', text: 'Le texte a bien été sauvegardé.', timeout: '5000'});

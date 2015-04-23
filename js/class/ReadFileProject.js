@@ -72,13 +72,13 @@ ReadFileProject.prototype.getFile = function(id) {
     if(file.isVideo)
     {
         fileObject.makeVideo();
-        this.getThumbnail(file.uId, currentProject.tabListFiles.length, file.type, file.isUploaded.i);
+        this.getThumbnail(file.uId, currentProject.tabListFiles.length, file.type, file.format, file.isUploaded.i);
     }
 
     if(file.isAudio)
     {
         fileObject.makeAudio();
-        this.getThumbnail(file.uId, currentProject.tabListFiles.length, TYPE.AUDIO, file.isUploaded.a);
+        this.getThumbnail(file.uId, currentProject.tabListFiles.length, TYPE.AUDIO, file.format, file.isUploaded.a);
     }
 
     fileObject.setDuration(file.duration);
@@ -91,8 +91,8 @@ ReadFileProject.prototype.getFile = function(id) {
     setTimeout(function() { addFileList(file.id, file.fileName, file.type); }, 500);
 };
 
-ReadFileProject.prototype.getThumbnail = function(uId, row, type, uploadStatus) {
-    var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + uId + '.data';
+ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, uploadStatus) {
+    var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + uId + '.' + format;
     var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName;
 
     /*
