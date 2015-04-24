@@ -22,6 +22,22 @@ function rLog(text) {
     lastRLog = text;
 }
 
+function rConsole() {
+    if(document.getElementById('console').style.display == 'none') {
+        document.getElementById('iconRConsole').classList.remove('glyphicon-unchecked');
+        document.getElementById('iconRConsole').classList.add('glyphicon-check');
+
+        document.getElementById('console').style.display = '';
+    }
+    else
+    {
+        document.getElementById('iconRConsole').classList.remove('glyphicon-check');
+        document.getElementById('iconRConsole').classList.add('glyphicon-unchecked');
+
+        document.getElementById('console').style.display = 'none';
+    }
+}
+
 function compressName(name) {
     return ((name.length > 12) ? name.substring(0, 4) + '...' + name.substring(name.length - 5, name.length) : name);
 }

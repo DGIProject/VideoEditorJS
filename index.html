@@ -44,6 +44,8 @@
                                 <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Sauvegarder</a></li>
                                 <li><a href="#" onclick="currentProject.switchAutoSave();"><span id="iconAutoSave" class="glyphicon glyphicon-unchecked"></span> Sauvegarde Automatique</a></li>
                                 <li class="divider"></li>
+                                <li><a href="#" onclick="rConsole();"><span id="iconRConsole" class="glyphicon glyphicon-unchecked"></span> Afficher la console</a></li>
+                                <li class="divider"></li>
                                 <li><a href="#">Projet : <span id="projectDropdown">--</span></a></li>
                                 <li><a href="#">Dernière sauvegarde : <span id="lastSaveDropdown">--</span></a></li>
                             </ul>
@@ -124,7 +126,7 @@
         <p><a href="#">VideoEditorJS</a> par Dylan Delaporte et Guillaume Villena - Project d'ISN 2015</p>
     </footer>
 
-    <pre id="console">Console</pre>
+    <pre id="console" style="display: none;">-VEJS CONSOLE-</pre>
 
     <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
