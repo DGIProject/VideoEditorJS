@@ -36,11 +36,6 @@ function saveProject($path, $contentFile) {
     fclose($fp);
 }
 
-function deleteProject($project)
-{
-
-}
-
 function listProject()
 {
     global $DIR_projectsData, $backPath;
@@ -64,6 +59,36 @@ function listProject()
     closedir($dir);
 
     echo json_encode($tabListProjects);
+}
+
+function deleteProject($path, $pathToFile) {
+    unlink($pathToFile);
+    clear($path);
+    rmdir($path);
+
+    return json_encode(array('code' => 0));
+}
+
+
+function deleteDirectory($dir){
+    $result = false;
+    if ($handle = opendir("$dir")){
+        $result = true;
+        while ((($file=readdir($handle))!==false) && ($result)){
+            if ($file!='.' && $file!='..'){
+                if (is_dir("$dir/$file")){
+                    $result = deleteDirectory("$dir/$file");
+                } else {
+                    $result = unlink("$dir/$fich");
+                }
+            }
+        }
+        closedir($handle);
+        if ($result){
+            $result = rmdir($dir);
+        }
+    }
+    return $result;
 }
 
 function clear($path)
@@ -132,7 +157,10 @@ switch ($_GET['action'])
         }
         break;
     case "delete":
-        //  deleteProject();
+        $path = '../' . $DIR_projectsData . $projectName . '/';
+        $pathToFile = $backPath . $DIR_projectsData . $projectName . '.vejs';
+
+        echo deleteProject($path, $pathToFile);
         break;
     default:
         echo json_encode(array('code'=> -1, "info" => "There are missing args"));

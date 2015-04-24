@@ -149,7 +149,8 @@ function saveProject() {
 
     xhr.onload = function() {
         console.log('response : ' + xhr.responseText);
-        jsonRep = JSON.parse(xhr.responseText);
+
+        var jsonRep = JSON.parse(xhr.responseText);
 
         hLoadM();
 
@@ -182,6 +183,51 @@ function saveProject() {
 
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xhr.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile) + '&forceSave=' + currentProject.forceSave);
+}
+
+function deleteProject(projectName) {
+    if(projectName == undefined)
+        return;
+
+    rLog('-PROJECT- delete : start [name: ' + projectName + ']');
+
+    var url = remoteAPIPath + 'php/projectManagement.php?action=delete';
+
+    var xhr = createCORSRequest('POST', url);
+
+    if (!xhr) {
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+        return;
+    }
+
+    xhr.onload = function() {
+        console.log('response : ' + xhr.responseText);
+
+        var jsonRep = JSON.parse(xhr.responseText);
+
+        if(jsonRep.code == 0)
+        {
+            rLog('-PROJECT- delete : end|true [name: ' + projectName + ']');
+            getListProjects('listProjects');
+
+            noty({layout: 'topRight', type: 'success', text: 'Le projet ' + projectName + ' a bien été supprimé.', timeout: '5000'});
+        }
+        else
+        {
+            rLog('-PROJECT- delete : end|false [name: ' + projectName + ']');
+
+            noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à supprimer le projet.', timeout: '5000'});
+        }
+    };
+
+    xhr.onerror = function() {
+        reportError('No contact with server');
+
+        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
+    };
+
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhr.send('nameProject=' + projectName);
 }
 
 function resetInterface() {
