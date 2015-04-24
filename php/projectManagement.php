@@ -64,31 +64,11 @@ function listProject()
 function deleteProject($path, $pathToFile) {
     unlink($pathToFile);
     clear($path);
+
+    rmdir($path . 'RENDER_DATA/');
     rmdir($path);
 
     return json_encode(array('code' => 0));
-}
-
-
-function deleteDirectory($dir){
-    $result = false;
-    if ($handle = opendir("$dir")){
-        $result = true;
-        while ((($file=readdir($handle))!==false) && ($result)){
-            if ($file!='.' && $file!='..'){
-                if (is_dir("$dir/$file")){
-                    $result = deleteDirectory("$dir/$file");
-                } else {
-                    $result = unlink("$dir/$fich");
-                }
-            }
-        }
-        closedir($handle);
-        if ($result){
-            $result = rmdir($dir);
-        }
-    }
-    return $result;
 }
 
 function clear($path)
@@ -104,7 +84,6 @@ function clear($path)
                 $i++  ;
         }
     }
-
 
     closedir($dir);
 }
