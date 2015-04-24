@@ -5,13 +5,13 @@
 /* Fonction pour ajouter un fichier externe (aussi utilisée lors du chargement d'un projet), elle se présente en plusieurs parties et utilise
 d'autres fonctions ainsi que pour les éléments vidéo/audio FFMPEG (donc le TerminalJS, ref. lib/TerminalJS/TerminalJS.js) */
 function addFile(currentFile) {
-    console.log('currentFile : ' + currentFile);
 
     //Remplacement des minuscules par des majuscules et des accents pour simplifier
     var fileName = currentFile.name.deleteAccent().replace(new RegExp(' ', 'g'), '_');
 
     var typeFile = getTypeFile(fileName);
-    console.log(typeFile);
+
+    rLog('-FILE- add [fileName: ' + currentFile.name + '][type: ' + typeFile + ']');
 
     if (typeFile != 'ERROR') {
         var fileId = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
@@ -45,8 +45,6 @@ function addFile(currentFile) {
 
             reader.readAsArrayBuffer(currentFile);
         }
-
-        console.log('next');
     }
     else
     {
@@ -482,7 +480,7 @@ function removeFile(id) {
 
 //Fonction pour envoyer le fichier, utilisation d'un objet FileUpload pour connaître l'avancement et permettre plusieurs envois en même temps
 function uploadFile(id, uId, name, file, type, format) {
-    rLog('uploadFile : ' + id + uId + name + file + type + format);
+    rLog('-FILE- upload : start [id: ' + id + '][uId: ' + uId + '][name: ' + name + '][type: ' + type + '][format: ' + format + ']');
 
     if(id >= 0) {
         eId('toolsFile' + id).innerHTML = 'Sending ...';
@@ -546,6 +544,8 @@ function uploadFile(id, uId, name, file, type, format) {
 
             //Si le fichier est bien envoyé : changement de la valeur isUpload et notification à l'utilisateur sinon bouton permettant de réessayer l'envoi du fichier
             if (this.responseText != 'true') {
+                rLog('-FILE- upload : end|false [id: ' + id + '][uId: ' + uId + '][name: ' + name + '][type: ' + type + '][format: ' + format + ']');
+
                 noty({
                     layout: 'topRight',
                     type: 'error',
@@ -561,7 +561,7 @@ function uploadFile(id, uId, name, file, type, format) {
 
             }
             else {
-                rLog('file : ' + file.name + id + name + type);
+                rLog('-FILE- upload : end|true [id: ' + id + '][uId: ' + uId + '][name: ' + name + '][type: ' + type + '][format: ' + format + ']');
 
                 if(id >= 0) {
                     var text = '';
@@ -597,10 +597,6 @@ function uploadFile(id, uId, name, file, type, format) {
                     {
                         eId('toolsFile' + id).innerHTML = 'Ready!';
                     }
-                }
-                else
-                {
-                    console.log('negative id');
                 }
             }
 
