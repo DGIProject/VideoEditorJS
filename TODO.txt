@@ -3,4 +3,3 @@ TODO : currentRow error
 TODO : textElement input
 TODO : load project count tracks
 TODO : deleteProject
-TODO : drag file track

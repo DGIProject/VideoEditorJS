@@ -15,6 +15,8 @@ function addTracks() {
 }
 
 function addTrack(type) {
+    rLog('-TRACK- add [type: ' + type + ']');
+
     var trackId = (currentProject.tabListTracks.length > 0) ? (currentProject.tabListTracks[currentProject.tabListTracks.length - 1].id + 1) : 0;
 
     var elementInfo = document.createElement('div');
@@ -52,6 +54,8 @@ function addTrack(type) {
 }
 
 function setParentTracks(id1, id2) {
+    rLog('-TRACK- setParent [id1: ' + id1 + '][id2: ' + id2 + ']');
+
     currentProject.tabListTracks[rowById(id1, currentProject.tabListTracks)].setParent(id2);
     currentProject.tabListTracks[rowById(id2, currentProject.tabListTracks)].setParent(id1);
 }
@@ -82,7 +86,7 @@ function deleteTrackModal(id) {
 }
 
 function deleteTrack(id) {
-    rLog('-TRACK- delete|id : ' + id);
+    rLog('-TRACK- delete [trackId: ' + id + ']');
 
     $('#deleteTrackModal').modal('hide');
 
@@ -90,7 +94,7 @@ function deleteTrack(id) {
 
     deleteGraphicalTrack(rowTrack1, id);
 
-    rLog('-TRACK- delete|parent : ' + currentProject.tabListTracks[rowTrack1].parent);
+    rLog('-TRACK- delete [parentId: ' + currentProject.tabListTracks[rowTrack1].parent + ']');
 
     for(var i = 0; i < currentProject.tabListTracks[rowTrack1].tabElements.length; i++) {
         breakLinkElements(currentProject.tabListTracks[rowTrack1].tabElements[i].id, id);
@@ -128,6 +132,8 @@ function deleteGraphicalTrack(row, id) {
 
 //ZOOM
 function changeZoom(zoom, defaultZ) {
+    rLog('-TRACK- changeZoom');
+
     document.getElementById('zoomRange').value = zoom;
 
     lastZoom = (defaultZ) ? zoom : oneSecond;
@@ -141,6 +147,7 @@ function changeZoom(zoom, defaultZ) {
 
 function zoomPlus() {
     if (parseInt(document.getElementById('zoomRange').value) < parseInt(document.getElementById('zoomRange').max)) {
+        rLog('-TRACK- zoomPlus');
 
         lastZoom = oneSecond;
         oneSecond = parseInt(document.getElementById('zoomRange').value) + 1;
@@ -150,12 +157,11 @@ function zoomPlus() {
         calculateTimeBar();
         calculateElementsPixel();
     }
-
-    console.log(oneSecond);
 }
 
-function zoomMoins() {
+function zoomLess() {
     if (parseInt(document.getElementById('zoomRange').value) > parseInt(document.getElementById('zoomRange').min)) {
+        rLog('-TRACK- zoomLess');
 
         lastZoom = oneSecond;
         oneSecond = parseInt(document.getElementById('zoomRange').value) - 1;
@@ -165,8 +171,6 @@ function zoomMoins() {
         calculateTimeBar();
         calculateElementsPixel();
     }
-
-    console.log(oneSecond);
 }
 
 function calculateElementsPixel() {
@@ -186,7 +190,6 @@ function calculateElementsPixel() {
         drawElements(i);
     }
 }
-
 
 //SCROLL
 function scrollPlusTracks() {
@@ -220,9 +223,8 @@ function scrollLessTracks() {
 
 //TIME BAR
 function calculateTimeBar() {
-
-    canvas = document.getElementById('timeBarCanvas');
-    ctx = canvas.getContext('2d');
+    var canvas = document.getElementById('timeBarCanvas');
+    var ctx = canvas.getContext('2d');
 
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -373,6 +375,8 @@ function showContextMenu(e) {
     if(track.currentRow >= 0)
     {
         var element = track.tabElements[track.currentRow];
+
+        rLog('-TRACK- contextMenu [trackId: ' + trackId + '][elementId: ' + element.id + ']');
 
         eId('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
         eId('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
