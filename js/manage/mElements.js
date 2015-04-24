@@ -118,51 +118,6 @@ function updateThumbnail(track, elementRow, thumbnail) {
     imageThumbnail.src = thumbnail;
 }
 
-function addElements(id, trackId, posX, timeBegin, parent) {
-    var file = currentProject.tabListFiles[rowById(id, currentProject.tabListFiles)];
-
-    var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
-    var parentTrack = currentProject.tabListTracks[rowById(track.parent, currentProject.tabListTracks)];
-
-    console.log(file);
-
-    var id1 = (track.tabElements.length > 0) ? track.tabElements[track.tabElements.length - 1].id + 1 : 0;
-    var id2 = id1 + 1;
-
-    var marginLeft = 0;
-
-    if(posX >= 0)
-    {
-        marginLeft = posX;
-    }
-    else
-    {
-        for(var i = 0; i < currentProject.tabListTracks.length; i++)
-        {
-            for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++)
-            {
-                marginLeft = ((currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) > marginLeft) ? (currentProject.tabListTracks[i].tabElements[x].marginLeft + currentProject.tabListTracks[i].tabElements[x].width) : marginLeft;
-            }
-        }
-    }
-
-    var color = randomColor();
-
-    if(file.isVideo && file.isAudio && parent)
-    {
-        console.log('with parent');
-
-        elementTrack(track, id1, file.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id2);
-        elementTrack(parentTrack, id2, file.type, ((parentTrack.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, track.parent, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), id1);
-    }
-    else
-    {
-        console.log('without parent');
-
-        elementTrack(track, id1, file.type, ((track.type == TYPE.VIDEO) ? file.thumbnail.i : file.thumbnail.a), color, {total: timeToSeconds(file.duration), begin: timeBegin}, id, trackId, marginLeft, ((track.type == TYPE.VIDEO) ? {opacity: 0, effects: []} : {volume: 100, effects: []}), -1);
-    }
-}
-
 //Ajout de chaque élément dans la piste (ref. fonction addElement)
 function elementTrack(track, elementId, type, thumbnailData, color, time, fileId, trackId, marginLeft, properties, parent) {
     var imageThumbnail = new Image();
