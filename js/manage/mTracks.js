@@ -295,34 +295,28 @@ function mouseMoveTime(x) {
 function allowDrop(e) {
     if(isFirefox)
     {
-        //console.log('isFirefox');
-
         var id = parseInt(this.id.replace('elementView', ''));
         var fileId = parseInt(e.dataTransfer.getData('fileId'));
 
-        var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
-        var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
+        if(!isNaN(fileId)) {
+            var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
+            var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
-        if(file.isVideo && file.isAudio)
-        {
-            if(track.parent >= 0)
+            if(file.isVideo && file.isAudio)
             {
-                //console.log('yes because have parent');
-
+                if(track.parent >= 0)
+                {
+                    e.preventDefault();
+                }
+            }
+            else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+            {
                 e.preventDefault();
             }
-            else
-            {
-                //console.log('no parent');
-            }
-        }
-        else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
-        {
-            e.preventDefault();
         }
         else
         {
-            //console.log('no');
+            rLog('-TRACK- drop : not a file [trackId: ' + id + ']');
         }
     }
     else
@@ -332,41 +326,40 @@ function allowDrop(e) {
 }
 
 function dropFile(e) {
-    console.log('dropFile');
-
     e.preventDefault();
 
     var id = parseInt(this.id.replace('elementView', ''));
     var fileId = parseInt(e.dataTransfer.getData('fileId'));
 
-    console.log(e.dataTransfer);
-    console.log(fileId);
+    if(!isNaN(fileId)) {
+        var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
+        var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
 
-    var track = currentProject.tabListTracks[rowById(id, currentProject.tabListTracks)];
-    var file = currentProject.tabListFiles[rowById(fileId, currentProject.tabListFiles)];
-
-    if(file.isVideo && file.isAudio)
-    {
-        if(track.parent >= 0)
+        if(file.isVideo && file.isAudio)
         {
-            //console.log('yes because have parent');
-
+            if(track.parent >= 0)
+            {
+                rLog('-TRACK- drop : video/audio file [trackId: ' + id + ']');
+                addElementTrack(fileId, id, -1, 0, -1, true);
+            }
+            else
+            {
+                rLog('-TRACK- drop : video/audio file / no parent track [trackId: ' + id + ']');
+            }
+        }
+        else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
+        {
+            rLog('-TRACK- drop : allowed [trackId: ' + id + '][typeTrack: ' + track.type + ']');
             addElementTrack(fileId, id, -1, 0, -1, true);
         }
         else
         {
-            //console.log('no parent');
+            rLog('-TRACK- drop : not supported file [trackId: ' + id + ']');
         }
-    }
-    else if((file.isVideo && track.type == TYPE.VIDEO) || (file.isAudio && track.type == TYPE.AUDIO))
-    {
-        //console.log('yes');
-
-        addElementTrack(fileId, id, -1, 0, -1, true);
     }
     else
     {
-        //console.log('no');
+        rLog('-TRACK- drop : not a file [trackId: ' + id + ']');
     }
 }
 
