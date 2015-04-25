@@ -163,6 +163,13 @@ ManageTextElement.prototype.mouseDown = function(e) {
     if(e.button == 0)
     {
         currentManageTextElement.leftClick = true;
+
+        var xMouse = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
+        var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
+
+        currentManageTextElement.isSelected = currentManageTextElement.isOnArea(xMouse, yMouse);
+
+        currentManageTextElement.writeTextToCanvas();
     }
 };
 
@@ -174,15 +181,10 @@ ManageTextElement.prototype.mouseUp = function(e) {
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
-    var xMouse = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
-    var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
-
-    currentManageTextElement.isSelected = currentManageTextElement.isOnArea(xMouse, yMouse);
-
     if(currentManageTextElement.isSelected && currentManageTextElement.leftClick)
     {
-        currentManageTextElement.properties.pos.x = xMouse;
-        currentManageTextElement.properties.pos.y = yMouse;
+        currentManageTextElement.properties.pos.x = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
+        currentManageTextElement.properties.pos.y = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
     }
 
     currentManageTextElement.writeTextToCanvas();
