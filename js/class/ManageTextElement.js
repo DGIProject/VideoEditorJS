@@ -5,7 +5,7 @@ ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
     this.canvas.onmousemove = this.mouseMove;
     this.canvas.onmousedown = this.mouseDown;
     this.canvas.onmouseup = this.mouseUp;
-    window.onkeypress = this.keyPress;
+    //window.onkeypress = this.keyPress;
 
     this.canvas.width = canvasWidth;
     this.canvas.height = this.canvas.width / 1.77;
@@ -98,6 +98,10 @@ ManageTextElement.prototype.changeTextAlign = function(textAlign) {
     this.writeTextToCanvas();
 };
 
+ManageTextElement.prototype.updateText = function(text) {
+    console.log(text);
+};
+
 ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -168,6 +172,10 @@ ManageTextElement.prototype.mouseDown = function(e) {
         var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
 
         currentManageTextElement.isSelected = currentManageTextElement.isOnArea(xMouse, yMouse);
+
+        if(this.isSelected) {
+            document.getElementById('inputTextElement').focus();
+        }
 
         currentManageTextElement.writeTextToCanvas();
     }
