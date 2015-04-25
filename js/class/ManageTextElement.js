@@ -71,6 +71,10 @@ ManageTextElement.prototype.editTextElement = function(id, fileId, text, propert
     this.writeTextToCanvas();
 };
 
+ManageTextElement.prototype.gInformationsTextElement = function() {
+    return {id : this.id, text : this.text, properties: this.properties};
+};
+
 ManageTextElement.prototype.changeFont = function(font) {
     this.properties.font = font;
     this.writeTextToCanvas();
@@ -93,15 +97,6 @@ ManageTextElement.prototype.changeTextAlign = function(textAlign) {
     this.properties.align = textAlign;
     this.writeTextToCanvas();
 };
-
-/*
-ManageTextElement.prototype.changePosElement = function(x, y) {
-    this.properties.pos.x += x;
-    this.properties.pos.y += y;
-
-    this.writeTextToCanvas();
-};
-*/
 
 ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -147,13 +142,7 @@ ManageTextElement.prototype.writeTextToCanvas = function() {
     document.getElementById(this.elementsId.buttonSaveTextElement).disabled = (this.text == '');
 };
 
-ManageTextElement.prototype.isOnArea = function(xClient, yClient) {
-    var x = (xClient + window.scrollX) - $('#' + this.canvasId).offset().left;
-    var y = (yClient + window.scrollY) - $('#' + this.canvasId).offset().top;
-
-    console.log(x, y);
-    console.log(this.properties.pos.x, this.properties.pos.y);
-
+ManageTextElement.prototype.isOnArea = function(x, y) {
     var enterInContent = this.text.split('|');
 
     var xWidth = 0;
@@ -168,16 +157,6 @@ ManageTextElement.prototype.isOnArea = function(xClient, yClient) {
     }
 
     return x >= ((this.properties.pos.x - xWidth) - 5) && y >= (this.properties.pos.y - this.properties.size) && x <= ((this.properties.pos.x - xWidth) + this.widthLine + 5) && y <= ((this.properties.pos.y - this.properties.size) + (enterInContent.length * this.properties.size) + 15);
-};
-
-/*
-ManageTextElement.prototype.enableButtonSaveTextElement = function() {
-    document.getElementById(this.elementsId.buttonSaveTextElement).disabled = (this.text == '');
-};
-*/
-
-ManageTextElement.prototype.gInformationsTextElement = function() {
-    return {id : this.id, text : this.text, properties: this.properties};
 };
 
 ManageTextElement.prototype.mouseDown = function(e) {
@@ -195,44 +174,13 @@ ManageTextElement.prototype.mouseUp = function(e) {
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
-    currentManageTextElement.isSelected = currentManageTextElement.isOnArea(e.clientX, e.clientY);
+    var xMouse = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
+    var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
+
+    currentManageTextElement.isSelected = currentManageTextElement.isOnArea(xMouse, yMouse);
 
     if(currentManageTextElement.isSelected && currentManageTextElement.leftClick)
     {
-        var xMouse = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
-        var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
-
-        console.log(xMouse, yMouse);
-
-        /*
-        var x = 0, y = 0;
-
-        if(xMouse < currentManageTextElement.lastXMouse)
-        {
-            x = -1.35;
-        }
-
-        if(xMouse > currentManageTextElement.lastXMouse)
-        {
-            x = 1.35;
-        }
-
-        if(yMouse < currentManageTextElement.lastYMouse)
-        {
-            y = -1.35;
-        }
-
-        if(yMouse > currentManageTextElement.lastYMouse)
-        {
-            y = 1.35;
-        }
-
-        currentManageTextElement.lastXMouse = xMouse;
-        currentManageTextElement.lastYMouse = yMouse;
-
-        currentManageTextElement.changePosElement(x, y);
-        */
-
         currentManageTextElement.properties.pos.x = xMouse;
         currentManageTextElement.properties.pos.y = yMouse;
     }
