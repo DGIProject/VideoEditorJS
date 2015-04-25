@@ -94,12 +94,14 @@ ManageTextElement.prototype.changeTextAlign = function(textAlign) {
     this.writeTextToCanvas();
 };
 
+/*
 ManageTextElement.prototype.changePosElement = function(x, y) {
     this.properties.pos.x += x;
     this.properties.pos.y += y;
 
     this.writeTextToCanvas();
 };
+*/
 
 ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -142,7 +144,7 @@ ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.fillRect((((this.properties.pos.x - xWidth) - 5)), (((this.properties.pos.y - this.properties.size) + ((enterInContent.length * this.properties.size) + 15)) - 1), (this.widthLine + 10), 1);
     this.context.fillRect(((this.properties.pos.x - xWidth) - 5), (this.properties.pos.y - this.properties.size), 1, ((enterInContent.length * this.properties.size) + 15));
 
-    this.enableButtonSaveTextElement();
+    document.getElementById(this.elementsId.buttonSaveTextElement).disabled = (this.text == '');
 };
 
 ManageTextElement.prototype.isOnArea = function(xClient, yClient) {
@@ -168,39 +170,21 @@ ManageTextElement.prototype.isOnArea = function(xClient, yClient) {
     return x >= ((this.properties.pos.x - xWidth) - 5) && y >= (this.properties.pos.y - this.properties.size) && x <= ((this.properties.pos.x - xWidth) + this.widthLine + 5) && y <= ((this.properties.pos.y - this.properties.size) + (enterInContent.length * this.properties.size) + 15);
 };
 
+/*
 ManageTextElement.prototype.enableButtonSaveTextElement = function() {
-    if(this.text != '')
-    {
-        document.getElementById(this.elementsId.buttonSaveTextElement).removeAttribute('disabled');
-    }
-    else
-    {
-        document.getElementById(this.elementsId.buttonSaveTextElement).setAttribute('disabled', '');
-    }
+    document.getElementById(this.elementsId.buttonSaveTextElement).disabled = (this.text == '');
 };
+*/
 
 ManageTextElement.prototype.gInformationsTextElement = function() {
     return {id : this.id, text : this.text, properties: this.properties};
 };
 
 ManageTextElement.prototype.mouseDown = function(e) {
-    console.log(e.clientX, e.clientY);
-
-    if(currentManageTextElement.isOnArea(e.clientX, e.clientY))
+    if(e.button == 0)
     {
-        currentManageTextElement.isSelected = true;
-
-        if(e.button == 0)
-        {
-            currentManageTextElement.leftClick = true;
-        }
+        currentManageTextElement.leftClick = true;
     }
-    else
-    {
-        currentManageTextElement.isSelected = false;
-    }
-
-    currentManageTextElement.writeTextToCanvas();
 };
 
 ManageTextElement.prototype.mouseUp = function(e) {
@@ -211,11 +195,16 @@ ManageTextElement.prototype.mouseUp = function(e) {
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
-    if(currentManageTextElement.leftClick)
-    {
-        var xMouse = e.clientX + window.scrollX;
-        var yMouse = e.clientY + window.scrollY;
+    currentManageTextElement.isSelected = currentManageTextElement.isOnArea(e.clientX, e.clientY);
 
+    if(currentManageTextElement.isSelected && currentManageTextElement.leftClick)
+    {
+        var xMouse = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
+        var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
+
+        console.log(xMouse, yMouse);
+
+        /*
         var x = 0, y = 0;
 
         if(xMouse < currentManageTextElement.lastXMouse)
@@ -242,7 +231,13 @@ ManageTextElement.prototype.mouseMove = function(e) {
         currentManageTextElement.lastYMouse = yMouse;
 
         currentManageTextElement.changePosElement(x, y);
+        */
+
+        currentManageTextElement.properties.pos.x = xMouse;
+        currentManageTextElement.properties.pos.y = yMouse;
     }
+
+    currentManageTextElement.writeTextToCanvas();
 };
 
 ManageTextElement.prototype.keyPress = function(e) {
