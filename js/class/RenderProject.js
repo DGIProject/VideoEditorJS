@@ -137,7 +137,11 @@ RenderP = function (format) {
         finalAudio = "audio.mp3";
     }
     else {
-        finalAudio = "track_"+this.commandTracksAudio[i][0]+".mp3";
+        if (this.commandTracksAudio.length>0)
+        {
+            finalAudio = "track_"+this.commandTracksAudio.length+".mp3";
+        }
+
     }
 
     // merge audio and video

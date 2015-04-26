@@ -71,6 +71,10 @@ ManageTextElement.prototype.editTextElement = function(id, fileId, text, propert
     this.writeTextToCanvas();
 };
 
+ManageTextElement.prototype.gInformationsTextElement = function() {
+    return {id : this.id, text : this.text, properties: this.properties};
+};
+
 ManageTextElement.prototype.changeFont = function(font) {
     this.properties.font = font;
     this.writeTextToCanvas();
@@ -94,11 +98,8 @@ ManageTextElement.prototype.changeTextAlign = function(textAlign) {
     this.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.changePosElement = function(x, y) {
-    this.properties.pos.x += x;
-    this.properties.pos.y += y;
-
-    this.writeTextToCanvas();
+ManageTextElement.prototype.updateText = function(text) {
+    console.log(text);
 };
 
 ManageTextElement.prototype.writeTextToCanvas = function() {
@@ -142,16 +143,10 @@ ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.fillRect((((this.properties.pos.x - xWidth) - 5)), (((this.properties.pos.y - this.properties.size) + ((enterInContent.length * this.properties.size) + 15)) - 1), (this.widthLine + 10), 1);
     this.context.fillRect(((this.properties.pos.x - xWidth) - 5), (this.properties.pos.y - this.properties.size), 1, ((enterInContent.length * this.properties.size) + 15));
 
-    this.enableButtonSaveTextElement();
+    document.getElementById(this.elementsId.buttonSaveTextElement).disabled = (this.text == '');
 };
 
-ManageTextElement.prototype.isOnArea = function(xClient, yClient) {
-    var x = (xClient + window.scrollX) - $('#' + this.canvasId).offset().left;
-    var y = (yClient + window.scrollY) - $('#' + this.canvasId).offset().top;
-
-    console.log(x, y);
-    console.log(this.properties.pos.x, this.properties.pos.y);
-
+ManageTextElement.prototype.isOnArea = function(x, y) {
     var enterInContent = this.text.split('|');
 
     var xWidth = 0;
@@ -168,39 +163,18 @@ ManageTextElement.prototype.isOnArea = function(xClient, yClient) {
     return x >= ((this.properties.pos.x - xWidth) - 5) && y >= (this.properties.pos.y - this.properties.size) && x <= ((this.properties.pos.x - xWidth) + this.widthLine + 5) && y <= ((this.properties.pos.y - this.properties.size) + (enterInContent.length * this.properties.size) + 15);
 };
 
-ManageTextElement.prototype.enableButtonSaveTextElement = function() {
-    if(this.text != '')
-    {
-        document.getElementById(this.elementsId.buttonSaveTextElement).removeAttribute('disabled');
-    }
-    else
-    {
-        document.getElementById(this.elementsId.buttonSaveTextElement).setAttribute('disabled', '');
-    }
-};
-
-ManageTextElement.prototype.gInformationsTextElement = function() {
-    return {id : this.id, text : this.text, properties: this.properties};
-};
-
 ManageTextElement.prototype.mouseDown = function(e) {
-    console.log(e.clientX, e.clientY);
-
-    if(currentManageTextElement.isOnArea(e.clientX, e.clientY))
+    if(e.button == 0)
     {
-        currentManageTextElement.isSelected = true;
+        currentManageTextElement.leftClick = true;
 
-        if(e.button == 0)
-        {
-            currentManageTextElement.leftClick = true;
-        }
-    }
-    else
-    {
-        currentManageTextElement.isSelected = false;
-    }
+        var xMouse = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
+        var yMouse = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
 
-    currentManageTextElement.writeTextToCanvas();
+        currentManageTextElement.isSelected = currentManageTextElement.isOnArea(xMouse, yMouse);
+
+        currentManageTextElement.writeTextToCanvas();
+    }
 };
 
 ManageTextElement.prototype.mouseUp = function(e) {
@@ -211,38 +185,13 @@ ManageTextElement.prototype.mouseUp = function(e) {
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
-    if(currentManageTextElement.leftClick)
+    if(currentManageTextElement.isSelected && currentManageTextElement.leftClick)
     {
-        var xMouse = e.clientX + window.scrollX;
-        var yMouse = e.clientY + window.scrollY;
-
-        var x = 0, y = 0;
-
-        if(xMouse < currentManageTextElement.lastXMouse)
-        {
-            x = -1.35;
-        }
-
-        if(xMouse > currentManageTextElement.lastXMouse)
-        {
-            x = 1.35;
-        }
-
-        if(yMouse < currentManageTextElement.lastYMouse)
-        {
-            y = -1.35;
-        }
-
-        if(yMouse > currentManageTextElement.lastYMouse)
-        {
-            y = 1.35;
-        }
-
-        currentManageTextElement.lastXMouse = xMouse;
-        currentManageTextElement.lastYMouse = yMouse;
-
-        currentManageTextElement.changePosElement(x, y);
+        currentManageTextElement.properties.pos.x = e.clientX + window.scrollX - $('#' + currentManageTextElement.canvasId).offset().left;
+        currentManageTextElement.properties.pos.y = e.clientY + window.scrollY - $('#' + currentManageTextElement.canvasId).offset().top;
     }
+
+    currentManageTextElement.writeTextToCanvas();
 };
 
 ManageTextElement.prototype.keyPress = function(e) {
@@ -263,4 +212,6 @@ ManageTextElement.prototype.keyPress = function(e) {
 
         currentManageTextElement.writeTextToCanvas();
     }
+
+    return false;
 };

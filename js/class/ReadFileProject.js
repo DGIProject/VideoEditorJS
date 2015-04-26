@@ -213,9 +213,8 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
             }
             else
             {
-                rLog('-LOAD PROJECT- elements track : end');
-
-                this.finishLoadProject();
+                this.countTracks++;
+                this.setElementsTrack(false);
             }
         }
         else
@@ -238,14 +237,16 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
             }
             else
             {
+                console.log('other track ' + this.countTracks);
+                console.log(this.listTracks[this.countTracks].tabElements.length);
+
                 if(this.listTracks[this.countTracks].tabElements.length > 0) {
                     this.setElementThumbnail(this.countTracks, this.countElementsTrack);
                 }
                 else
                 {
-                    rLog('-LOAD PROJECT- elements track : end');
-
-                    this.finishLoadProject();
+                    this.countTracks++;
+                    this.setElementsTrack(false);
                 }
             }
         }

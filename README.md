@@ -46,7 +46,13 @@ ScreenShots :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr01.PNG)
 - Renders page :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr02.PNG)
-- Imported file properties :
+- File properties :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr03.PNG)
 - HTML5 Audio/Video recording :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr04.PNG)
+- Upload manager :
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr05.png)
+- Element properties :
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr06.png)
+- Text element editor :
+![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr07.png)

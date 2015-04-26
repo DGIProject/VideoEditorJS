@@ -39,10 +39,12 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span> Projet <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#" onclick="newProject(true);"><span class="glyphicon glyphicon-plus"></span> Nouveau</a></li>
-                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-folder-open"></span> Ouvrir</a></li>
+                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-th"></span> Mes projets</a></li>
                                 <li class="divider"></li>
                                 <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Sauvegarder</a></li>
                                 <li><a href="#" onclick="currentProject.switchAutoSave();"><span id="iconAutoSave" class="glyphicon glyphicon-unchecked"></span> Sauvegarde Automatique</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#" onclick="rConsole();"><span id="iconRConsole" class="glyphicon glyphicon-unchecked"></span> Afficher la console</a></li>
                                 <li class="divider"></li>
                                 <li><a href="#">Projet : <span id="projectDropdown">--</span></a></li>
                                 <li><a href="#">Dernière sauvegarde : <span id="lastSaveDropdown">--</span></a></li>
@@ -76,7 +78,7 @@
 
                     <form class="navbar-form navbar-left">
 
-                        <button type="button" onclick="zoomMoins();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
+                        <button type="button" onclick="zoomLess();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
                         <div class="form-group">
                             <input class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value, false);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="20">
                         </div>
@@ -124,7 +126,7 @@
         <p><a href="#">VideoEditorJS</a> par Dylan Delaporte et Guillaume Villena - Project d'ISN 2015</p>
     </footer>
 
-    <pre id="console">Console</pre>
+    <pre id="console" style="display: none;">-VEJS CONSOLE-</pre>
 
     <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -229,7 +231,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Ouvrir un projet</h4>
+                    <h4 class="modal-title">Mes projets</h4>
                 </div>
                 <div class="modal-body">
                     <div id="listProjects" class="list-group">Chargement des projets ...</div>
@@ -258,13 +260,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Upload Manager</h4>
+                    <h4 class="modal-title">Gestionnaire d'envoi</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="listUploads" class="list-group">No uploads.</div>
+                    <div id="listUploads" class="list-group">Aucun envoi.</div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Finish</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
@@ -440,8 +442,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="removeElementButton" data-dismiss="modal">Remove</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-danger" id="removeElementButton" data-dismiss="modal">Supprimer</button>
                 </div>
             </div>
         </div>
@@ -450,7 +452,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 id="opacityElement" class="modal-title">Opacity Element</h4>
+                    <h4 id="opacityElement" class="modal-title">Opacité de l'élément</h4>
                 </div>
                 <div class="modal-body">
                     <input type="range" id="opacityRange" step="1" min="0" max="100" class="form-control">
@@ -460,7 +462,7 @@
                     </span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Finish</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
@@ -473,7 +475,7 @@
                         <div class="form-group">
                             <input type="range" id="volumeRange" step="1" min="0" max="100" class="form-control">
                         </div>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Terminer</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
                     </form>
                 </div>
             </div>
