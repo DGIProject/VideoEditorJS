@@ -1,3 +1,2 @@
 TODO : video/audio recorder
-TODO : textElement input
 TODO : load project count tracks

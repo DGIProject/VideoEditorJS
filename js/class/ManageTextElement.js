@@ -5,7 +5,7 @@ ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
     this.canvas.onmousemove = this.mouseMove;
     this.canvas.onmousedown = this.mouseDown;
     this.canvas.onmouseup = this.mouseUp;
-    //window.onkeypress = this.keyPress;
+    window.onkeypress = this.keyPress;
 
     this.canvas.width = canvasWidth;
     this.canvas.height = this.canvas.width / 1.77;
@@ -173,10 +173,6 @@ ManageTextElement.prototype.mouseDown = function(e) {
 
         currentManageTextElement.isSelected = currentManageTextElement.isOnArea(xMouse, yMouse);
 
-        if(this.isSelected) {
-            document.getElementById('inputTextElement').focus();
-        }
-
         currentManageTextElement.writeTextToCanvas();
     }
 };
@@ -216,4 +212,6 @@ ManageTextElement.prototype.keyPress = function(e) {
 
         currentManageTextElement.writeTextToCanvas();
     }
+
+    return false;
 };
