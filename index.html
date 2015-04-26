@@ -355,7 +355,7 @@
             </div>
         </div>
     </div>
-    <div id="recordFileModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="recordFileModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -620,9 +620,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="alert alert-info">
-                            Pour pouvoir utiliser cette fonctionnalité,
-                            vous devez valider l'autorisation d'acces au microphone ou a votre webcam.
+                        <div id="RTCInfo" class="alert alert-info">
+                        Pour pouvoir utiliser cette fonctionnalité,
+                        vous devez valider l'autorisation d'acces au microphone ou a votre webcam.
+                        </div>
+                        <div id="RTCError" class="alert alert-danger">
+                            Il nous est impossible d'obtenir une autorisation de l'utilisation de votre microphone ou webcam.
+                            <br>
+                            Pour que l'enregistrement fonctionne, vous devez brancher à votre ordinateur, un microphone ou une webcam.
+                            <br>
+                            Verifiez votre matériel.
+                            <br><br>
+                            <button type="button" id="closeWaitRecordModal" class="btn btn-default" data-dismiss="modal">Fermer</button>
                         </div>
                     </div>
                 </div>

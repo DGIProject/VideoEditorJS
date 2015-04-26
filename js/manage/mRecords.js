@@ -46,6 +46,13 @@ var playPause = document.getElementById('playPauseRecordVideoButton');
 playPause.disabled = true;
 var startRecordingbtn = document.getElementById('recordVideoButton');
 var stopRecordingbtn = document.getElementById('stopRecordVideoButton');
+var closeWaitRecordModal = document.getElementById('closeWaitRecordModal');
+
+closeWaitRecordModal.onclick = function()
+{
+    $("#recordFileModal").modal('hide');
+};
+
 
 playPause.onclick = function(){
 
@@ -65,22 +72,25 @@ function captureUserMedia(callback) {
     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
     playPause.removeAttribute("disabled");
     navigator.getUserMedia(para, function (stream) {
+        startRecordingbtn.disabled = true;
+        stopRecordingbtn.disabled = false;
+        playPause.disabled = true;
+        playElement.muted = true;
         playElement.src = URL.createObjectURL(stream);
         localStream = stream;
         playElement.muted = true;
         playElement.play();
         callback(stream);
     }, function (error) {
-        $("#waitRecordRTCModal").modal('hide');
+        eId('RTCError').style.display = "";
+        eId('RTCInfo').style.display = "none";
         console.error(error);
     });
 }
 startRecordingbtn.onclick = function () {
-    startRecordingbtn.disabled = true;
-    stopRecordingbtn.disabled = false;
-    playPause.disabled = true;
-    playElement.muted = true;
 
+    eId('RTCError').style.display = "none";
+    eId('RTCInfo').style.display = "";
     $("#waitRecordRTCModal").modal('show');
     console.log(para);
     captureUserMedia(function (stream) {
@@ -243,7 +253,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     terminal.Files.push({name: fileName, data: ElementData});
 
                     var newFileName = (document.getElementById('fileName').value+".avi");
-                    loadM();
+                    sLoadM();
                     terminal.processCmd("ffmpeg -i "+fileName+" "+newFileName, function (e, index){
                         var message = e.data;
 
@@ -264,7 +274,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                                     reader.addEventListener("loadend", function() {
                                         $('#recordAudioOrVideoElement').modal('hide');
 
-                                        currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, fileName, fileName.split('.').pop()));
+                                        currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, newFileName, newFileName.split('.').pop()));
 
                                         sLoadM();
                                         fileProcessing(fileId, reader.result);
