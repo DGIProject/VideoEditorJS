@@ -46,9 +46,8 @@ var playPause = document.getElementById('playPauseRecordVideoButton');
 playPause.disabled = true;
 var startRecordingbtn = document.getElementById('recordVideoButton');
 var stopRecordingbtn = document.getElementById('stopRecordVideoButton');
-var closeWaitRecordModal = document.getElementById('closeWaitRecordModal');
 
-closeWaitRecordModal.onclick = function()
+document.getElementById('closeWaitRecordModal').onclick = function()
 {
     $("#recordFileModal").modal('hide');
 };
@@ -122,6 +121,11 @@ startRecordingbtn.onclick = function () {
         }
 
         window.audioVideoRecorder.startRecording();
+        countTimer = 0;
+        timer = window.setInterval(function(){
+            countTimer++;
+            eId('durationVideoRecord').innerHTML =  secondToTime(countTimer);
+        }, 1000);
 
 
     });
@@ -137,7 +141,7 @@ stopRecordingbtn.onclick = function () {
         console.log(url);
         playElement.muted = false;
         playElement.src = url;
-
+        clearInterval(timer);
         videoRecorderResult = window.audioVideoRecorder.getBlob();
 
         if (isChrome) {
@@ -273,9 +277,8 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                                     var reader = new FileReader();
                                     reader.addEventListener("loadend", function() {
                                         $('#recordAudioOrVideoElement').modal('hide');
-
                                         currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, newFileName, newFileName.split('.').pop()));
-
+                                        addFileList(fileId, newFileName, typeFile);
                                         sLoadM();
                                         fileProcessing(fileId, reader.result);
                                     });
@@ -291,7 +294,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                 else
                 {
                     currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, videoRecorderResult.size, fileName, fileName.split('.').pop()));
-
+                    addFileList(fileId, fileName, typeFile);
                     sLoadM();
                     fileProcessing(fileId, arrayBuffer);
                 }

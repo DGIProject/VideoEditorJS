@@ -327,8 +327,8 @@ function getTypeFile(fileName) {
     var extension = fileName.split('.').reverse()[0];
     console.log(extension);
 
-    var tabExtensionAudio = ['mp3', 'wav', 'wma', 'oga'];
-    var tabExtensionVideo = ['avi', 'mp4', 'wmv', 'flv', 'webm', 'ogv', 'ogg', 'mov' ];
+    var tabExtensionAudio = ['mp3', 'wav', 'wma', 'oga', 'ogg'];
+    var tabExtensionVideo = ['avi', 'mp4', 'wmv', 'flv', 'webm', 'ogv', 'mov' ];
     var tabExtensionImage = ['png', 'jpg', 'jpeg', 'gif', 'bmp'];
 
     if (tabExtensionAudio.lastIndexOf(extension.toLowerCase()) != -1) {

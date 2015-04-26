@@ -219,3 +219,11 @@ function dataUrlToBlob(dataURL) {
 
     return new Blob([uInt8Array], {type: contentType});
 }
+function secondToTime(seconds)
+{
+    var hours = parseInt( seconds / 3600 ) % 24;
+    var minutes = parseInt( seconds / 60 ) % 60;
+    var seconds = seconds % 60;
+
+    return (hours < 10 ? "0" + hours : hours) + "h" + (minutes < 10 ? "0" + minutes : minutes) + "m" + (seconds  < 10 ? "0" + seconds : seconds) + "s";
+}

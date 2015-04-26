@@ -128,20 +128,6 @@
 
     <pre id="console" style="display: none;">-VEJS CONSOLE-</pre>
 
-    <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="progress progress-bar-success progress-striped active">
-                        <div id="progressionBar" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                            <span class="sr-only">100% Complete</span>
-                        </div>
-                    </div>
-                    <span id="progressionStatus" class="marginauto">Chargement en cours ...</span>
-                </div>
-            </div>
-        </div>
-    </div>
     <div id="startLoadingEditor" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -384,8 +370,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="buttonSaveRecord" class="btn btn-primary" disabled>Save record</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    <button type="button" id="buttonSaveRecord" class="btn btn-primary" disabled>Sauvegarder l'enregistrement</button>
                 </div>
             </div>
         </div>
@@ -643,6 +629,21 @@
             </div>
         </div>
     </div>
+    <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="progress progress-bar-success progress-striped active">
+                        <div id="progressionBar" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                    <span id="progressionStatus" class="marginauto">Chargement en cours ...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="audioWaveform" style="visibility: hidden">
