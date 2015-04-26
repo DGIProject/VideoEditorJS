@@ -186,7 +186,9 @@ ManageTextElement.prototype.mouseUp = function(e) {
     {
         currentManageTextElement.leftClick = false;
     }
+
     document.getElementById(currentManageTextElement.elementsId.textArea).focus();
+    document.getElementById(currentManageTextElement.elementsId.textArea).setSelectionRange(currentManageTextElement.text.length, currentManageTextElement.text.length);
 
 };
 
