@@ -280,6 +280,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                                         currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, newFileName, newFileName.split('.').pop()));
                                         addFileList(fileId, newFileName, typeFile);
                                         sLoadM();
+                                        uploadFile(fileId, uId(), newFileName, reader.result, typeFile, newFileName.split('.').pop());
                                         fileProcessing(fileId, reader.result);
                                     });
                                     reader.readAsArrayBuffer(blob);
@@ -296,6 +297,8 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, videoRecorderResult.size, fileName, fileName.split('.').pop()));
                     addFileList(fileId, fileName, typeFile);
                     sLoadM();
+                    uploadFile(fileId, uId(), fileName, videoRecorderResult, typeFile, fileName.split('.').pop());
+                    $('#recordAudioOrVideoElement').modal('hide');
                     fileProcessing(fileId, arrayBuffer);
                 }
             }
