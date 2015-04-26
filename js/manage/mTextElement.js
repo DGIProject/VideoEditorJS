@@ -8,7 +8,6 @@ function newTextElement(){
     var id = (currentProject.tabListFiles.length > 0) ? (currentProject.tabListFiles[currentProject.tabListFiles.length - 1].id + 1) : 0;
 
     currentManageTextElement.newTextElement(id);
-
     $('#textElementModal').modal('show');
 }
 

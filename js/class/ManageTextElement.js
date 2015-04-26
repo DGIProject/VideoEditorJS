@@ -5,7 +5,7 @@ ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
     this.canvas.onmousemove = this.mouseMove;
     this.canvas.onmousedown = this.mouseDown;
     this.canvas.onmouseup = this.mouseUp;
-    window.onkeypress = this.keyPress;
+   // window.onkeypress = this.keyPress;
 
     this.canvas.width = canvasWidth;
     this.canvas.height = this.canvas.width / 1.77;
@@ -42,6 +42,9 @@ ManageTextElement.prototype.newTextElement = function(id) {
 
     document.getElementById(this.elementsId.sizeText).value = this.properties.size;
     document.getElementById(this.elementsId.sizeTextInfo).innerHTML = this.properties.size;
+    document.getElementById(this.elementsId.textArea).value = this.text;
+    document.getElementById(this.elementsId.textArea).focus();
+
 
     this.isEditing = false;
 
@@ -99,7 +102,8 @@ ManageTextElement.prototype.changeTextAlign = function(textAlign) {
 };
 
 ManageTextElement.prototype.updateText = function(text) {
-    console.log(text);
+    this.text = text;
+    this.writeTextToCanvas();
 };
 
 ManageTextElement.prototype.writeTextToCanvas = function() {
@@ -109,7 +113,7 @@ ManageTextElement.prototype.writeTextToCanvas = function() {
     this.context.textAlign = this.properties.align;
     this.context.fillStyle = this.properties.color;
 
-    var enterInContent = this.text.split('|');
+    var enterInContent = this.text.split('\n');
 
     this.widthLine = 0;
 
@@ -182,6 +186,8 @@ ManageTextElement.prototype.mouseUp = function(e) {
     {
         currentManageTextElement.leftClick = false;
     }
+    document.getElementById(currentManageTextElement.elementsId.textArea).focus();
+
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
@@ -194,7 +200,7 @@ ManageTextElement.prototype.mouseMove = function(e) {
     currentManageTextElement.writeTextToCanvas();
 };
 
-ManageTextElement.prototype.keyPress = function(e) {
+/*ManageTextElement.prototype.keyPress = function(e) {
     if(currentManageTextElement.isSelected)
     {
         if(e.keyCode == 8)
@@ -212,6 +218,6 @@ ManageTextElement.prototype.keyPress = function(e) {
 
         currentManageTextElement.writeTextToCanvas();
     }
-
+    console.log('Block')
     return false;
-};
+};*/
