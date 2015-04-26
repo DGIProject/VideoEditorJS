@@ -1,1 +1,2 @@
 TODO : load project count tracks
+TODO : Fix bug input

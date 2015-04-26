@@ -132,14 +132,14 @@ RenderP = function (format) {
             var trackId = this.commandTracksAudio[i][0];
             cmd += "-i track_" + trackId + ".mp3 ";
         }
-        cmd += "amix=inputs=" + this.commandTracksAudio.length + ":duration=longest:dropout_transition=2 audio.mp3";
+        cmd += " -filter_complex amerge audio.mp3";
         this.commandList.push(cmd);
         finalAudio = "audio.mp3";
     }
     else {
         if (this.commandTracksAudio.length>0)
         {
-            finalAudio = "track_"+this.commandTracksAudio.length+".mp3";
+            finalAudio = "track_"+this.commandTracksAudio[0][0]+".mp3";
         }
 
     }
