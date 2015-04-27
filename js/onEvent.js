@@ -123,28 +123,6 @@ document.getElementById('tracks').addEventListener("DOMMouseScroll", function(e)
 
     return false;
 });
-
-/*document.getElementById('tracks').addEventListener("mousewheel", function(e){
-    var e = window.event || e;
-    var delta = (e.wheelDelta || e.detail);
-    if (delta>0)
-    {
-        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 100;
-    }
-    else
-    {
-        if (document.getElementById('audioView').scrollLeft-100>0)
-        {
-            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 100;
-        }
-        else
-        {
-            document.getElementById('audioView').scrollLeft = 0;
-        }
-    }
-
-    return false;
-});*/
 document.getElementById('tracks').onmouseleave =  function(e){
     console.log("mouseLeave");
     window.removeEventListener('DOMMouseScroll',   preventDefault, false);
