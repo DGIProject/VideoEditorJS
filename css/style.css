@@ -18,12 +18,12 @@
 
 .trackInfo {
     float: left;
-    width: 90px;
+    width: 70px;
 }
 
 .trackView {
     float: left;
-    width: 710px;
+    width: 730px;
 }
 
 #videoView {
@@ -43,14 +43,7 @@
 .valuesTrack
 {
     float: left;
-    width: 140px;
-    margin-top: 5px;
-}
-
-.optionsTrack
-{
-    float: right;
-    width: 45px;
+    margin-top: 10px;
 }
 
 .canvasTrack {

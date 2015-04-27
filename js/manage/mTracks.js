@@ -23,7 +23,7 @@ function addTrack(type) {
     elementInfo.id = 'elementInfo' + trackId;
     elementInfo.classList.add('singleTrack');
     elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
-    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
 
     var elementView = document.createElement('canvas');
     elementView.id = 'elementView' + trackId;
@@ -38,11 +38,11 @@ function addTrack(type) {
 
     elementView.oncontextmenu = showContextMenu;
 
-    elementView.width = 730;
+    elementView.width = 740;
     elementView.height = 105;
 
     var contextElementView = elementView.getContext('2d');
-    contextElementView.width = 730;
+    contextElementView.width = 740;
     contextElementView.height = 105;
 
     document.getElementById((type == TYPE.VIDEO) ? 'videoInfo' : 'audioInfo').appendChild(elementInfo);
