@@ -18,6 +18,7 @@ Track = function(id, type, canvas) {
 
     this.mousedown = false;
     this.gap = 0;
+    this.currentX = 0;
     this.lastX = 0;
 
     this.tabElements = [];

@@ -7,6 +7,8 @@ var pixelTimeBar = {g: 0, d: 734};
 var lastZoom = 5;
 var scrollTracks = 0;
 
+var timeoutAutoScroll = null;
+
 function addTracks() {
     var id1 = addTrack(TYPE.VIDEO);
     var id2 = addTrack(TYPE.AUDIO);
