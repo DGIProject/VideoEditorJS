@@ -218,19 +218,13 @@ function mouseMoveTracks(e) {
                 mouseMoveTime(x - pixelTimeBar.g, null);
             }
 
-            console.log('x: ' + (track.tabElements[track.currentRow].marginLeft + track.gap));
-
             if((track.tabElements[track.currentRow].marginLeft + track.gap) >= (pixelTimeBar.d - 35) && !timeoutAutoScroll) {
-                console.log('auto scroll plus');
-
                 timeoutAutoScroll = setTimeout(function() {
                     autoScrollPlus(row, track.currentRow);
                 }, 50);
             }
 
             if((track.tabElements[track.currentRow].marginLeft + track.gap) <= (pixelTimeBar.g + 35) && !timeoutAutoScroll) {
-                console.log('auto scroll less');
-
                 timeoutAutoScroll = setTimeout(function() {
                     autoScrollLess(row, track.currentRow);
                 }, 50);
@@ -280,9 +274,6 @@ function mouseMoveTracks(e) {
 }
 
 function autoScrollPlus(rowTrack, rowElement) {
-    console.log(rowTrack, rowElement);
-    console.log(timeoutAutoScroll);
-
     if(rowElement >= 0) {
         if((currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft + currentProject.tabListTracks[rowTrack].gap) >= (pixelTimeBar.d - 35) && currentProject.tabListTracks[rowTrack].mousedown) {
             document.getElementById('videoView').scrollLeft += 10;
@@ -316,9 +307,6 @@ function autoScrollPlus(rowTrack, rowElement) {
 
 function autoScrollLess(rowTrack, rowElement) {
     if(pixelTimeBar.g > 0) {
-        console.log(rowTrack, rowElement);
-        console.log(timeoutAutoScroll);
-
         if(rowElement >= 0) {
             if((currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft + currentProject.tabListTracks[rowTrack].gap) <= (pixelTimeBar.g + 35) && currentProject.tabListTracks[rowTrack].mousedown) {
                 document.getElementById('videoView').scrollLeft -= 10;
