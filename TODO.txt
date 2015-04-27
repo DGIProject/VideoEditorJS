@@ -1,2 +1,2 @@
 TODO : load project count tracks
-TODO : Fix bug input
+TODO : place black when long audio

@@ -44,6 +44,7 @@ function makeRender(format) {
                         }
                         noty({layout: 'topRight', type: 'info', text: 'Rendu Terminé  !', timeout: '5000'});
                         clearInterval(timer);
+                        eId('startRender').removeAttribute('disabled');
 
                         url = remoteAPIPath + 'php/renderStat.php?action=delete&id='+currentProject.username+"_"+currentProject.name;
                         var xhr2 = createCORSRequest('GET', url);
@@ -73,6 +74,7 @@ function makeRender(format) {
     }
     else
     {
+        eId('startRender').removeAttribute('disabled')
         noty({layout: 'topRight', type: 'error', text: 'Le rendu ne peux pas être lancé, des fichiers sont en cours d\'envois', timeout: '4000'});
     }
 }
