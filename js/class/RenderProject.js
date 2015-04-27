@@ -115,7 +115,7 @@ RenderP = function (format) {
                 (this.otherTrack[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
                if ((maxA-maxV)>oneSecond && this.otherTrack[t].type != TYPE.AUDIO )
                {
-                   cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+                   cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -c:v mpeg2video -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
                    this.commandList.push(cmd);
                    this.commands[this.t].push(cmd);
                }
@@ -259,6 +259,7 @@ RenderP.prototype.addBlackV = function (e) {
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
+
             cmd = "-f rawvideo -pix_fmt rgb24 -c:v mpeg2video -r 1 -i /dev/zero -t "
             + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond)
             + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";

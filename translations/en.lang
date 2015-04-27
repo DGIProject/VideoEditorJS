@@ -3,7 +3,7 @@
 	"translations" : [
 	    {
     	    "id": "start.welcome.text",
-    	    "text": "Welcome on VideoEditorJS"
+    	    "text": "Welcome to VideoEditorJS"
     	},
     	{
         	"id": "start.loadingJS.text",
@@ -19,7 +19,7 @@
         },
 		{
         	"id": "start.note.text",
-        	"text": "This account will be automatically create if it doesn't exist."
+        	"text": "This account will be automatically created if it doesn't exist."
         },
 		{
         	"id": "start.loadingProjects.text",
