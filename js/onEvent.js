@@ -123,25 +123,17 @@ document.getElementById('tracks').addEventListener("DOMMouseScroll", function(e)
 
     return false;
 });
-
-document.getElementById('tracks').addEventListener("mousewheel", function(e){
-    var e = window.event || e;
-    var delta = (e.wheelDelta || e.detail);
-    if (delta>0)
-    {
-        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 100;
-    }
-    else
-    {
-        if (document.getElementById('audioView').scrollLeft-100>0)
-        {
-            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 100;
-        }
-        else
-        {
-            document.getElementById('audioView').scrollLeft = 0;
-        }
-    }
-
-    return false;
-});
+document.getElementById('tracks').onmouseleave =  function(e){
+    console.log("mouseLeave");
+    window.removeEventListener('DOMMouseScroll',   preventDefault, false);
+};
+document.getElementById('tracks').onmouseenter = function(e){
+    console.log("mouseEnter");
+    window.addEventListener('DOMMouseScroll',  preventDefault, false);
+};
+function preventDefault(e) {
+    e = e || window.event;
+    if (e.preventDefault)
+        e.preventDefault();
+    e.returnValue = false;
+};
