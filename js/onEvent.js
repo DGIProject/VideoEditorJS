@@ -107,13 +107,13 @@ document.getElementById('tracks').addEventListener("DOMMouseScroll", function(e)
     var delta = (e.wheelDelta || e.detail);
     if (delta>0)
     {
-        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 200;
+        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 100;
     }
     else
     {
-        if (document.getElementById('audioView').scrollLeft-200>0)
+        if (document.getElementById('audioView').scrollLeft-100>0)
         {
-            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 200;
+            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 100;
         }
         else
         {
@@ -129,13 +129,13 @@ document.getElementById('tracks').addEventListener("mousewheel", function(e){
     var delta = (e.wheelDelta || e.detail);
     if (delta>0)
     {
-        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 200;
+        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 100;
     }
     else
     {
-        if (document.getElementById('audioView').scrollLeft-200>0)
+        if (document.getElementById('audioView').scrollLeft-100>0)
         {
-            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 200;
+            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 100;
         }
         else
         {
