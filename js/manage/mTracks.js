@@ -3,7 +3,7 @@
  */
 
 var oneSecond = 5;
-var pixelTimeBar = {g: 0, d: 710};
+var pixelTimeBar = {g: 0, d: 730};
 var lastZoom = 5;
 var scrollTracks = 0;
 
@@ -22,8 +22,7 @@ function addTrack(type) {
     var elementInfo = document.createElement('div');
     elementInfo.id = 'elementInfo' + trackId;
     elementInfo.classList.add('singleTrack');
-    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
-    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-trash"></span></button></div>';
 
     var elementView = document.createElement('canvas');
     elementView.id = 'elementView' + trackId;

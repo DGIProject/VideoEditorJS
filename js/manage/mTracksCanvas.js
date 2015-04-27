@@ -5,8 +5,9 @@
 
 //fonction de détection des collisions des éléments mais aussi de déselection des éléments lorsque la souris est hors de la piste,
 // elle est appelée lorsque le bouton de la souris est relaché
-
 function analyzeCollision() {
+    rLog('-TRACK- canvas : analyseCollision');
+
     for(var x = 0; x < currentProject.tabListTracks.length; x++)
     {
         var track = currentProject.tabListTracks[x];
@@ -16,15 +17,14 @@ function analyzeCollision() {
         
         if(currentRow >= 0)
         {
-            console.log(currentRow);
-
             //Détection de l'élément séléctionné s'il y en a un
             var selectedElement = track.tabElements[currentRow];
+
+            rLog('-TRACK- selected element [rowTrack:' + x + '][elementId: ' + selectedElement.id + ']');
 
             //Suppression de l'élément si c'est le mode choisi par l'utilisateur
             if(track.mode == MODE.REMOVE)
             {
-                rLog('-CANVASTRACK- remove mode');
                 deleteElementModal(x, currentRow);
             }
             else
@@ -36,7 +36,7 @@ function analyzeCollision() {
 
                     if(element.marginLeft > selectedElement.marginLeft && (element.marginLeft + element.width) < (selectedElement.marginLeft + selectedElement.width))
                     {
-                        rLog('-CANVASTRACK- collision in');
+                        rLog('-TRACK- canvas : collision in [elementId: ' + selectedElement.id + '][collisionElementId: ' + element.id + ']');
 
                         deleteElement(x, i);
                     }
@@ -44,7 +44,10 @@ function analyzeCollision() {
                     {
                         if(element.marginLeft < selectedElement.marginLeft && (element.marginLeft + element.width) > (selectedElement.marginLeft + selectedElement.width))
                         {
-                            rLog('-CANVASTRACK- collision between');
+                            rLog('-TRACK- canvas : collision between [elementId: ' + selectedElement.id + '][collisionElementId: ' + element.id + ']');
+
+                            //L'élément a été déplacé sur un autre élément, dans ce cas on redimentionne l'élément qui a subit la subit la collision
+                            //puis on crée un autre élément avec l'élément séléctionné.
 
                             var newMarginLeft = selectedElement.marginLeft + selectedElement.width;
                             var widthNewElement = element.width - /*(selectedElement.width + (selectedElement.marginLeft - element.marginLeft))*/ ((selectedElement.marginLeft + selectedElement.width) - element.marginLeft);
@@ -60,7 +63,7 @@ function analyzeCollision() {
 
                         if((selectedElement.marginLeft + selectedElement.width) > track.tabElements[i].marginLeft && (selectedElement.marginLeft + selectedElement.width) < (track.tabElements[i].marginLeft + track.tabElements[i].width))
                         {
-                            rLog('-CANVASTRACK- collision before');
+                            rLog('-TRACK- canvas : collision before [elementId: ' + selectedElement.id + '][collisionElementId: ' + element.id + ']');
 
                             track.tabElements[i].leftGap += (selectedElement.marginLeft + selectedElement.width) - track.tabElements[i].marginLeft;
 
@@ -72,7 +75,7 @@ function analyzeCollision() {
 
                         if(selectedElement.marginLeft > track.tabElements[i].marginLeft && selectedElement.marginLeft < (track.tabElements[i].marginLeft + track.tabElements[i].width))
                         {
-                            rLog('-CANVASTRACK- collision after');
+                            rLog('-TRACK- canvas : collision after [elementId: ' + selectedElement.id + '][collisionElementId: ' + element.id + ']');
 
                             track.tabElements[i].rightGap += (track.tabElements[i].marginLeft + track.tabElements[i].width) - selectedElement.marginLeft;
 
@@ -97,7 +100,7 @@ function mouseDownTracks(e) {
         var x = ((e.offsetX == undefined)?e.layerX:e.offsetX);
         var row = rowById(parseInt(this.id.replace('elementView', '')), currentProject.tabListTracks);
 
-        rLog('-CANVASTRACK- mousedown [row: ' + row + ']');
+        rLog('-TRACK- canvas : mousedown [rowTrack: ' + row + ']');
 
         currentProject.tabListTracks[row].mousedown = true;
         currentProject.tabListTracks[row].gap = (currentProject.tabListTracks[row].currentRow >= 0) ? (x - currentProject.tabListTracks[row].tabElements[currentProject.tabListTracks[row].currentRow].marginLeft) : 0;
@@ -308,11 +311,7 @@ function rowElement(x, row) {
 function deselectAllElements() {
     for(var i = 0; i < currentProject.tabListTracks.length; i++) {
         for(var x = 0; x < currentProject.tabListTracks[i].tabElements.length; x++) {
-            if(currentProject.tabListTracks[i].mousedown) {
-                console.log('is selected');
-            }
-            else
-            {
+            if(!currentProject.tabListTracks[i].mousedown) {
                 currentProject.tabListTracks[i].currentRow = -1;
                 currentProject.tabListTracks[i].tabElements[x].selected = false;
             }
@@ -361,8 +360,6 @@ function element(rowTrack, row) {
     var marginLeftWithGap = currentElement.marginLeft + gapErrorMarginLeft;
     var widthWithGap = currentElement.width + gapErrorWidth;
 
-    //console.log('gapErrorWidth: ' + gapErrorWidth);
-
     context.beginPath();
     context.lineWidth = 1;
     context.strokeStyle = (currentElement.selected) ? 'blue' : 'gray';
@@ -400,8 +397,6 @@ function element(rowTrack, row) {
 
         widthThumbnail = (newWidth > (widthWithGap - 7)) ? (widthWithGap - 7) : newWidth;
         heightThumbnail = 75;
-
-        //console.log(sWidth + ' - ' + sHeight + ' - ' + xThumbnail + ' - ' + yThumbnail + ' - ' + newWidth + ' - ' + widthThumbnail + ' - ' + heightThumbnail);
 
         if(sWidth > 0 && widthThumbnail > 0)
         {
