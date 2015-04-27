@@ -123,6 +123,8 @@ function mouseMoveTracks(e) {
         var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX);
         var y = e.clientY - $('#' + e.target.id).offset().top;
 
+        track.currentX = x;
+
         //si la souris est enfoncée, alors on effecture le mode choisi aussi non on cherche en fonction de la position de la souris le mode
         if(track.mousedown)
         {
@@ -217,6 +219,30 @@ function mouseMoveTracks(e) {
             {
                 mouseMoveTime(x - pixelTimeBar.g, null);
             }
+
+            if(track.tabElements[track.currentRow].marginLeft >= (pixelTimeBar.d - 75) && !timeoutAutoScroll) {
+                console.log('auto scroll plus');
+
+                timeoutAutoScroll = setTimeout(function() {
+                    autoScrollPlus(row, track.currentRow);
+                }, 1000);
+            }
+
+            /*
+            if(track.tabElements[track.currentRow].marginLeft <= (pixelTimeBar.g + 75)) {
+                console.log('auto scroll less');
+
+                intervalAutoScroll = setInterval(autoScrollLess, 1000);
+            }
+            else
+            {
+                console.log('not auto scroll plus');
+
+                if(intervalAutoScroll) {
+                    clearInterval(intervalAutoScroll);
+                }
+            }
+            */
         }
         else
         {
@@ -259,6 +285,59 @@ function mouseMoveTracks(e) {
     }
 
     drawElementsTracks();
+}
+
+function autoScrollPlus(rowTrack, rowElement) {
+    console.log(rowTrack, rowElement);
+    console.log(timeoutAutoScroll);
+
+    if(rowElement >= 0) {
+        if(currentProject.tabListTracks[rowTrack].currentX >= (pixelTimeBar.d - 75) && currentProject.tabListTracks[rowTrack].mousedown) {
+            document.getElementById('videoView').scrollLeft += 10;
+            document.getElementById('audioView').scrollLeft += 10;
+
+            pixelTimeBar.g += 10;
+            pixelTimeBar.d += 10;
+
+            currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft = currentProject.tabListTracks[rowTrack].currentX - currentProject.tabListTracks[rowTrack].gap;
+
+            scrollPlusTracks();
+            calculateTimeBar();
+            drawElementsTracks();
+
+            timeoutAutoScroll = setTimeout(function() {
+                autoScrollPlus(rowTrack, rowElement);
+            }, 1000);
+        }
+        else
+        {
+            clearTimeout(timeoutAutoScroll);
+            timeoutAutoScroll = false
+        }
+    }
+    else
+    {
+        clearTimeout(timeoutAutoScroll);
+        timeoutAutoScroll = false;
+    }
+}
+
+function autoScrollLess() {
+    if(pixelTimeBar.g <= 0) {
+        document.getElementById('videoView').scrollLeft -= 10;
+        document.getElementById('audioView').scrollLeft -= 10;
+
+        pixelTimeBar.g -= 10;
+        pixelTimeBar.d -= 10;
+
+        scrollPlusTracks();
+        calculateTimeBar();
+        drawElementsTracks();
+    }
+    else
+    {
+        clearInterval(intervalAutoScroll);
+    }
 }
 
 //lors des modifications d'un élément sur une piste si celui-ci possède un "ami" alors on change aussi ses valeurs (taille, marge, écarts sur les côtés)
