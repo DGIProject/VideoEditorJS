@@ -254,7 +254,7 @@ function mouseMoveTime(x, width) {
     var canvas = document.getElementById('timeBarCanvas');
     var ctx = canvas.getContext('2d');
 
-    var text = pixelToTime(x);
+    var text = pixelToTime(x+pixelTimeBar.g);
     ctx.font = "10pt Verdana";
     ctx.textBaseline = "top";
     var textPxLength = ctx.measureText(text);
