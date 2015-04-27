@@ -246,15 +246,17 @@ function setOpacityElement(id, trackId) {
 
 //VOLUME
 function volumeElementModal(id, trackId, value) {
-    console.log("change1");
     document.getElementById('volumeRange').value = value;
-    document.getElementById('volumeRange').onchange = setVolumeElement(id, trackId);
+    document.getElementById('volumeRange').onchange = function()
+    {
+        console.log("call");
+        setVolumeElement(id, trackId);
+    };
 
     $('#volumeElementModal').modal('show');
 }
 
 function setVolumeElement(id, trackId) {
-    console.log("change");
     var track = currentProject.tabListTracks[rowById(trackId, currentProject.tabListTracks)];
     var element = track.tabElements[rowById(id, track.tabElements)];
 

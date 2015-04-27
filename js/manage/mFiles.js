@@ -310,6 +310,8 @@ function fileProcessing(fileId, arrayBuffer)
                         progressColor : '#4d4d4d'
                     });
                     wavesurfer.load(url);
+                    currentProject.switchAutoSave();
+
                 }
                 else{
                     hLoadM();
