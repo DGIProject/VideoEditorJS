@@ -3,7 +3,7 @@
  */
 
 var oneSecond = 5;
-var pixelTimeBar = {g: 0, d: 730};
+var pixelTimeBar = {g: 0, d: 734};
 var lastZoom = 5;
 var scrollTracks = 0;
 
