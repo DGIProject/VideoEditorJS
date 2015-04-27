@@ -226,11 +226,14 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
     }
     else
     {
+        console.log('countTracks : ' + this.countTracks);
         if(this.countElementsTrack >= this.listTracks[this.countTracks].tabElements.length) {
             this.countTracks++;
             this.countElementsTrack = 0;
 
             if(this.countTracks >= this.listTracks.length) {
+                console.log('end load project');
+
                 rLog('-LOAD PROJECT- elements track : end');
 
                 this.finishLoadProject();
@@ -245,7 +248,6 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
                 }
                 else
                 {
-                    this.countTracks++;
                     this.setElementsTrack(false);
                 }
             }

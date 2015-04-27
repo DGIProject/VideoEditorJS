@@ -66,6 +66,10 @@ window.onload = function() {
     getFileJS();
 };
 
+function loadTranslation(fileName) {
+
+}
+
 function getFileJS() {
     if(currentFileRow != tabFilesJS.length)
     {

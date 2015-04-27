@@ -105,7 +105,7 @@ function updateDataFile(id, file) {
         noty({
             layout: 'topRight',
             type: 'error',
-            text: 'Erreur, ce fichier ne correspond pas aux propriétéx de l\'ancien fichier.',
+            text: 'Erreur, ce fichier ne correspond pas aux propriétés de l\'ancien fichier.',
             timeout: '5000'
         });
     }
