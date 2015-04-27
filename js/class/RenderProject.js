@@ -24,11 +24,11 @@ RenderP = function (format) {
 
     this.userFormat = format || this.FORMAT.MPEG4;
     //console.log(this.userFormat);
-    this.otherTrack = []
+    this.otherTrack = [];
     this.tabVideoTrack = [];
 
     //Isolating video tracks
-    for (i = 0; i < this.tracks.length; i++) {
+    for (var i = 0; i < this.tracks.length; i++) {
         if (this.tracks[i].type == TYPE.VIDEO) {
             this.tabVideoTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
             console.log("vid", i);
@@ -64,7 +64,7 @@ RenderP = function (format) {
     //Get max size
     for (i=0;i<this.otherTrack.length;i++)
     {
-        for (el=0;el<this.otherTrack[i].tabElements.length;el++)
+        for (var el=0;el<this.otherTrack[i].tabElements.length;el++)
         {
             var size = this.otherTrack[i].tabElements[el].marginLeft + this.otherTrack[i].tabElements[el].width;
             if (size>maxA)
@@ -78,7 +78,7 @@ RenderP = function (format) {
 
 
     this.t = 0;
-    for (t = 0; t < this.otherTrack.length; t++) {
+    for (var t = 0; t < this.otherTrack.length; t++) {
         //Processing each track
         this.t = t;
         this.otherTrack[t].tabElements.sort(function (a, b) {
@@ -91,7 +91,7 @@ RenderP = function (format) {
         this.elementInTrack = this.otherTrack[t].tabElements;
 
         console.log("track ", t, "elementT", this.elementInTrack);
-
+        var cmd;
         //processing each element.
         for (var e = 0; e < this.elementInTrack.length; e++) {
             console.log("element n°", e);
@@ -99,7 +99,7 @@ RenderP = function (format) {
             if (e == 0) {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft >= oneSecond) {
-                    var cmd;
+
                     cmd = (this.otherTrack[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-f rawvideo -pix_fmt rgb24 -c:v mpeg2video -r 1 -i /dev/zero -t " +  Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
                     this.commandList.push(cmd);
                     this.commands[this.t].push(cmd);
@@ -115,7 +115,7 @@ RenderP = function (format) {
                 (this.otherTrack[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
                if ((maxA-maxV)>oneSecond && this.otherTrack[t].type != TYPE.AUDIO )
                {
-                   var cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+                   cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
                    this.commandList.push(cmd);
                    this.commands[this.t].push(cmd);
                }
@@ -157,7 +157,7 @@ RenderP = function (format) {
     var finalAudio = "audio.mp3";
     // Merge audio tracks into single one
     if (this.commandTracksAudio.length > 1) {
-        var cmd = "";
+        cmd = "";
         for (i = 0; i < this.commandTracksAudio.length; i++) {
             var trackId = this.commandTracksAudio[i][0];
             cmd += "-i track_" + trackId + ".mp3 ";
@@ -205,7 +205,7 @@ RenderP.prototype.getBlack = function(track, elementIndex){
             if (trackId<this.tabVideoTrack.length)
             {
                 console.log("tabSize", this.tabVideoTrack[trackId].tabElements.length);
-                for (i=0;i<this.tabVideoTrack[trackId].tabElements.length;i++)
+                for (var i=0;i<this.tabVideoTrack[trackId].tabElements.length;i++)
                 {
                     this.findOnTrackB(rowById(track.id, this.tabVideoTrack)+1, from,to, NextElement );
                 }
@@ -219,7 +219,7 @@ RenderP.prototype.getBlack = function(track, elementIndex){
 /* Add a video command */
 RenderP.prototype.addCommandV = function (e) {
     var cmd = "";
-    this.elementEnd = e.marginLeft + e.width
+    this.elementEnd = e.marginLeft + e.width;
     var curentFileforElement = this.getFileInformationById(e.fileId);
 
     if (curentFileforElement.type == TYPE.IMAGE || curentFileforElement.type == TYPE.TEXT) {
@@ -240,17 +240,16 @@ RenderP.prototype.addCommandV = function (e) {
 };
 /* Add an audioCommand */
 RenderP.prototype.addCommandA = function (e) {
-    this.elementEnd = e.marginLeft + e.width
+    this.elementEnd = e.marginLeft + e.width;
 
-    var curentFileforElement = this.getFileInformationById(e.fileId)
-    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -af 'volume="+currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].volume/100+"'  -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
+    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -af 'volume="+ e.properties.volume/100+"'  -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
     this.commands[this.t].push(cmd);
     this.commandList.push(cmd);
 
 };
 /* Add a "black" element */
 RenderP.prototype.addBlackV = function (e) {
-    tempIndex = e;
+    var tempIndex = e;
     tempIndex++;
     var cmd = "";
     if (!(tempIndex > this.elementInTrack.length)) {
@@ -271,7 +270,7 @@ RenderP.prototype.addBlackV = function (e) {
 };
 /* Add a black element */
 RenderP.prototype.addBlackA = function (e) {
-    tempIndex = e;
+    var tempIndex = e;
     tempIndex++;
     if (!(tempIndex > this.elementInTrack.length)) {
         this.nextElement = this.elementInTrack[tempIndex];
@@ -289,7 +288,7 @@ RenderP.prototype.addBlackA = function (e) {
 };
 /* Get File information with Id */
 RenderP.prototype.getFileInformationById = function (id) {
-    for (i = 0; i < currentProject.tabListFiles.length; i++) {
+    for (var i = 0; i < currentProject.tabListFiles.length; i++) {
         if (currentProject.tabListFiles[i].id == id) {
             var file = currentProject.tabListFiles[i];
         }
@@ -300,7 +299,7 @@ RenderP.prototype.getFileInformationById = function (id) {
 RenderP.prototype.uploadCommands = function () {
     var finalString = "";
 
-    for (i = 0; i < this.commandList.length; i++) {
+    for (var i = 0; i < this.commandList.length; i++) {
         finalString += this.commandList[i];
         if (i != this.commandList.length - 1) {
             finalString += "\n"
@@ -322,7 +321,7 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
         return a.marginLeft - b.marginLeft
     });
 
-    for (e=0;e<this.tabVideoTrack[tId].tabElements.length;e++)
+    for (var e=0;e<this.tabVideoTrack[tId].tabElements.length;e++)
     {
         var newTrackElement = this.tabVideoTrack[tId].tabElements[e];
 
@@ -437,7 +436,7 @@ RenderP.prototype.mergeTrack = function (trackId) {
     if (trackId<this.tabVideoTrack.length)
     {
         console.log("Merging tracks");
-        for (i=0;i<this.tabVideoTrack[trackId].tabElements.length;i++)
+        for (var i=0;i<this.tabVideoTrack[trackId].tabElements.length;i++)
         {
             this.tabVideoTrack[0].tabElements.push(this.tabVideoTrack[trackId].tabElements[i]);
         }

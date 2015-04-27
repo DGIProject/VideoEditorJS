@@ -249,7 +249,6 @@ function volumeElementModal(id, trackId, value) {
     document.getElementById('volumeRange').value = value;
     document.getElementById('volumeRange').onchange = function()
     {
-        console.log("call");
         setVolumeElement(id, trackId);
     };
 

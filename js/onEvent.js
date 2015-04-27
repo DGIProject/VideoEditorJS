@@ -124,11 +124,9 @@ document.getElementById('tracks').addEventListener("DOMMouseScroll", function(e)
     return false;
 });
 document.getElementById('tracks').onmouseleave =  function(e){
-    console.log("mouseLeave");
     window.removeEventListener('DOMMouseScroll',   preventDefault, false);
 };
 document.getElementById('tracks').onmouseenter = function(e){
-    console.log("mouseEnter");
     window.addEventListener('DOMMouseScroll',  preventDefault, false);
 };
 function preventDefault(e) {
