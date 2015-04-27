@@ -93,7 +93,7 @@ RenderP = function (format) {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft >= oneSecond) {
                     var cmd;
-                    cmd = (this.otherTrack[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+                    cmd = (this.otherTrack[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-f rawvideo -pix_fmt rgb24 -c:v mpeg2video -r 1 -i /dev/zero -t " +  Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
                     this.commandList.push(cmd);
                     this.commands[this.t].push(cmd);
 
@@ -154,7 +154,7 @@ RenderP = function (format) {
             var trackId = this.commandTracksAudio[i][0];
             cmd += "-i track_" + trackId + ".mp3 ";
         }
-        cmd += " -filter_complex amerge audio.mp3";
+        cmd += " -filter_complex amerge="+this.commandTracksAudio.length+" audio.mp3";
         this.commandList.push(cmd);
         finalAudio = "audio.mp3";
     }
@@ -247,7 +247,7 @@ RenderP.prototype.addBlackV = function (e) {
         }
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
-            cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t "
+            cmd = "-f rawvideo -pix_fmt rgb24 -c:v mpeg2video -r 1 -i /dev/zero -t "
             + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond)
             + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
 

@@ -53,8 +53,8 @@ do
 	cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
     cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
     FILENAME=$(ls $TEMPDIR | grep "final_WEB\.*");
-    cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
-    cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
+    cp $TEMPDIR/$FILENAME  "$CURDATE_WEB.${FILENAME##*.}"
+    cp $TEMPDIR/$FILENAME  "$CURDATE_WEB.${FILENAME##*.}"
 	VALUE="action=update&id=$ID&content={\"totcmd\":$LN,\"actual\":$AV,\"startTime\":\"$DATE\", \"filename\":\"$CURDATE.${FILENAME##*.}\"}"
     echo "updating Stat"
     wget -O /dev/null "$WEBSERVPHPDir/renderStat.php?$VALUE"
