@@ -123,8 +123,6 @@ function mouseMoveTracks(e) {
         var x = ((e.offsetX == undefined) ? e.layerX : e.offsetX);
         var y = e.clientY - $('#' + e.target.id).offset().top;
 
-        track.currentX = x;
-
         //si la souris est enfoncée, alors on effecture le mode choisi aussi non on cherche en fonction de la position de la souris le mode
         if(track.mousedown)
         {
@@ -225,24 +223,16 @@ function mouseMoveTracks(e) {
 
                 timeoutAutoScroll = setTimeout(function() {
                     autoScrollPlus(row, track.currentRow);
-                }, 1000);
+                }, 50);
             }
 
-            /*
             if(track.tabElements[track.currentRow].marginLeft <= (pixelTimeBar.g + 75)) {
                 console.log('auto scroll less');
 
-                intervalAutoScroll = setInterval(autoScrollLess, 1000);
+                timeoutAutoScroll = setTimeout(function() {
+                    autoScrollLess(row, track.currentRow);
+                }, 50);
             }
-            else
-            {
-                console.log('not auto scroll plus');
-
-                if(intervalAutoScroll) {
-                    clearInterval(intervalAutoScroll);
-                }
-            }
-            */
         }
         else
         {
@@ -292,14 +282,14 @@ function autoScrollPlus(rowTrack, rowElement) {
     console.log(timeoutAutoScroll);
 
     if(rowElement >= 0) {
-        if(currentProject.tabListTracks[rowTrack].currentX >= (pixelTimeBar.d - 75) && currentProject.tabListTracks[rowTrack].mousedown) {
+        if(currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft >= (pixelTimeBar.d - 75) && currentProject.tabListTracks[rowTrack].mousedown) {
             document.getElementById('videoView').scrollLeft += 10;
             document.getElementById('audioView').scrollLeft += 10;
 
             pixelTimeBar.g += 10;
             pixelTimeBar.d += 10;
 
-            currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft = currentProject.tabListTracks[rowTrack].currentX - currentProject.tabListTracks[rowTrack].gap;
+            currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft += 10;
 
             scrollPlusTracks();
             calculateTimeBar();
@@ -307,12 +297,12 @@ function autoScrollPlus(rowTrack, rowElement) {
 
             timeoutAutoScroll = setTimeout(function() {
                 autoScrollPlus(rowTrack, rowElement);
-            }, 1000);
+            }, 200);
         }
         else
         {
             clearTimeout(timeoutAutoScroll);
-            timeoutAutoScroll = false
+            timeoutAutoScroll = false;
         }
     }
     else
@@ -322,21 +312,49 @@ function autoScrollPlus(rowTrack, rowElement) {
     }
 }
 
-function autoScrollLess() {
-    if(pixelTimeBar.g <= 0) {
-        document.getElementById('videoView').scrollLeft -= 10;
-        document.getElementById('audioView').scrollLeft -= 10;
+function autoScrollLess(rowTrack, rowElement) {
+    if(pixelTimeBar.g > 0) {
+        console.log(rowTrack, rowElement);
+        console.log(timeoutAutoScroll);
 
-        pixelTimeBar.g -= 10;
-        pixelTimeBar.d -= 10;
+        if(rowElement >= 0) {
+            if(currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft <= (pixelTimeBar.g + 75) && currentProject.tabListTracks[rowTrack].mousedown) {
+                document.getElementById('videoView').scrollLeft -= 10;
+                document.getElementById('audioView').scrollLeft -= 10;
 
-        scrollPlusTracks();
-        calculateTimeBar();
-        drawElementsTracks();
+                pixelTimeBar.g -= 10;
+                pixelTimeBar.d -= 10;
+
+                currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft -= 10;
+
+                if(currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft <= 0) {
+                    currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft = 0;
+                }
+
+                scrollPlusTracks();
+                calculateTimeBar();
+                drawElementsTracks();
+
+                timeoutAutoScroll = setTimeout(function() {
+                    autoScrollLess(rowTrack, rowElement);
+                }, 500);
+            }
+            else
+            {
+                clearTimeout(timeoutAutoScroll);
+                timeoutAutoScroll = false;
+            }
+        }
+        else
+        {
+            clearTimeout(timeoutAutoScroll);
+            timeoutAutoScroll = false;
+        }
     }
     else
     {
-        clearInterval(intervalAutoScroll);
+        clearInterval(timeoutAutoScroll);
+        timeoutAutoScroll = false;
     }
 }
 
