@@ -3,6 +3,7 @@
 DATAPATH="/home/clangue/VEJSFiles"
 LOGPATH="/home/clangue/videoProcess/logs"
 TEMPDIR="/home/clangue/videoProcess/tmp"
+WEBSERVPHPDir="http://clangue.net/other/testVideo/php"
 FFMPEGPATH="ffmpeg"
 THREADS=4
 
@@ -40,7 +41,7 @@ do
             echo "ffmpeg end"
             VALUE="action=update&id=$ID&content={\"totcmd\":$LN,\"actual\":$AV,\"startTime\":\"$DATE\"}"
             echo "updating Stat"
-            wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
+            wget -O /dev/null "$WEBSERVPHPDir/renderStat.php?$VALUE"
             AV=$(($AV+1))
         done < "RENDER.ffm"
 	cd $DATAPATH
@@ -56,12 +57,12 @@ do
     cp $TEMPDIR/$FILENAME  "$CURDATE.${FILENAME##*.}"
 	VALUE="action=update&id=$ID&content={\"totcmd\":$LN,\"actual\":$AV,\"startTime\":\"$DATE\", \"filename\":\"$CURDATE.${FILENAME##*.}\"}"
     echo "updating Stat"
-    wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
+    wget -O /dev/null "$WEBSERVPHPDir/renderStat.php?$VALUE"
 	cd $DATAPATH
     SERVATT=$(find . -name "*.ffm" | wc -l)
     VALUE="action=setStat&content={\"wait\":$SERVATT}"
 	echo "updating Stat"
-	wget -O /dev/null "http://clangue.net/other/testVideo/php/renderStat.php?$VALUE"
+	wget -O /dev/null "$WEBSERVPHPDir/renderStat.php?$VALUE"
 	done < "$LOGPATH/renderList.txt"
     sleep 10
 done
