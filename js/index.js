@@ -145,10 +145,6 @@ function randomColor() {
     && (lor.length == 6) ?  lor : co(lor); })('');
 }
 
-function xmlHTTP() {
-    return (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-}
-
 function createCORSRequest(method, url) {
     var xhr = new XMLHttpRequest();
     if ("withCredentials" in xhr) {

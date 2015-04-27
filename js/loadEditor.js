@@ -67,7 +67,24 @@ window.onload = function() {
 };
 
 function loadTranslation(fileName) {
+    var xhr = xmlHTTP();
 
+    xhr.open("GET", 'translations/' + fileName + '.lang', false);
+    xhr.send(null);
+    if(xhr.readyState != 4 || (xhr.status != 200 && xhr.status != 0)) // Code == 0 en local
+        throw new Error("Impossible de charger le fichier de traduction \"" + fileName + ".lang\" (code HTTP : " + xhr.status + ").");
+
+    var translationData = xhr.responseText;
+
+    console.log(translationData);
+
+    var tabTranslations = JSON.parse(translationData);
+
+    console.log(tabTranslations);
+
+    for(var i = 0; i < tabTranslations.translations.length; i++) {
+        document.getElementById(tabTranslations.translations[i].id).innerHTML = tabTranslations.translations[i].text;
+    }
 }
 
 function getFileJS() {
@@ -82,7 +99,7 @@ function getFileJS() {
         currentFileRow++;
 
         document.getElementById('progressLoadJS').style.width = Math.ceil((currentFileRow / tabFilesJS.length) * 100) + '%';
-        document.getElementById('persentProgress').innerHTML = currentFileRow + '/' + tabFilesJS.length;
+        document.getElementById('percentProgress').innerHTML = currentFileRow + '/' + tabFilesJS.length;
     }
     else
     {
@@ -137,4 +154,8 @@ function setUsername(username) {
     {
         noty({layout: 'topRight', type: 'error', text: 'Erreur, veuillez entrer un pseudo.', timeout: '5000'});
     }
+}
+
+function xmlHTTP() {
+    return (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
 }

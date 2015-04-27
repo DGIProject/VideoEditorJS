@@ -132,7 +132,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Bienvenue sur VideoEditorJS</h4>
+                    <h4 id="start.welcome.text" class="modal-title">Bienvenue sur VideoEditorJS</h4>
                 </div>
                 <div class="modal-body">
                     <div id="loadingProgressProject">
@@ -141,7 +141,7 @@
                                 <span class="sr-only">0% Complete</span>
                             </div>
                         </div>
-                        <span class="marginauto strong">Chargement en cours ... <span id="persentProgress">0%</span></span>
+                        <span class="marginauto strong"><span id="start.loading.text">Chargement en cours ...</span> <span id="percentProgress">0%</span></span>
                     </div>
                     <div id="enterUsername" style="display: none;">
                         <form method="post" onsubmit="setUsername(this.usernameSession.value);return false" class="form-horizontal">
@@ -162,7 +162,7 @@
                     <div id="startUseProject" style="display: none;">
                         <div id="listExistingProjects">Chargement des projets ...</div>
                         <hr>
-                        <a href="#" onclick="newProject(false);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> Projet</a>
+                        <a href="#" id="start.buttonNewProject" onclick="newProject(false);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> <span id="start.buttonNewProject.text">Projet</span></a>
                     </div>
                     <div id="notAvailableBrowser" style="display: none;">
                         <p>Votre navigateur n'est pas compatible. Utilisez Firefox pour continuer.</p>

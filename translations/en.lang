@@ -1,0 +1,13 @@
+{
+    "lang" : "en",
+	"translations" : [
+	    {
+    	    "id": "start.welcome.text",
+    	    "text": "Welcome on VideoEditorJS"
+    	},
+	    {
+	        "id": "start.buttonNewProject.text",
+	        "text": "Project"
+	    }
+	]
+}
