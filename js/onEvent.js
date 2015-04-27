@@ -101,3 +101,47 @@ document.getElementById('listFiles').ondrop = function(e) {
         addFile(files[0]);
     }
 };
+
+document.getElementById('tracks').addEventListener("DOMMouseScroll", function(e){
+    var e = window.event || e;
+    var delta = (e.wheelDelta || e.detail);
+    if (delta>0)
+    {
+        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 200;
+    }
+    else
+    {
+        if (document.getElementById('audioView').scrollLeft-200>0)
+        {
+            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 200;
+        }
+        else
+        {
+            document.getElementById('audioView').scrollLeft = 0;
+        }
+    }
+
+    return false;
+});
+
+document.getElementById('tracks').addEventListener("mousewheel", function(e){
+    var e = window.event || e;
+    var delta = (e.wheelDelta || e.detail);
+    if (delta>0)
+    {
+        document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft + 200;
+    }
+    else
+    {
+        if (document.getElementById('audioView').scrollLeft-200>0)
+        {
+            document.getElementById('audioView').scrollLeft = document.getElementById('audioView').scrollLeft - 200;
+        }
+        else
+        {
+            document.getElementById('audioView').scrollLeft = 0;
+        }
+    }
+
+    return false;
+});
