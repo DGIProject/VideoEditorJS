@@ -35,6 +35,7 @@ RenderP = function (format) {
             this.otherTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
         }
     }
+
     console.log("tabs", this.tabVideoTrack, this.otherTrack);
 
     var index = this.tabVideoTrack.length;
@@ -53,8 +54,23 @@ RenderP = function (format) {
         console.log("tris");
         return a.marginLeft - b.marginLeft
     });
+    var maxA = 0;
+    var maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].width;
 
+    for (i=0;i<this.otherTrack.length;i++)
+    {
+        for (el=0;el<this.otherTrack[i].tabElements.length;el++)
+        {
+            var size = this.otherTrack[i].tabElements[el].marginLeft + this.otherTrack[i].tabElements[el].width;
+            if (size>maxA)
+            {
+                maxA = size
+            }
+        }
+    }
     this.otherTrack.push(this.tabVideoTrack[0]);
+
+
 
     this.t = 0;
     for (t = 0; t < this.otherTrack.length; t++) {
@@ -77,7 +93,7 @@ RenderP = function (format) {
                 console.log("0 -> deb");
                 if (this.elementInTrack[e].marginLeft >= oneSecond) {
                     var cmd;
-                    cmd = (this.otherTrack[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts"; ;
+                    cmd = (this.otherTrack[t].type == TYPE.AUDIO) ? "-ar 48000 -f s16le -acodec pcm_s16le -ac 2 -i /dev/zero -acodec libmp3lame -aq 4 -t " + Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -y " + (this.commands[this.t].length) + ".mp3" : "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil(this.elementInTrack[e].marginLeft / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
                     this.commandList.push(cmd);
                     this.commands[this.t].push(cmd);
 
@@ -90,6 +106,12 @@ RenderP = function (format) {
             else if (e == (this.elementInTrack.length - 1)) {
                 console.log("length -1");
                 (this.otherTrack[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
+               if ((maxA-maxV)>oneSecond && this.otherTrack[t].type != TYPE.AUDIO )
+               {
+                   var cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+                   this.commandList.push(cmd);
+                   this.commands[this.t].push(cmd);
+               }
             }
             else {
                 console.log("not -1");
