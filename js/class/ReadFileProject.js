@@ -11,6 +11,8 @@ ReadFileProject = function(fileContent) {
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
 
+    this.loadTracks = false;
+
     rLog('ReadFileProject : start');
 };
 
@@ -127,31 +129,37 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, upload
 };
 
 ReadFileProject.prototype.setTracks = function() {
-    rLog('-LOAD PROJECT- track : start [countTracks: ' + this.listTracks.length + ']');
+    if(!this.loadTracks) {
+        rLog('-LOAD PROJECT- track : start [countTracks: ' + this.listTracks.length + ']');
 
-    var id = -1;
-    var lastId = -1;
+        console.log('--countTracks:' + this.listTracks.length);
 
-    for(var i = 0; i < this.listTracks.length; i++)
-    {
-        id = addTrack(this.listTracks[i].type);
+        this.loadTracks = true;
 
-        if(lastId >= 0) {
-            setParentTracks(lastId, id);
+        var id = -1;
+        var lastId = -1;
 
-            lastId = -1;
-        }
-        else
+        for(var i = 0; i < this.listTracks.length; i++)
         {
-            lastId = (this.listTracks[i].parent >= 0) ? id : -1;
+            id = addTrack(this.listTracks[i].type);
+
+            if(lastId >= 0) {
+                setParentTracks(lastId, id);
+
+                lastId = -1;
+            }
+            else
+            {
+                lastId = (this.listTracks[i].parent >= 0) ? id : -1;
+            }
+
+            currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
         }
 
-        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
+        rLog('-LOAD PROJECT- track : end');
+
+        this.setElementsTrack(true);
     }
-
-    rLog('-LOAD PROJECT- track : end');
-
-    this.setElementsTrack(true);
 };
 
 ReadFileProject.prototype.setElementsTrack = function(start) {
@@ -180,6 +188,7 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
     }
     else
     {
+        console.log('countTrack: ' + this.countTracks);
         if(this.countElementsTrack >= this.listTracks[this.countTracks].tabElements.length) {
             this.countTracks++;
             this.countElementsTrack = 0;
