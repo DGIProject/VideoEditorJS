@@ -36,8 +36,15 @@
 
 .singleTrack
 {
-    height: 120px;
+    height: 105px;
     border-bottom: 1px solid #dcdcdc;
+}
+
+.valuesTrack
+{
+    float: left;
+    width: 140px;
+    margin-top: 5px;
 }
 
 .optionsTrack
@@ -46,11 +53,8 @@
     width: 45px;
 }
 
-.valuesTrack
-{
-    float: left;
-    width: 140px;
-    margin-top: 5px;
+.canvasTrack {
+    display: block;
 }
 
 .time

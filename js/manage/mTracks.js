@@ -27,7 +27,9 @@ function addTrack(type) {
 
     var elementView = document.createElement('canvas');
     elementView.id = 'elementView' + trackId;
+
     elementView.classList.add('singleTrack');
+    elementView.classList.add('canvasTrack');
 
     elementView.onmousedown = mouseDownTracks;
 
@@ -37,11 +39,11 @@ function addTrack(type) {
     elementView.oncontextmenu = showContextMenu;
 
     elementView.width = 730;
-    elementView.height = 120;
+    elementView.height = 105;
 
     var contextElementView = elementView.getContext('2d');
     contextElementView.width = 730;
-    contextElementView.height = 120;
+    contextElementView.height = 105;
 
     document.getElementById((type == TYPE.VIDEO) ? 'videoInfo' : 'audioInfo').appendChild(elementInfo);
     document.getElementById((type == TYPE.VIDEO) ? 'videoView' : 'audioView').appendChild(elementView);
