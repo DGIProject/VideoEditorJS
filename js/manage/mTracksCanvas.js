@@ -211,16 +211,16 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - pixelTimeBar.g, track.tabElements[track.currentRow].width);
+                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - pixelTimeBar.g, -track.tabElements[track.currentRow].width);
             }
             else
             {
-                mouseMoveTime(x - pixelTimeBar.g, -1);
+                mouseMoveTime(x - pixelTimeBar.g, null);
             }
         }
         else
         {
-            mouseMoveTime(x - pixelTimeBar.g, -1);
+            mouseMoveTime(x - pixelTimeBar.g, null);
 
             track.currentRow = rowElement(x, row);
 

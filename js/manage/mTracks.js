@@ -247,8 +247,6 @@ function calculateTimeBar() {
 }
 
 function mouseMoveTime(x, width) {
-    console.log(width);
-
     calculateTimeBar();
 
     var canvas = document.getElementById('timeBarCanvas');
@@ -256,6 +254,7 @@ function mouseMoveTime(x, width) {
 
     var text = pixelToTime(x+pixelTimeBar.g);
     ctx.font = "10pt Verdana";
+    ctx.textAlign = "center";
     ctx.textBaseline = "top";
     var textPxLength = ctx.measureText(text);
 
@@ -267,9 +266,10 @@ function mouseMoveTime(x, width) {
         ctx.closePath();
         ctx.stroke();
 
-        if(width >= 0) {
-            ctx.textAlign = "left";
-            ctx.fillText(pixelToTime(width), (x + 2), (canvas.height - 12), (width - 4));
+        if(width != null) {
+            if(((width < 0) ? -width : width) >= 64) {
+                ctx.fillText(pixelToTime((width < 0) ? -width : width), (x + (width / 2)), (canvas.height - 14), (((width < 0) ? -width : width) - 4));
+            }
 
             ctx.beginPath();
             ctx.moveTo((x + width),canvas.height/2);
@@ -306,7 +306,6 @@ function mouseMoveTime(x, width) {
 
     //Texte
     ctx.fillStyle = "#000000";
-    ctx.textAlign = "center";
     ctx.fillText(text,posX,3);
 }
 
