@@ -105,7 +105,7 @@ RenderP = function (format) {
             console.log(this.commands[t], this.commands);
             if (this.commands[t].length > 1) {
                 lastCmd = '-i "concat:';
-                var ending = ((this.otherTrack[t].type == TYPE.VIDEO) ? " -c mpeg4" : "" )+" -y ";
+                var ending = ((this.otherTrack[t].type == TYPE.VIDEO) ? " -c:v mpeg4" : "" )+" -y ";
                 for (i = 0; i < this.commands[t].length; i++) {
                     lastCmd += ((this.otherTrack[t].type == TYPE.AUDIO) ? "" + i + ".mp3|" : "" + i + ".ts|");
                 }
