@@ -243,7 +243,7 @@ RenderP.prototype.addCommandA = function (e) {
     this.elementEnd = e.marginLeft + e.width
 
     var curentFileforElement = this.getFileInformationById(e.fileId)
-    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -af 'volume="+currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].volume+"'  -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
+    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -af 'volume="+currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].volume/100+"'  -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
     this.commands[this.t].push(cmd);
     this.commandList.push(cmd);
 
