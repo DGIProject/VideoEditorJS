@@ -246,7 +246,9 @@ function calculateTimeBar() {
     ctx.fillText(text,(canvas.width-textPxLength.width),3);
 }
 
-function mouseMoveTime(x) {
+function mouseMoveTime(x, width) {
+    console.log(width);
+
     calculateTimeBar();
 
     var canvas = document.getElementById('timeBarCanvas');
@@ -254,7 +256,6 @@ function mouseMoveTime(x) {
 
     var text = pixelToTime(x);
     ctx.font = "10pt Verdana";
-    ctx.textAlign = "center";
     ctx.textBaseline = "top";
     var textPxLength = ctx.measureText(text);
 
@@ -265,6 +266,18 @@ function mouseMoveTime(x) {
         ctx.lineTo(x,canvas.height);
         ctx.closePath();
         ctx.stroke();
+
+        if(width >= 0) {
+            ctx.textAlign = "left";
+            ctx.fillText(pixelToTime(width), (x + 2), (canvas.height - 12), (width - 4));
+
+            ctx.beginPath();
+            ctx.moveTo((x + width),canvas.height/2);
+            ctx.lineTo((x + width),canvas.height);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
         var posX = (x<textPxLength.width/2)? textPxLength.width/2 : ( x>(canvas.width-(textPxLength.width)/2))? canvas.width-(textPxLength.width)/2 : x ;
     }
     else
@@ -287,10 +300,13 @@ function mouseMoveTime(x) {
         }
     }
 
+    //Carré blanc derrière le texte
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(posX-(textPxLength.width/2),2,textPxLength.width+2, 12);
-    //console.log(textPxLength);
+
+    //Texte
     ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
     ctx.fillText(text,posX,3);
 }
 

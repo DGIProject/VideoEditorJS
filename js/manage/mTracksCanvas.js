@@ -138,7 +138,7 @@ function mouseMoveTracks(e) {
                 }
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g);
+                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g, track.tabElements[track.currentRow].width);
             }
             else if(track.mode == MODE.RESIZE.LEFT)
             {
@@ -176,7 +176,7 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g);
+                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g, track.tabElements[track.currentRow].width);
             }
             else if(track.mode == MODE.RESIZE.RIGHT)
             {
@@ -211,12 +211,16 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - pixelTimeBar.g);
+                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - pixelTimeBar.g, track.tabElements[track.currentRow].width);
+            }
+            else
+            {
+                mouseMoveTime(x - pixelTimeBar.g, -1);
             }
         }
         else
         {
-            mouseMoveTime(x - pixelTimeBar.g);
+            mouseMoveTime(x - pixelTimeBar.g, -1);
 
             track.currentRow = rowElement(x, row);
 
