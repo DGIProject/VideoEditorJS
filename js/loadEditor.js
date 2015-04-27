@@ -83,7 +83,8 @@ function loadTranslation(fileName) {
     console.log(tabTranslations);
 
     for(var i = 0; i < tabTranslations.translations.length; i++) {
-        document.getElementById(tabTranslations.translations[i].id).innerHTML = tabTranslations.translations[i].text;
+        if(document.getElementById(tabTranslations.translations[i].id) != null)
+            document.getElementById(tabTranslations.translations[i].id).innerHTML = tabTranslations.translations[i].text;
     }
 }
 
