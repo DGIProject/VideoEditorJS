@@ -238,13 +238,12 @@ RenderP.prototype.addCommandV = function (e) {
 
 
 };
-
 /* Add an audioCommand */
 RenderP.prototype.addCommandA = function (e) {
     this.elementEnd = e.marginLeft + e.width
 
     var curentFileforElement = this.getFileInformationById(e.fileId)
-    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
+    var cmd = "-ss " + (e.leftGap / oneSecond) + " -i FILE_" + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].uId + "." + currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].format + " -af 'volume="+currentProject.tabListFiles[rowById(e.fileId,currentProject.tabListFiles)].volume+"'  -t " + (Math.ceil((e.width - e.rightGap) / oneSecond)) + " -y " + this.commands[this.t].length + ".mp3";
     this.commands[this.t].push(cmd);
     this.commandList.push(cmd);
 
@@ -288,7 +287,6 @@ RenderP.prototype.addBlackA = function (e) {
         }
     }
 };
-
 /* Get File information with Id */
 RenderP.prototype.getFileInformationById = function (id) {
     for (i = 0; i < currentProject.tabListFiles.length; i++) {
@@ -298,7 +296,6 @@ RenderP.prototype.getFileInformationById = function (id) {
     }
     return file;
 };
-
 /* This function upload all command to the server for processing */
 RenderP.prototype.uploadCommands = function () {
     var finalString = "";
@@ -315,7 +312,6 @@ RenderP.prototype.uploadCommands = function () {
     //uploadFile(-1, "renderFile", txtFile, "RENDER");
     uploadFile(-1, uId() ,"renderFile", txtFile, "RENDER")
 };
-
 /* This function is made to check recurcively into tracks if element exist and cut them to fit the "black" spaces */
 RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
     console.log("trying ........");
@@ -394,7 +390,6 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
 
     }
 };
-
 /* this function is made to convert multiple video tracks into single video track, by an analysis of present tracks */
 RenderP.prototype.makeSingleVideoTrack = function(){
 
@@ -434,7 +429,6 @@ RenderP.prototype.makeSingleVideoTrack = function(){
 
         this.mergeTrack(1);
 };
-
 /* When elements on tracks are cut to fit, the "black" size , Elements still are in their respective tracks.
    This function get tracks content and add it to the first track.
  */
