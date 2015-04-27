@@ -1,2 +1,1 @@
 TODO : load project count tracks
-TODO : place black when long audio

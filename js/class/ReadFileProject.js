@@ -11,6 +11,8 @@ ReadFileProject = function(fileContent) {
     this.listFiles = this.tabProject.files;
     this.listTracks = this.tabProject.tracks;
 
+    this.loadTracks = false;
+
     rLog('ReadFileProject : start');
 };
 
@@ -99,52 +101,6 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, upload
     var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + uId + '.' + format;
     var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName;
 
-    /*
-    var xhr = createCORSRequest('GET', url);
-    if (!xhr) {
-        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
-        return;
-    }
-
-    xhr.onload = function() {
-        console.log('response : ' + xhr.response);
-
-        var blob = new Blob([xhr.response], {type: "image/png"});
-
-        //console.log(blob, window.URL.createObjectURL(blob));
-
-        if(type == TYPE.VIDEO || type == TYPE.IMAGE || type == TYPE.TEXT)
-        {
-            currentProject.tabListFiles[row].setThumbnailImage(window.URL.createObjectURL(blob));
-        }
-        else
-        {
-            currentProject.tabListFiles[row].setThumbnailAudio(window.URL.createObjectURL(blob));
-        }
-
-        readFileProject.progression++;
-        readFileProject.countGetFiles++;
-
-        if(readFileProject.countGetFiles == readFileProject.totalGetFiles)
-        {
-            rLog('-LOAD PROJECT- files : finish');
-
-            //readFileProject.dispatchEvent(listfilesend);
-
-            readFileProject.setTracks();
-        }
-    };
-
-    xhr.onerror = function() {
-        reportError('No contact with server');
-
-        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
-    };
-
-    xhr.responseType = 'arrayBuffer';
-    xhr.send();
-    */
-
     var oReq = new XMLHttpRequest();
     oReq.open("GET", url, true);
     oReq.responseType = "arraybuffer";
@@ -173,31 +129,37 @@ ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, upload
 };
 
 ReadFileProject.prototype.setTracks = function() {
-    rLog('-LOAD PROJECT- track : start [countTracks: ' + this.listTracks.length + ']');
+    if(!this.loadTracks) {
+        rLog('-LOAD PROJECT- track : start [countTracks: ' + this.listTracks.length + ']');
 
-    var id = -1;
-    var lastId = -1;
+        console.log('--countTracks:' + this.listTracks.length);
 
-    for(var i = 0; i < this.listTracks.length; i++)
-    {
-        id = addTrack(this.listTracks[i].type);
+        this.loadTracks = true;
 
-        if(lastId >= 0) {
-            setParentTracks(lastId, id);
+        var id = -1;
+        var lastId = -1;
 
-            lastId = -1;
-        }
-        else
+        for(var i = 0; i < this.listTracks.length; i++)
         {
-            lastId = (this.listTracks[i].parent >= 0) ? id : -1;
+            id = addTrack(this.listTracks[i].type);
+
+            if(lastId >= 0) {
+                setParentTracks(lastId, id);
+
+                lastId = -1;
+            }
+            else
+            {
+                lastId = (this.listTracks[i].parent >= 0) ? id : -1;
+            }
+
+            currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
         }
 
-        currentProject.tabListTracks[i].tabElements = this.listTracks[i].tabElements;
+        rLog('-LOAD PROJECT- track : end');
+
+        this.setElementsTrack(true);
     }
-
-    rLog('-LOAD PROJECT- track : end');
-
-    this.setElementsTrack(true);
 };
 
 ReadFileProject.prototype.setElementsTrack = function(start) {
@@ -226,23 +188,18 @@ ReadFileProject.prototype.setElementsTrack = function(start) {
     }
     else
     {
-        console.log('countTracks : ' + this.countTracks);
+        console.log('countTrack: ' + this.countTracks);
         if(this.countElementsTrack >= this.listTracks[this.countTracks].tabElements.length) {
             this.countTracks++;
             this.countElementsTrack = 0;
 
             if(this.countTracks >= this.listTracks.length) {
-                console.log('end load project');
-
                 rLog('-LOAD PROJECT- elements track : end');
 
                 this.finishLoadProject();
             }
             else
             {
-                console.log('other track ' + this.countTracks);
-                console.log(this.listTracks[this.countTracks].tabElements.length);
-
                 if(this.listTracks[this.countTracks].tabElements.length > 0) {
                     this.setElementThumbnail(this.countTracks, this.countElementsTrack);
                 }
@@ -265,16 +222,10 @@ ReadFileProject.prototype.setElementThumbnail = function(rowTrack, rowElement) {
     var element = currentProject.tabListTracks[rowTrack].tabElements[rowElement];
     var file = currentProject.tabListFiles[rowById(element.fileId, currentProject.tabListFiles)];
 
-    console.log('load thumbnail');
-    console.log(element);
-
     var imageThumbnail = new Image();
 
     imageThumbnail.onload = function() {
         rLog('-LOAD PROJECT- elements track : thumbnail [rowTrack: ' + rowTrack + '][elementId: ' + element.id + '][type: ' + element.type + ']');
-
-        //console.log(element);
-        //console.log(imageThumbnail);
 
         element.thumbnail = imageThumbnail;
 

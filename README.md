@@ -29,6 +29,7 @@ If you have another solution we are open to them ! Just contact us by github or 
 
 Just change paths in scripts as described above. It is easy !
 
+You can try this project on : http://clangue.net/other/testVideo/
 
 Requirements
 ============
@@ -39,8 +40,7 @@ The server can run as well for Linux servers or Widnows servers ( script comming
 You also have to download ( for windows essentialy ) a staic version of FFmpeg binaries, adapted for your architecture can be found here http://ffmpeg.org/download.html.
 To use it you need to have a recent web-browser. In particaly we recomand Firefox and Google Chrome.
 
-
-ScreenShots :
+Screen's :
 =============
 - Main Interface :
 ![alt tag](https://raw.githubusercontent.com/DGIProject/VideoEditorJS/master/screenshots/scr01.PNG)

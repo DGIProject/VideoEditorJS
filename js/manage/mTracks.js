@@ -3,7 +3,7 @@
  */
 
 var oneSecond = 5;
-var pixelTimeBar = {g: 0, d: 710};
+var pixelTimeBar = {g: 0, d: 730};
 var lastZoom = 5;
 var scrollTracks = 0;
 
@@ -22,12 +22,13 @@ function addTrack(type) {
     var elementInfo = document.createElement('div');
     elementInfo.id = 'elementInfo' + trackId;
     elementInfo.classList.add('singleTrack');
-    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
-    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span></div><div class="optionsTrack"><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-remove"></span></button></div>';
+    elementInfo.innerHTML = '<div class="valuesTrack"><span class="bold">' + ((type == TYPE.VIDEO) ? 'VIDEO' : 'AUDIO') + ' ' + trackId + '</span><button type="button" onclick="deleteTrackModal(' + trackId + ');" class="btn btn-link"><span class="glyphicon glyphicon-trash"></span></button></div>';
 
     var elementView = document.createElement('canvas');
     elementView.id = 'elementView' + trackId;
+
     elementView.classList.add('singleTrack');
+    elementView.classList.add('canvasTrack');
 
     elementView.onmousedown = mouseDownTracks;
 
@@ -36,12 +37,12 @@ function addTrack(type) {
 
     elementView.oncontextmenu = showContextMenu;
 
-    elementView.width = 730;
-    elementView.height = 120;
+    elementView.width = 740;
+    elementView.height = 105;
 
     var contextElementView = elementView.getContext('2d');
-    contextElementView.width = 730;
-    contextElementView.height = 120;
+    contextElementView.width = 740;
+    contextElementView.height = 105;
 
     document.getElementById((type == TYPE.VIDEO) ? 'videoInfo' : 'audioInfo').appendChild(elementInfo);
     document.getElementById((type == TYPE.VIDEO) ? 'videoView' : 'audioView').appendChild(elementView);
@@ -245,7 +246,9 @@ function calculateTimeBar() {
     ctx.fillText(text,(canvas.width-textPxLength.width),3);
 }
 
-function mouseMoveTime(x) {
+function mouseMoveTime(x, width) {
+    console.log(width);
+
     calculateTimeBar();
 
     var canvas = document.getElementById('timeBarCanvas');
@@ -253,7 +256,6 @@ function mouseMoveTime(x) {
 
     var text = pixelToTime(x);
     ctx.font = "10pt Verdana";
-    ctx.textAlign = "center";
     ctx.textBaseline = "top";
     var textPxLength = ctx.measureText(text);
 
@@ -264,6 +266,18 @@ function mouseMoveTime(x) {
         ctx.lineTo(x,canvas.height);
         ctx.closePath();
         ctx.stroke();
+
+        if(width >= 0) {
+            ctx.textAlign = "left";
+            ctx.fillText(pixelToTime(width), (x + 2), (canvas.height - 12), (width - 4));
+
+            ctx.beginPath();
+            ctx.moveTo((x + width),canvas.height/2);
+            ctx.lineTo((x + width),canvas.height);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
         var posX = (x<textPxLength.width/2)? textPxLength.width/2 : ( x>(canvas.width-(textPxLength.width)/2))? canvas.width-(textPxLength.width)/2 : x ;
     }
     else
@@ -286,10 +300,13 @@ function mouseMoveTime(x) {
         }
     }
 
+    //Carré blanc derrière le texte
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(posX-(textPxLength.width/2),2,textPxLength.width+2, 12);
-    //console.log(textPxLength);
+
+    //Texte
     ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
     ctx.fillText(text,posX,3);
 }
 

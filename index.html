@@ -132,7 +132,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Bienvenue sur VideoEditorJS</h4>
+                    <h4 id="start.welcome.text" class="modal-title">Bienvenue sur VideoEditorJS</h4>
                 </div>
                 <div class="modal-body">
                     <div id="loadingProgressProject">
@@ -141,31 +141,40 @@
                                 <span class="sr-only">0% Complete</span>
                             </div>
                         </div>
-                        <span class="marginauto strong">Chargement en cours ... <span id="persentProgress">0%</span></span>
+                        <span class="marginauto strong"><span id="start.loadingJS.text">Chargement en cours ...</span> <span id="percentProgress">--</span></span>
                     </div>
                     <div id="enterUsername" style="display: none;">
                         <form method="post" onsubmit="setUsername(this.usernameSession.value);return false" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Pseudo</label>
+                                <label id="start.username.text" class="col-sm-2 control-label">Pseudo</label>
                                 <div class="col-sm-10">
                                     <input type="text" id="usernameSession" name="usernameSession" class="form-control" placeholder="Pseudo">
-                                    <span class="textNote">Le compte sera automatiquement crée s'il n'existe pas.</span>
+                                    <span id="start.note.text" class="textNote">Le compte sera automatiquement crée s'il n'existe pas.</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label id="start.translation.text" class="col-sm-2 control-label">Traduction</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" onchange="loadTranslation(this.value);">
+                                        <option value="fr">Français/French</option>
+                                        <option value="en">Anglais/English</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Continuer</button>
+                                    <button type="submit" id="start.buttonContinue" class="btn btn-primary"><span id="start.buttonContinue.text">Continuer</span></button>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div id="startUseProject" style="display: none;">
-                        <div id="listExistingProjects">Chargement des projets ...</div>
+                        <div id="listExistingProjects"><span id="start.loadingProjects.text">Chargement des projets ...</span></div>
                         <hr>
-                        <a href="#" onclick="newProject(false);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> Projet</a>
+                        <a href="#" id="start.buttonNewProject" onclick="newProject(false);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> <span id="start.buttonNewProject.text">Projet</span></a>
                     </div>
                     <div id="notAvailableBrowser" style="display: none;">
-                        <p>Votre navigateur n'est pas compatible. Utilisez Firefox pour continuer.</p>
+                        <p id="start.notCompatibleBrowser.text">Votre navigateur n'est pas compatible. Utilisez Firefox ou Chrome pour continuer.</p>
                     </div>
                 </div>
             </div>

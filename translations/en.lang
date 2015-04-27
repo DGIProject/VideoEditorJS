@@ -1,0 +1,41 @@
+{
+    "lang" : "en",
+	"translations" : [
+	    {
+    	    "id": "start.welcome.text",
+    	    "text": "Welcome on VideoEditorJS"
+    	},
+    	{
+        	"id": "start.loadingJS.text",
+        	"text": "Loading ..."
+        },
+		{
+        	"id": "start.username.text",
+        	"text": "Username"
+        },
+		{
+        	"id": "start.translation.text",
+        	"text": "Translation"
+        },
+		{
+        	"id": "start.note.text",
+        	"text": "This account will be automatically create if it doesn't exist."
+        },
+		{
+        	"id": "start.loadingProjects.text",
+        	"text": "Loading projects ..."
+        },
+		{
+        	"id": "start.buttonContinue.text",
+        	"text": "Continue"
+        },
+	    {
+	        "id": "start.buttonNewProject.text",
+	        "text": "Project"
+	    },
+		{
+        	"id": "start.notCompatibleBrowser.text",
+        	"text": "Your browser is not compatible. Use Firefox or Chrome."
+        }
+	]
+}
