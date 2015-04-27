@@ -1,5 +1,6 @@
 /**
  * Created by Guillaume on 14/03/2015.
+ * Render Class, to make a render File corresponding to the visual content.
  */
 RenderP = function (format) {
     this.tracks = JSON.parse(JSON.stringify(currentProject.tabListTracks));
@@ -10,7 +11,7 @@ RenderP = function (format) {
     this.commandTracksVideo = [];
     this.commandList = [];
     this.previousZoom = parseInt(document.getElementById('zoomRange').value);
-    //changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
+    changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
 
     this.FORMAT = {
         MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
@@ -25,6 +26,8 @@ RenderP = function (format) {
     //console.log(this.userFormat);
     this.otherTrack = []
     this.tabVideoTrack = [];
+
+    //Isolating video tracks
     for (i = 0; i < this.tracks.length; i++) {
         if (this.tracks[i].type == TYPE.VIDEO) {
             this.tabVideoTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
@@ -38,6 +41,7 @@ RenderP = function (format) {
 
     console.log("tabs", this.tabVideoTrack, this.otherTrack);
 
+    //Convert multiple video track into Single one
     var index = this.tabVideoTrack.length;
     console.log('index', index );
     do
@@ -57,6 +61,7 @@ RenderP = function (format) {
     var maxA = 0;
     var maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].width;
 
+    //Get max size
     for (i=0;i<this.otherTrack.length;i++)
     {
         for (el=0;el<this.otherTrack[i].tabElements.length;el++)
@@ -74,6 +79,7 @@ RenderP = function (format) {
 
     this.t = 0;
     for (t = 0; t < this.otherTrack.length; t++) {
+        //Processing each track
         this.t = t;
         this.otherTrack[t].tabElements.sort(function (a, b) {
             console.log("tris");
@@ -86,6 +92,7 @@ RenderP = function (format) {
 
         console.log("track ", t, "elementT", this.elementInTrack);
 
+        //processing each element.
         for (var e = 0; e < this.elementInTrack.length; e++) {
             console.log("element n°", e);
 
@@ -123,6 +130,7 @@ RenderP = function (format) {
         }
 
         if (this.otherTrack[t].tabElements.length > 0) {
+            //Concat each track element into single one
             var lastCmd = "";
             console.log(this.commands[t], this.commands);
             if (this.commands[t].length > 1) {
@@ -179,7 +187,10 @@ RenderP = function (format) {
 
 };
 
+/* This function, is made, to detect "Black" elements, and check if another element exist on others tracks*/
+
 RenderP.prototype.getBlack = function(track, elementIndex){
+
     var tabElement = track.tabElements;
     var Element = tabElement[elementIndex];
     console.log('tabElement', tabElement, parseInt(elementIndex+1), elementIndex);
@@ -204,8 +215,8 @@ RenderP.prototype.getBlack = function(track, elementIndex){
     {
         console.log("Out!");
     }
-
 };
+/* Add a video command */
 RenderP.prototype.addCommandV = function (e) {
     var cmd = "";
     this.elementEnd = e.marginLeft + e.width
@@ -227,6 +238,8 @@ RenderP.prototype.addCommandV = function (e) {
 
 
 };
+
+/* Add an audioCommand */
 RenderP.prototype.addCommandA = function (e) {
     this.elementEnd = e.marginLeft + e.width
 
@@ -236,6 +249,7 @@ RenderP.prototype.addCommandA = function (e) {
     this.commandList.push(cmd);
 
 };
+/* Add a "black" element */
 RenderP.prototype.addBlackV = function (e) {
     tempIndex = e;
     tempIndex++;
@@ -256,6 +270,7 @@ RenderP.prototype.addBlackV = function (e) {
         }
     }
 };
+/* Add a black element */
 RenderP.prototype.addBlackA = function (e) {
     tempIndex = e;
     tempIndex++;
@@ -273,6 +288,8 @@ RenderP.prototype.addBlackA = function (e) {
         }
     }
 };
+
+/* Get File information with Id */
 RenderP.prototype.getFileInformationById = function (id) {
     for (i = 0; i < currentProject.tabListFiles.length; i++) {
         if (currentProject.tabListFiles[i].id == id) {
@@ -281,6 +298,8 @@ RenderP.prototype.getFileInformationById = function (id) {
     }
     return file;
 };
+
+/* This function upload all command to the server for processing */
 RenderP.prototype.uploadCommands = function () {
     var finalString = "";
 
@@ -296,6 +315,8 @@ RenderP.prototype.uploadCommands = function () {
     //uploadFile(-1, "renderFile", txtFile, "RENDER");
     uploadFile(-1, uId() ,"renderFile", txtFile, "RENDER")
 };
+
+/* This function is made to check recurcively into tracks if element exist and cut them to fit the "black" spaces */
 RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
     console.log("trying ........");
 
@@ -373,6 +394,8 @@ RenderP.prototype.findOnTrackB = function (tId, from, to, element) {
 
     }
 };
+
+/* this function is made to convert multiple video tracks into single video track, by an analysis of present tracks */
 RenderP.prototype.makeSingleVideoTrack = function(){
 
         this.tabVideoTrack[0].tabElements.sort(function (a, b) {
@@ -411,6 +434,10 @@ RenderP.prototype.makeSingleVideoTrack = function(){
 
         this.mergeTrack(1);
 };
+
+/* When elements on tracks are cut to fit, the "black" size , Elements still are in their respective tracks.
+   This function get tracks content and add it to the first track.
+ */
 RenderP.prototype.mergeTrack = function (trackId) {
     console.log("---------------------------------------------------------------------");
     if (trackId<this.tabVideoTrack.length)
