@@ -36,6 +36,30 @@
 		{
         	"id": "start.notCompatibleBrowser.text",
         	"text": "Your browser is not compatible. Use Firefox or Chrome."
+        },
+		{
+        	"id": "contextMenu.breakLink.text",
+        	"text": "Break link"
+        },
+		{
+        	"id": "contextMenu.effects.text",
+        	"text": "Effects"
+        },
+		{
+        	"id": "contextMenu.opacity.text",
+        	"text": "Opacity"
+        },
+		{
+        	"id": "contextMenu.volume.text",
+        	"text": "Volume"
+        },
+		{
+        	"id": "contextMenu.properties.text",
+        	"text": "Properties"
+        },
+		{
+        	"id": "contextMenu.delete.text",
+        	"text": "Delete"
         }
 	]
 }

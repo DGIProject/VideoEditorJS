@@ -13,14 +13,14 @@
     <div id="editor">
         <div class="dropdown">
             <ul id="contextMenu" class="dropdown-menu">
-                <li id="liBreakLinkCM"><a id="buttonBreakLinkCM" tabindex="-1" href="#">Rompre le lien</a></li>
+                <li id="liBreakLinkCM"><a id="buttonBreakLinkCM" tabindex="-1" href="#"><span id="contextMenu.breakLink.text">Rompre le lien</span></a></li>
                 <li class="divider"></li>
-                <li id="liEffectsCM"><a id="buttonEffectsCM" tabindex="-1" href="#">Effets</a></li>
-                <li id="liOpacityCM"><a id="buttonOpacityCM" tabindex="-1" href="#">Opacité</a></li>
-                <li id="liVolumeCM"><a id="buttonVolumeCM" tabindex="-1" href="#">Volume</a></li>
+                <li id="liEffectsCM"><a id="buttonEffectsCM" tabindex="-1" href="#"><span id="contextMenu.effects.text">Effets</span></a></li>
+                <li id="liOpacityCM"><a id="buttonOpacityCM" tabindex="-1" href="#"><span id="contextMenu.opacity.text">Opacité</span></a></li>
+                <li id="liVolumeCM"><a id="buttonVolumeCM" tabindex="-1" href="#"><span id="contextMenu.volume.text">Volume</span></a></li>
                 <li class="divider"></li>
-                <li><a id="buttonPropertiesCM" tabindex="-1" href="#">Propriétés</a></li>
-                <li><a id="buttonDeleteCM" tabindex="-1" href="#">Supprimer</a></li>
+                <li><a id="buttonPropertiesCM" tabindex="-1" href="#"><span id="contextMenu.properties.text">Propriétés</span></a></li>
+                <li><a id="buttonDeleteCM" tabindex="-1" href="#"><span id="contextMenu.delete.text">Supprimer</span></a></li>
             </ul>
         </div>
         <nav class="navbar navbar-default" role="navigation">
@@ -36,18 +36,18 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span> Projet <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span> <span id="menu.project.title.text">Projet</span> <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="newProject(true);"><span class="glyphicon glyphicon-plus"></span> Nouveau</a></li>
-                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-th"></span> Mes projets</a></li>
+                                <li><a href="#" onclick="newProject(true);"><span class="glyphicon glyphicon-plus"></span> <span id="menu.project.new.text">Nouveau</span></a></li>
+                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-th"></span> <span id="menu.project.projects.text">Mes projets</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> Sauvegarder</a></li>
-                                <li><a href="#" onclick="currentProject.switchAutoSave();"><span id="iconAutoSave" class="glyphicon glyphicon-unchecked"></span> Sauvegarde Automatique</a></li>
+                                <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> <span id="menu.project.save.text">Sauvegarder</span></a></li>
+                                <li><a href="#" onclick="currentProject.switchAutoSave();"><span id="iconAutoSave" class="glyphicon glyphicon-unchecked"></span> <span id="menu.project.autoSave.text">Sauvegarde Automatique</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="rConsole();"><span id="iconRConsole" class="glyphicon glyphicon-unchecked"></span> Afficher la console</a></li>
+                                <li><a href="#" onclick="rConsole();"><span id="iconRConsole" class="glyphicon glyphicon-unchecked"></span> <span id="menu.project.console.text">Afficher la console</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Projet : <span id="projectDropdown">--</span></a></li>
-                                <li><a href="#">Dernière sauvegarde : <span id="lastSaveDropdown">--</span></a></li>
+                                <li><a href="#"><span id="menu.project.project.text">Projet</span> : <span id="projectDropdown">--</span></a></li>
+                                <li><a href="#"><span id="menu.project.lastSave.text">Dernière sauvegarde</span> : <span id="lastSaveDropdown">--</span></a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
