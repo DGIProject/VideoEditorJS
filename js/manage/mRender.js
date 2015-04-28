@@ -5,6 +5,8 @@
 function renderModal() {
     listAvailableRenderFiles();
 
+    eId('render.modal.buttonStart').disabled = false;
+
     $('#renderModal').modal('show');
 }
 
