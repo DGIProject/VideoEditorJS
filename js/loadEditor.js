@@ -32,6 +32,7 @@ var currentFileRow = 0;
 
 var currentProject = false, currentManageTextElement = false;
 
+var usernameSession = null, tabTranslations = null;
 
 var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
@@ -63,6 +64,7 @@ window.onload = function() {
     timeCanvas.height = timeCanvas.offsetHeight;
 
     getFileJS();
+    loadTranslation('fr');
 };
 
 function loadTranslation(fileName) {
