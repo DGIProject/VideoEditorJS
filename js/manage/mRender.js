@@ -111,7 +111,7 @@ function listAvailableRenderFiles()
             var url2 = remoteAPIPath + 'php/videoFileManagement.php?action=read&id='+jsonRep[i]+'&projectName='+currentProject.name;
             li=document.createElement("li");
             li.setAttribute("class","list-group-item");
-            li.innerHTML = '<a href="'+url2+'" target="_blank">'+jsonRep[i]+'</a><button class="btn btn-xs btn-danger pull-right" onclick="deleteRender(\''+jsonRep[i]+'\')" type="button"><span class="glyphicon glyphicon-remove"></span></button><button onclick="viewVideoFile(\''+jsonRep[i]+'\')" class="btn btn-xs btn-default pull-right" type="button"><span class="glyphicon glyphicon-play"></span></button>'
+            li.innerHTML = '<a href="'+url2+'" target="_blank">'+jsonRep[i]+'</a><button class="btn btn-xs btn-danger pull-right" onclick="deleteRender(\''+jsonRep[i]+'\')" type="button"><span class="glyphicon glyphicon-remove"></span></button> <button onclick="viewVideoFile(\''+jsonRep[i]+'\')" class="btn btn-xs btn-default pull-right" type="button"><span class="glyphicon glyphicon-play"></span></button>';
             ul.appendChild(li);
         }
 

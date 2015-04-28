@@ -186,6 +186,18 @@
         	"text": "Start"
         },
 		{
+        	"id": "render.modal.progression.text",
+        	"text": "Render progression"
+        },
+		{
+        	"id": "render.modal.renders.text",
+        	"text": "My renders"
+        },
+		{
+        	"id": "render.modal.buttonClose.text",
+        	"text": "Close"
+        },
+		{
         	"id": "footer.info.text",
         	"text": "by Dylan Delaporte and Guillaume Villena - ISN Project 2015"
         }
