@@ -51,28 +51,28 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> Fichier <span id="countUploads" class="badge">0</span> <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> <span id="menu.file.title.text">Fichier</span> <span id="countUploads" class="badge">0</span> <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-file"></span> Fichier externe</a></li>
-                                <li><a href="#" onclick="newTextElement();"><span class="glyphicon glyphicon-text-width"></span> Elément Text</a></li>
+                                <li><a href="#" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-file"></span> <span id="menu.file.externalFile.text">Fichier externe</span></a></li>
+                                <li><a href="#" onclick="newTextElement();"><span class="glyphicon glyphicon-text-width"></span> <span id="menu.file.textElement.text">Elément Text</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="newRecord(TYPE.VIDEO);"><span class="glyphicon glyphicon-facetime-video"></span> Enregistrement vidéo</a></li>
-                                <li><a href="#" onclick="newRecord(TYPE.AUDIO);"><span class="glyphicon glyphicon-record"></span> Enregistrement audio</a></li>
+                                <li><a href="#" onclick="newRecord(TYPE.VIDEO);"><span class="glyphicon glyphicon-facetime-video"></span> <span id="menu.file.videoRecord.text">Enregistrement vidéo</span></a></li>
+                                <li><a href="#" onclick="newRecord(TYPE.AUDIO);"><span class="glyphicon glyphicon-record"></span> <span id="menu.file.audioRecord.text">Enregistrement audio</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="uploadManagerModal();"><span class="glyphicon glyphicon-upload"></span> Gestionnaire d'envoi</a></li>
+                                <li><a href="#" onclick="uploadManagerModal();"><span class="glyphicon glyphicon-upload"></span> <span id="menu.file.uploadManager.text">Gestionnaire d'envoi</span></a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> Piste <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> <span id="menu.track.title.text">Piste</span> <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="addTracks();"><span class="glyphicon glyphicon-oil"></span> Vidéo/Audio</a></li>
+                                <li><a href="#" onclick="addTracks();"><span class="glyphicon glyphicon-oil"></span> <span id="menu.track.newVideoAudio.text">Vidéo/Audio</span></a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" onclick="addTrack(TYPE.VIDEO);"><span class="glyphicon glyphicon-film"></span> Vidéo</a></li>
-                                <li><a href="#" onclick="addTrack(TYPE.AUDIO);"><span class="glyphicon glyphicon-music"></span> Audio</a></li>
+                                <li><a href="#" onclick="addTrack(TYPE.VIDEO);"><span class="glyphicon glyphicon-film"></span> <span id="menu.track.newVideo.text">Vidéo</span></a></li>
+                                <li><a href="#" onclick="addTrack(TYPE.AUDIO);"><span class="glyphicon glyphicon-music"></span> <span id="menu.track.newAudio.text">Audio</span></a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#" onclick="$('#renderModal').modal('show');" ><span class="glyphicon glyphicon-film"></span> Rendu </a>
+                            <a href="#" onclick="renderModal();" ><span class="glyphicon glyphicon-film"></span> <span id="menu.render.title.text">Rendu</span></a>
                         </li>
                     </ul>
 
@@ -86,7 +86,7 @@
 
                     </form>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><p id="currentProject" class="navbar-text strong">Aucun projet.</p></li>
+                        <li><p id="currentProject" class="navbar-text strong"><span id="menu.projectStatus.noProject.text">Aucun projet.</span></p></li>
                         <li><button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button></li>
                     </ul>
 
@@ -112,8 +112,8 @@
             </div>
             <div class="col-md-2 filesList">
                 <div id="listFiles" class="list-group listFiles">
-                    <span>Aucun fichier.</span>
-                    <span class="textNote">Glissez des fichiers ou cliquez sur fichier.</span>
+                    <span id="file.listFiles.noFile.text">Aucun fichier.</span>
+                    <span id="file.listFiles.note.text" class="textNote">Glissez des fichiers ou cliquez sur fichier.</span>
                 </div>
                 <div style="display: none;">
                     <input type="file" id="fileLoader" onchange="addFile(this.files[0]);"/>
@@ -123,7 +123,7 @@
         </div>
     </div>
     <footer>
-        <p><a href="#">VideoEditorJS</a> par Dylan Delaporte et Guillaume Villena - Project d'ISN 2015</p>
+        <p><a href="#">VideoEditorJS</a> <span id="footer.info.text">par Dylan Delaporte et Guillaume Villena - Project d'ISN 2015</span></p>
     </footer>
 
     <pre id="console" style="display: none;">-VEJS CONSOLE-</pre>
@@ -184,21 +184,21 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Nouveau projet</h4>
+                    <h4 class="modal-title"><span id="project.modal.new.title.text">Nouveau projet</span></h4>
                 </div>
                 <div class="modal-body">
                     <form method="post" onsubmit="saveNewProject(this.nameProject.value);return false" class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Nom</label>
+                            <label class="col-sm-2 control-label"><span id="project.modal.new.name.text">Nom</span></label>
                             <div class="col-sm-10">
                                 <input type="text" id="nameProject" name="nameProject" class="form-control" placeholder="Nom">
-                                <span class="textNote">Pour une compatibilité maximale, les accents et les majuscules seront retirés.</span>
+                                <span id="project.modal.new.note.text" class="textNote">Pour une compatibilité maximale, les accents seront retirés.</span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                <button type="button" id="buttonBackAddProject" class="btn btn-default" data-dismiss="modal">Retour</button>
+                                <button type="submit" class="btn btn-primary"><span id="project.modal.new.buttonSave.text">Enregistrer</span></button>
+                                <button type="button" id="buttonBackAddProject" class="btn btn-default" data-dismiss="modal"><span id="project.modal.new.buttonBack.text">Retour</span></button>
                             </div>
                         </div>
                     </form>
@@ -526,17 +526,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Rendu</h4>
+                    <h4 class="modal-title"><span id="render.modal.title.text">Rendu</span></h4>
                 </div>
                 <div class="modal-body">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Options de rendus</h3>
+                            <h3 class="panel-title"><span id="render.modal.create.text">Créer un rendu</span></h3>
                         </div>
                         <div class="panel-body">
                             <form onsubmit="return false;">
                                 <div class="form-group">
-                                    <label for="renderFormat">Format du rendu</label>
+                                    <label for="renderFormat"><span id="rendu.modal.format.text">Format du rendu</span></label>
                                     <select name="renderFormat" id="renderFormat">
                                         <option value="MPEG4">.mp4 ( mpeg4 )</option>
                                         <option value="X264">.mp4 ( x264 )</option>
@@ -546,7 +546,7 @@
                                         <option value="WEBM">.webm</option>
                                     </select>
                                 </div>
-                                <button type="submit" id="startRender" onclick="makeRender();this.setAttribute('disabled','');" class="btn btn-default">Lancer</button>
+                                <button type="submit" id="render.modal.buttonStart" onclick="makeRender();" class="btn btn-default"><span id="render.modal.buttonStart.text">Lancer</span></button>
                             </form>
                         </div>
                     </div>

@@ -60,6 +60,134 @@
 		{
         	"id": "contextMenu.delete.text",
         	"text": "Delete"
+        },
+		{
+        	"id": "menu.project.title.text",
+        	"text": "Project"
+        },
+		{
+        	"id": "menu.project.new.text",
+        	"text": "New"
+        },
+		{
+        	"id": "menu.project.projects.text",
+        	"text": "My projects"
+        },
+		{
+        	"id": "menu.project.save.text",
+        	"text": "Save"
+        },
+		{
+        	"id": "menu.project.autoSave.text",
+        	"text": "Auto save"
+        },
+		{
+        	"id": "menu.project.console.text",
+        	"text": "Show console"
+        },
+		{
+        	"id": "menu.project.project.text",
+        	"text": "Project"
+        },
+		{
+        	"id": "menu.project.lastSave.text",
+        	"text": "Last save"
+        },
+		{
+        	"id": "menu.file.title.text",
+        	"text": "File"
+        },
+		{
+        	"id": "menu.file.externalFile.text",
+        	"text": "External file"
+        },
+		{
+        	"id": "menu.file.textElement.text",
+        	"text": "Text element"
+        },
+		{
+        	"id": "menu.file.videoRecord.text",
+        	"text": "Video record"
+        },
+		{
+        	"id": "menu.file.audioRecord.text",
+        	"text": "Audio record"
+        },
+		{
+        	"id": "menu.file.uploadManager.text",
+        	"text": "Upload manager"
+        },
+		{
+        	"id": "menu.track.title.text",
+        	"text": "Track"
+        },
+		{
+        	"id": "menu.track.newVideoAudio.text",
+        	"text": "Video/Audio"
+        },
+		{
+        	"id": "menu.track.newVideo.text",
+        	"text": "Video"
+        },
+		{
+        	"id": "menu.track.newAudio.text",
+        	"text": "Audio"
+        },
+		{
+        	"id": "menu.render.title.text",
+        	"text": "Render"
+        },
+		{
+        	"id": "menu.projectStatus.noProject.text",
+        	"text": "No project."
+        },
+		{
+        	"id": "project.modal.new.title.text",
+        	"text": "New project"
+        },
+		{
+        	"id": "project.modal.new.name.text",
+        	"text": "Name"
+        },
+		{
+        	"id": "project.modal.new.note.text",
+        	"text": "For maximum compatibility, accents will be removed."
+        },
+		{
+        	"id": "project.modal.new.buttonSave.text",
+        	"text": "Save"
+        },
+		{
+        	"id": "project.modal.new.buttonBack.text",
+        	"text": "Back"
+        },
+		{
+        	"id": "file.listFiles.noFile.text",
+        	"text": "No file."
+        },
+		{
+        	"id": "file.listFiles.note.text",
+        	"text": "Drop files or click on \"File\" in toolbar."
+        },
+		{
+        	"id": "render.modal.title.text",
+        	"text": "Render"
+        },
+		{
+        	"id": "render.modal.create.text",
+        	"text": "Create render"
+        },
+		{
+        	"id": "render.modal.format.text",
+        	"text": "Formats"
+        },
+		{
+        	"id": "render.modal.buttonStart.text",
+        	"text": "Start"
+        },
+		{
+        	"id": "footer.info.text",
+        	"text": "by Dylan Delaporte and Guillaume Villena - ISN Project 2015"
         }
 	]
 }

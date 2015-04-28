@@ -2,11 +2,17 @@
  * Created by Dylan on 10/02/2015.
  */
 
+function renderModal() {
+    listAvailableRenderFiles();
+
+    $('#renderModal').modal('show');
+}
+
 function makeRender(format) {
+    eId('render.modal.buttonStart').disabled = true;
+
     if (isAllUploaded())
     {
-
-
         var myElements = document.querySelectorAll(".renderStats");
 
         for (var i = 0; i < myElements.length; i++) {
@@ -36,15 +42,16 @@ function makeRender(format) {
                     var progress = Math.ceil(jsonRep.actual/jsonRep.totcmd*100);
                     if (progress==100)
                     {
-                        eId('startRender').removeAttribute('disable');
+                        clearInterval(timer);
+
+                        eId('render.modal.buttonStart').disabled = false;
+
                         var myElements = document.querySelectorAll(".renderStatsV");
 
                         for (var i = 0; i < myElements.length; i++) {
                             myElements[i].className = myElements[i].className.replace("renderStatsV", "renderStats");
                         }
                         noty({layout: 'topRight', type: 'info', text: 'Rendu Terminé  !', timeout: '5000'});
-                        clearInterval(timer);
-                        eId('startRender').removeAttribute('disabled');
 
                         url = remoteAPIPath + 'php/renderStat.php?action=delete&id='+currentProject.username+"_"+currentProject.name;
                         var xhr2 = createCORSRequest('GET', url);
@@ -66,7 +73,7 @@ function makeRender(format) {
             xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
             xhr.send();
 
-        }, 10000)
+        }, 10000);
 
         format = document.getElementById("renderFormat").options[document.getElementById("renderFormat").selectedIndex].value;
         console.log("format", format);
@@ -74,8 +81,9 @@ function makeRender(format) {
     }
     else
     {
-        eId('startRender').removeAttribute('disabled')
-        noty({layout: 'topRight', type: 'error', text: 'Le rendu ne peux pas être lancé, des fichiers sont en cours d\'envois', timeout: '4000'});
+        eId('render.modal.buttonStart').disabled = false;
+
+        noty({layout: 'topRight', type: 'error', text: 'Le rendu ne peux pas être lancé, des fichiers n\'ont pas été envoyés ou sont en cours d\'envois', timeout: '4000'});
     }
 }
 

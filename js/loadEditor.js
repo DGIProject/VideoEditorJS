@@ -32,7 +32,6 @@ var currentFileRow = 0;
 
 var currentProject = false, currentManageTextElement = false;
 
-var usernameSession;
 
 var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
@@ -74,18 +73,26 @@ function loadTranslation(fileName) {
     if(xhr.readyState != 4 || (xhr.status != 200 && xhr.status != 0)) // Code == 0 en local
         throw new Error("Impossible de charger le fichier de traduction \"" + fileName + ".lang\" (code HTTP : " + xhr.status + ").");
 
-    var translationData = xhr.responseText;
-
-    console.log(translationData);
-
-    var tabTranslations = JSON.parse(translationData);
-
-    console.log(tabTranslations);
+    tabTranslations = JSON.parse(xhr.responseText);
 
     for(var i = 0; i < tabTranslations.translations.length; i++) {
         if(document.getElementById(tabTranslations.translations[i].id) != null)
             document.getElementById(tabTranslations.translations[i].id).innerHTML = tabTranslations.translations[i].text;
     }
+}
+
+function getTranslation(id) {
+    var translation = 'ERROR_TRANSLATION';
+
+    for(var i = 0; i < tabTranslations.translations.length; i++) {
+        if(tabTranslations.translations[i].id == id)
+            translation = tabTranslations.translations[i].text;
+    }
+
+    if(translation == 'ERROR_TRANSLATION')
+        reportError('ERROR_TRANSLATION [id: ' + id + ']');
+
+    return translation;
 }
 
 function getFileJS() {
