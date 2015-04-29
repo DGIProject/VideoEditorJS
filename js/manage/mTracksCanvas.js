@@ -504,11 +504,11 @@ function element(rowTrack, row) {
         sWidth = imageThumbnail.width - (ratio * currentElement.leftGap) - (ratio * currentElement.rightGap);
         sHeight = imageThumbnail.height;
 
-        xThumbnail = marginLeftWithGap;
-        yThumbnail = 20;
-
         widthThumbnail = widthWithGap;
-        heightThumbnail = 75;
+        heightThumbnail = 75*currentElement.properties.volume/100;
+
+        xThumbnail = marginLeftWithGap;
+        yThumbnail = (105-20)/2 - (heightThumbnail/2)+10;
 
         context.drawImage(imageThumbnail, sx, sy, sWidth, sHeight, xThumbnail, yThumbnail, widthThumbnail, heightThumbnail);
     }
