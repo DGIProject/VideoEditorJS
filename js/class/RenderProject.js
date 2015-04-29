@@ -50,7 +50,7 @@ RenderP = function (format) {
         index--;
         console.log('indexN', index )
     }
-    while (index!=1);
+    while (index>1);
 
     console.log("Video track", this.tabVideoTrack);
 
