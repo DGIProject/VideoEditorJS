@@ -254,11 +254,12 @@ function mouseMoveTime(x, width) {
     var canvas = document.getElementById('timeBarCanvas');
     var ctx = canvas.getContext('2d');
 
-    var text = pixelToTime(x+pixelTimeBar.g);
+    var text = pixelToTime(x+pixelTimeBar.g) ;
     ctx.font = "10pt Verdana";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     var textPxLength = ctx.measureText(text);
+
 
     if (x>0 && x<canvas.width)
     {
@@ -269,9 +270,15 @@ function mouseMoveTime(x, width) {
         ctx.stroke();
 
         if(width != null) {
-            if(((width < 0) ? -width : width) >= 64) {
+            if(width >= 64) {
                 ctx.fillText(pixelToTime((width < 0) ? -width : width), (x + (width / 2)), (canvas.height - 14), (((width < 0) ? -width : width) - 4));
+                console.log(width);
             }
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(x+width-textPxLength.width/2,2,textPxLength.width+2, 12);
+            ctx.fillStyle = "#000000";
+            ctx.fillText(pixelToTime(x+width), x+width,3 );
 
             ctx.beginPath();
             ctx.moveTo((x + width),canvas.height/2);
