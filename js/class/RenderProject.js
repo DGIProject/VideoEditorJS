@@ -41,25 +41,31 @@ RenderP = function (format) {
 
     console.log("tabs", this.tabVideoTrack, this.otherTrack);
 
-    //Convert multiple video track into Single one
-    var index = this.tabVideoTrack.length;
-    console.log('index', index );
-    do
-    {
-        this.makeSingleVideoTrack();
-        index--;
-        console.log('indexN', index )
-    }
-    while (index>1);
 
-    console.log("Video track", this.tabVideoTrack);
+        //Convert multiple video track into Single one
+        var index = this.tabVideoTrack.length;
+        console.log('index', index );
+        do
+        {
+            this.makeSingleVideoTrack();
+            index--;
+            console.log('indexN', index )
+        }
+        while (index>1);
 
-    this.tabVideoTrack[0].tabElements.sort(function (a, b) {
-        console.log("tris");
-        return a.marginLeft - b.marginLeft
-    });
-    var maxA = 0;
-    var maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].width;
+        console.log("Video track", this.tabVideoTrack);
+
+        this.tabVideoTrack[0].tabElements.sort(function (a, b) {
+            console.log("tris");
+            return a.marginLeft - b.marginLeft
+        });
+        var maxA = 0;
+        var maxV = 0;
+        if (this.tabVideoTrack[0].tabElements.length>0)
+        {
+            maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].width;
+        }
+
 
     //Get max size
     for (i=0;i<this.otherTrack.length;i++)
@@ -73,6 +79,7 @@ RenderP = function (format) {
             }
         }
     }
+
     this.otherTrack.push(this.tabVideoTrack[0]);
 
 
@@ -115,7 +122,7 @@ RenderP = function (format) {
                 (this.otherTrack[t].type == TYPE.AUDIO) ? this.addCommandA(this.elementInTrack[e]) : this.addCommandV(this.elementInTrack[e]);
                if ((maxA-maxV)>oneSecond && this.otherTrack[t].type != TYPE.AUDIO )
                {
-                   cmd = "-f rawvideo -pix_fmt rgb24 -r 1 -c:v mpeg2video -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+                   cmd = "-f rawvideo -pix_fmt rgb24 -s 1280x720 -r 1 -i /dev/zero -t " +  Math.ceil((maxA-maxV) / oneSecond) + "  -y " + this.commands[this.t].length + ".ts";
                    this.commandList.push(cmd);
                    this.commands[this.t].push(cmd);
                }
@@ -260,9 +267,9 @@ RenderP.prototype.addBlackV = function (e) {
         else {
             console.log("black from ", this.elementEnd, "to ", this.nextElement.marginLeft);
 
-            cmd = "-f rawvideo -pix_fmt rgb24 -c:v mpeg2video -r 1 -i /dev/zero -t "
+            cmd = "-f rawvideo -pix_fmt rgb24 -s 1280x720 -r 1 -i /dev/zero -t "
             + Math.ceil((this.nextElement.marginLeft - this.elementEnd) / oneSecond)
-            + " -s 1280x720 -y " + this.commands[this.t].length + ".ts";
+            + " -y " + this.commands[this.t].length + ".ts";
 
             this.commands[this.t].push(cmd);
             this.commandList.push(cmd);
