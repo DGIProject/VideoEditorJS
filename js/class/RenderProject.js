@@ -11,7 +11,7 @@ RenderP = function (format) {
     this.commandTracksVideo = [];
     this.commandList = [];
     this.previousZoom = parseInt(document.getElementById('zoomRange').value);
-    changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
+    //changeZoom((parseInt(document.getElementById('zoomRange').max)/2), false);
 
     this.FORMAT = {
         MPEG4 : { ext : 'mp4', codec : 'mpeg4'},
@@ -41,17 +41,17 @@ RenderP = function (format) {
 
     console.log("tabs", this.tabVideoTrack, this.otherTrack);
 
-
+    if (this.tabVideoTrack.length>0) {
         //Convert multiple video track into Single one
         var index = this.tabVideoTrack.length;
-        console.log('index', index );
+        console.log('index', index);
         do
         {
             this.makeSingleVideoTrack();
             index--;
-            console.log('indexN', index )
+            console.log('indexN', index)
         }
-        while (index>1);
+        while (index > 1);
 
         console.log("Video track", this.tabVideoTrack);
 
@@ -61,27 +61,23 @@ RenderP = function (format) {
         });
         var maxA = 0;
         var maxV = 0;
-        if (this.tabVideoTrack[0].tabElements.length>0)
-        {
-            maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length-1].width;
+        if (this.tabVideoTrack[0].tabElements.length > 0) {
+            maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length - 1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length - 1].width;
         }
 
 
-    //Get max size
-    for (i=0;i<this.otherTrack.length;i++)
-    {
-        for (var el=0;el<this.otherTrack[i].tabElements.length;el++)
-        {
-            var size = this.otherTrack[i].tabElements[el].marginLeft + this.otherTrack[i].tabElements[el].width;
-            if (size>maxA)
-            {
-                maxA = size
+        //Get max size
+        for (i = 0; i < this.otherTrack.length; i++) {
+            for (var el = 0; el < this.otherTrack[i].tabElements.length; el++) {
+                var size = this.otherTrack[i].tabElements[el].marginLeft + this.otherTrack[i].tabElements[el].width;
+                if (size > maxA) {
+                    maxA = size
+                }
             }
         }
+
+        this.otherTrack.push(this.tabVideoTrack[0]);
     }
-
-    this.otherTrack.push(this.tabVideoTrack[0]);
-
 
 
     this.t = 0;
@@ -188,12 +184,11 @@ RenderP = function (format) {
         this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ?  "track_"+this.commandTracksVideo[0][0]+".mp4 "  : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" -q:v 1 final."+this.FORMAT[this.userFormat].ext);
         this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" -q:v 1 final_WEB."+this.FORMAT.X264.ext);
 
-        changeZoom(this.previousZoom, false);
+       // changeZoom(this.previousZoom, false);
         this.uploadCommands();
     }
 
 };
-
 /* This function, is made, to detect "Black" elements, and check if another element exist on others tracks*/
 
 RenderP.prototype.getBlack = function(track, elementIndex){
@@ -316,7 +311,6 @@ RenderP.prototype.uploadCommands = function () {
     finalString += "\n";
 
     var txtFile = new Blob([finalString], {type: 'text/plain', name: "command.ffm"});
-    //uploadFile(-1, "renderFile", txtFile, "RENDER");
     uploadFile(-1, uId() ,"renderFile", txtFile, "RENDER")
 };
 /* This function is made to check recurcively into tracks if element exist and cut them to fit the "black" spaces */
