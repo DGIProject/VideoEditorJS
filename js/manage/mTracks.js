@@ -270,7 +270,7 @@ function mouseMoveTime(x, width) {
         ctx.stroke();
 
         if(width != null) {
-            if(width >= 64) {
+            if(((width < 0) ? -width : width) >= 64) {
                 ctx.fillText(pixelToTime((width < 0) ? -width : width), (x + (width / 2)), (canvas.height - 14), (((width < 0) ? -width : width) - 4));
                 console.log(width);
             }
