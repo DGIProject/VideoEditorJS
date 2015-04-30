@@ -57,12 +57,6 @@ imageClose.src = 'http://clangue.net/other/testVideo/img/remove.png';
 window.onload = function() {
     $('#startLoadingEditor').modal('show');
 
-    var timeCanvas = document.getElementById('timeBarCanvas');
-    timeCanvas.style.width='100%';
-    timeCanvas.style.height='100%';
-    timeCanvas.width = timeCanvas.offsetWidth;
-    timeCanvas.height = timeCanvas.offsetHeight;
-
     getFileJS();
     loadTranslation('fr');
 };
@@ -114,6 +108,8 @@ function getFileJS() {
     else
     {
         console.log('finish load JS');
+
+        loadTimeBar();
 
         terminal = new Terminal();
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement', textArea : 'textTextElement'});

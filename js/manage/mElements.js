@@ -260,6 +260,8 @@ function setVolumeElement(id, trackId) {
     var element = track.tabElements[rowById(id, track.tabElements)];
 
     element.properties.volume = parseInt(eId('volumeRange').value);
+
+    drawElementsTracks();
 }
 
 //Suppression d'un élément dans une piste avec sont élément "ami" (si il en a un)

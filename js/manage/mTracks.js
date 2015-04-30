@@ -3,7 +3,14 @@
  */
 
 var oneSecond = 5;
-var pixelTimeBar = {g: 0, d: 734};
+
+var timeBar = {
+    canvas: document.getElementById('timeBarCanvas'),
+    canvasContext: document.getElementById('timeBarCanvas').getContext('2d'),
+    pixelLeft: 0,
+    pixelRight: 734
+};
+
 var lastZoom = 5;
 var scrollTracks = 0;
 
@@ -225,97 +232,102 @@ function scrollLessTracks() {
 
 
 //TIME BAR
+function loadTimeBar() {
+    var timeCanvas = document.getElementById('timeBarCanvas');
+    timeCanvas.style.width='100%';
+    timeCanvas.style.height='100%';
+    timeCanvas.width = timeCanvas.offsetWidth;
+    timeCanvas.height = timeCanvas.offsetHeight;
+
+    calculateTimeBar();
+}
+
 function calculateTimeBar() {
-    var canvas = document.getElementById('timeBarCanvas');
-    var ctx = canvas.getContext('2d');
+    timeBar.canvasContext.fillStyle = '#ffffff';
+    timeBar.canvasContext.fillRect(0, 0, timeBar.canvas.width, timeBar.canvas.height);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0,0,canvas.width, canvas.height);
-    var text = pixelToTime(pixelTimeBar.g);
-    ctx.font = "10pt Verdana";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    var textPxLength = ctx.measureText(text);
-    ctx.fillStyle = "#000000";
-    ctx.fillText(text,0,3);
+    var text = pixelToTime(timeBar.pixelLeft);
+    timeBar.canvasContext.font = "10pt Verdana";
+    timeBar.canvasContext.textAlign = "left";
+    timeBar.canvasContext.textBaseline = "top";
+    var textPxLength = timeBar.canvasContext.measureText(text);
+    timeBar.canvasContext.fillStyle = "#000000";
+    timeBar.canvasContext.fillText(text,0,3);
 
-    text = pixelToTime(pixelTimeBar.d);
-    ctx.font = "10pt Verdana";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    textPxLength = ctx.measureText(text);
-    ctx.fillStyle = "#000000";
-    ctx.fillText(text,(canvas.width-textPxLength.width),3);
+    text = pixelToTime(timeBar.pixelRight);
+    timeBar.canvasContext.font = "10pt Verdana";
+    timeBar.canvasContext.textAlign = "left";
+    timeBar.canvasContext.textBaseline = "top";
+    textPxLength = timeBar.canvasContext.measureText(text);
+    timeBar.canvasContext.fillStyle = "#000000";
+    timeBar.canvasContext.fillText(text, (timeBar.canvas.width - textPxLength.width), 3);
 }
 
 function mouseMoveTime(x, width) {
     calculateTimeBar();
 
-    var canvas = document.getElementById('timeBarCanvas');
-    var ctx = canvas.getContext('2d');
-
-    var text = pixelToTime(x+pixelTimeBar.g) ;
-    ctx.font = "10pt Verdana";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    var textPxLength = ctx.measureText(text);
+    var text = pixelToTime(x + timeBar.pixelLeft);
+    timeBar.canvasContext.font = "10pt Verdana";
+    timeBar.canvasContext.textAlign = "center";
+    timeBar.canvasContext.textBaseline = "top";
+    var textPxLength = timeBar.canvasContext.measureText(text);
 
 
-    if (x>0 && x<canvas.width)
+    if (x>0 && x< timeBar.canvas.width)
     {
-        ctx.beginPath();
-        ctx.moveTo(x,canvas.height/2);
-        ctx.lineTo(x,canvas.height);
-        ctx.closePath();
-        ctx.stroke();
+        timeBar.canvasContext.beginPath();
+        timeBar.canvasContext.moveTo(x, timeBar.canvas.height/2);
+        timeBar.canvasContext.lineTo(x, timeBar.canvas.height);
+        timeBar.canvasContext.closePath();
+        timeBar.canvasContext.stroke();
 
         if(width != null) {
             if(((width < 0) ? -width : width) >= 64) {
-                ctx.fillText(pixelToTime((width < 0) ? -width : width), (x + (width / 2)), (canvas.height - 14), (((width < 0) ? -width : width) - 4));
+                timeBar.canvasContext.fillText(pixelToTime((width < 0) ? -width : width), (x + (width / 2)), (timeBar.canvas.height - 14), (((width < 0) ? -width : width) - 4));
                 console.log(width);
             }
 
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(x+width-textPxLength.width/2,2,textPxLength.width+2, 12);
-            ctx.fillStyle = "#000000";
-            ctx.fillText(pixelToTime(x+width), x+width,3 );
+            timeBar.canvasContext.fillStyle = '#ffffff';
+            timeBar.canvasContext.fillRect(x+width-textPxLength.width/2,2,textPxLength.width+2, 12);
+            timeBar.canvasContext.fillStyle = "#000000";
+            timeBar.canvasContext.fillText(pixelToTime(x+width), x+width,3 );
 
-            ctx.beginPath();
-            ctx.moveTo((x + width),canvas.height/2);
-            ctx.lineTo((x + width),canvas.height);
-            ctx.closePath();
-            ctx.stroke();
+            timeBar.canvasContext.beginPath();
+            timeBar.canvasContext.moveTo((x + width), timeBar.canvas.height/2);
+            timeBar.canvasContext.lineTo((x + width), timeBar.canvas.height);
+            timeBar.canvasContext.closePath();
+            timeBar.canvasContext.stroke();
         }
 
-        var posX = (x<textPxLength.width/2)? textPxLength.width/2 : ( x>(canvas.width-(textPxLength.width)/2))? canvas.width-(textPxLength.width)/2 : x ;
+        var posX = (x<textPxLength.width/2)? textPxLength.width/2 : ( x>(timeBar.canvas.width-(textPxLength.width)/2))? timeBar.canvas.width-(textPxLength.width)/2 : x;
     }
     else
     {
         if (x<0)
         {
-            ctx.beginPath();
-            ctx.moveTo(0,canvas.height/2);
-            ctx.lineTo(0,canvas.height);
-            ctx.closePath();
-            ctx.stroke();
+            timeBar.canvasContext.beginPath();
+            timeBar.canvasContext.moveTo(0, timeBar.canvas.height/2);
+            timeBar.canvasContext.lineTo(0, timeBar.canvas.height);
+            timeBar.canvasContext.closePath();
+            timeBar.canvasContext.stroke();
         }
-        else if (x>canvas.width)
+        else if (x> timeBar.canvas.width)
         {
-            ctx.beginPath();
-            ctx.moveTo(canvas.width,canvas.height/2);
-            ctx.lineTo(canvas.width,canvas.height);
-            ctx.closePath();
-            ctx.stroke();
+            timeBar.canvasContext.beginPath();
+            timeBar.canvasContext.moveTo(timeBar.canvas.width, timeBar.canvas.height/2);
+            timeBar.canvasContext.lineTo(timeBar.canvas.width, timeBar.canvas.height);
+            timeBar.canvasContext.closePath();
+            timeBar.canvasContext.stroke();
         }
     }
 
     //Carré blanc derrière le texte
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(posX-(textPxLength.width/2),2,textPxLength.width+2, 12);
+    timeBar.canvasContext.fillStyle = '#ffffff';
+    timeBar.canvasContext.fillRect(posX-(textPxLength.width/2),2,textPxLength.width+2, 12);
 
     //Texte
-    ctx.fillStyle = "#000000";
-    ctx.fillText(text,posX,3);
+    timeBar.canvasContext.fillStyle = "#000000";
+    timeBar.canvasContext.fillText(text,posX,3);
 }
 
 //DROP ELEMENT

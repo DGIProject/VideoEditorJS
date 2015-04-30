@@ -75,8 +75,8 @@ document.getElementById('audioView').onscroll = function() {
         scrollLessTracks();
     }
 
-    pixelTimeBar.g = this.scrollLeft;
-    pixelTimeBar.d = 734 + this.scrollLeft;
+    timeBar.pixelLeft = this.scrollLeft;
+    timeBar.pixelRight = 734 + this.scrollLeft;
 
     calculateTimeBar();
     drawElementsTracks();

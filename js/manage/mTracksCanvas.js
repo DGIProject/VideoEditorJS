@@ -138,7 +138,7 @@ function mouseMoveTracks(e) {
                 }
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g, track.tabElements[track.currentRow].width);
+                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - timeBar.pixelLeft, track.tabElements[track.currentRow].width);
             }
             else if(track.mode == MODE.RESIZE.LEFT)
             {
@@ -176,7 +176,7 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - pixelTimeBar.g, track.tabElements[track.currentRow].width);
+                mouseMoveTime(track.tabElements[track.currentRow].marginLeft - timeBar.pixelLeft, track.tabElements[track.currentRow].width);
             }
             else if(track.mode == MODE.RESIZE.RIGHT)
             {
@@ -211,20 +211,20 @@ function mouseMoveTracks(e) {
                 track.lastX = x;
 
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
-                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - pixelTimeBar.g, -track.tabElements[track.currentRow].width);
+                mouseMoveTime((track.tabElements[track.currentRow].marginLeft + track.tabElements[track.currentRow].width) - timeBar.pixelLeft, -track.tabElements[track.currentRow].width);
             }
             else
             {
-                mouseMoveTime(x - pixelTimeBar.g, null);
+                mouseMoveTime(x - timeBar.pixelLeft, null);
             }
 
-            if((track.tabElements[track.currentRow].marginLeft + track.gap) >= (pixelTimeBar.d - 35) && !timeoutAutoScroll) {
+            if((track.tabElements[track.currentRow].marginLeft + track.gap) >= (timeBar.pixelRight - 35) && !timeoutAutoScroll) {
                 timeoutAutoScroll = setTimeout(function() {
                     autoScrollPlus(row, track.currentRow);
                 }, 50);
             }
 
-            if((track.tabElements[track.currentRow].marginLeft + track.gap) <= (pixelTimeBar.g + 35) && !timeoutAutoScroll) {
+            if((track.tabElements[track.currentRow].marginLeft + track.gap) <= (timeBar.pixelLeft + 35) && !timeoutAutoScroll) {
                 timeoutAutoScroll = setTimeout(function() {
                     autoScrollLess(row, track.currentRow);
                 }, 50);
@@ -232,7 +232,7 @@ function mouseMoveTracks(e) {
         }
         else
         {
-            mouseMoveTime(x - pixelTimeBar.g, null);
+            mouseMoveTime(x - timeBar.pixelLeft, null);
 
             track.currentRow = rowElement(x, row);
 
@@ -275,12 +275,12 @@ function mouseMoveTracks(e) {
 
 function autoScrollPlus(rowTrack, rowElement) {
     if(rowElement >= 0) {
-        if((currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft + currentProject.tabListTracks[rowTrack].gap) >= (pixelTimeBar.d - 35) && currentProject.tabListTracks[rowTrack].mousedown) {
+        if((currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft + currentProject.tabListTracks[rowTrack].gap) >= (timeBar.pixelRight - 35) && currentProject.tabListTracks[rowTrack].mousedown) {
             document.getElementById('videoView').scrollLeft += 10;
             document.getElementById('audioView').scrollLeft += 10;
 
-            pixelTimeBar.g += 10;
-            pixelTimeBar.d += 10;
+            timeBar.pixelLeft += 10;
+            timeBar.pixelRight += 10;
 
             currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft += 10;
 
@@ -306,14 +306,14 @@ function autoScrollPlus(rowTrack, rowElement) {
 }
 
 function autoScrollLess(rowTrack, rowElement) {
-    if(pixelTimeBar.g > 0) {
+    if(timeBar.pixelLeft > 0) {
         if(rowElement >= 0) {
-            if((currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft + currentProject.tabListTracks[rowTrack].gap) <= (pixelTimeBar.g + 35) && currentProject.tabListTracks[rowTrack].mousedown) {
+            if((currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft + currentProject.tabListTracks[rowTrack].gap) <= (timeBar.pixelLeft + 35) && currentProject.tabListTracks[rowTrack].mousedown) {
                 document.getElementById('videoView').scrollLeft -= 10;
                 document.getElementById('audioView').scrollLeft -= 10;
 
-                pixelTimeBar.g -= 10;
-                pixelTimeBar.d -= 10;
+                timeBar.pixelLeft -= 10;
+                timeBar.pixelRight -= 10;
 
                 currentProject.tabListTracks[rowTrack].tabElements[rowElement].marginLeft -= 10;
 
