@@ -202,7 +202,7 @@ stopRecordingbtn.onclick = function () {
                                         console.log("Something traite avec le worker en provenance de videoRecorder")
                                         videoRecorderResult = new Blob([file.data]);
                                         document.getElementById('video').src = window.URL.createObjectURL(videoRecorderResult);
-                                        $('#recordAudioOrVideoElement').modal('show');
+                                        $('#recordFileModal').modal('show');
                                     });
                                 }
                             }
@@ -276,7 +276,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
 
                                     var reader = new FileReader();
                                     reader.addEventListener("loadend", function() {
-                                        $('#recordAudioOrVideoElement').modal('hide');
+                                        $('#recordFileModal').modal('hide');
                                         currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, newFileName, newFileName.split('.').pop()));
                                         addFileList(fileId, newFileName, typeFile);
                                         sLoadM();
@@ -297,7 +297,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, videoRecorderResult.size, fileName, fileName.split('.').pop()));
                     addFileList(fileId, fileName, typeFile);
                     sLoadM();
-                    uploadFile(fileId, uId(), fileName, videoRecorderResult, typeFile, fileName.split('.').pop());
+                    uploadFile(fileId, uId(), fileName, videoRecorderResult, 'FILE', fileName.split('.').pop());
                     $('#recordAudioOrVideoElement').modal('hide');
                     fileProcessing(fileId, arrayBuffer);
                 }

@@ -20,5 +20,5 @@ function reportError(text) {
     };
 
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xhr.send('text=' + ((isFirefox) ? '-Firefox-' : '-Chrome-') + ' -' + usernameSession + '- ' + text);
+    xhr.send('text=' + ((isFirefox) ? '-Firefox-' : '-Chrome-') + ' -' + usernameSession + '- ' + ' -' + ((currentProject) ? currentProject.name : 'No Project') + '- ' + text);
 }

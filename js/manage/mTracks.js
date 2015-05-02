@@ -273,7 +273,7 @@ function mouseMoveTime(x, width) {
     var textPxLength = timeBar.canvasContext.measureText(text);
 
 
-    if (x>0 && x< timeBar.canvas.width)
+    if (x >= 0 && x < timeBar.canvas.width)
     {
         timeBar.canvasContext.beginPath();
         timeBar.canvasContext.moveTo(x, timeBar.canvas.height/2);
@@ -284,13 +284,13 @@ function mouseMoveTime(x, width) {
         if(width != null) {
             if(((width < 0) ? -width : width) >= 64) {
                 timeBar.canvasContext.fillText(pixelToTime((width < 0) ? -width : width), (x + (width / 2)), (timeBar.canvas.height - 14), (((width < 0) ? -width : width) - 4));
-                console.log(width);
             }
 
             timeBar.canvasContext.fillStyle = '#ffffff';
             timeBar.canvasContext.fillRect(x+width-textPxLength.width/2,2,textPxLength.width+2, 12);
-            timeBar.canvasContext.fillStyle = "#000000";
-            timeBar.canvasContext.fillText(pixelToTime(x+width), x+width,3 );
+
+            //timeBar.canvasContext.fillStyle = "#000000";
+            //timeBar.canvasContext.fillText(pixelToTime(x+width), x+width,3 );
 
             timeBar.canvasContext.beginPath();
             timeBar.canvasContext.moveTo((x + width), timeBar.canvas.height/2);
@@ -303,7 +303,7 @@ function mouseMoveTime(x, width) {
     }
     else
     {
-        if (x<0)
+        if (x < 0)
         {
             timeBar.canvasContext.beginPath();
             timeBar.canvasContext.moveTo(0, timeBar.canvas.height/2);
@@ -311,7 +311,7 @@ function mouseMoveTime(x, width) {
             timeBar.canvasContext.closePath();
             timeBar.canvasContext.stroke();
         }
-        else if (x> timeBar.canvas.width)
+        else if (x > timeBar.canvas.width)
         {
             timeBar.canvasContext.beginPath();
             timeBar.canvasContext.moveTo(timeBar.canvas.width, timeBar.canvas.height/2);
