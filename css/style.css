@@ -2,6 +2,10 @@
     margin-right: 10px;
 }
 
+.blackColor {
+    color: #000000;;
+}
+
 .chronologicalView
 {
     height: 550px;

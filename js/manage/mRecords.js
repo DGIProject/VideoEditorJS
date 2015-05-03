@@ -264,7 +264,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     var newFileName = document.getElementById('fileName').value + ".avi";
 
                     sLoadM();
-                    
+
                     terminal.processCmd("ffmpeg -i "+fileName+" "+newFileName, function (e, index){
                         var message = e.data;
 

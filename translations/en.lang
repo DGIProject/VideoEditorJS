@@ -5,6 +5,30 @@
     	    "id": "start.welcome.text",
     	    "text": "Welcome to VideoEditorJS"
     	},
+		{
+    	    "id": "start.tutorial.step1.title.text",
+    	    "text": "Step 1 : Add files"
+    	},
+		{
+    	    "id": "start.tutorial.step1.note.text",
+    	    "text": "Drop file on file list or add text element, video or audio record by the toolbar clicking on file."
+    	},
+		{
+    	    "id": "start.tutorial.step2.title.text",
+    	    "text": "Step 2 : Add tracks"
+    	},
+		{
+    	    "id": "start.tutorial.step2.note.text",
+    	    "text": "Drop file on file list or add text element, video or audio record by the toolbar clicking on file."
+    	},
+		{
+    	    "id": "start.tutorial.step3.title.text",
+    	    "text": "Step 2 : Add elements on tracks"
+    	},
+		{
+    	    "id": "start.tutorial.step3.note.text",
+    	    "text": "Drop elements (added files) on tracks."
+    	},
     	{
         	"id": "start.loadingJS.text",
         	"text": "Loading ..."
