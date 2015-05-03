@@ -38,11 +38,7 @@ var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
 var readFileProject = false;
 
-
-
-//events
-//var listfilesend = new Event('listfilesend');
-//var classend = new Event('classend');
+var pressedKey = -1;
 
 var lastRLog = '';
 

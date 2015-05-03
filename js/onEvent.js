@@ -60,6 +60,31 @@ window.onmousemove = function(e) {
     }
 };
 
+window.onkeydown = function(e) {
+    console.log(e.ctrlKey + ' - ' + e.keyCode);
+
+    if(e.ctrlKey && pressedKey < 0) {
+        if(e.keyCode == 83) {
+            //s key
+            console.log('ctrl + s');
+
+            pressedKey = 83;
+
+            saveProject();
+
+            return false;
+        }
+    }
+};
+
+window.onkeyup = function(e) {
+    console.log(e.keyCode);
+
+    if(e.keyCode == pressedKey) {
+        pressedKey = -1;
+    }
+};
+
 document.getElementById('audioView').onscroll = function() {
     if(currentProject.isReady) {
         document.getElementById('videoView').scrollLeft = this.scrollLeft;

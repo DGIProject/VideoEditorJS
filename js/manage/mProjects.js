@@ -128,61 +128,63 @@ function loadProject(fileName) {
 
 //Sauvegarde du projet : GenerateFileProject permet de créer le fichier JSON avec tout le contenu du projet puis envoi par requête Ajax.
 function saveProject() {
-    rLog('Saving project ...');
+    if(currentProject) {
+        rLog('Saving project ...');
 
-    listAvailableRenderFiles();
-    sLoadM();
+        listAvailableRenderFiles();
+        sLoadM();
 
-    var fileProject = new GenerateFileProject(currentProject.name, currentProject.uId, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
-    var contentFile = fileProject.generateMain();
+        var fileProject = new GenerateFileProject(currentProject.name, currentProject.uId, currentProject.dateCreation, currentProject.lastSave, currentProject.tabListFiles, currentProject.tabListTracks);
+        var contentFile = fileProject.generateMain();
 
-    console.log(contentFile);
+        console.log(contentFile);
 
-    var url = remoteAPIPath + 'php/projectManagement.php?action=save';
+        var url = remoteAPIPath + 'php/projectManagement.php?action=save';
 
-    var xhr = createCORSRequest('POST', url);
+        var xhr = createCORSRequest('POST', url);
 
-    if (!xhr) {
-        noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
-        return;
+        if (!xhr) {
+            noty({layout: 'topRight', type: 'error', text: 'Erreur, navigateur incompatible avec les requêtes CORS.', timeout: '5000'});
+            return;
+        }
+
+        xhr.onload = function() {
+            console.log('response : ' + xhr.responseText);
+
+            var jsonRep = JSON.parse(xhr.responseText);
+
+            hLoadM();
+
+            if(jsonRep.code == 0)
+            {
+                currentProject.lastSave = getHour();
+                currentProject.forceSave = true;
+
+                currentProject.updateText();
+
+                noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
+
+                rLog('Saved!');
+            }
+            else if(jsonRep.code == 1) // already exist
+            {
+                $('#alreadyExistProjectModal').modal('show');
+            }
+            else
+            {
+                noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
+            }
+        };
+
+        xhr.onerror = function() {
+            reportError('No contact with server');
+
+            noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
+        };
+
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhr.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile) + '&forceSave=' + currentProject.forceSave);
     }
-
-    xhr.onload = function() {
-        console.log('response : ' + xhr.responseText);
-
-        var jsonRep = JSON.parse(xhr.responseText);
-
-        hLoadM();
-
-        if(jsonRep.code == 0)
-        {
-            currentProject.lastSave = getHour();
-            currentProject.forceSave = true;
-
-            currentProject.updateText();
-
-            noty({layout: 'topRight', type: 'success', text: 'Project sauvegardé.', timeout: '5000'});
-
-            rLog('Saved!');
-        }
-        else if(jsonRep.code == 1) // already exist
-        {
-            $('#alreadyExistProjectModal').modal('show');
-        }
-        else
-        {
-            noty({layout: 'topRight', type: 'error', text: 'Nous n\'arrivons pas à sauvegarder le projet.', timeout: '5000'});
-        }
-    };
-
-    xhr.onerror = function() {
-        reportError('No contact with server');
-
-        noty({layout: 'topRight', type: 'error', text: 'Erreur, impossible de contacter le serveur.', timeout: '5000'});
-    };
-
-    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xhr.send('nameProject=' + currentProject.name + '&contentFile=' + JSON.stringify(contentFile) + '&forceSave=' + currentProject.forceSave);
 }
 
 function deleteProject(projectName) {

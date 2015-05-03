@@ -5,7 +5,6 @@ ManageTextElement = function(id, canvasId, canvasWidth, elementsId) {
     this.canvas.onmousemove = this.mouseMove;
     this.canvas.onmousedown = this.mouseDown;
     this.canvas.onmouseup = this.mouseUp;
-   // window.onkeypress = this.keyPress;
 
     this.canvas.width = canvasWidth;
     this.canvas.height = this.canvas.width / 1.77;
