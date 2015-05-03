@@ -2,13 +2,31 @@
  * Created by Dylan on 10/02/2015.
  */
 
+var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+
+var para = {audio: true, video: true};
+
+var playElement;
+var videoRecorderResult;
+
+var audio = document.getElementById('audio');
+
+var audioData = null;
+var videoData = null;
+var playPause = document.getElementById('playPauseRecordVideoButton');
+
+var startRecordingbtn = document.getElementById('recordVideoButton');
+var stopRecordingbtn = document.getElementById('stopRecordVideoButton');
+
 function newRecord(type) {
     if(type == TYPE.VIDEO)
     {
         eId('audio').style.display = 'none';
         eId('video').style.display = '';
 
-        para = {video:true, audio:true};
+        para = {video: true, audio: true};
         console.log('vid !!')
         playElement = document.getElementById('video');
     }
@@ -20,32 +38,18 @@ function newRecord(type) {
         console.log('audio !!')
 
 
-        para = {video:false,audio:true};
+        para = {video: false, audio: true};
         playElement = document.getElementById('audio');
     }
-    
+
     eId('buttonSaveRecord').disabled = true;
 
     startRecordingbtn.disabled = false;
+    playPause.disabled = true;
     stopRecordingbtn.disabled = true;
 
     $('#recordFileModal').modal('show');
 }
-
-var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
-var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
-
-var para = {audio: true, video: true};
-
-var audio = document.getElementById('audio');
-
-var audioData = null;
-var videoData = null;
-var playPause = document.getElementById('playPauseRecordVideoButton');
-playPause.disabled = true;
-var startRecordingbtn = document.getElementById('recordVideoButton');
-var stopRecordingbtn = document.getElementById('stopRecordVideoButton');
 
 document.getElementById('closeWaitRecordModal').onclick = function()
 {
@@ -53,20 +57,18 @@ document.getElementById('closeWaitRecordModal').onclick = function()
 };
 
 
-playPause.onclick = function(){
-
-    if(playElement.paused) {
-        playElement.play();
+playPause.onclick = function() {
+    if(playElement.played) {
+        playElement.pause();
         document.getElementById('spanPlayPause').className = "glyphicon glyphicon-play";
     }
     else
     {
-        playElement.pause();
+        playElement.play();
         document.getElementById('spanPlayPause').className = "glyphicon glyphicon-pause";
     }
-
-
 };
+
 function captureUserMedia(callback) {
     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
     playPause.removeAttribute("disabled");
@@ -86,6 +88,7 @@ function captureUserMedia(callback) {
         console.error(error);
     });
 }
+
 startRecordingbtn.onclick = function () {
 
     eId('RTCError').style.display = "none";
@@ -131,11 +134,10 @@ startRecordingbtn.onclick = function () {
     });
 };
 stopRecordingbtn.onclick = function () {
-
-    document.getElementById('buttonSaveRecord').style.display = '';
     stopRecordingbtn.disabled = true;
-    startRecordingbtn.removeAttribute("disabled");
-    playPause.removeAttribute("disabled");
+    startRecordingbtn.disabled = false;
+    playPause.disabled = false;
+
     //recorder.getBlob(); // to get get a blob of what has been recorded ...
     window.audioVideoRecorder.stopRecording(function (url) {
         console.log(url);
@@ -143,6 +145,9 @@ stopRecordingbtn.onclick = function () {
         playElement.src = url;
         clearInterval(timer);
         videoRecorderResult = window.audioVideoRecorder.getBlob();
+
+        eId('buttonSaveRecord').style.display = '';
+        eId('buttonSaveRecord').disabled = !(document.getElementById('fileName').value != '' && videoRecorderResult.size > 0);
 
         if (isChrome) {
 
@@ -256,8 +261,10 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     var ElementData = new Uint8Array(arrayBuffer);
                     terminal.Files.push({name: fileName, data: ElementData});
 
-                    var newFileName = (document.getElementById('fileName').value+".avi");
+                    var newFileName = document.getElementById('fileName').value + ".avi";
+
                     sLoadM();
+                    
                     terminal.processCmd("ffmpeg -i "+fileName+" "+newFileName, function (e, index){
                         var message = e.data;
 
@@ -280,7 +287,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                                         currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, blob.size, newFileName, newFileName.split('.').pop()));
                                         addFileList(fileId, newFileName, typeFile);
                                         sLoadM();
-                                        uploadFile(fileId, uId(), newFileName, reader.result, typeFile, newFileName.split('.').pop());
+                                        uploadFile(fileId, uId(), newFileName, reader.result, typeFile, newFileName.split('.').pop().toUpperCase());
                                         fileProcessing(fileId, reader.result);
                                     });
                                     reader.readAsArrayBuffer(blob);
@@ -297,8 +304,8 @@ document.getElementById('buttonSaveRecord').onclick = function(){
                     currentProject.tabListFiles.push(new File(fileId, uId(), typeFile, videoRecorderResult.size, fileName, fileName.split('.').pop()));
                     addFileList(fileId, fileName, typeFile);
                     sLoadM();
-                    uploadFile(fileId, uId(), fileName, videoRecorderResult, 'FILE', fileName.split('.').pop());
-                    $('#recordAudioOrVideoElement').modal('hide');
+                    uploadFile(fileId, uId(), fileName, videoRecorderResult, 'FILE', fileName.split('.').pop().toUpperCase());
+                    $('#recordFileModal').modal('hide');
                     fileProcessing(fileId, arrayBuffer);
                 }
             }
@@ -313,12 +320,7 @@ document.getElementById('buttonSaveRecord').onclick = function(){
     }
 };
 document.getElementById('fileName').onkeyup = function(){
-    if (document.getElementById('fileName').value != "" && videoRecorderResult.size > 0) {
-        eId('buttonSaveRecord').removeAttribute("disabled");
+    if(videoRecorderResult) {
+        eId('buttonSaveRecord').disabled = !(document.getElementById('fileName').value != '' && videoRecorderResult.size > 0);
     }
-    else
-    {
-        eId('buttonSaveRecord').setAttribute("disabled","");
-    }
-
 };

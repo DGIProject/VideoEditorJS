@@ -1,6 +1,5 @@
 window.onload = function (e) {
     calculateTimeBar();
-
 };
 
 window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
@@ -62,24 +61,24 @@ window.onmousemove = function(e) {
 };
 
 document.getElementById('audioView').onscroll = function() {
-    //console.log(this.scrollLeft);
+    if(currentProject.isReady) {
+        document.getElementById('videoView').scrollLeft = this.scrollLeft;
 
-    document.getElementById('videoView').scrollLeft = this.scrollLeft;
+        if(this.scrollLeft > scrollTracks)
+        {
+            scrollPlusTracks();
+        }
+        else
+        {
+            scrollLessTracks();
+        }
 
-    if(this.scrollLeft > scrollTracks)
-    {
-        scrollPlusTracks();
+        timeBar.pixelLeft = this.scrollLeft;
+        timeBar.pixelRight = 734 + this.scrollLeft;
+
+        calculateTimeBar();
+        drawElementsTracks();
     }
-    else
-    {
-        scrollLessTracks();
-    }
-
-    timeBar.pixelLeft = this.scrollLeft;
-    timeBar.pixelRight = 734 + this.scrollLeft;
-
-    calculateTimeBar();
-    drawElementsTracks();
 };
 
 document.getElementById('listFiles').ondragover = function(e) {
@@ -123,15 +122,18 @@ document.getElementById('tracks').addEventListener("DOMMouseScroll", function(e)
 
     return false;
 });
+
 document.getElementById('tracks').onmouseleave =  function(e){
     window.removeEventListener('DOMMouseScroll',   preventDefault, false);
 };
+
 document.getElementById('tracks').onmouseenter = function(e){
     window.addEventListener('DOMMouseScroll',  preventDefault, false);
 };
+
 function preventDefault(e) {
     e = e || window.event;
     if (e.preventDefault)
         e.preventDefault();
     e.returnValue = false;
-};
+}
