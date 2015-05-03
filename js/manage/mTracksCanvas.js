@@ -218,16 +218,18 @@ function mouseMoveTracks(e) {
                 mouseMoveTime(x - timeBar.pixelLeft, null);
             }
 
-            if((track.tabElements[track.currentRow].marginLeft + track.gap) >= (timeBar.pixelRight - 35) && !timeoutAutoScroll) {
-                timeoutAutoScroll = setTimeout(function() {
-                    autoScrollPlus(row, track.currentRow);
-                }, 50);
-            }
+            if(track.currentRow >= 0) {
+                if((track.tabElements[track.currentRow].marginLeft + track.gap) >= (timeBar.pixelRight - 35) && !timeoutAutoScroll) {
+                    timeoutAutoScroll = setTimeout(function() {
+                        autoScrollPlus(row, track.currentRow);
+                    }, 50);
+                }
 
-            if((track.tabElements[track.currentRow].marginLeft + track.gap) <= (timeBar.pixelLeft + 35) && !timeoutAutoScroll) {
-                timeoutAutoScroll = setTimeout(function() {
-                    autoScrollLess(row, track.currentRow);
-                }, 50);
+                if((track.tabElements[track.currentRow].marginLeft + track.gap) <= (timeBar.pixelLeft + 35) && !timeoutAutoScroll) {
+                    timeoutAutoScroll = setTimeout(function() {
+                        autoScrollLess(row, track.currentRow);
+                    }, 50);
+                }
             }
         }
         else
