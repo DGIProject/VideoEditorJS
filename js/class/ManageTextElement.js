@@ -151,7 +151,7 @@ ManageTextElement.prototype.writeTextToCanvas = function() {
 };
 
 ManageTextElement.prototype.isOnArea = function(x, y) {
-    var enterInContent = this.text.split('|');
+    var enterInContent = this.text.split('\n');
 
     var xWidth = 0;
 
@@ -185,11 +185,10 @@ ManageTextElement.prototype.mouseUp = function(e) {
     if(e.button == 0)
     {
         currentManageTextElement.leftClick = false;
+
+        document.getElementById(currentManageTextElement.elementsId.textArea).focus();
+        document.getElementById(currentManageTextElement.elementsId.textArea).setSelectionRange(currentManageTextElement.text.length, currentManageTextElement.text.length);
     }
-
-    document.getElementById(currentManageTextElement.elementsId.textArea).focus();
-    document.getElementById(currentManageTextElement.elementsId.textArea).setSelectionRange(currentManageTextElement.text.length, currentManageTextElement.text.length);
-
 };
 
 ManageTextElement.prototype.mouseMove = function(e) {
@@ -201,25 +200,3 @@ ManageTextElement.prototype.mouseMove = function(e) {
 
     currentManageTextElement.writeTextToCanvas();
 };
-
-/*ManageTextElement.prototype.keyPress = function(e) {
-    if(currentManageTextElement.isSelected)
-    {
-        if(e.keyCode == 8)
-        {
-            currentManageTextElement.text = currentManageTextElement.text.substr(0, (currentManageTextElement.text.length - 1));
-        }
-        else if(e.keyCode == 13)
-        {
-            currentManageTextElement.text += '|';
-        }
-        else
-        {
-            currentManageTextElement.text += String.fromCharCode((e.charCode));
-        }
-
-        currentManageTextElement.writeTextToCanvas();
-    }
-    console.log('Block')
-    return false;
-};*/

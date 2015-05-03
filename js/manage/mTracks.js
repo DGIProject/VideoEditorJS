@@ -264,8 +264,6 @@ function calculateTimeBar() {
 }
 
 function mouseMoveTime(x, width) {
-    console.log(x, width);
-
     calculateTimeBar();
 
     var text = pixelToTime(x + timeBar.pixelLeft);
