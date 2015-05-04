@@ -26,7 +26,7 @@ function getListProjects(id, username) {
 
             for(var i = 0; i < tabListProjects.length; i++)
             {
-                eId(id).innerHTML += '<a href="#" class="list-group-item" ><span onclick="loadProject(\'' + tabListProjects[i] + '\')" data-dismiss="modal">' + tabListProjects[i] + '</span>' + ((tabListProjects[i].replace('.vejs', '') != currentProject.name) ? '<span onclick="deleteProject(\'' + tabListProjects[i].replace('.vejs', '') + '\');" class="badge"><span class="glyphicon glyphicon-remove"></span></span>' : '') + '</a>';
+                eId(id).innerHTML += '<div class="list-group-item" ><a href="#" onclick="loadProject(\'' + tabListProjects[i] + '\')" data-dismiss="modal">' + tabListProjects[i] + '</a>' + ((tabListProjects[i].replace('.vejs', '') != currentProject.name) ? '<span onclick="deleteProject(\'' + tabListProjects[i].replace('.vejs', '') + '\');" class="badge cPointer"><span class="glyphicon glyphicon-remove"></span></span>' : '') + '</div>';
             }
         }
         else
