@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>VideoEditorJS - Blog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container">
+
+<div class="blog-header">
+    <h1 class="blog-title">VideoEditorJS - Blog</h1>
+
+    <p class="lead blog-description">Editeur de vidéo en ligne 100% HTML5/JAVASCRIPT</p>
+</div>
+
+<div class="row">
+
+<div class="col-sm-8 blog-main">
+    <ol class="breadcrumb">
+        <li>
+            <a href="index.html">Home</a></br>
+            <a href="#">Développement & construction du project</a>
+            <ul><a href="manageProject.html">Gestion des projects</a></ul>
+            <ul><a href="addFile.html">Ajout des fichiers</a></ul>
+            <ul><a href="multimediaRecord.html">Enregistrement audio & vidéo</a></ul>
+            <ul><a href="manageTracks.html">Gestion des pistes et des éléments</a></ul>
+            <ul><a href="audioSpectrum.html">Spectre audio</a></ul>
+            <ul><a href="terminalJS.html">TerminalJS</a></ul>
+            <ul><a href="finalRender.html">Rendu final</a></ul>
+        </li>
+        <li>
+            <a href="#">Problèmes & difficultés rencontrées</a>
+            <ul><a href="elementsOverlay.html">Superposition des éléments</a></ul>
+            <ul><a href="audioSpectrumGeneration.html">Génération du spectre audio</a></ul>
+        </li>
+    </ol>
+
+    <div class="blog-post">
+        <h2 class="blog-post-title">Gestion des projets</h2>
+        <p>La gestion des projets se fait à partir du fichier mProjects et des classes de génération et de lecture du fichier du projet.
+            Les projets sont stockés sur le serveur dans le dossier de chaque utilisateur, le fichier projet a l'extension .vejs, les données des projets sont dans un dossier spécifique du projet.</p>
+        <hr>
+        <ul>
+            <li>Génération du projet avec la classe GenerateFileProject, l'ensemble des données (par exemple nom des fichiers, pistes ajoutées ou encore positions des éléments sur les pistes) sont stockés dans un tableau JSON présent dans le fichier du projet.</li>
+            <li>Lecture/ouverture du projet avec la classe ReadFileProject, le tableau JSON est analysé et chaque propriété est ajoutée sur interface en ligne. Les aperçus des fichiers sont aussi téléchargés.</li>
+            <li>Récupération et envoi des donnés : utilisation de requêtes Ajax qui redirigent vers un fichier PHP.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+    <div class="sidebar-module sidebar-module-inset">
+        <h4>A propos</h4>
+
+        <p>VideoEditorJs (abrégé VEJS), est un projet qui a pour but de permettre le montage vidéo a ceux qui
+            qui n'ont pas les logiciel necessaire, ni les compétence.
+            VEJS, devrait à terme être associé a site clangue, dans le but d'y proposer l'enregistrement vidéo
+            en plus de l'enregistrement audio.
+            Ce projet, est aussi conçus dans l'optique qu'il devienne un module utilisable facilement sur
+            d'autres sites.</p>
+    </div>
+    <div class="sidebar-module">
+        <h4>Accès au projet</h4>
+        <ol class="list-unstyled">
+            <li><a href="https://github.com/DGIProject/VideoEditorJS" target="_blank">GitHub</a></li>
+            <li><a href="http://clangue.net/other/testVideo" target="_blank">Site</a></li>
+        </ol>
+    </div>
+</div>
+</div>
+</div>
+
+<footer class="blog-footer">
+    <p>
+        <a href="#">Haut de page</a>
+    </p>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>
