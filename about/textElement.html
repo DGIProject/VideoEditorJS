@@ -52,12 +52,19 @@
                     <a href="#">Problèmes & difficultés rencontrées</a>
                     <ul><a href="elementsOverlay.html">Superposition des éléments</a></ul>
                     <ul><a href="audioSpectrumGeneration.html">Génération du spectre audio</a></ul>
+                    <ul><a href="weakPoints.html">Points faibles</a></ul>
                 </li>
             </ol>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">Développement du projet</h2>
-                <p></p>
+                <h2 class="blog-post-title">Elément texte</h2>
+                <p>Les éléments textes sont considérés comme des fichiers (ce sont en fait des images PNG générées à partir du canvas) mais avec de propriétés en plus qui permettent leur modification. La classe ManageTextElement permet leur création et leur modification puis la classe TextElement permet le stockage des propriétés de l'element texte.</p>
+                <hr>
+                <p>Quelques points essentiels à savoir sur les éléments textes :</p>
+                <ul>
+                    <li>Utilisation du canvas : la création et l'édition se fait par l'utilisation d'un canvas ce qui permet une plus grande flexibilité et personnalisation.</li>
+                    <li>Les événements sont beaucoup utilisés par exemple pour détecter l'entrée de la souris dans la zone édition du texte ou pour déplacer celui-ci dans la fenêtre.</li>
+                </ul>
             </div>
         </div>
 

@@ -38,9 +38,10 @@
             <ol class="breadcrumb">
                 <li>
                     <a href="index.html">Home</a></br>
-                    <a href="#">Développement & construction du project</a>
+                    <a href="developmentandconstruction.html">Développement & construction du project</a>
                     <ul><a href="manageProject.html">Gestion des projects</a></ul>
                     <ul><a href="addFile.html">Ajout des fichiers</a></ul>
+                    <ul><a href="textElement.html">Text Element</a></ul>
                     <ul><a href="multimediaRecord.html">Enregistrement audio & vidéo</a></ul>
                     <ul><a href="manageTracks.html">Gestion des pistes et des éléments</a></ul>
                     <ul><a href="audioSpectrum.html">Spectre audio</a></ul>
@@ -51,12 +52,20 @@
                     <a href="#">Problèmes & difficultés rencontrées</a>
                     <ul><a href="elementsOverlay.html">Superposition des éléments</a></ul>
                     <ul><a href="audioSpectrumGeneration.html">Génération du spectre audio</a></ul>
+                    <ul><a href="weakPoints.html">Points faibles</a></ul>
                 </li>
             </ol>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">Développement du projet</h2>
-                <p></p>
+                <h2 class="blog-post-title">Superposition des éléments</h2>
+                <p>La superposition des éléments a été d'une grande complexité tout d'abord par la gestion des positions et des risques d'erreurs mais aussi avec les éléments amis, qui ont à la fois une présence dans une piste vidéo et audio.</p>
+                <hr>
+                <p>Des problèmes précis :</p>
+                <ul>
+                    <li>Collisions au milieu d'une collision : cette collision a été la plus difficile à être réalisée car elle nécessité à la fois la redimension d'un élément mais aussi la création d'un nouvel élément après l'élément superposé.</li>
+                    <li>Les éléments amis ont été aussi compliqués à gérer car nous avons du vérifier sur les deux pistes la présence d'autres éléments.</li>
+                    <li>Le rendu, fut un problème dans la mesure où les pistes vidéos et audios doivent traitées séparément. Le principal problème provient des pistes vidéos. Sachant que la première piste est prioritaire, lorsque qu'un vide existe entre deux éléments, il faut chercher récursivement sur toutes les autres pistes vidéos s'il existe un élément. Tout cela dans le but de produire en mémoire une seule et unique piste vidéo avec tout les éléments des autres pistes (en exploitant la gestion des collisions décrite plus tôt).</li>
+                </ul>
             </div>
         </div>
 
