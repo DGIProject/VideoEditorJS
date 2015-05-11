@@ -1,710 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>VideoEditorJS</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <title>VideoEditorJS - Blog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
+
 <body>
-<div id="containerEditor" class="container">
-    <h1>VideoEditorJS</h1>
-    <div id="editor">
-        <div class="dropdown">
-            <ul id="contextMenu" class="dropdown-menu">
-                <li id="liBreakLinkCM"><a id="buttonBreakLinkCM" tabindex="-1" href="#"><span id="contextMenu.breakLink.text">Rompre le lien</span></a></li>
-                <li class="divider"></li>
-                <li id="liEffectsCM"><a id="buttonEffectsCM" tabindex="-1" href="#"><span id="contextMenu.effects.text">Effets</span></a></li>
-                <li id="liOpacityCM"><a id="buttonOpacityCM" tabindex="-1" href="#"><span id="contextMenu.opacity.text">Opacité</span></a></li>
-                <li id="liVolumeCM"><a id="buttonVolumeCM" tabindex="-1" href="#"><span id="contextMenu.volume.text">Volume</span></a></li>
-                <li class="divider"></li>
-                <li><a id="buttonPropertiesCM" tabindex="-1" href="#"><span id="contextMenu.properties.text">Propriétés</span></a></li>
-                <li><a id="buttonDeleteCM" tabindex="-1" href="#"><span id="contextMenu.delete.text">Supprimer</span></a></li>
+<div class="container">
+
+<div class="blog-header">
+    <h1 class="blog-title">VideoEditorJS - Blog</h1>
+
+    <p class="lead blog-description">Editeur de vidéo en ligne 100% HTML5/JAVASCRIPT</p>
+</div>
+
+<div class="row">
+
+    <div class="col-sm-8 blog-main">
+        <ol class="breadcrumb">
+            <li>
+                <a href="index.html">Home</a></br>
+                <a href="developmentandconstruction.html">Développement & construction du project</a>
+                <ul><a href="manageProject.html">Gestion des projects</a></ul>
+                <ul><a href="addFile.html">Ajout des fichiers</a></ul>
+                <ul><a href="textElement.html">Text Element</a></ul>
+                <ul><a href="multimediaRecord.html">Enregistrement audio & vidéo</a></ul>
+                <ul><a href="manageTracks.html">Gestion des pistes et des éléments</a></ul>
+                <ul><a href="audioSpectrum.html">Spectre audio</a></ul>
+                <ul><a href="terminalJS.html">TerminalJS</a></ul>
+                <ul><a href="finalRender.html">Rendu final</a></ul>
+            </li>
+            <li>
+                <a href="#">Problèmes & difficultés rencontrées</a>
+                <ul><a href="elementsOverlay.html">Superposition des éléments</a></ul>
+                <ul><a href="audioSpectrumGeneration.html">Génération du spectre audio</a></ul>
+                <ul><a href="weakPoints.html">Points faibles</a></ul>
+            </li>
+        </ol>
+
+        <div class="blog-post">
+            <h2 class="blog-post-title">VideoEditorJS c'est quoi ?</h2>
+            <ul>
+                <li>
+                    <h4>Origine du project</h4>
+                    <p>Le project a été crée pour permettre une fonctionnalité vidéo sur CLangue.</p>
+                </li>
+                <li>
+                    <h4>Fonctionnement</h4>
+                    <p>A partir de plusieurs modules développés en extérieur, le projet a été formé.</p>
+                </li>
             </ul>
         </div>
-        <nav class="navbar navbar-default" role="navigation">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span> <span id="menu.project.title.text">Projet</span> <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="newProject(true);"><span class="glyphicon glyphicon-plus"></span> <span id="menu.project.new.text">Nouveau</span></a></li>
-                                <li><a href="#" onclick="openProject();"><span class="glyphicon glyphicon-th"></span> <span id="menu.project.projects.text">Mes projets</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" onclick="saveProject();"><span class="glyphicon glyphicon-floppy-disk"></span> <span id="menu.project.save.text">Sauvegarder</span></a></li>
-                                <li><a href="#" onclick="currentProject.switchAutoSave();"><span id="iconAutoSave" class="glyphicon glyphicon-unchecked"></span> <span id="menu.project.autoSave.text">Sauvegarde Automatique</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" onclick="rConsole();"><span id="iconRConsole" class="glyphicon glyphicon-unchecked"></span> <span id="menu.project.console.text">Afficher la console</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"><span id="menu.project.project.text">Projet</span> : <span id="projectDropdown">--</span></a></li>
-                                <li><a href="#"><span id="menu.project.lastSave.text">Dernière sauvegarde</span> : <span id="lastSaveDropdown">--</span></a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> <span id="menu.file.title.text">Fichier</span> <span id="countUploads" class="badge">0</span> <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="$('#fileLoader').click();"><span class="glyphicon glyphicon-file"></span> <span id="menu.file.externalFile.text">Fichier externe</span></a></li>
-                                <li><a href="#" onclick="newTextElement();"><span class="glyphicon glyphicon-text-width"></span> <span id="menu.file.textElement.text">Elément Text</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" onclick="newRecord(TYPE.VIDEO);"><span class="glyphicon glyphicon-facetime-video"></span> <span id="menu.file.videoRecord.text">Enregistrement vidéo</span></a></li>
-                                <li><a href="#" onclick="newRecord(TYPE.AUDIO);"><span class="glyphicon glyphicon-record"></span> <span id="menu.file.audioRecord.text">Enregistrement audio</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" onclick="uploadManagerModal();"><span class="glyphicon glyphicon-upload"></span> <span id="menu.file.uploadManager.text">Gestionnaire d'envoi</span></a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> <span id="menu.track.title.text">Piste</span> <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" onclick="addTracks();"><span class="glyphicon glyphicon-oil"></span> <span id="menu.track.newVideoAudio.text">Vidéo/Audio</span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" onclick="addTrack(TYPE.VIDEO);"><span class="glyphicon glyphicon-film"></span> <span id="menu.track.newVideo.text">Vidéo</span></a></li>
-                                <li><a href="#" onclick="addTrack(TYPE.AUDIO);"><span class="glyphicon glyphicon-music"></span> <span id="menu.track.newAudio.text">Audio</span></a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#" onclick="renderModal();" ><span class="glyphicon glyphicon-film"></span> <span id="menu.render.title.text">Rendu</span></a>
-                        </li>
-                    </ul>
 
-                    <form class="navbar-form navbar-left">
+        <div class="blog-post">
+            <h2 class="blog-post-title">Modifications détaillées</h2>
 
-                        <button type="button" onclick="zoomLess();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-out"></span></button>
-                        <div class="form-group">
-                            <input class="form-control" type="range" id="zoomRange" step="1" onchange="changeZoom(this.value, false);" style="display: inline-block; width: 150px;" name="zoom" min="1" value="5" max="20">
-                        </div>
-                        <button type="button" onclick="zoomPlus();" class="btn btn-default"><span class="glyphicon glyphicon-zoom-in"></span></button>
-
-                    </form>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><p id="currentProject" class="navbar-text strong"><span id="menu.projectStatus.noProject.text">Aucun projet.</span></p></li>
-                        <li><button onclick="saveProject();" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-save"></span></button></li>
-                    </ul>
-
-
-                </div>
-            </div>
-        </nav>
-        <div id="globalEdit">
-            <div class="col-md-9 chronologicalView">
-                <div class="timeTrack">
-                    <canvas id="timeBarCanvas"></canvas>
-                </div>
-                <div id="tracks">
-                    <div id="videoTracks">
-                        <div id="videoInfo" class="trackInfo"></div>
-                        <div id="videoView" class="trackView"></div>
-                    </div>
-                    <div id="audioTracks">
-                        <div id="audioInfo" class="trackInfo"></div>
-                        <div id="audioView" class="trackView"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 filesList">
-                <div id="listFiles" class="list-group listFiles">
-                    <span id="file.listFiles.noFile.text">Aucun fichier.</span>
-                    <span id="file.listFiles.note.text" class="textNote">Glissez des fichiers ou cliquez sur fichier.</span>
-                </div>
-                <div style="display: none;">
-                    <input type="file" id="fileLoader" onchange="addFile(this.files[0]);"/>
-                    <input type="file" id="fileUploadLoader"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <footer>
-        <p><a href="#">VideoEditorJS</a> <span id="footer.info.text">par Dylan Delaporte et Guillaume Villena - Project d'ISN 2015</span></p>
-    </footer>
-
-    <pre id="console" style="display: none;">-VEJS CONSOLE-</pre>
-
-    <div id="startLoadingEditor" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 id="start.welcome.text" class="modal-title">Bienvenue sur VideoEditorJS</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner" role="listbox">
-                            <div class="item active">
-                                <img data-holder-rendered="true" src="img/tutorial_step1.jpg" alt="900x500">
-                                <div class="carousel-caption blackColor">
-                                    <h3 id="start.tutorial.step1.title.text">Etape 1 : Ajouter des fichiers</h3>
-                                    <p id="start.tutorial.step1.note.text">Déposez des fichiers dans la liste des fichiers ou alors ajouter des éléments textes, des enregistrement vidéo ou audio à partir de la barre d'outils.</p>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <img data-holder-rendered="true" src="img/tutorial_step2.jpg" alt="900x500">
-                                <div class="carousel-caption blackColor">
-                                    <h3 id="start.tutorial.step2.title.text">Etape 2 : Ajouter des pistes</h3>
-                                    <p id="start.tutorial.step2.note.text">Cliquez sur pistes dans la barre d'outils et ajoutez un piste soudée vidéo/audio, vidéo ou audio.</p>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <img data-holder-rendered="true" src="img/tutorial_step3.jpg" alt="900x500">
-                                <div class="carousel-caption blackColor">
-                                    <h3 id="start.tutorial.step3.title.text">Etape 3 : Ajouter des elements sur les pistes</h3>
-                                    <p id="start.tutorial.step3.note.text">Déposez les éléments (fichiers ajoutés) sur les pistes.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                    <hr>
-                    <div id="loadingProgressProject">
-                        <div class="progress progress-striped active">
-                            <div id="progressLoadJS" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                <span class="sr-only">0% Complete</span>
-                            </div>
-                        </div>
-                        <span class="marginauto strong"><span id="start.loadingJS.text">Chargement en cours ...</span> <span id="percentProgress">--</span></span>
-                    </div>
-                    <div id="enterUsername" style="display: none;">
-                        <form method="post" onsubmit="setUsername(this.usernameSession.value);return false" class="form-horizontal">
-                            <div class="form-group">
-                                <label id="start.username.text" class="col-sm-2 control-label">Pseudo</label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="usernameSession" name="usernameSession" class="form-control" placeholder="Pseudo">
-                                    <span id="start.note.text" class="textNote">Le compte sera automatiquement crée s'il n'existe pas.</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label id="start.translation.text" class="col-sm-2 control-label">Traduction</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" onchange="loadTranslation(this.value);">
-                                        <option value="fr">Français/French</option>
-                                        <option value="en">Anglais/English</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="submit" id="start.buttonContinue" class="btn btn-primary"><span id="start.buttonContinue.text">Continuer</span></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div id="startUseProject" style="display: none;">
-                        <div id="listExistingProjects"><span id="start.loadingProjects.text">Chargement des projets ...</span></div>
-                        <hr>
-                        <a href="#" id="start.buttonNewProject" onclick="newProject(false);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> <span id="start.buttonNewProject.text">Projet</span></a>
-                    </div>
-                    <div id="notAvailableBrowser" style="display: none;">
-                        <p id="start.notCompatibleBrowser.text">Votre navigateur n'est pas compatible. Utilisez Firefox ou Chrome pour continuer.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="newProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title"><span id="project.modal.new.title.text">Nouveau projet</span></h4>
-                </div>
-                <div class="modal-body">
-                    <form method="post" onsubmit="saveNewProject(this.nameProject.value);return false" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span id="project.modal.new.name.text">Nom</span></label>
-                            <div class="col-sm-10">
-                                <input type="text" id="nameProject" name="nameProject" class="form-control" placeholder="Nom">
-                                <span id="project.modal.new.note.text" class="textNote">Pour une compatibilité maximale, les accents seront retirés.</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary"><span id="project.modal.new.buttonSave.text">Enregistrer</span></button>
-                                <button type="button" id="buttonBackAddProject" class="btn btn-default" data-dismiss="modal"><span id="project.modal.new.buttonBack.text">Retour</span></button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="alreadyExistProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Project existant</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Ce projet existe déjà, êtes-vous sûr de vouloir l'écraser ? Toutes les données seront perdues.</p>
-                    <div class="btn-toolbar">
-                        <button type="button" onclick="overwriteProject();" class="btn btn-success">Oui</button>
-                        <button type="button" onclick="newProject(false);" class="btn btn-danger">Non</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="selectProjectModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Mes projets</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="listProjects" class="list-group">Chargement des projets ...</div>
-                    <hr>
-                    <button type="button" onclick="newProject(true);" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span> Projet</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Retour</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="uploadFileModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Envoyer le fichier</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Votre fichier s'est mal envoyé ou vous avez fermé la fenêtre trop tôt. Il est nécessaire d'avoir le fichier pour le rendu final.</p>
-                    <button type="button" onclick="$('#fileUploadLoader').click();" class="btn btn-primary btn-lg">Sélectionner un fichier</button>
-                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Annuler</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="uploadManagerModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Gestionnaire d'envoi</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="listUploads" class="list-group">Aucun envoi.</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="filePropertiesModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Propriétés du fichier</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 id="nameFileP" class="panel-title">File</h3>
-                        </div>
-                        <table class="table">
-                            <tbody>
-                            <tr><td class="titleTableProperties">Type</td><td id="typeFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Taille</td><td id="sizeFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Format</td><td id="formatFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Durée</td><td id="durationFileP"></td></tr>
-                            <tr><td class="titleTableProperties">Aperçu</td><td id="previewFileP"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-info" id="fileEditButton" data-dismiss="modal">Edit</button>
-                    <button type="button" class="btn btn-danger" id="fileRemoveButton" data-dismiss="modal">Remove</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="textElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Elément Texte</h4>
-                </div>
-                <div class="modal-body">
-                    <nav class="navbar navbar-default" role="navigation">
-                        <div class="container-fluid">
-                            <div class="collapse navbar-collapse">
-                                <form class="navbar-form navbar-left">
-                                    <div class="form-group">
-                                        <select id="fontText" onchange="currentManageTextElement.changeFont(this.value);" class="form-control">
-                                            <option>Calibri</option>
-                                            <option>Times New Roman</option>
-                                            <option>Arial</option>
-                                            <option>Verdana</option>
-                                        </select>
-                                    </div>
-                                </form>
-                                <form class="navbar-form navbar-left">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input id="sizeText" type="range" class="form-control" min="10" max="100" step="2" onchange="currentManageTextElement.changeSizeText(this.value);">
-                                            <span class="input-group-addon"><span id="sizeTextInfo"></span>px</span>
-                                        </div>
-                                    </div>
-                                </form>
-                                <ul class="nav navbar-nav btn-group">
-                                    <input type="color" id="colorText" class="form-control navbar-btn" onchange="currentManageTextElement.changeColor(this.value);">
-                                </ul>
-                                <ul class="nav navbar-nav btn-group" data-toggle="buttons">
-                                    <label class="btn btn-default navbar-btn">
-                                        <input type="radio" name="options" onchange="currentManageTextElement.changeTextAlign('left');" autocomplete="off"><span class="glyphicon glyphicon-align-left"></span>
-                                    </label>
-                                    <label class="btn btn-default navbar-btn active">
-                                        <input type="radio" name="options" onchange="currentManageTextElement.changeTextAlign('center');" autocomplete="off" checked><span class="glyphicon glyphicon-align-center"></span>
-                                    </label>
-                                    <label class="btn btn-default navbar-btn">
-                                        <input type="radio" name="options" onchange="currentManageTextElement.changeTextAlign('right');" autocomplete="off"><span class="glyphicon glyphicon-align-right"></span>
-                                    </label>
-                                </ul>
-                                <ul class="nav navbar-nav navbar-right">
-                                    <button type="button" onclick="saveTextElement();" id="buttonSaveTextElement" class="btn btn-primary navbar-btn" disabled=""><span class="glyphicon glyphicon-ok"></span></button>
-                                    <button type="button" class="btn btn-default navbar-btn" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                    <textarea name="text" id="textTextElement" style="width: 0px;height: 0px;overflow:hidden" onkeyup="currentManageTextElement.updateText(this.value)"></textarea>
-                    <canvas id="textElement"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="recordFileModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Enregistrement fichier Vidéo/Audio</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="videoRecord">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <video id="video" height="auto" width="100%"></video>
-                                <audio id="audio" width="100%" ></audio>
-                                <button type="button" id="recordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-record"></span></button>
-                                <button type="button" id="playPauseRecordVideoButton" class="btn btn-sm btn-default"><span id="spanPlayPause" class="glyphicon glyphicon-play"></span></button>
-                                <button type="button" id="stopRecordVideoButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-stop"></span></button>
-                            </div>
-                            <div class="col-md-4">
-                                Nom : <input class="form-control" id="fileName" type="text"/><br>
-                                Durée : <span id="durationVideoRecord">0s</span><br/>
-                                <div id="videoRecorderErrorText" style="display: none" class="alert alert-danger">Pour pouvoir valider l'enregistrement vidéo ou audio vous devez lui donner un nom !</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                    <button type="button" id="buttonSaveRecord" class="btn btn-primary" disabled>Sauvegarder l'enregistrement</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="loadingDivConvert" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar" id="progressRender"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                            <span class="sr-only">100% Complete</span>
-                        </div>
-                    </div>
-                    <span id="renderText" class="marginauto"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="elementPropertiesModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Propriétés de l'élement</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 id="nameElementP" class="panel-title">Element</h3>
-                        </div>
-                        <table class="table">
-                            <tbody>
-                            <tr><td class="titleTableProperties">Fichier</td><td id="fileElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Type</td><td id="typeElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Ami</td><td id="parentElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Couleur</td><td><input type="color" id="colorElementP" class="form-control"></td></tr>
-                            <tr><td class="titleTableProperties">Dimensions</td><td id="sizeElementP"><canvas id="canvasElementProperties" width="250" height="35"></canvas></td></tr>
-                            <tr><td class="titleTableProperties">Aperçu</td><td id="previewElementP"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Durées</h3>
-                        </div>
-                        <table class="table">
-                            <tbody>
-                            <tr><td class="titleTableProperties">Durée totale</td><td id="totalDElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Durée initiale</td><td id="initialDElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Redimension gauche</td><td id="resizeLElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Redimention droite</td><td id="resizeRElementP"></td></tr>
-                            <tr><td class="titleTableProperties">Position piste</td><td id="positionElementP"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-danger" id="removeElementButton" data-dismiss="modal">Supprimer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="opacityElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 id="opacityElement" class="modal-title">Opacité de l'élément</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="range" id="opacityRange" step="1" min="0" max="100" class="form-control">
-                    <span>
-                        <span id="opacityRangeValue">0</span>
-                        /100
-                    </span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="volumeElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <form class="form-inline">
-                        <div class="form-group">
-                            <input type="range" id="volumeRange" step="1" min="0" max="100" class="form-control">
-                        </div>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="deleteTrackModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Supprimer une piste</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Cette opération supprimera tous les éléments de la piste, une confirmation est requise.</p>
-                    <div id="haveParentTrack">
-                        Voulez-vous supprimer la piste parente <span id="parentTrack"></span> ?
-                        <br/><br/>
-                        <div class="btn-group" data-toggle="buttons">
-                            <label id="labelDeleteY" class="btn btn-info active">
-                                <input type="radio" name="radioDelete" id="radioDeleteY" autocomplete="off" checked> Oui
-                            </label>
-                            <label id="labelDeleteN" class="btn btn-info">
-                                <input type="radio" name="radioDelete" id="radioDeleteN" autocomplete="off"> Non
-                            </label>
-                        </div>
-                        <br/>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="buttonDeleteTrack" class="btn btn-danger">Continuer</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="deleteElementModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Supprimer un élément</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Cette opération supprimera l'élément, une confirmation est requise.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="buttonDeleteElement" class="btn btn-danger">Continuer</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="renderModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title"><span id="render.modal.title.text">Rendu</span></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><span id="render.modal.create.text">Créer un rendu</span></h3>
-                        </div>
-                        <div class="panel-body">
-                            <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="renderFormat"><span id="rendu.modal.format.text">Format du rendu</span></label>
-                                    <select name="renderFormat" id="renderFormat">
-                                        <option value="MPEG4">.mp4 ( mpeg4 )</option>
-                                        <option value="X264">.mp4 ( x264 )</option>
-                                        <option value="TS">.ts</option>
-                                        <option value="AVI">.avi</option>
-                                        <option value="OGG">.ogg</option>
-                                        <option value="WEBM">.webm</option>
-                                    </select>
-                                </div>
-                                <button type="submit" id="render.modal.buttonStart" onclick="makeRender();" class="btn btn-default"><span id="render.modal.buttonStart.text">Lancer</span></button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default renderStats">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><span id="render.modal.progression.text">Avancement du rendu</span></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="progress">
-                                        <div class="progress-bar" id="renderProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <span id="startedDate"></span>
-                                </div>
-                                <div class="col-md-5">
-                                    <span id="SrvLoad"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default" >
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><span id="render.modal.renders.text">Mes rendus</span> <button onclick="listAvailableRenderFiles();" class="pull-right btn btn-xs btn-info"><span class="glyphicon glyphicon-refresh"></span></button></h3>
-                        </div>
-                        <ul class="list-group" id="renderList"></ul>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><span id="render.modal.buttonClose.text">Fermer</span></button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="viewRenderModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Rendu</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <video src="" id="videoRender" controls="" autoplay=""></video>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="document.getElementById('videoRender').pause();" data-dismiss="modal">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="waitRecordRTCModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Autorisations</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div id="RTCInfo" class="alert alert-info">
-                        Pour pouvoir utiliser cette fonctionnalité,
-                        vous devez valider l'autorisation d'acces au microphone ou a votre webcam.
-                        </div>
-                        <div id="RTCError" class="alert alert-danger">
-                            Il nous est impossible d'obtenir une autorisation de l'utilisation de votre microphone ou webcam.
-                            <br>
-                            Pour que l'enregistrement fonctionne, vous devez brancher à votre ordinateur, un microphone ou une webcam.
-                            <br>
-                            Verifiez votre matériel.
-                            <br><br>
-                            <button type="button" id="closeWaitRecordModal" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="loadModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="progress progress-bar-success progress-striped active">
-                        <div id="progressionBar" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                            <span class="sr-only">100% Complete</span>
-                        </div>
-                    </div>
-                    <span id="progressionStatus" class="marginauto">Chargement en cours ...</span>
-                </div>
-            </div>
+            <p>L'ensemble des modifications apportées au projet sont enregistrées sur Github avec un commentaire et
+                le code modifié. Voici l'historique des modifications.</p>
+			<div id="githubCommits"><img src="img/ajax-loader.gif"></div>
         </div>
     </div>
 
-</div>
+    <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+        <div class="sidebar-module sidebar-module-inset">
+            <h4>A propos</h4>
 
-<div id="audioWaveform" style="visibility: hidden">
-    <div id="waveform">
-        <!-- Here be the waveform -->
+            <p>VideoEditorJs (abrégé VEJS), est un projet qui a pour but de permettre le montage vidéo a ceux qui
+                qui n'ont pas les logiciel necessaire, ni les compétence.
+                VEJS, devrait à terme être associé a site clangue, dans le but d'y proposer l'enregistrement vidéo
+                en plus de l'enregistrement audio.
+                Ce projet, est aussi conçus dans l'optique qu'il devienne un module utilisable facilement sur
+                d'autres sites.</p>
+        </div>
+        <div class="sidebar-module">
+            <h4>Accès au projet</h4>
+            <ol class="list-unstyled">
+                <li><a href="https://github.com/DGIProject/VideoEditorJS" target="_blank">GitHub</a></li>
+                <li><a href="http://clangue.net/other/testVideo" target="_blank">Site</a></li>
+            </ol>
+        </div>
     </div>
 </div>
+</div>
 
-<script src="js/jquery-latest.js"></script>
-<script src="js/jquery.noty.packaged.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/loadEditor.js"></script>
-<script src="//recordrtc.org/latest.js"></script>
+<footer class="blog-footer">
+    <p>
+        <a href="#">Haut de page</a>
+    </p>
+</footer>
 
-<div id="loadScripts"></div>
 
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="js/commits.js"></script>
 </body>
 </html>

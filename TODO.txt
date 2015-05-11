@@ -1,2 +1,0 @@
-TODO : saveProject
-TODO : tutorial start hide
