@@ -58,31 +58,25 @@
             </ol>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">Gestion des pistes</h2>
-                <p>C'est une des parties les plus complexes du projet après le rendu, il ne s'agit pas seulement
-                    de la création des pistes mais aussi du déplacement des éléments sur les pistes fait à
-                    partir du canvas.</p>
-                <hr>
-                <p>Le canvas est une zone de dessin vectorielle et s'utilise avec la balise CANVAS. Il y a donc un élement canvas pour chaque piste où seront dessinés les élements.</p>
-				<ul>
-					<li>
-						<h4>Création des pistes</h4>
-						<p>
-							La fonction d'ajout des pistes s'est compliquée depuis que la fonction de chargement des projets est en place, en effet,
-							l'ajout d'une piste se fait par deux (piste vidéo et audio) mais lors du chargement du projet et pour éviter de créer une nouvelle fonction,
-							le chargement des pistes se fait une par une.
-						</p>
-					</li>
-					<li>
-						<h4>Ajout des élements</h4>
-						<p>
-							Les élements sont toujours source d'erreur, non pas pour leur ajout mais pour leur positionnement sur la piste.
-							Les positions changent en permanence lors du déplacement sur la piste et il faut vérifier s'il n'y à pas d'autres
-							élements, dans ce cas il y aura une collision.</br>
-							Pour effectuer ces déplacement, nous utilisons les évènements.
-						</p>
-					</li>
-				</ul>
+                <h2 class="blog-post-title">Génération du spectre Audio</h2>
+                <p>
+                    La génération du spectre audio a été plutôt difficile car il existe de nombreuses possibilités pour ce faire.
+                    <br>
+                    la première idée a été l'utilisation de Gnuplot, un programme fonctionnant sous GNU/Linux et présentant des capacités de dessin graphique presque infinie.
+                    <br/>
+                    Mais, en peu de temps nous avons été confronté à un problème majeur. Ce programme n'est pas disponible en version recompilé JavaScript.<br/>
+                    Recompiler en JavaScript, implique l'utilisation de Emscripten, un système de compilation permettant de traduire les programmes coder initialement en C/C++ vers du JavaScript.
+                    GnuPlot est un programme qui a déjà été recompilé, mais avec des fonctionnalités en moins, qui ne permettent pas de faire ce que nous cherchions de manière efficace.
+                    <br/>
+                    Ce projet à tout de même été intégré dans le but faire des essais, mais ceux-ci n'étaient pas concluant, mais il a permis de renforcer l'utilité de TerminalJs codé pour rassembler les programmes externes.
+                    <br/>
+                    <br/>
+                    Nous avons par la suite, trouvé quelques projets conçu par la BBC qui eux aussi étaient eux aussi fonctionnel sous GNU/Linux, et donc impliquaient aussi l'utilisation de Emscripten.
+                    <br/>
+                    De la même façon que pour GNUPlot, les dépendances du programme étaient complexes à compiler pour Javascript, car elles demandaient elles même des dépendances qui ne pouvaients pas êtres satisfaites.
+                    <br/><br/> Nous avons donc décidé de chercher autre chose et nous avons donc trouvé une librairie JavaScript, qui nous permettaient de reproduire une interface à la manière d'Audacity.
+                    Nous avons donc modifié le projet initial afin d'obtenir, uniquement ce que l'on souhaitait obtenir. C'est ce projet qui a été retenu pour créer la forme d'onde, de manière simple et efficace au format png en utilisant les CANVAS ( images vectorielles ).
+                    </p>
             </div>
         </div>
 

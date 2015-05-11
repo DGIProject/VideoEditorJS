@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>VideoEditorJS - Blog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="container">
+
+    <div class="blog-header">
+        <h1 class="blog-title">VideoEditorJS - Blog</h1>
+
+        <p class="lead blog-description">Editeur de vidéo en ligne 100% HTML5/JAVASCRIPT</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-8 blog-main">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="index.html">Home</a></br>
+                    <a href="developmentandconstruction.html">Développement & construction du project</a>
+                    <ul><a href="manageProject.html">Gestion des projects</a></ul>
+                    <ul><a href="addFile.html">Ajout des fichiers</a></ul>
+                    <ul><a href="textElement.html">Text Element</a></ul>
+                    <ul><a href="multimediaRecord.html">Enregistrement audio & vidéo</a></ul>
+                    <ul><a href="manageTracks.html">Gestion des pistes et des éléments</a></ul>
+                    <ul><a href="audioSpectrum.html">Spectre audio</a></ul>
+                    <ul><a href="terminalJS.html">TerminalJS</a></ul>
+                    <ul><a href="finalRender.html">Rendu final</a></ul>
+                </li>
+                <li>
+                    <a href="#">Problèmes & difficultés rencontrées</a>
+                    <ul><a href="elementsOverlay.html">Superposition des éléments</a></ul>
+                    <ul><a href="audioSpectrumGeneration.html">Génération du spectre audio</a></ul>
+                    <ul><a href="renderProblems.html">Rendu des projets</a></ul>
+                    <ul><a href="weakPoints.html">Points faibles</a></ul>
+                </li>
+            </ol>
+
+            <div class="blog-post">
+                <h2 class="blog-post-title">Terminal JS</h2>
+                <p>Cette fonctionnalité a été introduite récement, dans un but d'obtimisation de l'utilisation
+                    des ressources, et une meilleur flexibilité et reactivité des programmes utilisé.</p>
+                <ul>
+                    <li>
+                        <h4>Principe de base :</h4>
+                        <div>
+                            <p>
+                                Le "Terminal JavaScript" permet l'exécution de programmes C/C++, via javacript grâce à
+                                l'utilisation de
+                                <a href="https://github.com/kripken/emscripten">emscripten</a>. Ces programmes fonctionnent
+                                donc de la même façon que s'il était exécuté depuis une machine, appelé avec des arguments.
+                                Le but de ce "projet" parallèle est de permettre une meilleure modularité, via l'ajout
+                                de commandes.
+                                <br/> Par exemple si l'on souhaite exécuter ffmpeg (et uniquement lui ), auparavant il fallaitutiliser ce
+                                morceau de code (la ligne "arguments" sont les arguments envoyés a ffmpeg) :
+                            </p>
+                        <pre>
+worker.postMessage({
+    type: "command",
+    arguments: parseArguments("-i fichier.mov sortie.mp4"),
+    files: []
+});
+                            </pre>
+                            <p>la même commande depuis un terminal sous linux :</p>
+                            <pre>
+ffmpeg -i fichier.mov sortie.mp4
+                            </pre>
+                            <p>et maintenant grâce à la classe Terminal développé ( il est aussi possible d'exécuter n'importe quel programme "Js" de manière "dynamique" ) (ici "callback" est un paramètre de la
+                                fonction, permettant d'exécuter une fonction personnalisée en fin de traitement), :</p>
+                        <pre>
+var terminal = new Terminal(); // initialisation de la classe
+                            ...
+terminal.Files.push({name:"fichier.mov", data: fileData}); // envois du fichier en  mémoire
+terminal.processCmd("ffmpeg -i fichier.mov sortie.mp4",callback) // envois de la commande
+                        </pre>
+                            <p>
+                                Bien évidemment il est possible de part la flexibilité qui a été donnée a cette classe de rajouter et développer nos propres "programme".
+                                <br/> Ainsi, actuellement 3 programmes sont utilisés.
+                            <ul>
+                                <li>ffmpeg</li>
+                                <li>Gnuplot</li>
+                                <li>list</li>
+                            </ul>
+                            <br/>
+                            Le programme <code>list</code> est un programme maison permettant d'afficher la liste de ceux qui sont disponnibles
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <h4>Fonctionnement</h4>
+                        <p>
+                            Le fonctinnemrnt est plutôt simple, lorsqu'une commande est envoyée, automatiquement, un processus JavaScript parallèle est créé, c'est ce que l'on appelle
+                            les workers, ces instances JavaScript peuvent exécuter des instructions sans bloquer le traitement de la page visible.
+                            <br/>
+                            De cette manière, cela permet par exemple de lancer deux commandes à un instant identique. Dans ce cas, deux worker seront créés, et exécuteront le code correspondant au "programme" lancé.
+                            <br>
+                            La fonction callback, est une fonction transmit en paramètre, et permet de définir une fonction personnalisée, qui sera exécuté, à chaque message retourné du worker.
+                            il n'existe qu'une seule façon de communiquer avec un worker, c'est d'utiliser la fonction <code>postMessage();</code>.
+                            <br/><br/>
+                            Pour visualiser le code source complet de la classe : <a href="https://github.com/DGIProject/VideoEditorJS/blob/master/terminal/TerminalJs.js">TerminalJs</a></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <div class="sidebar-module sidebar-module-inset">
+                <h4>A propos</h4>
+
+                <p>VideoEditorJs (abrégé VEJS), est un projet qui a pour but de permettre le montage vidéo a ceux qui
+                    qui n'ont pas les logiciel necessaire, ni les compétence.
+                    VEJS, devrait à terme être associé a site clangue, dans le but d'y proposer l'enregistrement vidéo
+                    en plus de l'enregistrement audio.
+                    Ce projet, est aussi conçus dans l'optique qu'il devienne un module utilisable facilement sur
+                    d'autres sites.</p>
+            </div>
+            <div class="sidebar-module">
+                <h4>Accès au projet</h4>
+                <ol class="list-unstyled">
+                    <li><a href="https://github.com/DGIProject/VideoEditorJS" target="_blank">GitHub</a></li>
+                    <li><a href="http://clangue.net/other/testVideo" target="_blank">Site</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="blog-footer">
+    <p>
+        <a href="#">Haut de page</a>
+    </p>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

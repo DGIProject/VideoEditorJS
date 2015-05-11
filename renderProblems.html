@@ -58,31 +58,30 @@
             </ol>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">Gestion des pistes</h2>
-                <p>C'est une des parties les plus complexes du projet après le rendu, il ne s'agit pas seulement
-                    de la création des pistes mais aussi du déplacement des éléments sur les pistes fait à
-                    partir du canvas.</p>
-                <hr>
-                <p>Le canvas est une zone de dessin vectorielle et s'utilise avec la balise CANVAS. Il y a donc un élement canvas pour chaque piste où seront dessinés les élements.</p>
-				<ul>
-					<li>
-						<h4>Création des pistes</h4>
-						<p>
-							La fonction d'ajout des pistes s'est compliquée depuis que la fonction de chargement des projets est en place, en effet,
-							l'ajout d'une piste se fait par deux (piste vidéo et audio) mais lors du chargement du projet et pour éviter de créer une nouvelle fonction,
-							le chargement des pistes se fait une par une.
-						</p>
-					</li>
-					<li>
-						<h4>Ajout des élements</h4>
-						<p>
-							Les élements sont toujours source d'erreur, non pas pour leur ajout mais pour leur positionnement sur la piste.
-							Les positions changent en permanence lors du déplacement sur la piste et il faut vérifier s'il n'y à pas d'autres
-							élements, dans ce cas il y aura une collision.</br>
-							Pour effectuer ces déplacement, nous utilisons les évènements.
-						</p>
-					</li>
-				</ul>
+                <h2 class="blog-post-title">Rendu</h2>
+                <p>
+                    Cette partie n'a pas été une des plus faciles, dans ces quelques lignes nous allons découvrir pourquoi.
+                </p>
+                <hr/>
+                <p>
+                    Les problèmes liés au rendu sont multiples et peuvent se découper en deux parties principales :                    <ul>
+                        <li>
+                            La classe Render.js, a au cours du temps subi de nombreuses modifications, qui dépendent directement de la façon dont sont traités éléments.
+                            Ainsi la venu de nouvelles fonctionnalités comme la possibilité de créer plusieurs pistes audio, vidéo ou encore le changement de volume des pistes audio,
+                            nous ont amené à faire de nombreuses modifications, rendant de plus en plus complexe la traduction de ce qui visuellement partait simple, en une suite d'instructions
+                            lisible par le serveur de traitement.
+                        </li>
+                        <li>
+                            Le rendu fut aussi un problème dans la mesure où les pistes vidéos et audios doivent traitées séparément.
+                            <br/>
+                            Le principal problème provient des pistes vidéos. Il faut fixer une base et donc nous avons choisi que la première piste était prioritaire sur toutes les autres.
+                            <br/>
+                            Lorsque qu'un vide existe entre deux éléments d'une même piste, il faut chercher récursivement sur toutes les autres pistes vidéos s'il existe un élément qui coïncide avec l'espace disponible.
+                            Tout cela dans le but de produire en mémoire une seule et unique piste vidéo avec tous les éléments des autres pistes (en exploitant la gestion des collisions décrite plus tôt).
+                            <br/>
+                            Après cette étape, le plus dur est fait, il suffit de traiter les pistes simplement, peu importe son type.                        </li>
+                    </ul>
+                </p>
             </div>
         </div>
 

@@ -58,31 +58,47 @@
             </ol>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">Gestion des pistes</h2>
-                <p>C'est une des parties les plus complexes du projet après le rendu, il ne s'agit pas seulement
-                    de la création des pistes mais aussi du déplacement des éléments sur les pistes fait à
-                    partir du canvas.</p>
-                <hr>
-                <p>Le canvas est une zone de dessin vectorielle et s'utilise avec la balise CANVAS. Il y a donc un élement canvas pour chaque piste où seront dessinés les élements.</p>
-				<ul>
-					<li>
-						<h4>Création des pistes</h4>
-						<p>
-							La fonction d'ajout des pistes s'est compliquée depuis que la fonction de chargement des projets est en place, en effet,
-							l'ajout d'une piste se fait par deux (piste vidéo et audio) mais lors du chargement du projet et pour éviter de créer une nouvelle fonction,
-							le chargement des pistes se fait une par une.
-						</p>
-					</li>
-					<li>
-						<h4>Ajout des élements</h4>
-						<p>
-							Les élements sont toujours source d'erreur, non pas pour leur ajout mais pour leur positionnement sur la piste.
-							Les positions changent en permanence lors du déplacement sur la piste et il faut vérifier s'il n'y à pas d'autres
-							élements, dans ce cas il y aura une collision.</br>
-							Pour effectuer ces déplacement, nous utilisons les évènements.
-						</p>
-					</li>
-				</ul>
+                <h2 class="blog-post-title">Rendu final</h2>
+                <p>
+                    La phase de rendu final a été une des plus longue puisqu'elle a été à plusieurs reprise recontrustruite pour s'adapter aux évolution du projet.
+                    <br/> Cependant, sont fonctionnement reste globalement le même.
+                </p>
+                <hr/>
+                    <h4>Pricipe de base</h4>
+                    <p>
+                        La phase de Rendu final, a pour simple but de transcrire ce que l'utilisateur vois sur sont écran, en une suite d'instruction qui vont permettre la génération d'un fichier video qui correspond au montage réalisé.
+                    </p>
+                    <h4>Fonctionnement</h4>
+                    <p>
+                        Le Rendu final ce découpe en trois principales étapes :
+                        <br/>
+                        <ul>
+                            <li>Duplication de l'état des varriables contenant les informations du montage</li>
+                            <li>Construction d'une unique piste vidéo, reflétant la superposition des autres pistes vidéos, en conservant la première comme prioritaire. </li>
+                            <li>Traduction de chaque piste une à une, en ayant préalablement reclasser ( par sécurité ) les éléement par ordre chronologique</li>
+                        </ul>
+                        <br/>
+                        L'enssemble de ces étapes permettent au final, d'obptenir un fichier contenant une liste de commandes.
+                        <br/>
+                        Le traitement final, ne s'éffectue pas du coté de l'utilisateur, mais du côté serveur. A l'aide d'un script BASH,
+                        il nous est possible de calculer l'avancement ainsi que d'executer la liste de commande de chaque projet en attente de traitement.
+                        <br/>
+                        Le traitement, est assuré grâce à FFmpeg ( <a href="https://www.ffmpeg.org/">https://www.ffmpeg.org/</a> ), qui permet de travailler relativement facilement les fichier multimédia.
+                        Celui-ci va être capable de produir par l'execution des commande, deux fichier :
+                        <ul>
+                            <li>l'un au format choisi par l'utilisateur</li>
+                            <li>l'autre au format MP4 x264</li>
+                        </ul>
+                    </p>
+                    <h4> Pourquoi deux fichier vidéo ? </h4>
+                    <p>
+                        Deux fichiers vidéo sont produit, le premier correspondant aux désir de l'utilisateur, le deuxième, présent pour permettre la lecture sur les navigateur web, avant de télécharger le fichier au format demandé.
+                        <br/>
+                        Le deuxième fichier est au mp4 car on peut obtenir des fichiers de petites taille avec le codec x264 pour la vidéo et le codec aac pour l'audio.
+                        <br/> De plus les navigateurs internet récent, supportant les technologies html5, sont capable de lire nativement les contenus videos et audios sur certains formats standardisé dont le mpeg4.
+                        ( voir les spécifications html5 : <a href="http://www.w3.org/TR/html5/embedded-content-0.html#the-video-element">Vidéo</a> | <a href="http://www.w3.org/TR/html5/embedded-content-0.html#the-audio-element">Audio</a>)
+                        La lecture du fichier final ne demmande aucune configuration particulière si ce n'est le fait d'avoir un navigateur web recent et conforme aux spécification html5.
+                    </p>
             </div>
         </div>
 

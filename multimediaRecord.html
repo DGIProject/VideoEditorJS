@@ -58,31 +58,21 @@
             </ol>
 
             <div class="blog-post">
-                <h2 class="blog-post-title">Gestion des pistes</h2>
-                <p>C'est une des parties les plus complexes du projet après le rendu, il ne s'agit pas seulement
-                    de la création des pistes mais aussi du déplacement des éléments sur les pistes fait à
-                    partir du canvas.</p>
-                <hr>
-                <p>Le canvas est une zone de dessin vectorielle et s'utilise avec la balise CANVAS. Il y a donc un élement canvas pour chaque piste où seront dessinés les élements.</p>
-				<ul>
-					<li>
-						<h4>Création des pistes</h4>
-						<p>
-							La fonction d'ajout des pistes s'est compliquée depuis que la fonction de chargement des projets est en place, en effet,
-							l'ajout d'une piste se fait par deux (piste vidéo et audio) mais lors du chargement du projet et pour éviter de créer une nouvelle fonction,
-							le chargement des pistes se fait une par une.
-						</p>
-					</li>
-					<li>
-						<h4>Ajout des élements</h4>
-						<p>
-							Les élements sont toujours source d'erreur, non pas pour leur ajout mais pour leur positionnement sur la piste.
-							Les positions changent en permanence lors du déplacement sur la piste et il faut vérifier s'il n'y à pas d'autres
-							élements, dans ce cas il y aura une collision.</br>
-							Pour effectuer ces déplacement, nous utilisons les évènements.
-						</p>
-					</li>
-				</ul>
+                <h2 class="blog-post-title">Enregistrement audio et vidéo</h2>
+                <p>
+                    L'enregistrement audio/vidéo via le navigateur s'est considérablement simplifié depuis l'arrivée de HTML5.
+                    <br> Clangue.net étant un projet ayant pour principale vocation l'enregistrement en ligne des élèves, cette partie fut relativement simple.</p>
+                <hr/>
+                <p>
+                    le Principe de base a été complètement importé depuis clangue.net, qui permettait l'enregistrement audio uniquement.                </p>
+                <p>
+                    Mais depuis le temps une communauté de développeur ont créé un projet utilisant les technologies html5, pour simplifier le portage des méthodes sur tous les navigateurs.
+                    Ces développeurs ont donc conçu RecordRTC ( <a href="https://github.com/muaz-khan/RecordRTC">lien du projet</a>), qui vise à simplifier cette tâche et permettant l'enregistrement sur des formats natifs à html5 plus facilement,
+                    comme l'OGG pour l'audio, ou le WEBM pour la vidéo.
+                    Cependant, le projet n'est pas encore parfait et demande donc encore une adaptation aux différentes situations. Ainsi pour le navigateur Google Chrome, par exemple
+                    L'enregistrement vidéo ne peut se faire que par l'enregistrement de manière indépendante l'audio et la vidéo. <br>
+                    Ce qui demande donc un traitement avec FFmpeg.js pour combiner ces deux partie, avant d'insérer le fichier dans le projet et de lui faire subir les traitements habituels de n'importe quel fichier importé par l'utilisateur.
+                </p>
             </div>
         </div>
 
