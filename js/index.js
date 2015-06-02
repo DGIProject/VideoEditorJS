@@ -53,8 +53,7 @@ function uId() {
     s4() + '-' + s4() + s4() + s4();
 }
 
-function rowById(id, tab)
-{
+function rowById(id, tab){
     var row = -1;
 
     for(var i = 0; i < tab.length; i++)
@@ -183,8 +182,7 @@ String.prototype.deleteAccent = function(){
     return str;
 };
 
-function findFirstDescendant(parent, tagname)
-{
+function findFirstDescendant(parent, tagname){
     parent = document.getElementById(parent);
     var descendants = parent.getElementsByTagName(tagname);
     if ( descendants.length )
@@ -215,8 +213,7 @@ function dataUrlToBlob(dataURL) {
 
     return new Blob([uInt8Array], {type: contentType});
 }
-function secondToTime(seconds)
-{
+function secondToTime(seconds){
     var hours = parseInt( seconds / 3600 ) % 24;
     var minutes = parseInt( seconds / 60 ) % 60;
     var seconds = seconds % 60;
