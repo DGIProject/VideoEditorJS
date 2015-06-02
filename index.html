@@ -135,6 +135,7 @@
                     <h4 id="start.welcome.text" class="modal-title">Bienvenue sur VideoEditorJS</h4>
                 </div>
                 <div class="modal-body">
+                    <div id="carouselBody">
                     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -173,7 +174,16 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div>
+                    <form class="form-inline" onsubmit="checkboxProsess(this.show.checked);return false;">
+                        <div class="checkbox" style="margin-top: 10px">
+                            <label>
+                                <input name="show" type="checkbox"> <span id="start.welcome.doNotShow">Ne plus afficher</span>
+                            </label>
+                        </div>
+                        <button type="submit" id="start.welcome.buttonUnderstand" style="margin-top: 10px" class="pull-right btn btn-primary" disabled><span id="start.welcome.buttonUnderStand.text" >J'ai compris</span></button>
+                    </form>
                     <hr>
+                    </div>
                     <div id="loadingProgressProject">
                         <div class="progress progress-striped active">
                             <div id="progressLoadJS" class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -182,6 +192,17 @@
                         </div>
                         <span class="marginauto strong"><span id="start.loadingJS.text">Chargement en cours ...</span> <span id="percentProgress">--</span></span>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loginModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="start.welcome.text1" class="modal-title">Bienvenue sur VideoEditorJS</h4>
+                </div>
+                <div class="modal-body">
                     <div id="enterUsername" style="display: none;">
                         <form method="post" onsubmit="setUsername(this.usernameSession.value);return false" class="form-horizontal">
                             <div class="form-group">

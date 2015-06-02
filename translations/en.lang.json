@@ -5,6 +5,18 @@
     	    "id": "start.welcome.text",
     	    "text": "Welcome to VideoEditorJS"
     	},
+        {
+    	    "id": "start.welcome.text1",
+    	    "text": "Welcome to VideoEditorJS"
+    	},
+        {
+            "id" : "start.welcome.doNotShow",
+            "text" : "Do not show this message again"
+        },
+        {
+            "id" : "start.welcome.buttonUnderStand.text",
+            "test" : "I understand"
+        },
 		{
     	    "id": "start.tutorial.step1.title.text",
     	    "text": "Step 1 : Add files"

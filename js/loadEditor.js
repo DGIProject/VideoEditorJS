@@ -51,16 +51,42 @@ imageClose.onload = function() {
 imageClose.src = 'http://clangue.net/other/testVideo/img/remove.png';
 
 window.onload = function() {
+    var cookieValue = getCookie("showC");
+    if (cookieValue !="")
+    {
+        if (cookieValue == "1")
+        {
+            document.getElementById("carouselBody").style.display = "none"
+        }
+    }
     $('#startLoadingEditor').modal('show');
 
     getFileJS();
     loadTranslation('fr');
 };
 
+function setCookie(name, value, expiration) {
+    var d = new Date();
+    d.setTime(d.getTime() + (expiration*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = name + "=" + value + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
 function loadTranslation(fileName) {
     var xhr = xmlHTTP();
 
-    xhr.open("GET", 'translations/' + fileName + '.lang', false);
+    xhr.open("GET", 'translations/' + fileName + '.lang.json', false);
     xhr.send(null);
     if(xhr.readyState != 4 || (xhr.status != 200 && xhr.status != 0)) // Code == 0 en local
         throw new Error("Impossible de charger le fichier de traduction \"" + fileName + ".lang\" (code HTTP : " + xhr.status + ").");
@@ -71,6 +97,20 @@ function loadTranslation(fileName) {
         if(document.getElementById(tabTranslations.translations[i].id) != null)
             document.getElementById(tabTranslations.translations[i].id).innerHTML = tabTranslations.translations[i].text;
     }
+}
+
+function checkboxProsess(checked)
+{
+    console.log("check ? ", checked)
+    if (checked)
+    {
+        setCookie('showC','1', 365);
+        console.log('setCookie');
+    }
+
+    $('#startLoadingEditor').modal('hide');
+    $('#loginModal').modal('show');
+
 }
 
 function getTranslation(id) {
@@ -103,6 +143,18 @@ function getFileJS() {
     }
     else
     {
+        var cookieValue = getCookie("showC");
+        if (cookieValue !="")
+        {
+            if (cookieValue == "1")
+            {
+                $('#startLoadingEditor').modal('hide');
+                $('#loginModal').modal('show');
+
+            }
+        }
+        document.getElementById('start.welcome.buttonUnderstand').removeAttribute("disabled");
+
         console.log('finish load JS');
 
         loadTimeBar();

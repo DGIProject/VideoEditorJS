@@ -6,6 +6,18 @@
     	    "text": "Welcome on VideoEditorJS"
     	},
     	{
+            "id": "start.welcome.text1",
+            "text": "Welcome on VideoEditorJS"
+        },
+        {
+            "id" : "start.welcome.doNotShow",
+            "text" : "Ne plus afficher"
+        },
+        {
+            "id" : "start.welcome.buttonUnderStand.text",
+            "text" : "J'ai compris"
+        },
+    	{
         	"id": "start.loadingJS.text",
         	"text": "Loading ..."
         },
