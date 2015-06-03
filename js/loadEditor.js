@@ -28,13 +28,13 @@ var tabFilesJS = [
     'onEvent.js'
 ];
 
+tabFilesJS.push.apply(tabFilesJS, config.modules);
+
 var currentFileRow = 0;
 
 var currentProject = false, currentManageTextElement = false;
 
 var usernameSession = null, tabTranslations = null;
-
-var remoteAPIPath = 'http://clangue.net/other/testVideo/';
 
 var readFileProject = false;
 
@@ -48,7 +48,7 @@ imageClose.onload = function() {
     console.log('loaded close');
 };
 
-imageClose.src = 'http://clangue.net/other/testVideo/img/remove.png';
+imageClose.src = config.closeImageUrl;
 
 window.onload = function() {
     var cookieValue = getCookie("showC");
@@ -99,8 +99,7 @@ function loadTranslation(fileName) {
     }
 }
 
-function checkboxProsess(checked)
-{
+function checkboxProsess(checked){
     console.log("check ? ", checked)
     if (checked)
     {
