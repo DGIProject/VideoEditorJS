@@ -3,7 +3,7 @@
  */
 
 function reportError(text) {
-    var url = remoteAPIPath + 'php/reportError.php';
+    var url = config.apiPath + 'php/reportError.php';
 
     var xhr = createCORSRequest('POST', url);
     if (!xhr) {

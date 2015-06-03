@@ -4,7 +4,7 @@
 
 //Liste des projets par requête Ajax dans un div (id) et en fonction du pseudo de l'utilisateur (username)
 function getListProjects(id, username) {
-    var url = remoteAPIPath + 'php/projectManagement.php?action=list';
+    var url = config.apiPath + 'php/projectManagement.php?action=list';
 
     var xhr = createCORSRequest('POST', url);
 
@@ -87,7 +87,7 @@ function openProject() {
 function loadProject(fileName) {
     sLoadM();
 
-    var url = remoteAPIPath + 'php/projectManagement.php?action=read';
+    var url = config.apiPath + 'php/projectManagement.php?action=read';
 
     var xhr = createCORSRequest('POST', url);
 
@@ -139,7 +139,7 @@ function saveProject() {
 
         console.log(contentFile);
 
-        var url = remoteAPIPath + 'php/projectManagement.php?action=save';
+        var url = config.apiPath + 'php/projectManagement.php?action=save';
 
         var xhr = createCORSRequest('POST', url);
 
@@ -193,7 +193,7 @@ function deleteProject(projectName) {
 
     rLog('-PROJECT- delete : start [name: ' + projectName + ']');
 
-    var url = remoteAPIPath + 'php/projectManagement.php?action=delete';
+    var url = config.apiPath + 'php/projectManagement.php?action=delete';
 
     var xhr = createCORSRequest('POST', url);
 
@@ -262,7 +262,7 @@ function overwriteProject() {
 
     sLoadM();
 
-    var url = remoteAPIPath + 'php/projectManagement.php?action=create';
+    var url = config.apiPath + 'php/projectManagement.php?action=create';
     var xhr = createCORSRequest('POST', url);
 
     if (!xhr) {
