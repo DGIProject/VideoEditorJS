@@ -175,7 +175,9 @@ function getFileJS() {
         ModuleController.startModules();
 
         ContextMenu.add({
-            onclick : function(element, trackId){
+            onclick : function(){
+                var trackId = this.trackId;
+                var element = this.element;
                 breakLinkElements(element.id , trackId )
             },
             toShow : function(element, trackId){
@@ -184,7 +186,9 @@ function getFileJS() {
         }, 'breakLink');
 
         ContextMenu.add({
-            onclick : function(element, trackId){
+            onclick : function(){
+                var trackId = this.trackId;
+                var element = this.element;
                 volumeElementModal(element.id ,trackId ,element.properties.volume );
             },
             toShow : function(element, trackId){
@@ -195,7 +199,8 @@ function getFileJS() {
         }, 'volume');
 
         ContextMenu.add({
-            onclick : function(element, trackId){
+            onclick : function(){
+                var trackId = this.trackId;
                 var rowTrack = rowById(trackId, currentProject.tabListTracks);
                 var track = currentProject.tabListTracks[rowTrack];
                 elementProperties(rowTrack , track.currentRow );
@@ -206,7 +211,8 @@ function getFileJS() {
         }, 'properties');
 
         ContextMenu.add({
-            onclick : function(element, trackId){
+            onclick : function(){
+                var trackId = this.trackId;
                 var rowTrack = rowById(trackId, currentProject.tabListTracks);
                 var track = currentProject.tabListTracks[rowTrack];
                 deleteElementModal(rowTrack,track.currentRow) ;
@@ -215,6 +221,8 @@ function getFileJS() {
                 return true;
             }
         }, 'delete');
+
+
 
         console.log('initialed classes');
 

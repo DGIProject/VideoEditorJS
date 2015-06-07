@@ -10,8 +10,9 @@ ModuleController.add('test', {
         this.id = id;
         console.log('Modules : Module started !');
         ContextMenu.add({
-            onclick: function (element, trackId) {
-                alert('Context menu are working great !');
+            onclick: function () {
+                console.log("WORLING !");
+                console.log(this);
             },
             toShow: function () {
 
@@ -20,7 +21,7 @@ ModuleController.add('test', {
         }, 'testMenu');
     },
     onRemove: function () {
-
+        ContextMenu.remove('testMenu');
     },
     lang: {
         default: 'en',

@@ -16,6 +16,7 @@ ModuleControl.prototype.add = function(moduleName, module)
     var translations  = tabTranslations.translations;
     var translationsToAdd = [];
 
+    this.modules[this.modules.length-1].module.isDisabled = false;
 
     if (this.modules[this.modules.length-1].module.lang.hasOwnProperty(tabTranslations.lang))
     {
@@ -33,8 +34,28 @@ ModuleControl.prototype.add = function(moduleName, module)
 
 };
 
-ModuleControl.prototype.remove = function(moduleName)
+ModuleControl.prototype.remove = function(moduleId)
 {
+    var row = rowById(moduleId, this.modules);
+    this.modules[row].module.onRemove();
+    this.modules.remove(row)
+};
+
+ModuleControl.prototype.disable = function (moduleId) {
+
+    var row = rowById(moduleId, this.modules);
+
+    if (!this.modules[row].module.isDisabled && row != -1)
+    {
+        this.modules[row].module.isDisabled = true;
+        this.modules[row].module.onRemove();
+    }
+    else
+    {
+        this.modules[row].module.isDisabled = false;
+        this.modules[row].module.onStart();
+    }
+
 
 };
 

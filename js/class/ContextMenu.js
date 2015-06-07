@@ -11,6 +11,10 @@ Menu.prototype.add = function(object, uniqueId){
     this.menu.push({id : uniqueId, obj :object});
 };
 
+Menu.prototype.remove = function (uniqueId) {
+    this.menu.remove(rowById(uniqueId, this.menu));
+};
+
 Menu.prototype.getMenu = function(element, trackId){
 
     var menu = document.getElementById('contextMenu');
