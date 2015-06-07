@@ -8,10 +8,10 @@ ModuleController.add('test', {
     version: 0.1,
     onStart: function (id) {
         this.id = id;
-        console.log('Modules : Module started !')
+        console.log('Modules : Module started !');
         ContextMenu.add({
             onclick: function (element, trackId) {
-                alert('yop !');
+                alert('Context menu are working great !');
             },
             toShow: function () {
 
