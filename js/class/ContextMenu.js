@@ -23,6 +23,8 @@ Menu.prototype.getMenu = function(element, trackId){
 
         if (this.menu[i].obj.toShow(element, trackId)  )
         {
+            this.menu[i].obj.element = element;
+            this.menu[i].obj.trackId = trackId;
             var li = document.createElement('li');
             li.setAttribute('id','contextMenu.'+this.menu[i].id+'.li');
 
@@ -31,7 +33,8 @@ Menu.prototype.getMenu = function(element, trackId){
             a.setAttribute('href', '#');
             a.setAttribute('tabindex', '-1');
             var itemMenu = this.menu[i];
-            a.setAttribute('onclick', "ContextMenu.menu["+i+"].obj.onclick('"+element+"','"+trackId+"')");
+
+            a.setAttribute('onclick', "ContextMenu.menu["+i+"].obj.onclick()");
 
             var span = document.createElement('span');
             span.setAttribute('id','contextMenu.'+this.menu[i].id+'.text');
