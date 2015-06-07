@@ -12,6 +12,13 @@ ModuleController.add('test', {
         ContextMenu.add({
             onclick: function () {
                 console.log("WORLING !");
+                // Create a new custom modal
+
+                var modal = new CustomisableModal();
+                modal.setModalTitle("testModal");
+                modal.innerHTML = "Yoop";
+                modal.show();
+
                 console.log(this);
             },
             toShow: function () {
@@ -19,6 +26,8 @@ ModuleController.add('test', {
                 return true
             }
         }, 'testMenu');
+
+
     },
     onRemove: function () {
         ContextMenu.remove('testMenu');

@@ -11,6 +11,7 @@ var tabFilesJS = [
     'class/Element.js',
     'class/RenderProject.js',
     'class/ContextMenu.js',
+    'class/CustomisableModal',
     'lib/TerminalJs/TerminalJs.js',
     'manage/mProjects.js',
     'manage/mFiles.js',
