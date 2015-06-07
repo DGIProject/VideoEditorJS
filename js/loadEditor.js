@@ -10,6 +10,7 @@ var tabFilesJS = [
     'class/Track.js',
     'class/Element.js',
     'class/RenderProject.js',
+    'class/ContextMenu.js',
     'lib/TerminalJs/TerminalJs.js',
     'manage/mProjects.js',
     'manage/mFiles.js',
@@ -27,6 +28,9 @@ var tabFilesJS = [
     'lib/waveform/drawer.canvas.js',
     'onEvent.js'
 ];
+
+var ModuleController = new ModuleControl();
+
 
 tabFilesJS.push.apply(tabFilesJS, config.modules);
 
@@ -51,6 +55,9 @@ imageClose.onload = function() {
 imageClose.src = config.closeImageUrl;
 
 window.onload = function() {
+    loadTranslation('en');
+    console.log('Translations loaded');
+
     var cookieValue = getCookie("showC");
     if (cookieValue !="")
     {
@@ -62,7 +69,7 @@ window.onload = function() {
     $('#startLoadingEditor').modal('show');
 
     getFileJS();
-    loadTranslation('fr');
+
 };
 
 function setCookie(name, value, expiration) {
@@ -160,6 +167,54 @@ function getFileJS() {
 
         terminal = new Terminal();
         currentManageTextElement = new ManageTextElement(0, 'textElement', 855, {nameText : 'nameText', sizeText : 'sizeText', sizeTextInfo : 'sizeTextInfo', colorText : 'colorText', buttonSaveTextElement : 'buttonSaveTextElement', textArea : 'textTextElement'});
+
+
+
+        ContextMenu = new Menu();
+
+        ModuleController.startModules();
+
+        ContextMenu.add({
+            onclick : function(element, trackId){
+                breakLinkElements(element.id , trackId )
+            },
+            toShow : function(element, trackId){
+                return (element.parent >= 0);
+            }
+        }, 'breakLink');
+
+        ContextMenu.add({
+            onclick : function(element, trackId){
+                volumeElementModal(element.id ,trackId ,element.properties.volume );
+            },
+            toShow : function(element, trackId){
+                var rowTrack = rowById(trackId, currentProject.tabListTracks);
+                var track = currentProject.tabListTracks[rowTrack];
+                return (track.type == TYPE.AUDIO);
+            }
+        }, 'volume');
+
+        ContextMenu.add({
+            onclick : function(element, trackId){
+                var rowTrack = rowById(trackId, currentProject.tabListTracks);
+                var track = currentProject.tabListTracks[rowTrack];
+                elementProperties(rowTrack , track.currentRow );
+            },
+            toShow : function(element, trackId){
+                return true;
+            }
+        }, 'properties');
+
+        ContextMenu.add({
+            onclick : function(element, trackId){
+                var rowTrack = rowById(trackId, currentProject.tabListTracks);
+                var track = currentProject.tabListTracks[rowTrack];
+                deleteElementModal(rowTrack,track.currentRow) ;
+            },
+            toShow : function(element, trackId){
+                return true;
+            }
+        }, 'delete');
 
         console.log('initialed classes');
 

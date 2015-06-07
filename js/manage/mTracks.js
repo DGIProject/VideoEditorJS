@@ -381,7 +381,8 @@ function showContextMenu(e) {
         eId('contextMenu').style.left = ((document.body.scrollLeft + e.clientX) - $('#globalEdit').offset().left) + 'px';
         eId('contextMenu').style.top = ((document.body.scrollTop + e.clientY) - $('#globalEdit').offset().top) + 'px';
 
-        if(element.parent >= 0)
+        ContextMenu.getMenu(element, trackId);
+     /*   if(element.parent >= 0)
         {
             eId('buttonBreakLinkCM').setAttribute('onclick', 'breakLinkElements(' + element.id + ', ' + trackId + ');');
             eId('liBreakLinkCM').classList.remove('disabled');
@@ -390,16 +391,16 @@ function showContextMenu(e) {
         {
             eId('buttonBreakLinkCM').removeAttribute('onclick');
             eId('liBreakLinkCM').classList.add('disabled');
-        }
+        }*/
 
 
-        eId('buttonEffectsCM').style.display = 'none';
+       /* eId('buttonEffectsCM').style.display = 'none';
         eId('liEffectsCM').classList.add('disabled');
 
         eId('buttonOpacityCM').style.display = 'none';
-        eId('liOpacityCM').classList.add('disabled');
+        eId('liOpacityCM').classList.add('disabled');*/
 
-        if(track.type == TYPE.AUDIO)
+      /*  if(track.type == TYPE.AUDIO)
         {
             eId('buttonVolumeCM').setAttribute('onclick', 'volumeElementModal(' + element.id + ',' + trackId + ', ' + element.properties.volume + ');');
             eId('liVolumeCM').classList.remove('disabled');
@@ -408,10 +409,10 @@ function showContextMenu(e) {
         {
             eId('buttonVolumeCM').removeAttribute('onclick');
             eId('liVolumeCM').classList.add('disabled');
-        }
+        }*/
 
-        eId('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
-        eId('buttonDeleteCM').setAttribute('onclick', 'deleteElementModal(' + rowTrack + ',' + track.currentRow + ');');
+       // eId('buttonPropertiesCM').setAttribute('onclick', 'elementProperties(' + rowTrack + ',' + track.currentRow + ');');
+        //eId('buttonDeleteCM').setAttribute('onclick', 'deleteElementModal(' + rowTrack + ',' + track.currentRow + ');');
 
         eId('contextMenu').style.display = 'initial';
     }
