@@ -47,11 +47,15 @@ CustomisableModal = function () {
     };
     this.header = {
         content : null,
-        setTitle : function (title, attr) {
-
+        setTitle : function (title, titleId) {
+            var titleNode = document.createElement('span');
+            titleNode.id = titleId;
+            titleNode.innerHTML = title;
+            //this.content.appendChild(titleNode);
+            this.content = titleNode;
         },
         getContent : function () {
-
+            return this.content;
         },
         closebtn : true
 
@@ -84,7 +88,7 @@ CustomisableModal = function () {
             }
             return span;
         },
-        button : function (id, attr) {
+        button : function (id, attr, text) {
             var button = document.createElement("button");
             button.id = id;
             if (attr != null)
@@ -94,6 +98,7 @@ CustomisableModal = function () {
                     button.setAttribute(attr[i].name, attr[i].value)
                 }
             }
+            button.innerHTML = text;
             return button;
         },
         img : function (id, attr) {
@@ -194,6 +199,7 @@ CustomisableModal = function () {
 
 CustomisableModal.prototype.show = function () {
     this.clearModal();
+    document.querySelector("#customModal .modal-title").appendChild(this.header.getContent());
     document.querySelector("#customModal .modal-body").appendChild(this.body.getContent());
     document.querySelector("#customModal .modal-footer").appendChild(this.footer.getContent());
     $("#customModal").modal('show');

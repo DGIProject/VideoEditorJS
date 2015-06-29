@@ -15,6 +15,7 @@ ModuleController.add('test', {
                 // Create a new custom modal
 
                 var modal = new CustomisableModal();
+                modal.header.setTitle("CutomTest modal", "custom.test.modal.header")
                 modal.body.add([
                     modal.uiElements.div('customModal.div.row',[{name : 'class', value : 'row'}],[
                             modal.uiElements.div('customModal.div.col-md-12', [{name : "class", value: "col-md-12"}],[
@@ -30,8 +31,7 @@ ModuleController.add('test', {
                             )])
                 ]);
                 modal.footer.add(modal.uiElements.button('customModal.btn',[
-                    {name :'type', value :"button"},{name : 'class' ,value :"btn btn-default"}, {name : 'data-dismiss', value :"modal"}
-                ]));
+                    {name :'type', value :"button"},{name : 'class' ,value :"btn btn-default"}, {name : 'data-dismiss', value :"modal"}], "Fermer"));
                 modal.show();
 
                 console.log(this);
