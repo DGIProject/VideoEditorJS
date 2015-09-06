@@ -21,6 +21,8 @@ Track = function(id, type, canvas) {
     this.lastX = 0;
 
     this.tabElements = [];
+    this.tabTransitions = [];
+
     this.currentRow = -1;
 
     this.parent = -1;

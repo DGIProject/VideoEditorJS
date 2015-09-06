@@ -94,6 +94,24 @@ function analyzeCollision() {
     }
 }
 
+function analyzeAlign(selectedElement) {
+    //var selectedElement = track.tabElements[track.currentRow];
+
+    console.log(selectedElement);
+
+    for(var i = 0; i < currentProject.tabListTracks.length; i++) {
+        for(var y = 0; y < currentProject.tabListTracks[i].tabElements.length; y++) {
+            var element = currentProject.tabListTracks[i].tabElements[y];
+
+            if((selectedElement.marginLeft - 7) <= (element.marginLeft + element.width) && (selectedElement.marginLeft - 14) >= (element.marginLeft + (element.width - 20))) {
+                console.log('yes');
+
+                selectedElement.marginLeft = element.marginLeft + element.width + 1;
+            }
+        }
+    }
+}
+
 //Le bouton gauche de la souris est enfoncé, on précise sur quelle piste , lorsqu'un élément est séléctionné, l'écart entre le dépuis de l'élément et la souris
 function mouseDownTracks(e) {
     if(e.button == 0) {
@@ -137,6 +155,7 @@ function mouseMoveTracks(e) {
                     track.tabElements[track.currentRow].marginLeft = 0;
                 }
 
+                analyzeAlign(track.tabElements[track.currentRow]);
                 setPropertiesParent(track.parent, track.tabElements[track.currentRow]);
                 mouseMoveTime(track.tabElements[track.currentRow].marginLeft - timeBar.pixelLeft, track.tabElements[track.currentRow].width);
             }
