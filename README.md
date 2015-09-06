@@ -6,7 +6,7 @@ VideoEditorJs is a small and easy to use Video Editor, online, made with Javascr
 How To install ? 
 ================
 
-There is two ways to do that :
+There are two ways to do that :
 - The first one is to clone the depo with `git clone` on a webserver.
 - The second one is to download the zip file.
 
