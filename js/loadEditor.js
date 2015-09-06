@@ -11,7 +11,7 @@ var tabFilesJS = [
     'class/Element.js',
     'class/RenderProject.js',
     'class/ContextMenu.js',
-    'class/CustomisableModal',
+    'class/CustomisableModal.js',
     'lib/TerminalJs/TerminalJs.js',
     'manage/mProjects.js',
     'manage/mFiles.js',
@@ -59,14 +59,9 @@ window.onload = function() {
     loadTranslation('en');
     console.log('Translations loaded');
 
-    var cookieValue = getCookie("showC");
-    if (cookieValue !="")
-    {
-        if (cookieValue == "1")
-        {
-            document.getElementById("carouselBody").style.display = "none"
-        }
-    }
+    if (parseInt(getCookie('showCarousel')) == 1)
+        document.getElementById("carouselBody").style.display = 'none';
+
     $('#startLoadingEditor').modal('show');
 
     getFileJS();
@@ -107,19 +102,6 @@ function loadTranslation(fileName) {
     }
 }
 
-function checkboxProsess(checked){
-    console.log("check ? ", checked)
-    if (checked)
-    {
-        setCookie('showC','1', 365);
-        console.log('setCookie');
-    }
-
-    $('#startLoadingEditor').modal('hide');
-    $('#loginModal').modal('show');
-
-}
-
 function getTranslation(id) {
     var translation = 'ERROR_TRANSLATION';
 
@@ -150,16 +132,12 @@ function getFileJS() {
     }
     else
     {
-        var cookieValue = getCookie("showC");
-        if (cookieValue !="")
+        if (parseInt(getCookie('showCarousel')) == 1)
         {
-            if (cookieValue == "1")
-            {
-                $('#startLoadingEditor').modal('hide');
-                $('#loginModal').modal('show');
-
-            }
+            $('#startLoadingEditor').modal('hide');
+            $('#loginModal').modal('show');
         }
+
         document.getElementById('start.welcome.buttonUnderstand').removeAttribute("disabled");
 
         console.log('finish load JS');
@@ -255,6 +233,19 @@ function loadFileJS(url, callback) {
     }
 
     document.getElementById('loadScripts').appendChild(script);
+}
+
+function checkboxCarousel(checked){
+    console.log("check ? ", checked);
+    if (checked)
+    {
+        setCookie('showCarousel','1', 365);
+        console.log('setCookie');
+    }
+
+    $('#startLoadingEditor').modal('hide');
+    $('#loginModal').modal('show');
+
 }
 
 function setUsername(username) {

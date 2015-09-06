@@ -14,8 +14,8 @@
             "text" : "Do not show this message again"
         },
         {
-            "id" : "start.welcome.buttonUnderStand.text",
-            "test" : "I understand"
+            "id" : "start.welcome.buttonUnderstand.text",
+            "text" : "I understand"
         },
 		{
     	    "id": "start.tutorial.step1.title.text",
