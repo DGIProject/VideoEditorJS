@@ -2,15 +2,20 @@
  * Created by Guillaume on 03/06/2015.
  */
 
+var MODULE_TYPE = {
+    EFFECT: 0,
+    TRANSITION: 1
+};
+
 ModuleControl = function ()
 {
     this.modules = []
 };
 
-ModuleControl.prototype.add = function(moduleName, module)
+ModuleControl.prototype.add = function(moduleName, moduleType, module)
 {
     var id = (this.modules.length == 0)? 1 :this.modules[this.modules.length-1].id + 1;
-    this.modules.push({id : id ,"name" : moduleName, "module" : module});
+    this.modules.push({id : id ,"name" : moduleName, type: moduleType, "module" : module});
     console.log('Starting module', moduleName);
 
     var translations  = tabTranslations.translations;

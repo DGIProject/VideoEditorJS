@@ -99,7 +99,7 @@ ReadFileProject.prototype.getFile = function(id) {
 
 ReadFileProject.prototype.getThumbnail = function(uId, row, type, format, uploadStatus) {
     var fileName = ((type == TYPE.AUDIO) ? 'THUMBNAIL_A_' : 'THUMBNAIL_I_') + uId + '.' + format;
-    var url = 'http://clangue.net/other/testVideo/data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName;
+    var url = config.baseName + 'data/projectsData/' + usernameSession + '/' + this.infoProject.name + '/' + fileName;
 
     var oReq = new XMLHttpRequest();
     oReq.open("GET", url, true);

@@ -236,12 +236,8 @@ function loadFileJS(url, callback) {
 }
 
 function checkboxCarousel(checked){
-    console.log("check ? ", checked);
     if (checked)
-    {
         setCookie('showCarousel','1', 365);
-        console.log('setCookie');
-    }
 
     $('#startLoadingEditor').modal('hide');
     $('#loginModal').modal('show');

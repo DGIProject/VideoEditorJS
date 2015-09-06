@@ -8,7 +8,7 @@ Menu = function()
 };
 
 Menu.prototype.add = function(object, uniqueId){
-    this.menu.push({id : uniqueId, obj :object});
+    this.menu.push({id: uniqueId, obj: object});
 };
 
 Menu.prototype.remove = function (uniqueId) {
@@ -19,13 +19,13 @@ Menu.prototype.getMenu = function(element, trackId){
 
     var menu = document.getElementById('contextMenu');
 
-    menu.innerHTML = "";
+    menu.innerHTML = '';
 
-    for (i=0;i<this.menu.length;i++)
+    for (var i=0 ; i < this.menu.length; i++)
     {
         //htmlContent += '<li id="contextMenu.'+this.menu[i].id +'.li"><a id="contextMenu.'+this.menu[i].id +'.a" tabindex="-1" href="#"><span id="contextMenu.'+this.menu[i].id +'.text">'+this.getTranslation(this.menu[i].id)+'</span></a></li>'
 
-        if (this.menu[i].obj.toShow(element, trackId)  )
+        if (this.menu[i].obj.toShow(element, trackId))
         {
             this.menu[i].obj.element = element;
             this.menu[i].obj.trackId = trackId;

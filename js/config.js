@@ -8,6 +8,7 @@
 
 var config = {
     "closeImageUrl" : "img/remove.png",
+    baseName: 'http://dgiproject.alwaysdata.net/projects/vejs/',
     "apiPath" : "",
     "modules" : ["modules/test.js"]
 };

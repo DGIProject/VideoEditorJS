@@ -2,7 +2,7 @@
  * Created by Guillaume on 03/06/2015.
  */
 
-ModuleController.add('test', {
+ModuleController.add('test', MODULE_TYPE.EFFECT, {
     name: "test",
     description: "this a test module",
     version: 0.1,
@@ -37,8 +37,7 @@ ModuleController.add('test', {
                 console.log(this);
             },
             toShow: function () {
-
-                return true
+                return true;
             }
         }, 'testMenu');
 
