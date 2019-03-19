@@ -66,3 +66,62 @@ QUnit.test("Unsupported file types should return errors", function ( assert ) {
     );
 });
 
+QUnit.test("New text element tests", function(assert){
+    var MTETest = new ManageTextElement;
+
+    MTETest.newTextElement(1);
+
+    assert.equal(MTETest.properties.font, "Calbri");
+    assert.equal(MTETest.properties.size, 50);
+    assert.equal(MTETest.properties.color, "#000000");
+    assert.equal(MTETest.properties.align, "center");
+    assert.equal(MTETest.isEditing, false);
+
+});
+
+QUnit.test("Editing text element tests", function( assert ){
+    var MTETest = new ManageTextElement;
+
+    MTETest.newTextElement(1);
+
+    MTETest.changeFont("Times New Roman");
+    assert.equal(MTETest.properties.font, "Times New Roman");
+
+    MTETest.changeSizeText(60);
+    assert.equal(MTETest.properties.size, 60);
+
+    MTETest.changeSizeText(1);
+    assert.equal(MTETest.properties.size, 1);
+
+    MTETest.changeSizeText(1000);
+    assert.equal(MTETest.properties.size, 1000);
+
+    MTETest.changeColor("#FFFFFF");
+    assert.equal(MTETest.properties.color, "#FFFFFF");
+
+    MTETest.changeTextAlign("right");
+    assert.equal(MTETest.properties.align, "center");
+
+    MTETest.updateText("Test");
+    assert.equal(MTETest.text, "Test");
+});
+
+QUnit.test("Creating new Project tests", function( assert ){
+    var testP = new Project("Test Project", 1, "Jakob", "03/04/2019");
+
+    assert.equal(testP.name, "Test Project");
+    assert.equal(testP.uId, 1);
+    assert.equal(testP.username, "Jakob");
+    assert.equal(testP.dateCreation, "03/04/2020");
+    assert.equal(testP.autoSave, false);
+
+});
+
+QUnit.test("Changing autosave test", function( assert ){
+    var testP = new Project("Test Project", 1, "Jakob", "03/04/2019");
+
+    assert.equal(testP.autoSave, false);
+    testP.switchAutoSave();
+    assert.equal(testP.autoSave, true);
+
+});
