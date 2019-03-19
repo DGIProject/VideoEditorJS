@@ -5,62 +5,16 @@
 CustomisableModal = function () {
     this.innerHTML = "";
 
-    this.body = {
-        content: document.createElement('div'),
-        add : function(nodes){
-            if (nodes.constructor === Array)
-            {
-                for (var i=0; i<nodes.length; i++)
-                {
-                    this.content.appendChild(nodes[i])
-                }
-            }
-            else
-            {
-                this.content.appendChild(nodes);
-            }
-            return this;
-        },
-        getContent : function(){
-            return this.content
-        }
-    };
-    this.footer = {
-        content: document.createElement('div'),
-        add : function(nodes){
-            if (nodes.constructor === Array)
-            {
-                for (var i=0; i<nodes.length; i++)
-                {
-                    this.content.appendChild(nodes[i])
-                }
-            }
-            else
-            {
-                this.content.appendChild(nodes);
-            }
-            return this;
-        },
-        getContent : function(){
-            return this.content
-        }
-    };
-    this.header = {
-        content : null,
-        setTitle : function (title, titleId) {
-            var titleNode = document.createElement('span');
-            titleNode.id = titleId;
-            titleNode.innerHTML = title;
-            //this.content.appendChild(titleNode);
-            this.content = titleNode;
-        },
-        getContent : function () {
-            return this.content;
-        },
-        closebtn : true
+    this.setUpBody();
 
-    };
+    this.setUpFooter();
+    
+    this.setUpHeader();
 
+    this.setUpUiElem();
+};
+
+CustomisableModal.prototype.setUpUiElem = function(){
     this.uiElements = {
         span : function (id, content, attr){
             var span = document.createElement("span");
@@ -194,8 +148,71 @@ CustomisableModal = function () {
             return document.createElement('br');
         }
     }
+}
+
+CustomisableModal.prototype.setUpFooter = function(){
+    this.footer = {
+        content: document.createElement('div'),
+        add : function(nodes){
+            if (nodes.constructor === Array)
+            {
+                for (var i=0; i<nodes.length; i++)
+                {
+                    this.content.appendChild(nodes[i])
+                }
+            }
+            else
+            {
+                this.content.appendChild(nodes);
+            }
+            return this;
+        },
+        getContent : function(){
+            return this.content
+        }
+    };
 };
 
+CustomisableModal.prototype.setUpBody = function(){
+    this.body = {
+        content: document.createElement('div'),
+        add : function(nodes){
+            if (nodes.constructor === Array)
+            {
+                for (var i=0; i<nodes.length; i++)
+                {
+                    this.content.appendChild(nodes[i])
+                }
+            }
+            else
+            {
+                this.content.appendChild(nodes);
+            }
+            return this;
+        },
+        getContent : function(){
+            return this.content
+        }
+    };
+}
+
+CustomisableModal.prototype.setUpHeader = function(){
+    this.header = {
+        content : null,
+        setTitle : function (title, titleId) {
+            var titleNode = document.createElement('span');
+            titleNode.id = titleId;
+            titleNode.innerHTML = title;
+            //this.content.appendChild(titleNode);
+            this.content = titleNode;
+        },
+        getContent : function () {
+            return this.content;
+        },
+        closebtn : true
+
+    };
+}
 
 CustomisableModal.prototype.show = function () {
     this.clearModal();

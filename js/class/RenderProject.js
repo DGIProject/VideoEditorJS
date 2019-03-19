@@ -27,60 +27,53 @@ RenderP = function (format) {
     this.otherTrack = [];
     this.tabVideoTrack = [];
 
-    //Isolating video tracks
-    for (var i = 0; i < this.tracks.length; i++) {
-        if (this.tracks[i].type == TYPE.VIDEO) {
-            this.tabVideoTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
-            console.log("vid", i);
-        }
-        else
-        {
-            this.otherTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
-        }
-    }
-
+    this.isolateVideoTracks();
     console.log("tabs", this.tabVideoTrack, this.otherTrack);
 
-    if (this.tabVideoTrack.length>0) {
-        //Convert multiple video track into Single one
-        var index = this.tabVideoTrack.length;
-        console.log('index', index);
-        do
-        {
-            this.makeSingleVideoTrack();
-            index--;
-            console.log('indexN', index)
-        }
-        while (index > 1);
-
-        console.log("Video track", this.tabVideoTrack);
-
-        this.tabVideoTrack[0].tabElements.sort(function (a, b) {
-            console.log("tris");
-            return a.marginLeft - b.marginLeft
-        });
-        var maxA = 0;
-        var maxV = 0;
-        if (this.tabVideoTrack[0].tabElements.length > 0) {
-            maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length - 1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length - 1].width;
-        }
-
-
-        //Get max size
-        for (i = 0; i < this.otherTrack.length; i++) {
-            for (var el = 0; el < this.otherTrack[i].tabElements.length; el++) {
-                var size = this.otherTrack[i].tabElements[el].marginLeft + this.otherTrack[i].tabElements[el].width;
-                if (size > maxA) {
-                    maxA = size
-                }
-            }
-        }
-
-        this.otherTrack.push(this.tabVideoTrack[0]);
+    if (this.tabVideoTrack.length>0) {i
+	this.mergeMultipleVideoTracks();
     }
 
 
     this.t = 0;
+	
+    this.processTracks();
+
+    console.log("----------------------------RENDER FINAL COMMAND-------------------------");
+    var finalAudio = "audio.mp3";
+    // Merge audio tracks into single one
+    if (this.commandTracksAudio.length > 1) {
+        cmd = "";
+        for (i = 0; i < this.commandTracksAudio.length; i++) {
+            var trackId = this.commandTracksAudio[i][0];
+            cmd += "-i track_" + trackId + ".mp3 ";
+        }
+        cmd += " -filter_complex amerge="+this.commandTracksAudio.length+" audio.mp3";
+        this.commandList.push(cmd);
+        finalAudio = "audio.mp3";
+    }
+    else {
+        if (this.commandTracksAudio.length>0)
+        {
+            finalAudio = "track_"+this.commandTracksAudio[0][0]+".mp3";
+        }
+
+    }
+
+    // merge audio and video
+    if (this.commandTracksAudio.length>0 || this.commandTracksVideo.length>0)
+    {
+        console.log("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") +" " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" -q:v 1 final."+this.FORMAT[this.userFormat].ext);
+        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ?  "track_"+this.commandTracksVideo[0][0]+".mp4 "  : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" -q:v 1 final."+this.FORMAT[this.userFormat].ext);
+        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" -q:v 1 final_WEB."+this.FORMAT.X264.ext);
+
+       // changeZoom(this.previousZoom, false);
+        this.uploadCommands();
+    }
+
+};
+
+RenderP.prototype.processTracks = function(){
     for (var t = 0; t < this.otherTrack.length; t++) {
         //Processing each track
         this.t = t;
@@ -155,40 +148,60 @@ RenderP = function (format) {
         }
     }
 
-
-    console.log("----------------------------RENDER FINAL COMMAND-------------------------");
-    var finalAudio = "audio.mp3";
-    // Merge audio tracks into single one
-    if (this.commandTracksAudio.length > 1) {
-        cmd = "";
-        for (i = 0; i < this.commandTracksAudio.length; i++) {
-            var trackId = this.commandTracksAudio[i][0];
-            cmd += "-i track_" + trackId + ".mp3 ";
-        }
-        cmd += " -filter_complex amerge="+this.commandTracksAudio.length+" audio.mp3";
-        this.commandList.push(cmd);
-        finalAudio = "audio.mp3";
-    }
-    else {
-        if (this.commandTracksAudio.length>0)
-        {
-            finalAudio = "track_"+this.commandTracksAudio[0][0]+".mp3";
-        }
-
-    }
-
-    // merge audio and video
-    if (this.commandTracksAudio.length>0 || this.commandTracksVideo.length>0)
-    {
-        console.log("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") +" " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" -q:v 1 final."+this.FORMAT[this.userFormat].ext);
-        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ?  "track_"+this.commandTracksVideo[0][0]+".mp4 "  : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 "+((this.FORMAT[this.userFormat].codec != null)?"-c:v "+this.FORMAT[this.userFormat].codec:"")+" -q:v 1 final."+this.FORMAT[this.userFormat].ext);
-        this.commandList.push("-i "+ ((this.commandTracksVideo.length > 0) ? "track_"+this.commandTracksVideo[0][0]+".mp4 " : "") + " " + ((this.commandTracksAudio.length > 0) ? "-i " + finalAudio : "") + " -s 1280x720 -c:v "+this.FORMAT.X264.codec+" -q:v 1 final_WEB."+this.FORMAT.X264.ext);
-
-       // changeZoom(this.previousZoom, false);
-        this.uploadCommands();
-    }
-
 };
+
+RenderP.prototype.isolateVideoTracks = function(){
+    //Isolating video tracks
+    for (var i = 0; i < this.tracks.length; i++) {
+        if (this.tracks[i].type == TYPE.VIDEO) {
+            this.tabVideoTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
+            console.log("vid", i);
+        }
+        else
+        {
+            this.otherTrack.push(JSON.parse(JSON.stringify(this.tracks[i])));
+        }
+    }
+};
+
+RenderP.prototype.mergeMultipleVideoTracks = function(){
+    //Convert multiple video track into Single one
+    var index = this.tabVideoTrack.length;
+    console.log('index', index);
+    do
+    {
+        this.makeSingleVideoTrack();
+        index--;
+        console.log('indexN', index)
+    }
+    while (index > 1);
+
+    console.log("Video track", this.tabVideoTrack);
+
+    this.tabVideoTrack[0].tabElements.sort(function (a, b) {
+        console.log("tris");
+        return a.marginLeft - b.marginLeft
+    });
+    var maxA = 0;
+    var maxV = 0;
+    if (this.tabVideoTrack[0].tabElements.length > 0) {
+        maxV = this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length - 1].marginLeft + this.tabVideoTrack[0].tabElements[this.tabVideoTrack[0].tabElements.length - 1].width;
+    }
+
+
+    //Get max size
+    for (i = 0; i < this.otherTrack.length; i++) {
+        for (var el = 0; el < this.otherTrack[i].tabElements.length; el++) {
+            var size = this.otherTrack[i].tabElements[el].marginLeft + this.otherTrack[i].tabElements[el].width;
+            if (size > maxA) {
+                maxA = size
+            }
+        }
+    }
+
+    this.otherTrack.push(this.tabVideoTrack[0]);
+};
+
 /* This function, is made, to detect "Black" elements, and check if another element exist on others tracks*/
 
 RenderP.prototype.getBlack = function(track, elementIndex){
