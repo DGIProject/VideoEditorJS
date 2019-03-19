@@ -1,9 +1,9 @@
 #!/bin/bash
 #define all path ans vars that are usefull
-DATAPATH="/c/xampp/htdocs/test/samples/VEJSFiles"
-LOGPATH="/c/xampp/htdocs/test/samples/videoProcess/logs"
-TEMPDIR="/c/xampp/htdocs/test/samples/videoProcess/tmp"
-WEBSERVPHPDir="localhost"
+DATAPATH="/home/clangue/VEJSFiles"
+LOGPATH="/home/clangue/videoProcess/logs"
+TEMPDIR="/home/clangue/videoProcess/tmp"
+WEBSERVPHPDir="http://clangue.net/other/testVideo/php"
 FFMPEGPATH="ffmpeg"
 THREADS=4
 
