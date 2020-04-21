@@ -10,7 +10,7 @@ There are two ways to do that :
 - The first one is to clone the depo with `git clone` on a webserver.
 - The second one is to download the zip file.
 
-###Installation
+### Installation
 
 - Then Edit the php/config.php to change paths for files
 - Then on the same server or another one, move the sample directory, and also the script directory
